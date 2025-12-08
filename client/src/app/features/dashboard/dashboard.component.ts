@@ -3,10 +3,9 @@ import { CommonModule } from '@angular/common';
 import { AuthService, User } from '../../core/services/auth.service';
 
 @Component({
-  selector: 'app-dashboard',
-  standalone: true,
-  imports: [CommonModule],
-  template: `
+    selector: 'app-dashboard',
+    imports: [CommonModule],
+    template: `
     <div class="min-h-screen bg-gray-100">
       <!-- Navigation -->
       <nav class="bg-white shadow-lg">
@@ -62,7 +61,7 @@ import { AuthService, User } from '../../core/services/auth.service';
       </div>
     </div>
   `,
-  styles: []
+    styles: []
 })
 export class DashboardComponent implements OnInit {
   currentUser: User | null = null;

@@ -108,7 +108,7 @@ export class AuthService {
    */
   loadCurrentUser(): void {
     this.api.get<any>('/api/auth/me').subscribe({
-      next: (response) => {
+      next: (response: any) => {
         if (response.success) {
           this.currentUserSubject.next(response.data.user);
           localStorage.setItem('user', JSON.stringify(response.data.user));
@@ -124,8 +124,8 @@ export class AuthService {
    * Update user profile
    */
   updateProfile(data: Partial<User>): Observable<any> {
-    return this.api.put('/api/auth/profile', data).pipe(
-      tap(response => {
+    return this.api.put<any>('/api/auth/profile', data).pipe(
+      tap((response: any) => {
         if (response.success) {
           this.currentUserSubject.next(response.data.user);
           localStorage.setItem('user', JSON.stringify(response.data.user));

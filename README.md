@@ -25,7 +25,7 @@ Turistas CP es una plataforma web diseñada para ayudar a equipos de programaci�
 - **JWT** - Autenticación
 
 ### Frontend
-- **Angular** 17+
+- **Angular** 19+
 - **Tailwind CSS** - Framework de estilos
 - **TypeScript**
 
