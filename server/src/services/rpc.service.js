@@ -2,6 +2,20 @@ import axios from 'axios';
 
 const RPC_BASE_URL = 'https://redprogramacioncompetitiva.com';
 
+/**
+ * RPC (Red de Programación Competitiva) Service
+ * 
+ * Note: RPC does not provide a public API for programmatic access.
+ * 
+ * Future implementation strategies:
+ * 1. Web Scraping: Use Puppeteer or Cheerio to extract contest information
+ * 2. Unofficial API: If community creates one, integrate with it
+ * 3. Manual Entry: Provide UI for coaches to manually add RPC contests
+ * 4. iCalendar Integration: Parse RPC calendar feeds if available
+ * 
+ * Current implementation returns placeholder data and directs users
+ * to manual registration on the RPC website.
+ */
 class RPCService {
   /**
    * Get upcoming RPC contests

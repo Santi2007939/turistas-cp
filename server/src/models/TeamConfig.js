@@ -56,7 +56,7 @@ const teamConfigSchema = new mongoose.Schema({
     }
   },
   statistics: {
-    totalProblemsolved: {
+    totalProblemsSolved: {
       type: Number,
       default: 0
     },
