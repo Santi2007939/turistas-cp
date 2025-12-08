@@ -6,6 +6,20 @@ class USACOIDEService {
    * @param {string} code - Source code to execute
    * @param {string} language - Programming language (cpp, python, java)
    * @param {string} input - Input data for the program
+   * 
+   * TODO: This is a placeholder implementation. A full implementation would require:
+   * 1. Sandboxed execution environment (Docker containers or VMs)
+   * 2. Security measures: time limits, memory limits, restricted system calls
+   * 3. Code compilation and execution pipeline
+   * 4. Output capture and error handling
+   * 5. Queue system for managing multiple execution requests
+   * 
+   * Security considerations:
+   * - Prevent arbitrary code execution on server
+   * - Sandbox all user code in isolated containers
+   * - Implement strict resource limits
+   * - Sanitize all inputs and outputs
+   * - Use read-only file systems
    */
   async executeCode(code, language, input = '') {
     try {
