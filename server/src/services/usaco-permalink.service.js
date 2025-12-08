@@ -82,15 +82,40 @@ class USACOPermalinkService {
 
       // Try to find and click the share/permalink button
       // The actual selectors would need to be determined by inspecting ide.usaco.guide
-      const shareButtonSelector = 'button[aria-label="Share"], button:has-text("Share")';
+      // Using multiple fallback selectors for better reliability
+      const shareButtonSelectors = [
+        'button[aria-label="Share"]',
+        'button[title="Share"]',
+        'button.share-button',
+        'button:contains("Share")'
+      ];
       
-      await page.waitForSelector(shareButtonSelector, { timeout: 5000 })
-        .catch(() => {
-          console.warn('Share button not found with standard selector');
-        });
+      let shareButtonFound = false;
+      let shareButton = null;
+      
+      for (const selector of shareButtonSelectors) {
+        try {
+          await page.waitForSelector(selector, { timeout: 2000 });
+          shareButton = await page.$(selector);
+          if (shareButton) {
+            shareButtonFound = true;
+            break;
+          }
+        } catch (error) {
+          // Try next selector
+          continue;
+        }
+      }
+      
+      if (!shareButtonFound || !shareButton) {
+        return {
+          ok: false,
+          reason: 'Share button not found - IDE interface may have changed'
+        };
+      }
 
       // Click share button
-      await page.click(shareButtonSelector);
+      await shareButton.click();
 
       // Wait for permalink URL to be generated
       // This would need to be adapted based on actual IDE behavior
