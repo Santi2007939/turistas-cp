@@ -138,12 +138,15 @@ export const createUsacoPermalink = asyncHandler(async (req, res, next) => {
     // Get language from body or query, default to 'cpp'
     const language = req.body.language || req.query.lang || 'cpp';
     
-    // Get headless setting from body, query, or env
-    const headless = req.body.headless !== undefined 
-      ? req.body.headless 
-      : (req.query.headless !== undefined 
-        ? req.query.headless === 'true' 
-        : process.env.USACO_HEADLESS !== 'false');
+    // Get headless setting from body, query, or env (default to true)
+    let headless = true;
+    if (req.body.headless !== undefined) {
+      headless = req.body.headless;
+    } else if (req.query.headless !== undefined) {
+      headless = req.query.headless === 'true';
+    } else {
+      headless = process.env.USACO_HEADLESS !== 'false';
+    }
     
     // Get timeout from body
     const timeout = req.body.timeout;
