@@ -8,7 +8,9 @@ import {
   getRPCRegistrationUrl,
   executeCode,
   getSupportedLanguages,
-  getCodeTemplate
+  getCodeTemplate,
+  createUsacoPermalink,
+  getUsacoPermalinkStatus
 } from '../controllers/integrations.controller.js';
 import { protect } from '../middlewares/auth.js';
 
@@ -33,5 +35,7 @@ router.get('/rpc/register/:contestId?', getRPCRegistrationUrl);
 router.post('/usaco-ide/execute', executeCode);
 router.get('/usaco-ide/languages', getSupportedLanguages);
 router.get('/usaco-ide/template/:language', getCodeTemplate);
+router.post('/usaco-ide/permalink', createUsacoPermalink);
+router.get('/usaco-ide/status', getUsacoPermalinkStatus);
 
 export default router;
