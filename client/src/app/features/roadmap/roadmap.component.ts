@@ -231,7 +231,13 @@ export class RoadmapComponent implements OnInit {
   showAddThemeModal = false;
   showUpdateModal = false;
   selectedThemeId = '';
-  editingNode: any = null;
+  editingNode: {
+    _id: string;
+    themeId: string;
+    status: string;
+    progress: number;
+    notes: string;
+  } | null = null;
 
   constructor(
     private roadmapService: RoadmapService,
@@ -292,6 +298,10 @@ export class RoadmapComponent implements OnInit {
   }
 
   editNode(node: PersonalNode): void {
+    if (!node.themeId || typeof node.themeId === 'string') {
+      this.error = 'Invalid theme data';
+      return;
+    }
     this.editingNode = {
       _id: node._id,
       themeId: node.themeId._id,

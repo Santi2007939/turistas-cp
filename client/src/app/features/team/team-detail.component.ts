@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TeamService, TeamConfig } from '../../core/services/team.service';
+import { TeamUtils } from '../../shared/utils/team.utils';
 
 @Component({
   selector: 'app-team-detail',
@@ -200,10 +201,8 @@ export class TeamDetailComponent implements OnInit {
   }
 
   isUserInTeam(): boolean {
-    if (!this.team || !this.currentUserId) return false;
-    return this.team.members.some(member => 
-      member.userId === this.currentUserId || member.userId._id === this.currentUserId
-    );
+    if (!this.team) return false;
+    return TeamUtils.isUserInTeam(this.team, this.currentUserId);
   }
 
   joinTeam(): void {
