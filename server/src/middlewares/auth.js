@@ -88,3 +88,29 @@ export const optionalAuth = async (req, res, next) => {
     next(error);
   }
 };
+
+// Admin authorization middleware
+export const isAdmin = async (req, res, next) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Acción permitida solo para administradores.'
+      });
+    }
+
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({
+        success: false,
+        message: 'Acción permitida solo para administradores.'
+      });
+    }
+
+    next();
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: 'Error en la validación de permisos.'
+    });
+  }
+};
