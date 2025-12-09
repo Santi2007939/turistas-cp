@@ -28,8 +28,8 @@ export const register = asyncHandler(async (req, res) => {
   }
 
   // Check if this is the first user
-  const userCount = await User.countDocuments();
-  const isFirstUser = userCount === 0;
+  const firstUser = await User.findOne().lean();
+  const isFirstUser = !firstUser;
 
   // Create user
   const user = await User.create({
@@ -204,12 +204,12 @@ export const changePassword = asyncHandler(async (req, res) => {
 // @route   GET /api/auth/check-users
 // @access  Public
 export const checkUsers = asyncHandler(async (req, res) => {
-  const userCount = await User.countDocuments();
+  const hasUsers = await User.findOne().lean();
   
   res.json({
     success: true,
     data: {
-      usersExist: userCount > 0
+      usersExist: !!hasUsers
     }
   });
 });
