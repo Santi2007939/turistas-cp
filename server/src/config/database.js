@@ -6,8 +6,8 @@ dotenv.config();
 
 const createAdminIfNotExists = async () => {
   try {
-    const userCount = await User.countDocuments();
-    if (userCount === 0) {
+    const hasUsers = await User.findOne().lean();
+    if (!hasUsers) {
       console.log('ℹ️  No users found in database. First registered user will be admin.');
     }
   } catch (err) {

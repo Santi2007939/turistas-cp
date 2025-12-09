@@ -61,36 +61,45 @@ export const updateUser = asyncHandler(async (req, res) => {
   });
 });
 
+// Helper function for updating user boolean fields
+const updateUserBooleanField = async (userId, fieldName, fieldValue) => {
+  if (typeof fieldValue !== 'boolean') {
+    throw new Error(`${fieldName} must be a boolean value`);
+  }
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  user[fieldName] = fieldValue;
+  await user.save();
+
+  return user;
+};
+
 // @desc    Update user status (Admin)
 // @route   PUT /api/users/:id/status
 // @access  Private/Admin
 export const updateUserStatus = asyncHandler(async (req, res) => {
   const { isActive } = req.body;
 
-  if (typeof isActive !== 'boolean') {
-    return res.status(400).json({
+  try {
+    const user = await updateUserBooleanField(req.params.id, 'isActive', isActive);
+    
+    res.json({
+      success: true,
+      message: 'User status updated successfully',
+      data: { user }
+    });
+  } catch (error) {
+    const statusCode = error.message === 'User not found' ? 404 : 400;
+    return res.status(statusCode).json({
       success: false,
-      message: 'isActive must be a boolean value'
+      message: error.message
     });
   }
-
-  const user = await User.findById(req.params.id);
-
-  if (!user) {
-    return res.status(404).json({
-      success: false,
-      message: 'User not found'
-    });
-  }
-
-  user.isActive = isActive;
-  await user.save();
-
-  res.json({
-    success: true,
-    message: 'User status updated successfully',
-    data: { user }
-  });
 });
 
 // @desc    Update user member status (Admin)
@@ -99,30 +108,21 @@ export const updateUserStatus = asyncHandler(async (req, res) => {
 export const updateUserMember = asyncHandler(async (req, res) => {
   const { isCurrentMember } = req.body;
 
-  if (typeof isCurrentMember !== 'boolean') {
-    return res.status(400).json({
+  try {
+    const user = await updateUserBooleanField(req.params.id, 'isCurrentMember', isCurrentMember);
+    
+    res.json({
+      success: true,
+      message: 'User member status updated successfully',
+      data: { user }
+    });
+  } catch (error) {
+    const statusCode = error.message === 'User not found' ? 404 : 400;
+    return res.status(statusCode).json({
       success: false,
-      message: 'isCurrentMember must be a boolean value'
+      message: error.message
     });
   }
-
-  const user = await User.findById(req.params.id);
-
-  if (!user) {
-    return res.status(404).json({
-      success: false,
-      message: 'User not found'
-    });
-  }
-
-  user.isCurrentMember = isCurrentMember;
-  await user.save();
-
-  res.json({
-    success: true,
-    message: 'User member status updated successfully',
-    data: { user }
-  });
 });
 
 // @desc    Delete user
