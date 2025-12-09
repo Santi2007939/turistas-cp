@@ -64,13 +64,17 @@ export const updateUser = asyncHandler(async (req, res) => {
 // Helper function for updating user boolean fields
 const updateUserBooleanField = async (userId, fieldName, fieldValue) => {
   if (typeof fieldValue !== 'boolean') {
-    throw new Error(`${fieldName} must be a boolean value`);
+    const error = new Error(`${fieldName} must be a boolean value`);
+    error.statusCode = 400;
+    throw error;
   }
 
   const user = await User.findById(userId);
 
   if (!user) {
-    throw new Error('User not found');
+    const error = new Error('User not found');
+    error.statusCode = 404;
+    throw error;
   }
 
   user[fieldName] = fieldValue;
@@ -85,21 +89,13 @@ const updateUserBooleanField = async (userId, fieldName, fieldValue) => {
 export const updateUserStatus = asyncHandler(async (req, res) => {
   const { isActive } = req.body;
 
-  try {
-    const user = await updateUserBooleanField(req.params.id, 'isActive', isActive);
-    
-    res.json({
-      success: true,
-      message: 'User status updated successfully',
-      data: { user }
-    });
-  } catch (error) {
-    const statusCode = error.message === 'User not found' ? 404 : 400;
-    return res.status(statusCode).json({
-      success: false,
-      message: error.message
-    });
-  }
+  const user = await updateUserBooleanField(req.params.id, 'isActive', isActive);
+  
+  res.json({
+    success: true,
+    message: 'User status updated successfully',
+    data: { user }
+  });
 });
 
 // @desc    Update user member status (Admin)
@@ -108,21 +104,13 @@ export const updateUserStatus = asyncHandler(async (req, res) => {
 export const updateUserMember = asyncHandler(async (req, res) => {
   const { isCurrentMember } = req.body;
 
-  try {
-    const user = await updateUserBooleanField(req.params.id, 'isCurrentMember', isCurrentMember);
-    
-    res.json({
-      success: true,
-      message: 'User member status updated successfully',
-      data: { user }
-    });
-  } catch (error) {
-    const statusCode = error.message === 'User not found' ? 404 : 400;
-    return res.status(statusCode).json({
-      success: false,
-      message: error.message
-    });
-  }
+  const user = await updateUserBooleanField(req.params.id, 'isCurrentMember', isCurrentMember);
+  
+  res.json({
+    success: true,
+    message: 'User member status updated successfully',
+    data: { user }
+  });
 });
 
 // @desc    Delete user
