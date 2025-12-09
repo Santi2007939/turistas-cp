@@ -17,8 +17,7 @@ router.get('/', asyncHandler(async (req, res) => {
     $or: [
       { isPublic: true },
       { createdBy: req.user._id },
-      { participants: req.user._id },
-      ...(req.user.teamId ? [{ teamId: req.user.teamId }] : [])
+      { participants: req.user._id }
     ]
   };
 
@@ -47,7 +46,7 @@ router.get('/', asyncHandler(async (req, res) => {
 // @access  Private
 router.get('/:id', asyncHandler(async (req, res) => {
   const event = await CalendarEvent.findById(req.params.id)
-    .populate('createdBy contestId participants teamId');
+    .populate('createdBy contestId participants');
 
   if (!event) {
     return res.status(404).json({

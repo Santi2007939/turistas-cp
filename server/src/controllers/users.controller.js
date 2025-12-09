@@ -5,7 +5,7 @@ import { asyncHandler } from '../middlewares/error.js';
 // @route   GET /api/users
 // @access  Private/Admin
 export const getUsers = asyncHandler(async (req, res) => {
-  const users = await User.find().select('-password').populate('teamId', 'name');
+  const users = await User.find().select('-password');
 
   res.json({
     success: true,
@@ -18,7 +18,7 @@ export const getUsers = asyncHandler(async (req, res) => {
 // @route   GET /api/users/:id
 // @access  Private
 export const getUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id).select('-password').populate('teamId', 'name');
+  const user = await User.findById(req.params.id).select('-password');
 
   if (!user) {
     return res.status(404).json({
@@ -37,7 +37,7 @@ export const getUser = asyncHandler(async (req, res) => {
 // @route   PUT /api/users/:id
 // @access  Private/Admin
 export const updateUser = asyncHandler(async (req, res) => {
-  const { role, isActive } = req.body;
+  const { role, isActive, isCurrentMember } = req.body;
 
   const user = await User.findById(req.params.id);
 
@@ -50,6 +50,7 @@ export const updateUser = asyncHandler(async (req, res) => {
 
   if (role !== undefined) user.role = role;
   if (isActive !== undefined) user.isActive = isActive;
+  if (isCurrentMember !== undefined) user.isCurrentMember = isCurrentMember;
 
   await user.save();
 
