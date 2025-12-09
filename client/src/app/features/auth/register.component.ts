@@ -136,7 +136,8 @@ export class RegisterComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error checking users:', err);
-        // Default to true on error
+        // Default to true on error - better to show the field than hide it
+        // This prevents confusion if the check fails
         this.usersExist = true;
       }
     });

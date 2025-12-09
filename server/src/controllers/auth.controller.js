@@ -40,7 +40,7 @@ export const register = asyncHandler(async (req, res) => {
     codeforcesHandle,
     role: isFirstUser ? 'admin' : 'student',
     isActive: true,
-    isCurrentMember: isFirstUser ? true : false
+    isCurrentMember: isFirstUser
   });
 
   // Generate token
