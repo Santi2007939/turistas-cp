@@ -110,8 +110,7 @@ export const isAdmin = async (req, res, next) => {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: 'Error en la validación de permisos.',
-      details: err.message
+      message: 'Error en la validación de permisos.'
     });
   }
 };
