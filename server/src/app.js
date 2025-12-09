@@ -7,6 +7,7 @@ import { errorHandler, notFound } from './middlewares/error.js';
 // Import routes
 import authRoutes from './routes/auth.routes.js';
 import usersRoutes from './routes/users.routes.js';
+import adminRoutes from './routes/admin.routes.js';
 import themesRoutes from './routes/themes.routes.js';
 import roadmapRoutes from './routes/roadmap.routes.js';
 import problemsRoutes from './routes/problems.routes.js';
@@ -46,6 +47,7 @@ app.get('/health', (req, res) => {
 // API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', usersRoutes);
+app.use('/api/admin', adminRoutes);
 app.use('/api/themes', themesRoutes);
 app.use('/api/roadmap', roadmapRoutes);
 app.use('/api/problems', problemsRoutes);

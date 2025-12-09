@@ -103,7 +103,7 @@ interface UserManagement extends User {
                           [class.text-green-800]="user.isActive"
                           [class.bg-red-100]="!user.isActive"
                           [class.text-red-800]="!user.isActive">
-                      {{ user.isActive ? 'Active' : 'Inactive' }}
+                      {{ user.isActive ? 'Activo' : 'En espera' }}
                     </span>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -112,7 +112,7 @@ interface UserManagement extends User {
                           [class.text-green-800]="user.isCurrentMember"
                           [class.bg-gray-100]="!user.isCurrentMember"
                           [class.text-gray-800]="!user.isCurrentMember">
-                      {{ user.isCurrentMember ? 'Yes' : 'No' }}
+                      {{ user.isCurrentMember ? 'Sí' : 'No' }}
                     </span>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
@@ -182,15 +182,15 @@ export class AdminDashboardComponent implements OnInit {
     this.loading = true;
     this.error = '';
     
-    this.http.get<{ success: boolean; data: { users: UserManagement[] } }>(
-      `${environment.apiUrl}/api/users`
+    this.http.get<UserManagement[]>(
+      `${environment.apiUrl}/api/admin/users`
     ).subscribe({
-      next: (response) => {
-        this.users = response.data.users;
+      next: (users) => {
+        this.users = users;
         this.loading = false;
       },
       error: (err) => {
-        this.error = err.error?.message || 'Error loading users';
+        this.error = err.error?.error || err.error?.message || 'Error loading users';
         this.loading = false;
       }
     });
