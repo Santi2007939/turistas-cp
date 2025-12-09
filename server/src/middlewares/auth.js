@@ -95,14 +95,14 @@ export const isAdmin = async (req, res, next) => {
     if (!req.user) {
       return res.status(401).json({
         success: false,
-        error: 'Acción permitida solo para administradores.'
+        message: 'Acción permitida solo para administradores.'
       });
     }
 
     if (req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
-        error: 'Acción permitida solo para administradores.'
+        message: 'Acción permitida solo para administradores.'
       });
     }
 
@@ -110,7 +110,7 @@ export const isAdmin = async (req, res, next) => {
   } catch (err) {
     res.status(500).json({
       success: false,
-      error: 'Error en la validación de permisos.',
+      message: 'Error en la validación de permisos.',
       details: err.message
     });
   }
