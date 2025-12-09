@@ -39,7 +39,7 @@ export const register = asyncHandler(async (req, res) => {
     fullName,
     codeforcesHandle,
     role: isFirstUser ? 'admin' : 'student',
-    isActive: true,
+    isActive: isFirstUser, // Only first user (admin) is active by default
     isCurrentMember: isFirstUser
   });
 
@@ -48,16 +48,17 @@ export const register = asyncHandler(async (req, res) => {
 
   res.status(201).json({
     success: true,
-    message: isFirstUser ? 'Admin account created successfully' : 'User registered successfully',
+    message: isFirstUser ? 'Admin account created successfully' : 'Usuario registrado exitosamente. Tu cuenta está pendiente de aprobación',
     data: {
       user: {
         id: user._id,
         username: user.username,
         email: user.email,
         fullName: user.fullName,
-        role: user.role
+        role: user.role,
+        isActive: user.isActive
       },
-      token
+      token: isFirstUser ? token : undefined // Only provide token for admin
     }
   });
 });
@@ -80,9 +81,10 @@ export const login = asyncHandler(async (req, res) => {
 
   // Check if user is active
   if (!user.isActive) {
-    return res.status(401).json({
+    return res.status(403).json({
       success: false,
-      message: 'Account is inactive'
+      message: 'Tu cuenta está pendiente de aprobación por un administrador',
+      code: 'ACCOUNT_PENDING_APPROVAL'
     });
   }
 
@@ -113,7 +115,9 @@ export const login = asyncHandler(async (req, res) => {
         email: user.email,
         fullName: user.fullName,
         role: user.role,
-        codeforcesHandle: user.codeforcesHandle
+        codeforcesHandle: user.codeforcesHandle,
+        isActive: user.isActive,
+        isCurrentMember: user.isCurrentMember
       },
       token
     }
