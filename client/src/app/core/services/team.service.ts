@@ -1,0 +1,108 @@
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { ApiService } from './api.service';
+
+export interface TeamMember {
+  userId: any;
+  role: 'leader' | 'member';
+  joinedAt: Date;
+}
+
+export interface TeamConfig {
+  _id: string;
+  name: string;
+  description: string;
+  coach?: any;
+  members: TeamMember[];
+  maxMembers: number;
+  settings: {
+    isPublic: boolean;
+    allowJoinRequests: boolean;
+    sharedRoadmap: boolean;
+    sharedCalendar: boolean;
+  };
+  statistics: {
+    totalProblemsSolved: number;
+    totalContests: number;
+    averageRating: number;
+  };
+  excalidrawRooms: Array<{
+    name: string;
+    roomId: string;
+    url: string;
+    createdAt: Date;
+  }>;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface TeamsResponse {
+  success: boolean;
+  count: number;
+  data: {
+    teams: TeamConfig[];
+  };
+}
+
+export interface TeamResponse {
+  success: boolean;
+  data: {
+    team: TeamConfig;
+  };
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class TeamService {
+  constructor(private api: ApiService) { }
+
+  /**
+   * Get all teams
+   */
+  getTeams(): Observable<TeamsResponse> {
+    return this.api.get<TeamsResponse>('/api/team');
+  }
+
+  /**
+   * Get single team by ID
+   */
+  getTeam(id: string): Observable<TeamResponse> {
+    return this.api.get<TeamResponse>(`/api/team/${id}`);
+  }
+
+  /**
+   * Create a new team
+   */
+  createTeam(team: Partial<TeamConfig>): Observable<TeamResponse> {
+    return this.api.post<TeamResponse>('/api/team', team);
+  }
+
+  /**
+   * Update existing team
+   */
+  updateTeam(id: string, team: Partial<TeamConfig>): Observable<TeamResponse> {
+    return this.api.put<TeamResponse>(`/api/team/${id}`, team);
+  }
+
+  /**
+   * Delete team
+   */
+  deleteTeam(id: string): Observable<any> {
+    return this.api.delete(`/api/team/${id}`);
+  }
+
+  /**
+   * Join a team
+   */
+  joinTeam(teamId: string): Observable<any> {
+    return this.api.post(`/api/team/${teamId}/join`, {});
+  }
+
+  /**
+   * Leave a team
+   */
+  leaveTeam(teamId: string): Observable<any> {
+    return this.api.post(`/api/team/${teamId}/leave`, {});
+  }
+}
