@@ -190,7 +190,7 @@ export class AdminDashboardComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        this.error = err.error?.error || err.error?.message || 'Error loading users';
+        this.error = err.error?.message || 'Error loading users';
         this.loading = false;
       }
     });

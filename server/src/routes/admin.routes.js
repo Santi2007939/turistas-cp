@@ -13,16 +13,8 @@ router.use(isAdmin);
 // @route   GET /api/admin/users
 // @access  Private/Admin
 router.get('/users', asyncHandler(async (req, res) => {
-  try {
-    const users = await User.find({}).select('-password');
-    res.status(200).json(users);
-  } catch (err) {
-    res.status(500).json({ 
-      success: false,
-      error: 'Error al obtener usuarios.', 
-      details: err.message 
-    });
-  }
+  const users = await User.find({}).select('-password');
+  res.status(200).json(users);
 }));
 
 export default router;
