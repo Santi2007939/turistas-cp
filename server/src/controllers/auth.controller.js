@@ -27,13 +27,20 @@ export const register = asyncHandler(async (req, res) => {
     });
   }
 
+  // Check if this is the first user
+  const firstUser = await User.findOne().lean();
+  const isFirstUser = !firstUser;
+
   // Create user
   const user = await User.create({
     username,
     email,
     password,
     fullName,
-    codeforcesHandle
+    codeforcesHandle,
+    role: isFirstUser ? 'admin' : 'student',
+    isActive: true,
+    isCurrentMember: isFirstUser
   });
 
   // Generate token
@@ -41,7 +48,7 @@ export const register = asyncHandler(async (req, res) => {
 
   res.status(201).json({
     success: true,
-    message: 'User registered successfully',
+    message: isFirstUser ? 'Admin account created successfully' : 'User registered successfully',
     data: {
       user: {
         id: user._id,
@@ -190,5 +197,19 @@ export const changePassword = asyncHandler(async (req, res) => {
   res.json({
     success: true,
     message: 'Password changed successfully'
+  });
+});
+
+// @desc    Check if users exist in database
+// @route   GET /api/auth/check-users
+// @access  Public
+export const checkUsers = asyncHandler(async (req, res) => {
+  const hasUsers = await User.findOne().lean();
+  
+  res.json({
+    success: true,
+    data: {
+      usersExist: !!hasUsers
+    }
   });
 });
