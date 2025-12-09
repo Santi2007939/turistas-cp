@@ -10,6 +10,8 @@ export interface User {
   fullName?: string;
   role: string;
   codeforcesHandle?: string;
+  isActive?: boolean;
+  isCurrentMember?: boolean;
   team?: any;
 }
 

@@ -18,6 +18,12 @@ import { AuthService } from '../../core/services/auth.service';
             Inicia sesión en tu cuenta
           </p>
         </div>
+
+        <!-- Success message from registration -->
+        <div *ngIf="successMessage" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
+          {{ successMessage }}
+        </div>
+
         <form class="mt-8 space-y-6" (ngSubmit)="onSubmit()">
           <div class="rounded-md shadow-sm -space-y-px">
             <div>
@@ -79,19 +85,33 @@ export class LoginComponent {
   };
   loading = false;
   error = '';
+  successMessage = '';
 
   constructor(
     private authService: AuthService,
     private router: Router
-  ) { }
+  ) {
+    // Check for success message from navigation state
+    const navigation = this.router.getCurrentNavigation();
+    const state = navigation?.extras?.state;
+    if (state && state['message']) {
+      this.successMessage = state['message'];
+    }
+  }
 
   onSubmit(): void {
     this.loading = true;
     this.error = '';
 
     this.authService.login(this.credentials).subscribe({
-      next: () => {
-        this.router.navigate(['/dashboard']);
+      next: (response) => {
+        const user = response.data.user;
+        // Redirect based on user role
+        if (user.role === 'admin') {
+          this.router.navigate(['/admin']);
+        } else {
+          this.router.navigate(['/dashboard']);
+        }
       },
       error: (err) => {
         this.error = err.error?.message || 'Error al iniciar sesión';

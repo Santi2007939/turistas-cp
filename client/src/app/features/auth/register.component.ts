@@ -148,8 +148,17 @@ export class RegisterComponent implements OnInit {
     this.error = '';
 
     this.authService.register(this.formData).subscribe({
-      next: () => {
-        this.router.navigate(['/dashboard']);
+      next: (response) => {
+        const user = response.data.user;
+        // If user is admin (first user), they're auto-logged in and redirected
+        if (user.role === 'admin') {
+          this.router.navigate(['/admin']);
+        } else {
+          // Student account created, show success and redirect to login
+          this.router.navigate(['/auth/login'], {
+            state: { message: response.message }
+          });
+        }
       },
       error: (err) => {
         this.error = err.error?.message || 'Error al registrarse';
