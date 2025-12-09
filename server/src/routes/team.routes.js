@@ -48,7 +48,7 @@ router.get('/:id', asyncHandler(async (req, res) => {
 // @desc    Create team
 // @route   POST /api/team
 // @access  Private/Coach/Admin
-router.post('/', authorize('coach', 'admin'), asyncHandler(async (req, res) => {
+router.post('/', authorize('admin'), asyncHandler(async (req, res) => {
   const teamData = {
     ...req.body,
     coach: req.user._id,
@@ -59,9 +59,6 @@ router.post('/', authorize('coach', 'admin'), asyncHandler(async (req, res) => {
   };
 
   const team = await TeamConfig.create(teamData);
-
-  // Update user's teamId
-  await User.findByIdAndUpdate(req.user._id, { teamId: team._id });
 
   res.status(201).json({
     success: true,
@@ -144,9 +141,6 @@ router.post('/:id/members', asyncHandler(async (req, res) => {
   team.members.push({ userId, role: 'member' });
   await team.save();
 
-  // Update user's teamId
-  await User.findByIdAndUpdate(userId, { teamId: team._id });
-
   res.json({
     success: true,
     message: 'Member added successfully',
@@ -178,9 +172,6 @@ router.delete('/:id/members/:userId', asyncHandler(async (req, res) => {
   team.members = team.members.filter(m => m.userId.toString() !== req.params.userId);
   await team.save();
 
-  // Remove teamId from user
-  await User.findByIdAndUpdate(req.params.userId, { teamId: null });
-
   res.json({
     success: true,
     message: 'Member removed successfully',
@@ -200,12 +191,6 @@ router.delete('/:id', authorize('admin'), asyncHandler(async (req, res) => {
       message: 'Team not found'
     });
   }
-
-  // Remove teamId from all members
-  await User.updateMany(
-    { teamId: team._id },
-    { $unset: { teamId: 1 } }
-  );
 
   await team.deleteOne();
 

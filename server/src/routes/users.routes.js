@@ -9,7 +9,7 @@ const router = express.Router();
 router.use(protect);
 
 // Routes
-router.get('/', authorize('admin', 'coach'), getUsers);
+router.get('/', authorize('admin'), getUsers);
 router.get('/:id', validateId(), getUser);
 router.put('/:id', authorize('admin'), validateId(), updateUser);
 router.delete('/:id', authorize('admin'), validateId(), deleteUser);

@@ -117,7 +117,7 @@ export const login = asyncHandler(async (req, res) => {
 // @route   GET /api/auth/me
 // @access  Private
 export const getMe = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id).populate('teamId', 'name');
+  const user = await User.findById(req.user._id);
 
   res.json({
     success: true,
@@ -129,7 +129,7 @@ export const getMe = asyncHandler(async (req, res) => {
         fullName: user.fullName,
         role: user.role,
         codeforcesHandle: user.codeforcesHandle,
-        team: user.teamId,
+        isCurrentMember: user.isCurrentMember,
         lastLogin: user.lastLogin,
         createdAt: user.createdAt
       }

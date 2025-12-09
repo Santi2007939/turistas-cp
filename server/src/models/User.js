@@ -35,16 +35,16 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['student', 'coach', 'admin'],
+    enum: ['student', 'admin'],
     default: 'student'
-  },
-  teamId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'TeamConfig'
   },
   isActive: {
     type: Boolean,
     default: true
+  },
+  isCurrentMember: {
+    type: Boolean,
+    default: false
   },
   lastLogin: {
     type: Date
