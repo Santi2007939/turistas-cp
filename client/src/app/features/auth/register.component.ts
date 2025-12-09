@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../core/services/auth.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
     selector: 'app-register',
@@ -15,7 +17,7 @@ import { AuthService } from '../../core/services/auth.service';
             🏔️ Turistas CP
           </h2>
           <p class="mt-2 text-center text-sm text-gray-600">
-            Crea tu cuenta
+            {{ usersExist ? 'Crea tu cuenta' : 'Crea la cuenta de administrador' }}
           </p>
         </div>
         <form class="mt-8 space-y-6" (ngSubmit)="onSubmit()">
@@ -67,7 +69,7 @@ import { AuthService } from '../../core/services/auth.service';
                 placeholder="Tu nombre completo"
               />
             </div>
-            <div>
+            <div *ngIf="usersExist">
               <label for="codeforcesHandle" class="block text-sm font-medium text-gray-700">Handle de Codeforces (opcional)</label>
               <input
                 id="codeforcesHandle"
@@ -106,7 +108,7 @@ import { AuthService } from '../../core/services/auth.service';
   `,
     styles: []
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
   formData = {
     username: '',
     email: '',
@@ -116,11 +118,29 @@ export class RegisterComponent {
   };
   loading = false;
   error = '';
+  usersExist = true;
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private http: HttpClient
   ) { }
+
+  ngOnInit(): void {
+    // Check if users exist in the database
+    this.http.get<{ success: boolean; data: { usersExist: boolean } }>(
+      `${environment.apiUrl}/api/auth/check-users`
+    ).subscribe({
+      next: (response) => {
+        this.usersExist = response.data.usersExist;
+      },
+      error: (err) => {
+        console.error('Error checking users:', err);
+        // Default to true on error
+        this.usersExist = true;
+      }
+    });
+  }
 
   onSubmit(): void {
     this.loading = true;
