@@ -67,6 +67,13 @@ export const updateUser = asyncHandler(async (req, res) => {
 export const updateUserStatus = asyncHandler(async (req, res) => {
   const { isActive } = req.body;
 
+  if (typeof isActive !== 'boolean') {
+    return res.status(400).json({
+      success: false,
+      message: 'isActive must be a boolean value'
+    });
+  }
+
   const user = await User.findById(req.params.id);
 
   if (!user) {
@@ -76,10 +83,8 @@ export const updateUserStatus = asyncHandler(async (req, res) => {
     });
   }
 
-  if (isActive !== undefined) {
-    user.isActive = isActive;
-    await user.save();
-  }
+  user.isActive = isActive;
+  await user.save();
 
   res.json({
     success: true,
@@ -94,6 +99,13 @@ export const updateUserStatus = asyncHandler(async (req, res) => {
 export const updateUserMember = asyncHandler(async (req, res) => {
   const { isCurrentMember } = req.body;
 
+  if (typeof isCurrentMember !== 'boolean') {
+    return res.status(400).json({
+      success: false,
+      message: 'isCurrentMember must be a boolean value'
+    });
+  }
+
   const user = await User.findById(req.params.id);
 
   if (!user) {
@@ -103,10 +115,8 @@ export const updateUserMember = asyncHandler(async (req, res) => {
     });
   }
 
-  if (isCurrentMember !== undefined) {
-    user.isCurrentMember = isCurrentMember;
-    await user.save();
-  }
+  user.isCurrentMember = isCurrentMember;
+  await user.save();
 
   res.json({
     success: true,
