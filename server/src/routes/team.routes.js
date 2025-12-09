@@ -47,7 +47,7 @@ router.get('/:id', asyncHandler(async (req, res) => {
 
 // @desc    Create team
 // @route   POST /api/team
-// @access  Private/Coach/Admin
+// @access  Private/Admin
 router.post('/', authorize('admin'), asyncHandler(async (req, res) => {
   const teamData = {
     ...req.body,
@@ -69,7 +69,7 @@ router.post('/', authorize('admin'), asyncHandler(async (req, res) => {
 
 // @desc    Update team
 // @route   PUT /api/team/:id
-// @access  Private/Coach/Admin
+// @access  Private/Team Owner/Admin
 router.put('/:id', asyncHandler(async (req, res) => {
   const team = await TeamConfig.findById(req.params.id);
 
@@ -80,7 +80,7 @@ router.put('/:id', asyncHandler(async (req, res) => {
     });
   }
 
-  // Check if user is coach or admin
+  // Check if user is team owner or admin
   if (team.coach.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
     return res.status(403).json({
       success: false,
@@ -102,7 +102,7 @@ router.put('/:id', asyncHandler(async (req, res) => {
 
 // @desc    Add member to team
 // @route   POST /api/team/:id/members
-// @access  Private/Coach/Admin
+// @access  Private/Team Owner/Admin
 router.post('/:id/members', asyncHandler(async (req, res) => {
   const { userId } = req.body;
   const team = await TeamConfig.findById(req.params.id);
@@ -114,7 +114,7 @@ router.post('/:id/members', asyncHandler(async (req, res) => {
     });
   }
 
-  // Check if user is coach or admin
+  // Check if user is team owner or admin
   if (team.coach.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
     return res.status(403).json({
       success: false,
@@ -150,7 +150,7 @@ router.post('/:id/members', asyncHandler(async (req, res) => {
 
 // @desc    Remove member from team
 // @route   DELETE /api/team/:id/members/:userId
-// @access  Private/Coach/Admin
+// @access  Private/Team Owner/Admin
 router.delete('/:id/members/:userId', asyncHandler(async (req, res) => {
   const team = await TeamConfig.findById(req.params.id);
 
@@ -161,7 +161,7 @@ router.delete('/:id/members/:userId', asyncHandler(async (req, res) => {
     });
   }
 
-  // Check if user is coach or admin
+  // Check if user is team owner or admin
   if (team.coach.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
     return res.status(403).json({
       success: false,
