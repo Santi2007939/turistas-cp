@@ -3,9 +3,15 @@ import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import { Theme } from './themes.service';
 
+export interface PopulatedUser {
+  _id: string;
+  username: string;
+  fullName?: string;
+}
+
 export interface PersonalNode {
   _id: string;
-  userId: string;
+  userId: string | PopulatedUser;
   themeId: Theme;
   status: 'not-started' | 'in-progress' | 'completed' | 'mastered';
   progress: number;
@@ -45,6 +51,20 @@ export class RoadmapService {
    */
   getRoadmap(): Observable<RoadmapResponse> {
     return this.api.get<RoadmapResponse>('/api/roadmap');
+  }
+
+  /**
+   * Get personal roadmap for a specific user
+   */
+  getPersonalRoadmap(userId: string): Observable<RoadmapResponse> {
+    return this.api.get<RoadmapResponse>(`/api/roadmap/personal/${userId}`);
+  }
+
+  /**
+   * Get other members' roadmaps
+   */
+  getMembersRoadmaps(userId: string): Observable<RoadmapResponse> {
+    return this.api.get<RoadmapResponse>(`/api/roadmap/members/${userId}`);
   }
 
   /**

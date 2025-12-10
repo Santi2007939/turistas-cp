@@ -8,6 +8,57 @@ const router = express.Router();
 // All routes require authentication
 router.use(protect);
 
+// @desc    Get personal roadmap
+// @route   GET /api/roadmap/personal/:userId
+// @access  Private
+router.get('/personal/:userId', asyncHandler(async (req, res) => {
+  const { userId } = req.params;
+  
+  // Users can only view their own personal roadmap
+  if (userId !== req.user._id.toString()) {
+    return res.status(403).json({
+      success: false,
+      message: 'Not authorized to view personal roadmap of other users'
+    });
+  }
+  
+  const personalRoadmap = await PersonalNode.find({ userId })
+    .populate('themeId')
+    .populate('problemsSolved');
+
+  res.json({
+    success: true,
+    count: personalRoadmap.length,
+    data: { roadmap: personalRoadmap }
+  });
+}));
+
+// @desc    Get other members' roadmaps
+// @route   GET /api/roadmap/members/:userId
+// @access  Private
+router.get('/members/:userId', asyncHandler(async (req, res) => {
+  const { userId } = req.params;
+  
+  // Verify the userId matches the authenticated user
+  if (userId !== req.user._id.toString()) {
+    return res.status(403).json({
+      success: false,
+      message: 'Not authorized to view members roadmaps from another user perspective'
+    });
+  }
+  
+  const memberRoadmaps = await PersonalNode.find({ userId: { $ne: userId } })
+    .populate('themeId')
+    .populate('problemsSolved')
+    .populate('userId', 'username fullName');
+
+  res.json({
+    success: true,
+    count: memberRoadmaps.length,
+    data: { roadmap: memberRoadmaps }
+  });
+}));
+
 // @desc    Get user roadmap
 // @route   GET /api/roadmap
 // @access  Private
@@ -29,6 +80,7 @@ router.get('/', asyncHandler(async (req, res) => {
 router.post('/', asyncHandler(async (req, res) => {
   const { themeId, status, progress, notes } = req.body;
 
+  // Users can only update their own roadmap
   const node = await PersonalNode.findOneAndUpdate(
     { userId: req.user._id, themeId },
     { status, progress, notes, lastPracticed: new Date() },

@@ -13,7 +13,6 @@ import roadmapRoutes from './routes/roadmap.routes.js';
 import problemsRoutes from './routes/problems.routes.js';
 import contestsRoutes from './routes/contests.routes.js';
 import calendarRoutes from './routes/calendar.routes.js';
-import teamRoutes from './routes/team.routes.js';
 import achievementsRoutes from './routes/achievements.routes.js';
 import integrationsRoutes from './routes/integrations.routes.js';
 
@@ -53,7 +52,6 @@ app.use('/api/roadmap', roadmapRoutes);
 app.use('/api/problems', problemsRoutes);
 app.use('/api/contests', contestsRoutes);
 app.use('/api/calendar', calendarRoutes);
-app.use('/api/team', teamRoutes);
 app.use('/api/achievements', achievementsRoutes);
 app.use('/api/integrations', integrationsRoutes);
 

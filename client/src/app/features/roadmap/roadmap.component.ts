@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { RoadmapService, PersonalNode } from '../../core/services/roadmap.service';
+import { RoadmapService, PersonalNode, PopulatedUser } from '../../core/services/roadmap.service';
 import { ThemesService, Theme } from '../../core/services/themes.service';
 
 @Component({
@@ -12,12 +12,25 @@ import { ThemesService, Theme } from '../../core/services/themes.service';
   template: `
     <div class="container mx-auto px-4 py-8">
       <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold text-gray-800">My Learning Roadmap</h1>
+        <h1 class="text-3xl font-bold text-gray-800">Roadmap</h1>
         <button 
+          *ngIf="selectedView === 'personal'"
           (click)="showAddThemeModal = true"
           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
           Add Theme to Roadmap
         </button>
+      </div>
+
+      <!-- Selector for roadmap view -->
+      <div class="mb-6 flex gap-4 items-center">
+        <label class="font-semibold text-gray-700">Ver:</label>
+        <select 
+          [(ngModel)]="selectedView"
+          (change)="onViewChange()"
+          class="border rounded px-4 py-2 bg-white">
+          <option value="personal">Mi roadmap</option>
+          <option value="members">Miembros</option>
+        </select>
       </div>
 
       <div *ngIf="loading" class="text-center py-8">
@@ -111,15 +124,22 @@ import { ThemesService, Theme } from '../../core/services/themes.service';
 
             <div class="flex gap-2 ml-4">
               <button 
+                *ngIf="selectedView === 'personal'"
                 (click)="editNode(node)"
                 class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm">
                 Update
               </button>
               <button 
+                *ngIf="selectedView === 'personal'"
                 (click)="deleteNode(node._id)"
                 class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">
                 Remove
               </button>
+              <span 
+                *ngIf="selectedView === 'members'"
+                class="text-sm text-gray-600 italic">
+                {{ getUserName(node) }}
+              </span>
             </div>
           </div>
         </div>
@@ -231,6 +251,8 @@ export class RoadmapComponent implements OnInit {
   showAddThemeModal = false;
   showUpdateModal = false;
   selectedThemeId = '';
+  selectedView: 'personal' | 'members' = 'personal';
+  currentUserId: string | null = null;
   editingNode: {
     _id: string;
     themeId: string;
@@ -242,18 +264,34 @@ export class RoadmapComponent implements OnInit {
   constructor(
     private roadmapService: RoadmapService,
     private themesService: ThemesService
-  ) {}
+  ) {
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      this.currentUserId = user.id;
+    }
+  }
 
   ngOnInit(): void {
     this.loadRoadmap();
     this.loadThemes();
   }
 
+  onViewChange(): void {
+    this.loadRoadmap();
+  }
+
   loadRoadmap(): void {
+    if (!this.currentUserId) return;
+
     this.loading = true;
     this.error = null;
     
-    this.roadmapService.getRoadmap().subscribe({
+    const observable = this.selectedView === 'personal'
+      ? this.roadmapService.getPersonalRoadmap(this.currentUserId)
+      : this.roadmapService.getMembersRoadmaps(this.currentUserId);
+
+    observable.subscribe({
       next: (response) => {
         this.nodes = response.data.roadmap;
         this.loading = false;
@@ -351,5 +389,13 @@ export class RoadmapComponent implements OnInit {
 
   getCountByStatus(status: string): number {
     return this.nodes.filter(node => node.status === status).length;
+  }
+
+  getUserName(node: PersonalNode): string {
+    if (typeof node.userId === 'object' && node.userId !== null) {
+      const user = node.userId as unknown as PopulatedUser;
+      return user.username || 'Miembro';
+    }
+    return 'Miembro';
   }
 }
