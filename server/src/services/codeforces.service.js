@@ -129,15 +129,16 @@ class CodeforcesService {
       // Examples:
       // https://codeforces.com/problemset/problem/1234/A
       // https://codeforces.com/contest/1234/problem/A
-      const urlPattern = /codeforces\.com\/(problemset|contest)\/(?:problem\/)?(\d+)\/([A-Z]\d?)/i;
+      // https://codeforces.com/gym/123456/problem/A
+      const urlPattern = /codeforces\.com\/(?:problemset\/problem|contest|gym)\/(\d+)\/([A-Za-z]\d?)/i;
       const match = url.match(urlPattern);
 
       if (!match) {
         throw new Error('Invalid Codeforces URL format');
       }
 
-      const contestId = match[2];
-      const index = match[3];
+      const contestId = match[1];
+      const index = match[2];
 
       // Fetch problem details from API
       const response = await axios.get(`${CODEFORCES_API}/problemset.problems`);
@@ -163,7 +164,7 @@ class CodeforcesService {
         rating: problem.rating || null,
         tags: problem.tags || [],
         timeLimit: problem.timeLimit ? `${problem.timeLimit / 1000}s` : null,
-        memoryLimit: problem.memoryLimit ? `${problem.memoryLimit / 1024}MB` : null
+        memoryLimit: problem.memoryLimit ? `${problem.memoryLimit}MB` : null
       };
     } catch (error) {
       console.error('Codeforces getProblemFromUrl error:', error.message);
