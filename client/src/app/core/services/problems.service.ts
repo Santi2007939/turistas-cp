@@ -2,6 +2,12 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 
+export interface PopulatedUser {
+  _id: string;
+  username: string;
+  fullName?: string;
+}
+
 export interface Problem {
   _id: string;
   title: string;
@@ -17,7 +23,7 @@ export interface Problem {
   memoryLimit?: string;
   addedBy: any;
   owner: 'personal' | 'team';
-  createdBy: any;
+  createdBy: string | PopulatedUser;
   isPublic: boolean;
   solveCount: number;
   createdAt: Date;

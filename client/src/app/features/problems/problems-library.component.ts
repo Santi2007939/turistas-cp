@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { ProblemsService, Problem } from '../../core/services/problems.service';
+import { ProblemsService, Problem, PopulatedUser } from '../../core/services/problems.service';
 import { AuthService, User } from '../../core/services/auth.service';
 
 @Component({
@@ -109,7 +109,7 @@ import { AuthService, User } from '../../core/services/auth.service';
           </div>
 
           <div *ngIf="problem.createdBy" class="mt-3 text-xs text-gray-500">
-            Creado por: {{ problem.createdBy.username || 'Usuario' }}
+            Creado por: {{ getCreatorName(problem) }}
           </div>
         </div>
       </div>
@@ -318,13 +318,20 @@ export class ProblemsLibraryComponent implements OnInit {
     if (problem.owner === 'personal') {
       // Check if createdBy is an object with _id or a string
       const createdById = typeof problem.createdBy === 'object' && problem.createdBy !== null
-        ? (problem.createdBy as any)._id
+        ? (problem.createdBy as PopulatedUser)._id
         : problem.createdBy;
       return createdById === this.currentUser.id;
     }
     
     // Anyone can edit team problems
     return problem.owner === 'team';
+  }
+
+  getCreatorName(problem: Problem): string {
+    if (typeof problem.createdBy === 'object' && problem.createdBy !== null) {
+      return (problem.createdBy as PopulatedUser).username || 'Usuario';
+    }
+    return 'Usuario';
   }
 
   editProblem(problem: Problem): void {
