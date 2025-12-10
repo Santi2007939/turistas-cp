@@ -6,6 +6,7 @@ import { AuthService, User } from '../../core/services/auth.service';
 import { environment } from '../../../environments/environment';
 
 interface UserManagement extends User {
+  _id: string;
   createdAt?: string;
   lastLogin?: string;
 }
@@ -118,7 +119,7 @@ interface UserManagement extends User {
                   <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                     <button
                       *ngIf="!user.isActive"
-                      (click)="approveUser(user.id)"
+                      (click)="approveUser(user._id)"
                       class="text-green-600 hover:text-green-900"
                       title="Approve user"
                     >
@@ -126,7 +127,7 @@ interface UserManagement extends User {
                     </button>
                     <button
                       *ngIf="user.isActive && user.role !== 'admin'"
-                      (click)="deactivateUser(user.id)"
+                      (click)="deactivateUser(user._id)"
                       class="text-red-600 hover:text-red-900"
                       title="Deactivate user"
                     >
@@ -134,7 +135,7 @@ interface UserManagement extends User {
                     </button>
                     <button
                       *ngIf="user.role !== 'admin'"
-                      (click)="toggleCurrentMember(user.id, !user.isCurrentMember)"
+                      (click)="toggleCurrentMember(user._id, !user.isCurrentMember)"
                       [class.text-blue-600]="!user.isCurrentMember"
                       [class.hover:text-blue-900]="!user.isCurrentMember"
                       [class.text-gray-600]="user.isCurrentMember"
@@ -197,6 +198,9 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   approveUser(userId: string): void {
+    console.log("ID que intento enviar:", userId);
+    console.log("Tipo de dato:", typeof userId);
+    
     this.error = '';
     this.successMessage = '';
     
