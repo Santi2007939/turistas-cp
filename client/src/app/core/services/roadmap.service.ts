@@ -48,6 +48,20 @@ export class RoadmapService {
   }
 
   /**
+   * Get personal roadmap for a specific user
+   */
+  getPersonalRoadmap(userId: string): Observable<RoadmapResponse> {
+    return this.api.get<RoadmapResponse>(`/api/roadmap/personal/${userId}`);
+  }
+
+  /**
+   * Get other members' roadmaps
+   */
+  getMembersRoadmaps(userId: string): Observable<RoadmapResponse> {
+    return this.api.get<RoadmapResponse>(`/api/roadmap/members/${userId}`);
+  }
+
+  /**
    * Create or update a roadmap node
    */
   updateNode(data: {

@@ -7,8 +7,7 @@ import { AdminDashboardComponent } from './features/admin/admin-dashboard.compon
 import { ThemesListComponent } from './features/themes/themes-list.component';
 import { ThemeDetailComponent } from './features/themes/theme-detail.component';
 import { RoadmapComponent } from './features/roadmap/roadmap.component';
-import { TeamListComponent } from './features/team/team-list.component';
-import { TeamDetailComponent } from './features/team/team-detail.component';
+import { ProblemsLibraryComponent } from './features/problems/problems-library.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -19,7 +18,6 @@ export const routes: Routes = [
   { path: 'themes', component: ThemesListComponent, canActivate: [AuthGuard] },
   { path: 'themes/:id', component: ThemeDetailComponent, canActivate: [AuthGuard] },
   { path: 'roadmap', component: RoadmapComponent, canActivate: [AuthGuard] },
-  { path: 'team', component: TeamListComponent, canActivate: [AuthGuard] },
-  { path: 'team/:id', component: TeamDetailComponent, canActivate: [AuthGuard] },
+  { path: 'problems', component: ProblemsLibraryComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '/dashboard' }
 ];
