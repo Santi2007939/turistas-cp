@@ -136,9 +136,9 @@ import { ThemesService, Theme } from '../../core/services/themes.service';
                 Remove
               </button>
               <span 
-                *ngIf="selectedView === 'members' && node.userId"
+                *ngIf="selectedView === 'members'"
                 class="text-sm text-gray-600 italic">
-                {{ (node.userId as any)?.username || 'Miembro' }}
+                {{ getUserName(node) }}
               </span>
             </div>
           </div>
@@ -389,5 +389,12 @@ export class RoadmapComponent implements OnInit {
 
   getCountByStatus(status: string): number {
     return this.nodes.filter(node => node.status === status).length;
+  }
+
+  getUserName(node: PersonalNode): string {
+    if (typeof node.userId === 'object' && node.userId !== null) {
+      return (node.userId as any).username || 'Miembro';
+    }
+    return 'Miembro';
   }
 }
