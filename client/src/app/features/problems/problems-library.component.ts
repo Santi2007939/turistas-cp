@@ -466,7 +466,7 @@ export class ProblemsLibraryComponent implements OnInit {
       url: problem.url || '',
       difficulty: problem.difficulty,
       owner: problem.owner,
-      tagsInput: problem.tags.join(', '),
+      tagsInput: (problem.tags || []).join(', '),
       rating: problem.rating || null,
       status: problem.status,
       notes: problem.notes || ''
@@ -485,9 +485,9 @@ export class ProblemsLibraryComponent implements OnInit {
         const problemData = response.data.problem;
         this.newProblem.title = problemData.title;
         this.newProblem.platform = problemData.platform;
-        this.newProblem.url = problemData.url;
-        this.newProblem.rating = problemData.rating;
-        this.newProblem.tagsInput = problemData.tags.join(', ');
+        this.newProblem.url = problemData.url || '';
+        this.newProblem.rating = problemData.rating || null;
+        this.newProblem.tagsInput = (problemData.tags || []).join(', ');
         this.fetchingCodeforces = false;
       },
       error: (err) => {
