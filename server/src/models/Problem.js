@@ -70,6 +70,15 @@ const problemSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  status: {
+    type: String,
+    enum: ['pending', 'ac', 'wa'],
+    default: 'pending'
+  },
+  notes: {
+    type: String,
+    trim: true
+  },
   createdAt: {
     type: Date,
     default: Date.now
