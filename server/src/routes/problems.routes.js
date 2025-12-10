@@ -13,6 +13,15 @@ router.use(protect);
 // @access  Private
 router.get('/personal/:userId', asyncHandler(async (req, res) => {
   const { userId } = req.params;
+  
+  // Users can only view their own personal problems
+  if (userId !== req.user._id.toString()) {
+    return res.status(403).json({
+      success: false,
+      message: 'Not authorized to view personal problems of other users'
+    });
+  }
+  
   const personalProblems = await Problem.find({ owner: 'personal', createdBy: userId })
     .populate('themes addedBy createdBy', 'name username');
 
@@ -42,6 +51,15 @@ router.get('/team', asyncHandler(async (req, res) => {
 // @access  Private
 router.get('/members/:userId', asyncHandler(async (req, res) => {
   const { userId } = req.params;
+  
+  // Verify the userId matches the authenticated user
+  if (userId !== req.user._id.toString()) {
+    return res.status(403).json({
+      success: false,
+      message: 'Not authorized to view members problems from another user perspective'
+    });
+  }
+  
   const memberProblems = await Problem.find({ owner: 'personal', createdBy: { $ne: userId } })
     .populate('themes addedBy createdBy', 'name username');
 

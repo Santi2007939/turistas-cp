@@ -316,8 +316,11 @@ export class ProblemsLibraryComponent implements OnInit {
     
     // Can edit personal problems created by user or team problems
     if (problem.owner === 'personal') {
-      return problem.createdBy?._id === this.currentUser.id || 
-             problem.createdBy?.toString() === this.currentUser.id;
+      // Check if createdBy is an object with _id or a string
+      const createdById = typeof problem.createdBy === 'object' && problem.createdBy !== null
+        ? (problem.createdBy as any)._id
+        : problem.createdBy;
+      return createdById === this.currentUser.id;
     }
     
     // Anyone can edit team problems

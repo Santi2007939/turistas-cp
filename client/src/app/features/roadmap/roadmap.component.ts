@@ -5,6 +5,12 @@ import { FormsModule } from '@angular/forms';
 import { RoadmapService, PersonalNode } from '../../core/services/roadmap.service';
 import { ThemesService, Theme } from '../../core/services/themes.service';
 
+interface PopulatedUser {
+  _id: string;
+  username: string;
+  fullName?: string;
+}
+
 @Component({
   selector: 'app-roadmap',
   standalone: true,
@@ -393,7 +399,8 @@ export class RoadmapComponent implements OnInit {
 
   getUserName(node: PersonalNode): string {
     if (typeof node.userId === 'object' && node.userId !== null) {
-      return (node.userId as any).username || 'Miembro';
+      const user = node.userId as unknown as PopulatedUser;
+      return user.username || 'Miembro';
     }
     return 'Miembro';
   }
