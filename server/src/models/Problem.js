@@ -53,6 +53,15 @@ const problemSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
+  owner: {
+    type: String,
+    enum: ['personal', 'team'],
+    default: 'team'
+  },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
   isPublic: {
     type: Boolean,
     default: true
