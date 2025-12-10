@@ -13,6 +13,15 @@ router.use(protect);
 // @access  Private
 router.get('/personal/:userId', asyncHandler(async (req, res) => {
   const { userId } = req.params;
+  
+  // Users can only view their own personal roadmap
+  if (userId !== req.user._id.toString()) {
+    return res.status(403).json({
+      success: false,
+      message: 'Not authorized to view personal roadmap of other users'
+    });
+  }
+  
   const personalRoadmap = await PersonalNode.find({ userId })
     .populate('themeId')
     .populate('problemsSolved');
@@ -29,6 +38,15 @@ router.get('/personal/:userId', asyncHandler(async (req, res) => {
 // @access  Private
 router.get('/members/:userId', asyncHandler(async (req, res) => {
   const { userId } = req.params;
+  
+  // Verify the userId matches the authenticated user
+  if (userId !== req.user._id.toString()) {
+    return res.status(403).json({
+      success: false,
+      message: 'Not authorized to view members roadmaps from another user perspective'
+    });
+  }
+  
   const memberRoadmaps = await PersonalNode.find({ userId: { $ne: userId } })
     .populate('themeId')
     .populate('problemsSolved')
