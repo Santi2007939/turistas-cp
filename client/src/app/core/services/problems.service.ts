@@ -26,6 +26,8 @@ export interface Problem {
   createdBy: string | PopulatedUser;
   isPublic: boolean;
   solveCount: number;
+  status: 'pending' | 'ac' | 'wa';
+  notes?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -112,5 +114,12 @@ export class ProblemsService {
    */
   deleteProblem(id: string): Observable<any> {
     return this.api.delete(`/api/problems/${id}`);
+  }
+
+  /**
+   * Fetch problem data from Codeforces URL
+   */
+  fetchCodeforcesData(url: string): Observable<ProblemResponse> {
+    return this.api.post<ProblemResponse>('/api/problems/fetch-codeforces', { url });
   }
 }

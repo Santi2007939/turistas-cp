@@ -2,11 +2,34 @@ import express from 'express';
 import Problem from '../models/Problem.js';
 import { protect } from '../middlewares/auth.js';
 import { asyncHandler } from '../middlewares/error.js';
+import codeforcesService from '../services/codeforces.service.js';
 
 const router = express.Router();
 
 // All routes require authentication
 router.use(protect);
+
+// @desc    Fetch problem data from Codeforces URL
+// @route   POST /api/problems/fetch-codeforces
+// @access  Private
+router.post('/fetch-codeforces', asyncHandler(async (req, res) => {
+  const { url } = req.body;
+
+  if (!url) {
+    return res.status(400).json({
+      success: false,
+      message: 'URL is required'
+    });
+  }
+
+  const problemData = await codeforcesService.getProblemFromUrl(url);
+
+  res.json({
+    success: true,
+    message: 'Problem data fetched successfully',
+    data: { problem: problemData }
+  });
+}));
 
 // @desc    Get personal problems
 // @route   GET /api/problems/personal/:userId
