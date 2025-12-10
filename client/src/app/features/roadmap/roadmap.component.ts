@@ -2,14 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { RoadmapService, PersonalNode } from '../../core/services/roadmap.service';
+import { RoadmapService, PersonalNode, PopulatedUser } from '../../core/services/roadmap.service';
 import { ThemesService, Theme } from '../../core/services/themes.service';
-
-interface PopulatedUser {
-  _id: string;
-  username: string;
-  fullName?: string;
-}
 
 @Component({
   selector: 'app-roadmap',

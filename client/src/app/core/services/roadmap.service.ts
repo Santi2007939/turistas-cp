@@ -3,9 +3,15 @@ import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import { Theme } from './themes.service';
 
+export interface PopulatedUser {
+  _id: string;
+  username: string;
+  fullName?: string;
+}
+
 export interface PersonalNode {
   _id: string;
-  userId: string;
+  userId: string | PopulatedUser;
   themeId: Theme;
   status: 'not-started' | 'in-progress' | 'completed' | 'mastered';
   progress: number;
