@@ -8,6 +8,50 @@ const router = express.Router();
 // All routes require authentication
 router.use(protect);
 
+// @desc    Get personal problems
+// @route   GET /api/problems/personal/:userId
+// @access  Private
+router.get('/personal/:userId', asyncHandler(async (req, res) => {
+  const { userId } = req.params;
+  const personalProblems = await Problem.find({ owner: 'personal', createdBy: userId })
+    .populate('themes addedBy createdBy', 'name username');
+
+  res.json({
+    success: true,
+    count: personalProblems.length,
+    data: { problems: personalProblems }
+  });
+}));
+
+// @desc    Get team problems
+// @route   GET /api/problems/team
+// @access  Private
+router.get('/team', asyncHandler(async (req, res) => {
+  const teamProblems = await Problem.find({ owner: 'team' })
+    .populate('themes addedBy createdBy', 'name username');
+
+  res.json({
+    success: true,
+    count: teamProblems.length,
+    data: { problems: teamProblems }
+  });
+}));
+
+// @desc    Get other members' problems
+// @route   GET /api/problems/members/:userId
+// @access  Private
+router.get('/members/:userId', asyncHandler(async (req, res) => {
+  const { userId } = req.params;
+  const memberProblems = await Problem.find({ owner: 'personal', createdBy: { $ne: userId } })
+    .populate('themes addedBy createdBy', 'name username');
+
+  res.json({
+    success: true,
+    count: memberProblems.length,
+    data: { problems: memberProblems }
+  });
+}));
+
 // @desc    Get all problems
 // @route   GET /api/problems
 // @access  Private
@@ -53,7 +97,8 @@ router.get('/:id', asyncHandler(async (req, res) => {
 router.post('/', asyncHandler(async (req, res) => {
   const problemData = {
     ...req.body,
-    addedBy: req.user._id
+    addedBy: req.user._id,
+    createdBy: req.user._id
   };
 
   const problem = await Problem.create(problemData);
@@ -75,6 +120,14 @@ router.put('/:id', asyncHandler(async (req, res) => {
     return res.status(404).json({
       success: false,
       message: 'Problem not found'
+    });
+  }
+
+  // Check edit permissions: only personal problems owned by user or team problems can be edited
+  if (problem.owner === 'personal' && problem.createdBy.toString() !== req.user._id.toString()) {
+    return res.status(403).json({
+      success: false,
+      message: 'Not authorized to edit this problem'
     });
   }
 
