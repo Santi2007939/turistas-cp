@@ -117,6 +117,59 @@ class CodeforcesService {
       throw new Error(`Failed to fetch problem statistics: ${error.message}`);
     }
   }
+
+  /**
+   * Extract problem information from Codeforces URL
+   * @param {string} url - Codeforces problem URL
+   * @returns {Promise<object>} Problem data including name, rating, tags
+   */
+  async getProblemFromUrl(url) {
+    try {
+      // Parse URL to extract contestId and index
+      // Examples:
+      // https://codeforces.com/problemset/problem/1234/A
+      // https://codeforces.com/contest/1234/problem/A
+      const urlPattern = /codeforces\.com\/(problemset|contest)\/(?:problem\/)?(\d+)\/([A-Z]\d?)/i;
+      const match = url.match(urlPattern);
+
+      if (!match) {
+        throw new Error('Invalid Codeforces URL format');
+      }
+
+      const contestId = match[2];
+      const index = match[3];
+
+      // Fetch problem details from API
+      const response = await axios.get(`${CODEFORCES_API}/problemset.problems`);
+
+      if (response.data.status !== 'OK') {
+        throw new Error(response.data.comment || 'Failed to fetch problems');
+      }
+
+      const problem = response.data.result.problems.find(
+        p => p.contestId === parseInt(contestId) && p.index === index
+      );
+
+      if (!problem) {
+        throw new Error('Problem not found in Codeforces database');
+      }
+
+      // Return formatted problem data
+      return {
+        title: `${problem.contestId}${problem.index} - ${problem.name}`,
+        platform: 'codeforces',
+        platformId: `${problem.contestId}${problem.index}`,
+        url: `https://codeforces.com/problemset/problem/${problem.contestId}/${problem.index}`,
+        rating: problem.rating || null,
+        tags: problem.tags || [],
+        timeLimit: problem.timeLimit ? `${problem.timeLimit / 1000}s` : null,
+        memoryLimit: problem.memoryLimit ? `${problem.memoryLimit / 1024}MB` : null
+      };
+    } catch (error) {
+      console.error('Codeforces getProblemFromUrl error:', error.message);
+      throw new Error(`Failed to fetch problem from URL: ${error.message}`);
+    }
+  }
 }
 
 export default new CodeforcesService();
