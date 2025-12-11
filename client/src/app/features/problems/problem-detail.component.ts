@@ -12,8 +12,25 @@ import { AuthService } from '../../core/services/auth.service';
   imports: [CommonModule, RouterModule, FormsModule],
   template: `
     <div class="min-h-screen bg-gray-50">
+      <!-- Navigation -->
+      <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex justify-between h-16">
+            <div class="flex items-center">
+              <h1 class="text-2xl font-bold text-blue-600">🏔️ Turistas CP</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+              <a routerLink="/dashboard" class="text-gray-700 hover:text-blue-600">Dashboard</a>
+              <a routerLink="/themes" class="text-gray-700 hover:text-blue-600">Themes</a>
+              <a routerLink="/roadmap" class="text-gray-700 hover:text-blue-600">Roadmap</a>
+              <a routerLink="/problems" class="text-gray-700 hover:text-blue-600 font-semibold">Problems</a>
+            </div>
+          </div>
+        </div>
+      </nav>
+
       <!-- Header with back button -->
-      <div class="bg-white border-b sticky top-0 z-10">
+      <div class="bg-white border-b">
         <div class="max-w-5xl mx-auto px-6 py-4">
           <button 
             (click)="goBack()"
@@ -237,27 +254,7 @@ import { AuthService } from '../../core/services/auth.service';
             </div>
           </div>
 
-          <!-- Notes Section -->
-          <div class="bg-white rounded-lg shadow-sm p-8 border">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6">📝 Notas</h2>
-            
-            <div *ngIf="canEdit" class="space-y-4">
-              <textarea
-                [(ngModel)]="problem.notes"
-                (blur)="updateNotes()"
-                rows="4"
-                class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Notas técnicas o estratégicas..."></textarea>
-            </div>
 
-            <div *ngIf="!canEdit && problem.notes" class="prose max-w-none">
-              <p class="text-gray-700 leading-relaxed whitespace-pre-wrap">{{ problem.notes }}</p>
-            </div>
-
-            <div *ngIf="!canEdit && !problem.notes" class="text-gray-500 italic">
-              No hay notas disponibles.
-            </div>
-          </div>
         </div>
       </div>
 
@@ -722,17 +719,5 @@ export class ProblemDetailComponent implements OnInit {
     });
   }
 
-  updateNotes(): void {
-    if (!this.problem) return;
 
-    this.problemsService.updateProblem(this.problem._id, { notes: this.problem.notes }).subscribe({
-      next: () => {
-        // Notes updated successfully
-      },
-      error: (err) => {
-        this.error = 'Error al actualizar notas.';
-        console.error('Error updating notes:', err);
-      }
-    });
-  }
 }
