@@ -38,9 +38,40 @@ const problemSchema = new mongoose.Schema({
     trim: true
   }],
   themes: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Theme'
+    themeId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Theme',
+      required: true
+    },
+    subthemes: [{
+      type: String,
+      trim: true
+    }]
   }],
+  metacognition: [{
+    time: {
+      type: Number,
+      required: true,
+      min: 0
+    },
+    description: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now
+    }
+  }],
+  takeaways: [{
+    type: String,
+    trim: true
+  }],
+  analysis: {
+    type: String,
+    trim: true
+  },
   timeLimit: {
     type: String,
     trim: true

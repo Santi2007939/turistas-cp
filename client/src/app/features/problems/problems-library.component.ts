@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProblemsService, Problem, PopulatedUser } from '../../core/services/problems.service';
 import { AuthService, User } from '../../core/services/auth.service';
+import { ThemesService, Theme } from '../../core/services/themes.service';
 
 @Component({
   selector: 'app-problems-library',
@@ -138,11 +139,16 @@ import { AuthService, User } from '../../core/services/auth.service';
           <!-- Actions -->
           <div class="flex gap-2 mt-4">
             <a 
+              [routerLink]="['/problems', problem._id]"
+              class="flex-1 bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded text-sm text-center">
+              Ver Detalles
+            </a>
+            <a 
               *ngIf="problem.url"
               [href]="problem.url" 
               target="_blank"
-              class="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm text-center">
-              Ver Problema
+              class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded text-sm">
+              🔗
             </a>
             <button 
               *ngIf="canEdit(problem)"
@@ -279,6 +285,56 @@ import { AuthService, User } from '../../core/services/auth.service';
               </select>
             </div>
 
+            <!-- Themes Section -->
+            <div class="border rounded p-4 bg-gray-50">
+              <label class="block text-gray-700 text-sm font-bold mb-3">Temas y Subtemas</label>
+              
+              <div class="space-y-3">
+                <div *ngFor="let themeAssoc of newProblem.themes; let i = index" class="border rounded p-3 bg-white">
+                  <div class="flex justify-between items-start mb-2">
+                    <div class="flex-1">
+                      <select 
+                        [(ngModel)]="themeAssoc.themeId"
+                        (change)="onModalThemeChange(i)"
+                        class="w-full border rounded px-3 py-2">
+                        <option value="">Seleccionar tema...</option>
+                        <option *ngFor="let theme of availableThemes" [value]="theme._id">
+                          {{ theme.name }}
+                        </option>
+                      </select>
+                    </div>
+                    <button 
+                      (click)="removeModalTheme(i)"
+                      class="ml-2 text-red-600 hover:text-red-800">
+                      ✕
+                    </button>
+                  </div>
+
+                  <div *ngIf="themeAssoc.themeId && getModalThemeSubthemes(themeAssoc.themeId).length > 0" class="mt-2">
+                    <label class="block text-xs text-gray-600 mb-2">Subtemas:</label>
+                    <div class="space-y-1">
+                      <label 
+                        *ngFor="let subtheme of getModalThemeSubthemes(themeAssoc.themeId)"
+                        class="flex items-center gap-2 text-sm">
+                        <input 
+                          type="checkbox"
+                          [checked]="isModalSubthemeSelected(i, subtheme.name)"
+                          (change)="toggleModalSubtheme(i, subtheme.name)"
+                          class="rounded">
+                        <span>{{ subtheme.name }}</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <button 
+                  (click)="addModalThemeAssociation()"
+                  class="w-full border-2 border-dashed border-gray-300 rounded py-2 text-gray-600 hover:border-blue-500 hover:text-blue-500 transition-colors text-sm">
+                  + Agregar Tema
+                </button>
+              </div>
+            </div>
+
             <!-- Optional fields collapsed -->
             <details class="border rounded p-3">
               <summary class="cursor-pointer font-semibold text-gray-700">Campos Opcionales</summary>
@@ -361,6 +417,7 @@ export class ProblemsLibraryComponent implements OnInit {
     rating: number | null;
     status: string;
     notes: string;
+    themes: any[];
   } = {
     title: '',
     description: '',
@@ -371,15 +428,18 @@ export class ProblemsLibraryComponent implements OnInit {
     tagsInput: '',
     rating: null,
     status: 'pending',
-    notes: ''
+    notes: '',
+    themes: []
   };
   
   fetchingCodeforces = false;
   editingProblem: Problem | null = null;
+  availableThemes: Theme[] = [];
 
   constructor(
     private problemsService: ProblemsService,
-    private authService: AuthService
+    private authService: AuthService,
+    private themesService: ThemesService
   ) {}
 
   ngOnInit(): void {
@@ -387,6 +447,18 @@ export class ProblemsLibraryComponent implements OnInit {
       this.currentUser = user;
       if (user) {
         this.loadProblems();
+        this.loadThemes();
+      }
+    });
+  }
+
+  loadThemes(): void {
+    this.themesService.getThemes().subscribe({
+      next: (response) => {
+        this.availableThemes = response.data.themes;
+      },
+      error: (err) => {
+        console.error('Error loading themes:', err);
       }
     });
   }
@@ -469,7 +541,8 @@ export class ProblemsLibraryComponent implements OnInit {
       tagsInput: (problem.tags || []).join(', '),
       rating: problem.rating || null,
       status: problem.status,
-      notes: problem.notes || ''
+      notes: problem.notes || '',
+      themes: problem.themes ? JSON.parse(JSON.stringify(problem.themes)) : []
     };
     this.showAddProblemModal = true;
   }
@@ -501,6 +574,9 @@ export class ProblemsLibraryComponent implements OnInit {
   saveProblem(): void {
     if (!this.newProblem.title) return;
 
+    // Filter out themes with no themeId selected
+    const validThemes = this.newProblem.themes.filter(t => t.themeId);
+
     const problemData: any = {
       title: this.newProblem.title,
       description: this.newProblem.description,
@@ -511,6 +587,7 @@ export class ProblemsLibraryComponent implements OnInit {
       rating: this.newProblem.rating,
       status: this.newProblem.status,
       notes: this.newProblem.notes,
+      themes: validThemes,
       tags: this.newProblem.tagsInput 
         ? this.newProblem.tagsInput.split(',').map(t => t.trim()).filter(t => t)
         : []
@@ -593,7 +670,44 @@ export class ProblemsLibraryComponent implements OnInit {
       tagsInput: '',
       rating: null,
       status: 'pending',
-      notes: ''
+      notes: '',
+      themes: []
     };
+  }
+
+  // Theme management methods for modal
+  getModalThemeSubthemes(themeId: string): any[] {
+    const theme = this.availableThemes.find(t => t._id === themeId);
+    return theme?.subthemes || [];
+  }
+
+  isModalSubthemeSelected(themeIndex: number, subthemeName: string): boolean {
+    return this.newProblem.themes[themeIndex]?.subthemes?.includes(subthemeName) || false;
+  }
+
+  toggleModalSubtheme(themeIndex: number, subthemeName: string): void {
+    if (!this.newProblem.themes[themeIndex].subthemes) {
+      this.newProblem.themes[themeIndex].subthemes = [];
+    }
+    
+    const index = this.newProblem.themes[themeIndex].subthemes.indexOf(subthemeName);
+    if (index > -1) {
+      this.newProblem.themes[themeIndex].subthemes.splice(index, 1);
+    } else {
+      this.newProblem.themes[themeIndex].subthemes.push(subthemeName);
+    }
+  }
+
+  onModalThemeChange(index: number): void {
+    // Reset subthemes when theme changes
+    this.newProblem.themes[index].subthemes = [];
+  }
+
+  addModalThemeAssociation(): void {
+    this.newProblem.themes.push({ themeId: '', subthemes: [] });
+  }
+
+  removeModalTheme(index: number): void {
+    this.newProblem.themes.splice(index, 1);
   }
 }

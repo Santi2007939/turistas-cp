@@ -2,6 +2,12 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 
+export interface Subtheme {
+  name: string;
+  description?: string;
+  _id?: string;
+}
+
 export interface Theme {
   _id: string;
   name: string;
@@ -9,6 +15,7 @@ export interface Theme {
   category: 'algorithms' | 'data-structures' | 'math' | 'strings' | 'graph' | 'dp' | 'greedy' | 'geometry' | 'other';
   difficulty: 'beginner' | 'intermediate' | 'advanced' | 'expert';
   tags: string[];
+  subthemes: Subtheme[];
   resources: Array<{
     title: string;
     url: string;
