@@ -98,7 +98,7 @@ const problemSchema = new mongoose.Schema({
 });
 
 // Index for searching problems
-problemSchema.index({ title: 'text', tags: 'text' });
+problemSchema.index({ title: 'text' });
 problemSchema.index({ platform: 1, platformId: 1 }, { unique: true, sparse: true });
 
 const Problem = mongoose.model('Problem', problemSchema);

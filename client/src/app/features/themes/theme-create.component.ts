@@ -229,8 +229,6 @@ export class ThemeCreateComponent {
   theme: Partial<Theme> = {
     name: '',
     description: '',
-    category: undefined,
-    difficulty: undefined,
     tags: [],
     subthemes: [],
     resources: [],
