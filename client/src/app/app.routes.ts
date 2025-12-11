@@ -6,6 +6,7 @@ import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { AdminDashboardComponent } from './features/admin/admin-dashboard.component';
 import { ThemesListComponent } from './features/themes/themes-list.component';
 import { ThemeDetailComponent } from './features/themes/theme-detail.component';
+import { ThemeCreateComponent } from './features/themes/theme-create.component';
 import { RoadmapComponent } from './features/roadmap/roadmap.component';
 import { ProblemsLibraryComponent } from './features/problems/problems-library.component';
 import { ProblemDetailComponent } from './features/problems/problem-detail.component';
@@ -17,6 +18,7 @@ export const routes: Routes = [
   { path: 'admin', component: AdminDashboardComponent, canActivate: [AuthGuard] },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: 'themes', component: ThemesListComponent, canActivate: [AuthGuard] },
+  { path: 'themes/create', component: ThemeCreateComponent, canActivate: [AuthGuard] },
   { path: 'themes/:id', component: ThemeDetailComponent, canActivate: [AuthGuard] },
   { path: 'roadmap', component: RoadmapComponent, canActivate: [AuthGuard] },
   { path: 'problems', component: ProblemsLibraryComponent, canActivate: [AuthGuard] },

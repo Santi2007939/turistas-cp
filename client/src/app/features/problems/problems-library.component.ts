@@ -11,15 +11,33 @@ import { ThemesService, Theme } from '../../core/services/themes.service';
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
   template: `
-    <div class="container mx-auto px-4 py-8">
-      <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold text-gray-800">Biblioteca de Problemas</h1>
-        <button 
-          (click)="openAddProblemModal()"
-          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Agregar Problema
-        </button>
-      </div>
+    <div class="min-h-screen bg-gray-100">
+      <!-- Navigation -->
+      <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex justify-between h-16">
+            <div class="flex items-center">
+              <h1 class="text-2xl font-bold text-blue-600">🏔️ Turistas CP</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+              <a routerLink="/dashboard" class="text-gray-700 hover:text-blue-600">Dashboard</a>
+              <a routerLink="/themes" class="text-gray-700 hover:text-blue-600">Themes</a>
+              <a routerLink="/roadmap" class="text-gray-700 hover:text-blue-600">Roadmap</a>
+              <a routerLink="/problems" class="text-gray-700 hover:text-blue-600 font-semibold">Problems</a>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <div class="container mx-auto px-4 py-8">
+        <div class="flex justify-between items-center mb-6">
+          <h1 class="text-3xl font-bold text-gray-800">Biblioteca de Problemas</h1>
+          <button 
+            (click)="openAddProblemModal()"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Agregar Problema
+          </button>
+        </div>
 
       <!-- Selector for problem view -->
       <div class="mb-6 flex gap-4 items-center">
@@ -120,20 +138,7 @@ import { ThemesService, Theme } from '../../core/services/themes.service';
               </span>
             </div>
 
-            <!-- Notes Section -->
-            <div *ngIf="problem.notes || canEdit(problem)" class="mb-3">
-              <label class="text-xs font-semibold text-gray-600 block mb-1">Notas:</label>
-              <textarea 
-                *ngIf="canEdit(problem)"
-                [(ngModel)]="problem.notes"
-                (blur)="updateProblemNotes(problem)"
-                rows="2"
-                class="w-full text-sm border rounded px-2 py-1 text-gray-700"
-                placeholder="Notas técnicas o estratégicas..."></textarea>
-              <p *ngIf="!canEdit(problem) && problem.notes" class="text-sm text-gray-600">
-                {{ problem.notes }}
-              </p>
-            </div>
+
           </div>
 
           <!-- Actions -->
@@ -267,15 +272,6 @@ import { ThemesService, Theme } from '../../core/services/themes.service';
             </div>
 
             <div>
-              <label class="block text-gray-700 text-sm font-bold mb-2">Notas Técnicas/Estratégicas</label>
-              <textarea 
-                [(ngModel)]="newProblem.notes"
-                rows="3"
-                class="w-full border rounded px-3 py-2"
-                placeholder="Notas sobre el problema, estrategias, técnicas usadas..."></textarea>
-            </div>
-
-            <div>
               <label class="block text-gray-700 text-sm font-bold mb-2">Owner</label>
               <select 
                 [(ngModel)]="newProblem.owner"
@@ -335,41 +331,7 @@ import { ThemesService, Theme } from '../../core/services/themes.service';
               </div>
             </div>
 
-            <!-- Optional fields collapsed -->
-            <details class="border rounded p-3">
-              <summary class="cursor-pointer font-semibold text-gray-700">Campos Opcionales</summary>
-              <div class="mt-3 space-y-3">
-                <div>
-                  <label class="block text-gray-700 text-sm font-bold mb-2">Descripción</label>
-                  <textarea 
-                    [(ngModel)]="newProblem.description"
-                    rows="3"
-                    class="w-full border rounded px-3 py-2"
-                    placeholder="Descripción del problema"></textarea>
-                </div>
 
-                <div>
-                  <label class="block text-gray-700 text-sm font-bold mb-2">Dificultad</label>
-                  <select 
-                    [(ngModel)]="newProblem.difficulty"
-                    class="w-full border rounded px-3 py-2">
-                    <option value="easy">Easy</option>
-                    <option value="medium">Medium</option>
-                    <option value="hard">Hard</option>
-                    <option value="very-hard">Very Hard</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label class="block text-gray-700 text-sm font-bold mb-2">Tags (separados por coma)</label>
-                  <input 
-                    type="text"
-                    [(ngModel)]="newProblem.tagsInput"
-                    class="w-full border rounded px-3 py-2"
-                    placeholder="dp, graphs, binary-search">
-                </div>
-              </div>
-            </details>
           </div>
 
           <div class="flex gap-2 justify-end mt-6">
@@ -387,6 +349,7 @@ import { ThemesService, Theme } from '../../core/services/themes.service';
           </div>
         </div>
       </div>
+    </div>
     </div>
   `,
   styles: [`
@@ -408,27 +371,19 @@ export class ProblemsLibraryComponent implements OnInit {
   
   newProblem: {
     title: string;
-    description: string;
     platform: string;
     url: string;
-    difficulty: string;
     owner: string;
-    tagsInput: string;
     rating: number | null;
     status: string;
-    notes: string;
     themes: any[];
   } = {
     title: '',
-    description: '',
     platform: 'codeforces',
     url: '',
-    difficulty: 'medium',
     owner: 'personal',
-    tagsInput: '',
     rating: null,
     status: 'pending',
-    notes: '',
     themes: []
   };
   
@@ -533,15 +488,11 @@ export class ProblemsLibraryComponent implements OnInit {
     this.editingProblem = problem;
     this.newProblem = {
       title: problem.title,
-      description: problem.description || '',
       platform: problem.platform,
       url: problem.url || '',
-      difficulty: problem.difficulty,
       owner: problem.owner,
-      tagsInput: (problem.tags || []).join(', '),
       rating: problem.rating || null,
       status: problem.status,
-      notes: problem.notes || '',
       themes: problem.themes ? JSON.parse(JSON.stringify(problem.themes)) : []
     };
     this.showAddProblemModal = true;
@@ -560,7 +511,6 @@ export class ProblemsLibraryComponent implements OnInit {
         this.newProblem.platform = problemData.platform;
         this.newProblem.url = problemData.url || '';
         this.newProblem.rating = problemData.rating || null;
-        this.newProblem.tagsInput = (problemData.tags || []).join(', ');
         this.fetchingCodeforces = false;
       },
       error: (err) => {
@@ -579,18 +529,12 @@ export class ProblemsLibraryComponent implements OnInit {
 
     const problemData: any = {
       title: this.newProblem.title,
-      description: this.newProblem.description,
       platform: this.newProblem.platform,
       url: this.newProblem.url,
-      difficulty: this.newProblem.difficulty,
       owner: this.newProblem.owner,
       rating: this.newProblem.rating,
       status: this.newProblem.status,
-      notes: this.newProblem.notes,
-      themes: validThemes,
-      tags: this.newProblem.tagsInput 
-        ? this.newProblem.tagsInput.split(',').map(t => t.trim()).filter(t => t)
-        : []
+      themes: validThemes
     };
 
     if (this.editingProblem) {
@@ -638,20 +582,7 @@ export class ProblemsLibraryComponent implements OnInit {
     });
   }
 
-  updateProblemNotes(problem: Problem): void {
-    if (!this.canEdit(problem)) return;
 
-    this.problemsService.updateProblem(problem._id, { notes: problem.notes }).subscribe({
-      next: () => {
-        // Notes updated successfully
-      },
-      error: (err) => {
-        this.error = 'Error al actualizar notas.';
-        console.error('Error updating notes:', err);
-        this.loadProblems(); // Reload to revert changes
-      }
-    });
-  }
 
   cancelAddProblem(): void {
     this.showAddProblemModal = false;
@@ -662,15 +593,11 @@ export class ProblemsLibraryComponent implements OnInit {
   resetNewProblem(): void {
     this.newProblem = {
       title: '',
-      description: '',
       platform: 'codeforces',
       url: '',
-      difficulty: 'medium',
       owner: 'personal',
-      tagsInput: '',
       rating: null,
       status: 'pending',
-      notes: '',
       themes: []
     };
   }

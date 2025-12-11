@@ -6,10 +6,6 @@ const problemSchema = new mongoose.Schema({
     required: [true, 'Problem title is required'],
     trim: true
   },
-  description: {
-    type: String,
-    trim: true
-  },
   platform: {
     type: String,
     enum: ['codeforces', 'atcoder', 'leetcode', 'hackerrank', 'cses', 'uva', 'spoj', 'custom', 'other'],
@@ -23,20 +19,11 @@ const problemSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
-  difficulty: {
-    type: String,
-    enum: ['easy', 'medium', 'hard', 'very-hard'],
-    default: 'medium'
-  },
   rating: {
     type: Number,
     min: 0,
     max: 5000
   },
-  tags: [{
-    type: String,
-    trim: true
-  }],
   themes: [{
     themeId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -72,14 +59,6 @@ const problemSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
-  timeLimit: {
-    type: String,
-    trim: true
-  },
-  memoryLimit: {
-    type: String,
-    trim: true
-  },
   addedBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
@@ -105,10 +84,6 @@ const problemSchema = new mongoose.Schema({
     type: String,
     enum: ['pending', 'ac', 'wa'],
     default: 'pending'
-  },
-  notes: {
-    type: String,
-    trim: true
   },
   createdAt: {
     type: Date,
