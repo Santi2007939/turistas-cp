@@ -24,6 +24,17 @@ const themeSchema = new mongoose.Schema({
     type: String,
     trim: true
   }],
+  subthemes: [{
+    name: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    description: {
+      type: String,
+      trim: true
+    }
+  }],
   resources: [{
     title: String,
     url: String,
