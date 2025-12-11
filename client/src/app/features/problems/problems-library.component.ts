@@ -686,6 +686,8 @@ export class ProblemsLibraryComponent implements OnInit {
   }
 
   toggleModalSubtheme(themeIndex: number, subthemeName: string): void {
+    if (!this.newProblem.themes[themeIndex]) return;
+    
     if (!this.newProblem.themes[themeIndex].subthemes) {
       this.newProblem.themes[themeIndex].subthemes = [];
     }

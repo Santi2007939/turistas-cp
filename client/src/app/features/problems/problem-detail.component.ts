@@ -531,6 +531,8 @@ export class ProblemDetailComponent implements OnInit {
   }
 
   toggleSubtheme(themeIndex: number, subthemeName: string): void {
+    if (!this.editingThemes[themeIndex]) return;
+    
     if (!this.editingThemes[themeIndex].subthemes) {
       this.editingThemes[themeIndex].subthemes = [];
     }
@@ -605,8 +607,9 @@ export class ProblemDetailComponent implements OnInit {
   saveMetacognitionEntry(): void {
     if (!this.problem || !this.newMetacognition.time || !this.newMetacognition.description) return;
 
+    const currentMetacognition = this.problem.metacognition || [];
     const updatedMetacognition = [
-      ...(this.problem.metacognition || []),
+      ...currentMetacognition,
       { ...this.newMetacognition, createdAt: new Date() }
     ];
 
@@ -654,8 +657,9 @@ export class ProblemDetailComponent implements OnInit {
   saveTakeaway(): void {
     if (!this.problem || !this.newTakeaway) return;
 
+    const currentTakeaways = this.problem.takeaways || [];
     const updatedTakeaways = [
-      ...(this.problem.takeaways || []),
+      ...currentTakeaways,
       this.newTakeaway
     ];
 
