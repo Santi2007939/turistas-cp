@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -225,12 +225,12 @@ import { ThemesService, Theme, Subtheme } from '../../core/services/themes.servi
   `,
   styles: []
 })
-export class ThemeCreateComponent implements OnInit {
+export class ThemeCreateComponent {
   theme: Partial<Theme> = {
     name: '',
     description: '',
-    category: '' as any,
-    difficulty: '' as any,
+    category: undefined,
+    difficulty: undefined,
     tags: [],
     subthemes: [],
     resources: [],
@@ -245,9 +245,6 @@ export class ThemeCreateComponent implements OnInit {
     private themesService: ThemesService,
     private router: Router
   ) {}
-
-  ngOnInit(): void {
-  }
 
   addSubtheme(): void {
     this.theme.subthemes = this.theme.subthemes || [];
