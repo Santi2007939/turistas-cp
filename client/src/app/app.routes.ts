@@ -8,6 +8,7 @@ import { ThemesListComponent } from './features/themes/themes-list.component';
 import { ThemeDetailComponent } from './features/themes/theme-detail.component';
 import { RoadmapComponent } from './features/roadmap/roadmap.component';
 import { ProblemsLibraryComponent } from './features/problems/problems-library.component';
+import { ProblemDetailComponent } from './features/problems/problem-detail.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -19,5 +20,6 @@ export const routes: Routes = [
   { path: 'themes/:id', component: ThemeDetailComponent, canActivate: [AuthGuard] },
   { path: 'roadmap', component: RoadmapComponent, canActivate: [AuthGuard] },
   { path: 'problems', component: ProblemsLibraryComponent, canActivate: [AuthGuard] },
+  { path: 'problems/:id', component: ProblemDetailComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '/dashboard' }
 ];

@@ -8,6 +8,19 @@ export interface PopulatedUser {
   fullName?: string;
 }
 
+export interface MetacognitionEntry {
+  time: number;
+  description: string;
+  createdAt?: Date;
+  _id?: string;
+}
+
+export interface ThemeAssociation {
+  themeId: string;
+  subthemes: string[];
+  _id?: string;
+}
+
 export interface Problem {
   _id: string;
   title: string;
@@ -18,7 +31,10 @@ export interface Problem {
   difficulty: 'easy' | 'medium' | 'hard' | 'very-hard';
   rating?: number;
   tags: string[];
-  themes: any[];
+  themes: ThemeAssociation[];
+  metacognition: MetacognitionEntry[];
+  takeaways: string[];
+  analysis?: string;
   timeLimit?: string;
   memoryLimit?: string;
   addedBy: any;
