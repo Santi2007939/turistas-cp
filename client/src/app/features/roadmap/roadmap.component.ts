@@ -449,6 +449,35 @@ import { ThemesService, Theme } from '../../core/services/themes.service';
   `
 })
 export class RoadmapComponent implements OnInit {
+  // Constants
+  private readonly STATUS_LABELS: { [key: string]: string } = {
+    'not-started': 'No iniciado',
+    'in-progress': 'En progreso',
+    'completed': 'Completado',
+    'mastered': 'Dominado'
+  };
+
+  private readonly DIFFICULTY_LABELS: { [key: string]: string } = {
+    'beginner': '⭐ Principiante',
+    'intermediate': '⭐⭐ Intermedio',
+    'advanced': '⭐⭐⭐ Avanzado',
+    'expert': '⭐⭐⭐⭐ Experto'
+  };
+
+  private readonly DIFFICULTY_ORDER: { [key: string]: number } = {
+    'beginner': 1,
+    'intermediate': 2,
+    'advanced': 3,
+    'expert': 4
+  };
+
+  private readonly ERROR_MESSAGES = {
+    LOAD_ROADMAP: 'No se pudo cargar el roadmap. Por favor intenta nuevamente.',
+    ADD_THEME: 'No se pudo agregar el tema al roadmap.',
+    UPDATE_NODE: 'No se pudo actualizar el progreso.',
+    DELETE_NODE: 'No se pudo eliminar el tema.'
+  };
+
   nodes: PersonalNode[] = [];
   filteredNodes: PersonalNode[] = [];
   availableThemes: Theme[] = [];
@@ -515,7 +544,7 @@ export class RoadmapComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'No se pudo cargar el roadmap. Por favor intenta nuevamente.';
+        this.error = this.ERROR_MESSAGES.LOAD_ROADMAP;
         this.loading = false;
         console.error('Error loading roadmap:', err);
       }
@@ -554,14 +583,8 @@ export class RoadmapComponent implements OnInit {
           const dateB = b.lastPracticed ? new Date(b.lastPracticed).getTime() : 0;
           return dateB - dateA;
         case 'difficulty':
-          const difficultyOrder: { [key: string]: number } = {
-            'beginner': 1,
-            'intermediate': 2,
-            'advanced': 3,
-            'expert': 4
-          };
-          const diffA = difficultyOrder[a.themeId?.difficulty || ''] || 0;
-          const diffB = difficultyOrder[b.themeId?.difficulty || ''] || 0;
+          const diffA = this.DIFFICULTY_ORDER[a.themeId?.difficulty || ''] || 0;
+          const diffB = this.DIFFICULTY_ORDER[b.themeId?.difficulty || ''] || 0;
           return diffA - diffB;
         default:
           return 0;
@@ -604,7 +627,7 @@ export class RoadmapComponent implements OnInit {
         this.error = null;
       },
       error: (err) => {
-        this.error = 'No se pudo agregar el tema al roadmap.';
+        this.error = this.ERROR_MESSAGES.ADD_THEME;
         console.error('Error adding theme:', err);
       }
     });
@@ -647,7 +670,7 @@ export class RoadmapComponent implements OnInit {
         this.error = null;
       },
       error: (err) => {
-        this.error = 'No se pudo actualizar el progreso.';
+        this.error = this.ERROR_MESSAGES.UPDATE_NODE;
         console.error('Error updating node:', err);
       }
     });
@@ -665,7 +688,7 @@ export class RoadmapComponent implements OnInit {
         this.error = null;
       },
       error: (err) => {
-        this.error = 'No se pudo eliminar el tema.';
+        this.error = this.ERROR_MESSAGES.DELETE_NODE;
         this.showDeleteConfirmation = false;
         console.error('Error deleting node:', err);
       }
@@ -685,23 +708,11 @@ export class RoadmapComponent implements OnInit {
   }
 
   getStatusLabel(status: string): string {
-    const labels: { [key: string]: string } = {
-      'not-started': 'No iniciado',
-      'in-progress': 'En progreso',
-      'completed': 'Completado',
-      'mastered': 'Dominado'
-    };
-    return labels[status] || status;
+    return this.STATUS_LABELS[status] || status;
   }
 
   getDifficultyLabel(difficulty: string | undefined): string {
     if (!difficulty) return 'N/A';
-    const labels: { [key: string]: string } = {
-      'beginner': '⭐ Principiante',
-      'intermediate': '⭐⭐ Intermedio',
-      'advanced': '⭐⭐⭐ Avanzado',
-      'expert': '⭐⭐⭐⭐ Experto'
-    };
-    return labels[difficulty] || difficulty;
+    return this.DIFFICULTY_LABELS[difficulty] || difficulty;
   }
 }
