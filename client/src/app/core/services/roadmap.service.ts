@@ -9,13 +9,38 @@ export interface PopulatedUser {
   fullName?: string;
 }
 
+export interface CodeSnippet {
+  language: 'python' | 'cpp' | 'c++';
+  code: string;
+  description?: string;
+}
+
+export interface Resource {
+  name: string;
+  link: string;
+}
+
+export interface Subtopic {
+  _id?: string;
+  name: string;
+  description?: string;
+  personalNotes?: string;
+  sharedTheory?: string;
+  codeSnippets?: CodeSnippet[];
+  linkedProblems?: any[];
+  resources?: Resource[];
+  order?: number;
+}
+
 export interface PersonalNode {
   _id: string;
   userId: string | PopulatedUser;
   themeId: Theme;
-  status: 'not-started' | 'in-progress' | 'completed' | 'mastered';
+  status: 'not-started' | 'in-progress' | 'completed' | 'mastered' | 'todo' | 'done';
   progress: number;
   notes: string;
+  dueDate?: Date;
+  subtopics?: Subtopic[];
   problemsSolved: any[];
   startedAt?: Date;
   completedAt?: Date;
@@ -75,6 +100,8 @@ export class RoadmapService {
     status?: string;
     progress?: number;
     notes?: string;
+    dueDate?: Date | null;
+    subtopics?: Subtopic[];
   }): Observable<NodeResponse> {
     return this.api.post<NodeResponse>('/api/roadmap', data);
   }
@@ -84,5 +111,26 @@ export class RoadmapService {
    */
   deleteNode(nodeId: string): Observable<any> {
     return this.api.delete(`/api/roadmap/${nodeId}`);
+  }
+
+  /**
+   * Add subtopic to a roadmap node
+   */
+  addSubtopic(nodeId: string, subtopic: Subtopic): Observable<NodeResponse> {
+    return this.api.post<NodeResponse>(`/api/roadmap/${nodeId}/subtopics`, subtopic);
+  }
+
+  /**
+   * Update subtopic in a roadmap node
+   */
+  updateSubtopic(nodeId: string, subtopicId: string, subtopic: Partial<Subtopic>): Observable<NodeResponse> {
+    return this.api.put<NodeResponse>(`/api/roadmap/${nodeId}/subtopics/${subtopicId}`, subtopic);
+  }
+
+  /**
+   * Delete subtopic from a roadmap node
+   */
+  deleteSubtopic(nodeId: string, subtopicId: string): Observable<any> {
+    return this.api.delete(`/api/roadmap/${nodeId}/subtopics/${subtopicId}`);
   }
 }

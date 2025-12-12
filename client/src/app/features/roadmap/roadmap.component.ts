@@ -19,13 +19,25 @@ import { ThemesService, Theme } from '../../core/services/themes.service';
               <h1 class="text-3xl font-bold text-gray-800 mb-2">🗺️ Mi Roadmap</h1>
               <p class="text-gray-600">Gestiona tu ruta de aprendizaje personalizada</p>
             </div>
-            <button 
-              *ngIf="selectedView === 'personal'"
-              (click)="showAddThemeModal = true"
-              class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center gap-2">
-              <span class="text-xl">+</span>
-              <span>Agregar Tema</span>
-            </button>
+            <div class="flex gap-2">
+              <button 
+                routerLink="/roadmap/kanban"
+                class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all">
+                📋 Kanban
+              </button>
+              <button 
+                routerLink="/roadmap/graph"
+                class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all">
+                📊 Gráfica
+              </button>
+              <button 
+                *ngIf="selectedView === 'personal'"
+                (click)="showAddThemeModal = true"
+                class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center gap-2">
+                <span class="text-xl">+</span>
+                <span>Agregar Tema</span>
+              </button>
+            </div>
           </div>
 
           <!-- View Selector and Filters -->
@@ -237,13 +249,31 @@ import { ThemesService, Theme } from '../../core/services/themes.service';
                 <p class="text-sm text-gray-700">{{ node.notes }}</p>
               </div>
 
-              <div *ngIf="node.lastPracticed" class="flex items-center gap-2 text-xs text-gray-500">
-                <span>🕐</span>
-                <span>Última práctica: {{ node.lastPracticed | date:'short' }}</span>
+              <div class="flex items-center gap-4 text-xs">
+                <div *ngIf="node.lastPracticed" class="flex items-center gap-2 text-gray-500">
+                  <span>🕐</span>
+                  <span>Última práctica: {{ node.lastPracticed | date:'short' }}</span>
+                </div>
+                <div *ngIf="node.dueDate" class="flex items-center gap-2"
+                     [ngClass]="{
+                       'text-red-600 font-bold': isOverdue(node.dueDate),
+                       'text-orange-600': isDueSoon(node.dueDate),
+                       'text-gray-500': !isOverdue(node.dueDate) && !isDueSoon(node.dueDate)
+                     }">
+                  <span>📅</span>
+                  <span>Vence: {{ node.dueDate | date:'short' }}</span>
+                  <span *ngIf="isOverdue(node.dueDate)">⚠️</span>
+                </div>
               </div>
             </div>
 
             <div class="flex flex-col gap-2" [ngClass]="{'md:ml-4': selectedView === 'personal'}">
+              <a 
+                *ngIf="selectedView === 'personal'"
+                [routerLink]="['/roadmap', node._id, 'subtopics']"
+                class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all shadow-sm hover:shadow-md text-center">
+                📝 Subtemas
+              </a>
               <button 
                 *ngIf="selectedView === 'personal'"
                 (click)="editNode(node)"
@@ -391,6 +421,14 @@ import { ThemesService, Theme } from '../../core/services/themes.service';
             </div>
           </div>
 
+          <div class="mb-5">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Fecha límite (opcional)</label>
+            <input 
+              type="date"
+              [(ngModel)]="editingNode.dueDate"
+              class="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all">
+          </div>
+
           <div class="mb-6">
             <label class="block text-gray-700 text-sm font-bold mb-2">Notas</label>
             <textarea 
@@ -505,6 +543,7 @@ export class RoadmapComponent implements OnInit {
     status: string;
     progress: number;
     notes: string;
+    dueDate?: string;
   } | null = null;
 
   constructor(
@@ -649,7 +688,8 @@ export class RoadmapComponent implements OnInit {
       themeId: node.themeId._id,
       status: node.status,
       progress: node.progress,
-      notes: node.notes || ''
+      notes: node.notes || '',
+      dueDate: node.dueDate ? new Date(node.dueDate).toISOString().split('T')[0] : undefined
     };
     this.showUpdateModal = true;
   }
@@ -661,7 +701,8 @@ export class RoadmapComponent implements OnInit {
       themeId: this.editingNode.themeId,
       status: this.editingNode.status,
       progress: this.editingNode.progress,
-      notes: this.editingNode.notes
+      notes: this.editingNode.notes,
+      dueDate: this.editingNode.dueDate ? new Date(this.editingNode.dueDate) : null
     }).subscribe({
       next: () => {
         this.showUpdateModal = false;
@@ -697,6 +738,19 @@ export class RoadmapComponent implements OnInit {
 
   getCountByStatus(status: string): number {
     return this.nodes.filter(node => node.status === status).length;
+  }
+
+  isOverdue(dueDate: Date | undefined): boolean {
+    if (!dueDate) return false;
+    return new Date(dueDate) < new Date();
+  }
+
+  isDueSoon(dueDate: Date | undefined): boolean {
+    if (!dueDate) return false;
+    const now = new Date();
+    const due = new Date(dueDate);
+    const diffDays = Math.ceil((due.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+    return diffDays <= 3 && diffDays >= 0;
   }
 
   getUserName(node: PersonalNode): string {
