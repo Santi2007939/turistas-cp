@@ -689,9 +689,13 @@ export class RoadmapComponent implements OnInit {
       status: node.status,
       progress: node.progress,
       notes: node.notes || '',
-      dueDate: node.dueDate ? new Date(node.dueDate).toISOString().split('T')[0] : undefined
+      dueDate: node.dueDate ? this.formatDateForInput(node.dueDate) : undefined
     };
     this.showUpdateModal = true;
+  }
+
+  formatDateForInput(date: Date): string {
+    return new Date(date).toISOString().split('T')[0];
   }
 
   saveNodeUpdate(): void {

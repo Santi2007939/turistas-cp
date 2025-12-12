@@ -10,7 +10,7 @@ export interface PopulatedUser {
 }
 
 export interface CodeSnippet {
-  language: 'python' | 'cpp' | 'c++';
+  language: 'python' | 'cpp';
   code: string;
   description?: string;
 }

@@ -100,7 +100,7 @@ router.post('/', asyncHandler(async (req, res) => {
     { userId: req.user._id, themeId },
     updateData,
     { new: true, upsert: true, runValidators: true }
-  ).populate('themeId').populate('subtopics.linkedProblems');
+  ).populate(['themeId', 'subtopics.linkedProblems']);
 
   res.json({
     success: true,
