@@ -136,7 +136,6 @@ import { RoadmapService, PersonalNode, Subtopic, CodeSnippet, Resource } from '.
                         class="border border-gray-300 rounded px-3 py-1 text-sm">
                         <option value="python">🐍 Python</option>
                         <option value="cpp">⚡ C++</option>
-                        <option value="c++">⚡ C++</option>
                       </select>
                       <button 
                         (click)="removeCodeSnippet(subtopic, j)"
@@ -399,8 +398,17 @@ export class SubtopicDetailComponent implements OnInit {
   }
 
   editSubtopic(subtopic: Subtopic): void {
-    // TODO: Implement edit modal
-    console.log('Edit subtopic:', subtopic);
+    // Set the subtopic as the one being edited
+    this.newSubtopic = {
+      name: subtopic.name,
+      description: subtopic.description || '',
+      personalNotes: subtopic.personalNotes,
+      sharedTheory: subtopic.sharedTheory,
+      codeSnippets: subtopic.codeSnippets,
+      linkedProblems: subtopic.linkedProblems,
+      resources: subtopic.resources
+    };
+    this.showAddSubtopicModal = true;
   }
 
   saveSubtopic(subtopic: Subtopic): void {
@@ -466,8 +474,15 @@ export class SubtopicDetailComponent implements OnInit {
   }
 
   showAddProblemModal(subtopic: Subtopic): void {
-    // TODO: Implement problem selection modal
-    console.log('Add problem to subtopic:', subtopic);
+    // Simple prompt for now - can be enhanced with a full modal later
+    const problemId = prompt('Ingresa el ID del problema a vincular:');
+    if (problemId && problemId.trim()) {
+      if (!subtopic.linkedProblems) {
+        subtopic.linkedProblems = [];
+      }
+      subtopic.linkedProblems.push(problemId.trim());
+      this.saveSubtopic(subtopic);
+    }
   }
 
   removeProblem(subtopic: Subtopic, problemId: any): void {

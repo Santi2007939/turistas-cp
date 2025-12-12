@@ -24,7 +24,7 @@ const subtopicSchema = new mongoose.Schema({
   codeSnippets: [{
     language: {
       type: String,
-      enum: ['python', 'cpp', 'c++'],
+      enum: ['python', 'cpp'],
       default: 'python'
     },
     code: {

@@ -308,8 +308,8 @@ export class RoadmapKanbanComponent implements OnInit {
   }
 
   openNodeDetails(node: PersonalNode): void {
-    // TODO: Navigate to node details page
-    console.log('Open node details:', node);
+    // Navigate to subtopic details page
+    window.location.href = `/roadmap/${node._id}/subtopics`;
   }
 
   isOverdue(dueDate: Date): boolean {
