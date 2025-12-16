@@ -551,7 +551,7 @@ export class ProblemsLibraryComponent implements OnInit {
     const problemData: any = {
       title: this.newProblem.title,
       platform: this.newProblem.platform,
-      url: this.newProblem.url?.trim() || undefined, // Don't send empty or whitespace-only strings
+      url: this.normalizeUrl(this.newProblem.url),
       owner: this.newProblem.owner,
       rating: this.newProblem.rating,
       status: this.newProblem.status,
@@ -666,6 +666,13 @@ export class ProblemsLibraryComponent implements OnInit {
   }
 
   /**
+   * Normalize URL by trimming whitespace and returning undefined for empty strings
+   */
+  normalizeUrl(url: string | null | undefined): string | undefined {
+    return url?.trim() || undefined;
+  }
+
+  /**
    * Detect platform from URL
    */
   detectPlatformFromUrl(url: string): string | null {
@@ -711,8 +718,12 @@ export class ProblemsLibraryComponent implements OnInit {
       return { valid: true, message: 'Plataforma no reconocida. Puedes continuar de todas formas.', warning: true };
     }
 
-    // Platform-specific validation with anchored patterns
+    // Platform-specific validation with fully anchored patterns to prevent URL manipulation
     const validationPatterns: { [key: string]: RegExp } = {
+      // Codeforces supports three URL formats:
+      // 1. problemset/problem/1234/A - general problemset
+      // 2. contest/1500/problem/B - specific contest
+      // 3. gym/102001/problem/A - gym contests
       codeforces: /^https?:\/\/(www\.)?codeforces\.com\/(?:problemset\/problem\/\d+\/[A-Za-z]\d?|contest\/\d+\/problem\/[A-Za-z]\d?|gym\/\d+\/problem\/[A-Za-z]\d?)(?:\/.*)?$/i,
       atcoder: /^https?:\/\/(www\.)?atcoder\.jp\/contests\/[^\/]+\/tasks\/[^\/]+(?:\/.*)?$/i,
       leetcode: /^https?:\/\/(www\.)?leetcode\.com\/problems\/[^\/]+(?:\/.*)?$/i,
