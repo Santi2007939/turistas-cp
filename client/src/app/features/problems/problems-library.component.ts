@@ -189,30 +189,6 @@ import { ThemesService, Theme } from '../../core/services/themes.service';
           </h3>
           
           <div class="space-y-4">
-            <!-- Codeforces URL Fetcher (only for Codeforces and when adding) -->
-            <div *ngIf="!editingProblem && newProblem.platform === 'codeforces'" 
-                 class="bg-blue-50 border border-blue-200 rounded p-4">
-              <label class="block text-gray-700 text-sm font-bold mb-2">
-                Obtener datos de Codeforces (Opcional)
-              </label>
-              <div class="flex gap-2">
-                <input 
-                  type="url"
-                  [(ngModel)]="newProblem.url"
-                  class="flex-1 border rounded px-3 py-2"
-                  placeholder="https://codeforces.com/problemset/problem/1234/A">
-                <button 
-                  (click)="fetchCodeforcesData()"
-                  [disabled]="!newProblem.url || fetchingCodeforces"
-                  class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded disabled:bg-gray-300">
-                  {{ fetchingCodeforces ? 'Cargando...' : 'Obtener' }}
-                </button>
-              </div>
-              <p class="text-xs text-gray-600 mt-1">
-                Si no usas esta opción, puedes llenar los campos manualmente.
-              </p>
-            </div>
-
             <div>
               <label class="block text-gray-700 text-sm font-bold mb-2">Título *</label>
               <input 
@@ -220,6 +196,30 @@ import { ThemesService, Theme } from '../../core/services/themes.service';
                 [(ngModel)]="newProblem.title"
                 class="w-full border rounded px-3 py-2"
                 placeholder="Nombre del problema">
+            </div>
+
+            <!-- URL Field (optional for all platforms) -->
+            <div>
+              <label class="block text-gray-700 text-sm font-bold mb-2">
+                URL del Problema (Opcional)
+              </label>
+              <input 
+                type="url"
+                [(ngModel)]="newProblem.url"
+                (ngModelChange)="onUrlChange()"
+                class="w-full border rounded px-3 py-2"
+                [class.border-red-500]="urlValidationError && !isUrlWarning"
+                [class.border-yellow-500]="urlValidationError && isUrlWarning"
+                placeholder="https://codeforces.com/problemset/problem/1234/A">
+              <p *ngIf="urlValidationError" 
+                 class="text-xs mt-1"
+                 [class.text-red-600]="!isUrlWarning"
+                 [class.text-yellow-600]="isUrlWarning">
+                {{ urlValidationError }}
+              </p>
+              <p class="text-xs text-gray-600 mt-1">
+                La plataforma se detectará automáticamente desde la URL.
+              </p>
             </div>
 
             <div>
@@ -240,13 +240,21 @@ import { ThemesService, Theme } from '../../core/services/themes.service';
               </select>
             </div>
 
-            <div *ngIf="editingProblem || newProblem.platform !== 'codeforces'">
-              <label class="block text-gray-700 text-sm font-bold mb-2">URL</label>
-              <input 
-                type="url"
-                [(ngModel)]="newProblem.url"
-                class="w-full border rounded px-3 py-2"
-                placeholder="https://...">
+            <!-- Codeforces Auto-Fetch Button (shown when platform is Codeforces) -->
+            <div *ngIf="!editingProblem && newProblem.platform === 'codeforces' && newProblem.url" 
+                 class="bg-blue-50 border border-blue-200 rounded p-4">
+              <p class="text-sm text-gray-700 mb-2">
+                ¿Quieres obtener automáticamente los datos de este problema de Codeforces?
+              </p>
+              <button 
+                (click)="fetchCodeforcesData()"
+                [disabled]="fetchingCodeforces || !!urlValidationError"
+                class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded disabled:bg-gray-300 w-full">
+                {{ fetchingCodeforces ? 'Obteniendo datos...' : '🔄 Obtener Datos de Codeforces' }}
+              </button>
+              <p class="text-xs text-gray-600 mt-2">
+                Esto llenará automáticamente el título, rating y otros detalles.
+              </p>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
@@ -390,6 +398,8 @@ export class ProblemsLibraryComponent implements OnInit {
   fetchingCodeforces = false;
   editingProblem: Problem | null = null;
   availableThemes: Theme[] = [];
+  urlValidationError: string | null = null;
+  isUrlWarning = false;
 
   constructor(
     private problemsService: ProblemsService,
@@ -495,6 +505,8 @@ export class ProblemsLibraryComponent implements OnInit {
       status: problem.status,
       themes: problem.themes ? JSON.parse(JSON.stringify(problem.themes)) : []
     };
+    this.urlValidationError = null;
+    this.isUrlWarning = false;
     this.showAddProblemModal = true;
   }
 
@@ -524,13 +536,22 @@ export class ProblemsLibraryComponent implements OnInit {
   saveProblem(): void {
     if (!this.newProblem.title) return;
 
+    // Validate URL if provided
+    if (this.newProblem.url) {
+      const validation = this.validateUrl(this.newProblem.url);
+      if (!validation.valid) {
+        this.urlValidationError = validation.message || 'URL inválida';
+        return;
+      }
+    }
+
     // Filter out themes with no themeId selected
     const validThemes = this.newProblem.themes.filter(t => t.themeId);
 
     const problemData: any = {
       title: this.newProblem.title,
       platform: this.newProblem.platform,
-      url: this.newProblem.url,
+      url: this.normalizeUrl(this.newProblem.url),
       owner: this.newProblem.owner,
       rating: this.newProblem.rating,
       status: this.newProblem.status,
@@ -588,6 +609,8 @@ export class ProblemsLibraryComponent implements OnInit {
     this.showAddProblemModal = false;
     this.resetNewProblem();
     this.editingProblem = null;
+    this.urlValidationError = null;
+    this.isUrlWarning = false;
   }
 
   resetNewProblem(): void {
@@ -600,6 +623,8 @@ export class ProblemsLibraryComponent implements OnInit {
       status: 'pending',
       themes: []
     };
+    this.urlValidationError = null;
+    this.isUrlWarning = false;
   }
 
   // Theme management methods for modal
@@ -638,5 +663,116 @@ export class ProblemsLibraryComponent implements OnInit {
 
   removeModalTheme(index: number): void {
     this.newProblem.themes.splice(index, 1);
+  }
+
+  /**
+   * Normalize URL by trimming whitespace and returning undefined for empty strings
+   */
+  normalizeUrl(url: string | null | undefined): string | undefined {
+    return url?.trim() || undefined;
+  }
+
+  /**
+   * Detect platform from URL
+   */
+  detectPlatformFromUrl(url: string): string | null {
+    if (!url) return null;
+
+    const platformPatterns = [
+      { pattern: /^https?:\/\/(www\.)?codeforces\.com\//i, platform: 'codeforces' },
+      { pattern: /^https?:\/\/(www\.)?atcoder\.jp\//i, platform: 'atcoder' },
+      { pattern: /^https?:\/\/(www\.)?leetcode\.com\//i, platform: 'leetcode' },
+      { pattern: /^https?:\/\/(www\.)?hackerrank\.com\//i, platform: 'hackerrank' },
+      { pattern: /^https?:\/\/(www\.)?cses\.fi\//i, platform: 'cses' },
+      { pattern: /^https?:\/\/(www\.)?uva\.onlinejudge\.org\//i, platform: 'uva' },
+      { pattern: /^https?:\/\/(www\.)?spoj\.com\//i, platform: 'spoj' }
+    ];
+
+    for (const { pattern, platform } of platformPatterns) {
+      if (pattern.test(url)) {
+        return platform;
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Validate URL format for known platforms
+   */
+  validateUrl(url: string): { valid: boolean; message?: string; warning?: boolean } {
+    if (!url?.trim()) {
+      return { valid: true }; // Empty URL is valid (optional field)
+    }
+
+    // Basic URL format validation
+    try {
+      new URL(url);
+    } catch {
+      return { valid: false, message: 'URL inválida. Debe ser una URL completa (ej: https://...)' };
+    }
+
+    const detectedPlatform = this.detectPlatformFromUrl(url);
+    
+    if (!detectedPlatform) {
+      return { valid: true, message: 'Plataforma no reconocida. Puedes continuar de todas formas.', warning: true };
+    }
+
+    // Platform-specific validation with fully anchored patterns to prevent URL manipulation
+    const validationPatterns: { [key: string]: RegExp } = {
+      // Codeforces supports three URL formats:
+      // 1. problemset/problem/1234/A - general problemset
+      // 2. contest/1500/problem/B - specific contest
+      // 3. gym/102001/problem/A - gym contests
+      codeforces: /^https?:\/\/(www\.)?codeforces\.com\/(?:problemset\/problem\/\d+\/[A-Za-z]\d?|contest\/\d+\/problem\/[A-Za-z]\d?|gym\/\d+\/problem\/[A-Za-z]\d?)(?:\/.*)?$/i,
+      atcoder: /^https?:\/\/(www\.)?atcoder\.jp\/contests\/[^\/]+\/tasks\/[^\/]+(?:\/.*)?$/i,
+      leetcode: /^https?:\/\/(www\.)?leetcode\.com\/problems\/[^\/]+(?:\/.*)?$/i,
+      hackerrank: /^https?:\/\/(www\.)?hackerrank\.com\/challenges\/[^\/]+(?:\/.*)?$/i,
+      cses: /^https?:\/\/(www\.)?cses\.fi\/problemset\/task\/\d+(?:\/.*)?$/i,
+      uva: /^https?:\/\/(www\.)?uva\.onlinejudge\.org\/.*problem=\d+.*$/i,
+      spoj: /^https?:\/\/(www\.)?spoj\.com\/problems\/[^\/]+(?:\/.*)?$/i
+    };
+
+    const pattern = validationPatterns[detectedPlatform];
+    if (pattern && !pattern.test(url)) {
+      return { 
+        valid: false, 
+        message: `URL de ${detectedPlatform} no válida. Verifica el formato.` 
+      };
+    }
+
+    return { valid: true };
+  }
+
+  /**
+   * Handle URL change and auto-detect platform
+   */
+  onUrlChange(): void {
+    this.urlValidationError = null;
+    this.isUrlWarning = false;
+
+    if (!this.newProblem.url) {
+      return;
+    }
+
+    // Validate URL
+    const validation = this.validateUrl(this.newProblem.url);
+    if (!validation.valid) {
+      this.urlValidationError = validation.message || 'URL inválida';
+      this.isUrlWarning = false;
+      return;
+    }
+
+    // Show warning message if platform not recognized but URL is valid
+    if (validation.warning && validation.message) {
+      this.urlValidationError = validation.message;
+      this.isUrlWarning = true;
+    }
+
+    // Auto-detect and update platform (only when creating new problems)
+    const detectedPlatform = this.detectPlatformFromUrl(this.newProblem.url);
+    if (detectedPlatform && !this.editingProblem) {
+      this.newProblem.platform = detectedPlatform;
+    }
   }
 }
