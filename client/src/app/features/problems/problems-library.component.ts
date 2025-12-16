@@ -668,13 +668,13 @@ export class ProblemsLibraryComponent implements OnInit {
     if (!url) return null;
 
     const platformPatterns = [
-      { pattern: /codeforces\.com/i, platform: 'codeforces' },
-      { pattern: /atcoder\.jp/i, platform: 'atcoder' },
-      { pattern: /leetcode\.com/i, platform: 'leetcode' },
-      { pattern: /hackerrank\.com/i, platform: 'hackerrank' },
-      { pattern: /cses\.fi/i, platform: 'cses' },
-      { pattern: /uva\.onlinejudge\.org/i, platform: 'uva' },
-      { pattern: /spoj\.com/i, platform: 'spoj' }
+      { pattern: /^https?:\/\/(www\.)?codeforces\.com/i, platform: 'codeforces' },
+      { pattern: /^https?:\/\/(www\.)?atcoder\.jp/i, platform: 'atcoder' },
+      { pattern: /^https?:\/\/(www\.)?leetcode\.com/i, platform: 'leetcode' },
+      { pattern: /^https?:\/\/(www\.)?hackerrank\.com/i, platform: 'hackerrank' },
+      { pattern: /^https?:\/\/(www\.)?cses\.fi/i, platform: 'cses' },
+      { pattern: /^https?:\/\/(www\.)?uva\.onlinejudge\.org/i, platform: 'uva' },
+      { pattern: /^https?:\/\/(www\.)?spoj\.com/i, platform: 'spoj' }
     ];
 
     for (const { pattern, platform } of platformPatterns) {
@@ -689,7 +689,7 @@ export class ProblemsLibraryComponent implements OnInit {
   /**
    * Validate URL format for known platforms
    */
-  validateUrl(url: string): { valid: boolean; message?: string } {
+  validateUrl(url: string): { valid: boolean; message?: string; warning?: boolean } {
     if (!url || url.trim() === '') {
       return { valid: true }; // Empty URL is valid (optional field)
     }
@@ -704,18 +704,18 @@ export class ProblemsLibraryComponent implements OnInit {
     const detectedPlatform = this.detectPlatformFromUrl(url);
     
     if (!detectedPlatform) {
-      return { valid: true, message: 'Plataforma no reconocida. Puedes continuar de todas formas.' };
+      return { valid: true, message: 'Plataforma no reconocida. Puedes continuar de todas formas.', warning: true };
     }
 
     // Platform-specific validation
     const validationPatterns: { [key: string]: RegExp } = {
-      codeforces: /codeforces\.com\/(?:problemset\/problem|contest|gym)\/\d+\/[A-Za-z]\d?/i,
-      atcoder: /atcoder\.jp\/contests\/[^\/]+\/tasks\/[^\/]+/i,
-      leetcode: /leetcode\.com\/problems\/[^\/]+/i,
-      hackerrank: /hackerrank\.com\/challenges\/[^\/]+/i,
-      cses: /cses\.fi\/problemset\/task\/\d+/i,
-      uva: /uva\.onlinejudge\.org\/.*problem=\d+/i,
-      spoj: /spoj\.com\/problems\/[^\/]+/i
+      codeforces: /^https?:\/\/(www\.)?codeforces\.com\/(?:problemset\/problem|contest|gym)\/\d+\/[A-Za-z]\d?/i,
+      atcoder: /^https?:\/\/(www\.)?atcoder\.jp\/contests\/[^\/]+\/tasks\/[^\/]+/i,
+      leetcode: /^https?:\/\/(www\.)?leetcode\.com\/problems\/[^\/]+/i,
+      hackerrank: /^https?:\/\/(www\.)?hackerrank\.com\/challenges\/[^\/]+/i,
+      cses: /^https?:\/\/(www\.)?cses\.fi\/problemset\/task\/\d+/i,
+      uva: /^https?:\/\/(www\.)?uva\.onlinejudge\.org\/.*problem=\d+/i,
+      spoj: /^https?:\/\/(www\.)?spoj\.com\/problems\/[^\/]+/i
     };
 
     const pattern = validationPatterns[detectedPlatform];
@@ -746,12 +746,12 @@ export class ProblemsLibraryComponent implements OnInit {
       return;
     }
 
-    // Show info message if platform not recognized
-    if (validation.message) {
+    // Show warning message if platform not recognized but URL is valid
+    if (validation.warning && validation.message) {
       this.urlValidationError = validation.message;
     }
 
-    // Auto-detect and update platform
+    // Auto-detect and update platform (only when creating new problems)
     const detectedPlatform = this.detectPlatformFromUrl(this.newProblem.url);
     if (detectedPlatform && !this.editingProblem) {
       this.newProblem.platform = detectedPlatform;
