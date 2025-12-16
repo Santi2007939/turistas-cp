@@ -125,6 +125,16 @@ class CodeforcesService {
    */
   async getProblemDetails(contestId, index) {
     try {
+      // Validate inputs
+      const contestIdNum = parseInt(contestId);
+      if (isNaN(contestIdNum) || contestIdNum <= 0) {
+        throw new Error('Invalid contest ID');
+      }
+
+      if (!index || typeof index !== 'string') {
+        throw new Error('Invalid problem index');
+      }
+
       const response = await axios.get(`${CODEFORCES_API}/problemset.problems`);
 
       if (response.data.status !== 'OK') {
@@ -132,7 +142,7 @@ class CodeforcesService {
       }
 
       const problem = response.data.result.problems.find(
-        p => p.contestId === parseInt(contestId) && p.index === index.toUpperCase()
+        p => p.contestId === contestIdNum && p.index === index.toUpperCase()
       );
 
       if (!problem) {
@@ -140,7 +150,7 @@ class CodeforcesService {
       }
 
       const problemStats = response.data.result.problemStatistics.find(
-        s => s.contestId === parseInt(contestId) && s.index === index.toUpperCase()
+        s => s.contestId === contestIdNum && s.index === index.toUpperCase()
       );
 
       return {

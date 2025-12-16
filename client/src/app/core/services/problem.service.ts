@@ -73,47 +73,58 @@ export class ProblemService {
   detectPlatformFromUrl(url: string): { platform: string; contestId?: string; index?: string } | null {
     if (!url) return null;
 
-    // Codeforces patterns
-    const codeforcesPattern = /codeforces\.com\/(?:contest|problemset\/problem)\/(\d+)\/([A-Z]\d?)/i;
-    const codeforcesMatch = url.match(codeforcesPattern);
-    if (codeforcesMatch) {
-      return {
-        platform: 'codeforces',
-        contestId: codeforcesMatch[1],
-        index: codeforcesMatch[2]
-      };
-    }
+    try {
+      const urlObj = new URL(url);
+      const hostname = urlObj.hostname.toLowerCase();
 
-    // LeetCode patterns
-    if (url.includes('leetcode.com')) {
-      return { platform: 'leetcode' };
-    }
+      // Codeforces patterns
+      if (hostname === 'codeforces.com' || hostname === 'www.codeforces.com') {
+        const codeforcesPattern = /\/(?:contest|problemset\/problem)\/(\d+)\/([A-Z]\d?)/i;
+        const codeforcesMatch = urlObj.pathname.match(codeforcesPattern);
+        if (codeforcesMatch) {
+          return {
+            platform: 'codeforces',
+            contestId: codeforcesMatch[1],
+            index: codeforcesMatch[2]
+          };
+        }
+        return { platform: 'codeforces' };
+      }
 
-    // AtCoder patterns
-    if (url.includes('atcoder.jp')) {
-      return { platform: 'atcoder' };
-    }
+      // LeetCode patterns
+      if (hostname === 'leetcode.com' || hostname === 'www.leetcode.com') {
+        return { platform: 'leetcode' };
+      }
 
-    // HackerRank patterns
-    if (url.includes('hackerrank.com')) {
-      return { platform: 'hackerrank' };
-    }
+      // AtCoder patterns
+      if (hostname === 'atcoder.jp' || hostname.endsWith('.atcoder.jp')) {
+        return { platform: 'atcoder' };
+      }
 
-    // CSES patterns
-    if (url.includes('cses.fi')) {
-      return { platform: 'cses' };
-    }
+      // HackerRank patterns
+      if (hostname === 'hackerrank.com' || hostname === 'www.hackerrank.com') {
+        return { platform: 'hackerrank' };
+      }
 
-    // UVA patterns
-    if (url.includes('onlinejudge.org') || url.includes('uva.onlinejudge.org')) {
-      return { platform: 'uva' };
-    }
+      // CSES patterns
+      if (hostname === 'cses.fi' || hostname === 'www.cses.fi') {
+        return { platform: 'cses' };
+      }
 
-    // SPOJ patterns
-    if (url.includes('spoj.com')) {
-      return { platform: 'spoj' };
-    }
+      // UVA patterns
+      if (hostname === 'onlinejudge.org' || hostname === 'uva.onlinejudge.org') {
+        return { platform: 'uva' };
+      }
 
-    return { platform: 'other' };
+      // SPOJ patterns
+      if (hostname === 'spoj.com' || hostname === 'www.spoj.com') {
+        return { platform: 'spoj' };
+      }
+
+      return { platform: 'other' };
+    } catch (e) {
+      // Invalid URL
+      return { platform: 'other' };
+    }
   }
 }
