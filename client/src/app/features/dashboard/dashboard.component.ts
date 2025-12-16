@@ -51,10 +51,10 @@ import { AuthService, User } from '../../core/services/auth.service';
               <h3 class="text-lg font-semibold">👥 Teams</h3>
               <p class="mt-2 text-gray-600">Collaborate with your team</p>
             </a>
-            <div class="bg-white overflow-hidden shadow rounded-lg p-6 opacity-50">
-              <h3 class="text-lg font-semibold">💻 Problems</h3>
-              <p class="mt-2 text-gray-600">Practice and exercises (Coming soon)</p>
-            </div>
+            <a routerLink="/problems" class="bg-white overflow-hidden shadow rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer">
+              <h3 class="text-lg font-semibold">💻 Biblioteca de Problemas</h3>
+              <p class="mt-2 text-gray-600">Gestiona problemas de CP</p>
+            </a>
             <div class="bg-white overflow-hidden shadow rounded-lg p-6 opacity-50">
               <h3 class="text-lg font-semibold">📅 Calendar</h3>
               <p class="mt-2 text-gray-600">Contests and events (Coming soon)</p>

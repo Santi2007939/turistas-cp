@@ -9,6 +9,8 @@ import { ThemeDetailComponent } from './features/themes/theme-detail.component';
 import { RoadmapComponent } from './features/roadmap/roadmap.component';
 import { TeamListComponent } from './features/team/team-list.component';
 import { TeamDetailComponent } from './features/team/team-detail.component';
+import { ProblemsListComponent } from './features/problems/problems-list.component';
+import { ProblemFormComponent } from './features/problems/problem-form.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -21,5 +23,7 @@ export const routes: Routes = [
   { path: 'roadmap', component: RoadmapComponent, canActivate: [AuthGuard] },
   { path: 'team', component: TeamListComponent, canActivate: [AuthGuard] },
   { path: 'team/:id', component: TeamDetailComponent, canActivate: [AuthGuard] },
+  { path: 'problems', component: ProblemsListComponent, canActivate: [AuthGuard] },
+  { path: 'problems/new', component: ProblemFormComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '/dashboard' }
 ];

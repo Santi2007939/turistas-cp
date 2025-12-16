@@ -2,6 +2,7 @@ import express from 'express';
 import Problem from '../models/Problem.js';
 import { protect } from '../middlewares/auth.js';
 import { asyncHandler } from '../middlewares/error.js';
+import codeforcesService from '../services/codeforces.service.js';
 
 const router = express.Router();
 
@@ -25,6 +26,20 @@ router.get('/', asyncHandler(async (req, res) => {
     success: true,
     count: problems.length,
     data: { problems }
+  });
+}));
+
+// @desc    Fetch Codeforces problem details
+// @route   GET /api/problems/codeforces/:contestId/:index
+// @access  Private
+router.get('/codeforces/:contestId/:index', asyncHandler(async (req, res) => {
+  const { contestId, index } = req.params;
+
+  const problemDetails = await codeforcesService.getProblemDetails(contestId, index);
+
+  res.json({
+    success: true,
+    data: { problem: problemDetails }
   });
 }));
 

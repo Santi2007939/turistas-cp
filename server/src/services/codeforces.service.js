@@ -117,6 +117,46 @@ class CodeforcesService {
       throw new Error(`Failed to fetch problem statistics: ${error.message}`);
     }
   }
+
+  /**
+   * Get problem details from Codeforces
+   * @param {string} contestId - Contest ID
+   * @param {string} index - Problem index (A, B, C, etc.)
+   */
+  async getProblemDetails(contestId, index) {
+    try {
+      const response = await axios.get(`${CODEFORCES_API}/problemset.problems`);
+
+      if (response.data.status !== 'OK') {
+        throw new Error(response.data.comment || 'Failed to fetch problems');
+      }
+
+      const problem = response.data.result.problems.find(
+        p => p.contestId === parseInt(contestId) && p.index === index.toUpperCase()
+      );
+
+      if (!problem) {
+        throw new Error('Problem not found');
+      }
+
+      const problemStats = response.data.result.problemStatistics.find(
+        s => s.contestId === parseInt(contestId) && s.index === index.toUpperCase()
+      );
+
+      return {
+        title: problem.name,
+        tags: problem.tags || [],
+        rating: problem.rating || null,
+        solveCount: problemStats?.solvedCount || 0,
+        contestId: problem.contestId,
+        index: problem.index,
+        type: problem.type
+      };
+    } catch (error) {
+      console.error('Codeforces getProblemDetails error:', error.message);
+      throw new Error(`Failed to fetch problem details: ${error.message}`);
+    }
+  }
 }
 
 export default new CodeforcesService();
