@@ -208,13 +208,13 @@ import { ThemesService, Theme } from '../../core/services/themes.service';
                 [(ngModel)]="newProblem.url"
                 (ngModelChange)="onUrlChange()"
                 class="w-full border rounded px-3 py-2"
-                [class.border-red-500]="urlValidationError && !urlValidationError.includes('no reconocida')"
-                [class.border-yellow-500]="urlValidationError && urlValidationError.includes('no reconocida')"
+                [class.border-red-500]="urlValidationError && !isUrlWarning"
+                [class.border-yellow-500]="urlValidationError && isUrlWarning"
                 placeholder="https://codeforces.com/problemset/problem/1234/A">
               <p *ngIf="urlValidationError" 
                  class="text-xs mt-1"
-                 [class.text-red-600]="!urlValidationError.includes('no reconocida')"
-                 [class.text-yellow-600]="urlValidationError.includes('no reconocida')">
+                 [class.text-red-600]="!isUrlWarning"
+                 [class.text-yellow-600]="isUrlWarning">
                 {{ urlValidationError }}
               </p>
               <p class="text-xs text-gray-600 mt-1">
@@ -399,6 +399,7 @@ export class ProblemsLibraryComponent implements OnInit {
   editingProblem: Problem | null = null;
   availableThemes: Theme[] = [];
   urlValidationError: string | null = null;
+  isUrlWarning = false;
 
   constructor(
     private problemsService: ProblemsService,
@@ -505,6 +506,7 @@ export class ProblemsLibraryComponent implements OnInit {
       themes: problem.themes ? JSON.parse(JSON.stringify(problem.themes)) : []
     };
     this.urlValidationError = null;
+    this.isUrlWarning = false;
     this.showAddProblemModal = true;
   }
 
@@ -549,7 +551,7 @@ export class ProblemsLibraryComponent implements OnInit {
     const problemData: any = {
       title: this.newProblem.title,
       platform: this.newProblem.platform,
-      url: this.newProblem.url || undefined, // Don't send empty string
+      url: this.newProblem.url?.trim() || undefined, // Don't send empty or whitespace-only strings
       owner: this.newProblem.owner,
       rating: this.newProblem.rating,
       status: this.newProblem.status,
@@ -608,6 +610,7 @@ export class ProblemsLibraryComponent implements OnInit {
     this.resetNewProblem();
     this.editingProblem = null;
     this.urlValidationError = null;
+    this.isUrlWarning = false;
   }
 
   resetNewProblem(): void {
@@ -621,6 +624,7 @@ export class ProblemsLibraryComponent implements OnInit {
       themes: []
     };
     this.urlValidationError = null;
+    this.isUrlWarning = false;
   }
 
   // Theme management methods for modal
@@ -668,13 +672,13 @@ export class ProblemsLibraryComponent implements OnInit {
     if (!url) return null;
 
     const platformPatterns = [
-      { pattern: /^https?:\/\/(www\.)?codeforces\.com/i, platform: 'codeforces' },
-      { pattern: /^https?:\/\/(www\.)?atcoder\.jp/i, platform: 'atcoder' },
-      { pattern: /^https?:\/\/(www\.)?leetcode\.com/i, platform: 'leetcode' },
-      { pattern: /^https?:\/\/(www\.)?hackerrank\.com/i, platform: 'hackerrank' },
-      { pattern: /^https?:\/\/(www\.)?cses\.fi/i, platform: 'cses' },
-      { pattern: /^https?:\/\/(www\.)?uva\.onlinejudge\.org/i, platform: 'uva' },
-      { pattern: /^https?:\/\/(www\.)?spoj\.com/i, platform: 'spoj' }
+      { pattern: /^https?:\/\/(www\.)?codeforces\.com\//i, platform: 'codeforces' },
+      { pattern: /^https?:\/\/(www\.)?atcoder\.jp\//i, platform: 'atcoder' },
+      { pattern: /^https?:\/\/(www\.)?leetcode\.com\//i, platform: 'leetcode' },
+      { pattern: /^https?:\/\/(www\.)?hackerrank\.com\//i, platform: 'hackerrank' },
+      { pattern: /^https?:\/\/(www\.)?cses\.fi\//i, platform: 'cses' },
+      { pattern: /^https?:\/\/(www\.)?uva\.onlinejudge\.org\//i, platform: 'uva' },
+      { pattern: /^https?:\/\/(www\.)?spoj\.com\//i, platform: 'spoj' }
     ];
 
     for (const { pattern, platform } of platformPatterns) {
@@ -690,7 +694,7 @@ export class ProblemsLibraryComponent implements OnInit {
    * Validate URL format for known platforms
    */
   validateUrl(url: string): { valid: boolean; message?: string; warning?: boolean } {
-    if (!url || url.trim() === '') {
+    if (!url?.trim()) {
       return { valid: true }; // Empty URL is valid (optional field)
     }
 
@@ -707,15 +711,15 @@ export class ProblemsLibraryComponent implements OnInit {
       return { valid: true, message: 'Plataforma no reconocida. Puedes continuar de todas formas.', warning: true };
     }
 
-    // Platform-specific validation
+    // Platform-specific validation with anchored patterns
     const validationPatterns: { [key: string]: RegExp } = {
-      codeforces: /^https?:\/\/(www\.)?codeforces\.com\/(?:problemset\/problem|contest|gym)\/\d+\/[A-Za-z]\d?/i,
-      atcoder: /^https?:\/\/(www\.)?atcoder\.jp\/contests\/[^\/]+\/tasks\/[^\/]+/i,
-      leetcode: /^https?:\/\/(www\.)?leetcode\.com\/problems\/[^\/]+/i,
-      hackerrank: /^https?:\/\/(www\.)?hackerrank\.com\/challenges\/[^\/]+/i,
-      cses: /^https?:\/\/(www\.)?cses\.fi\/problemset\/task\/\d+/i,
-      uva: /^https?:\/\/(www\.)?uva\.onlinejudge\.org\/.*problem=\d+/i,
-      spoj: /^https?:\/\/(www\.)?spoj\.com\/problems\/[^\/]+/i
+      codeforces: /^https?:\/\/(www\.)?codeforces\.com\/(?:problemset\/problem\/\d+\/[A-Za-z]\d?|contest\/\d+\/problem\/[A-Za-z]\d?|gym\/\d+\/problem\/[A-Za-z]\d?)(?:\/.*)?$/i,
+      atcoder: /^https?:\/\/(www\.)?atcoder\.jp\/contests\/[^\/]+\/tasks\/[^\/]+(?:\/.*)?$/i,
+      leetcode: /^https?:\/\/(www\.)?leetcode\.com\/problems\/[^\/]+(?:\/.*)?$/i,
+      hackerrank: /^https?:\/\/(www\.)?hackerrank\.com\/challenges\/[^\/]+(?:\/.*)?$/i,
+      cses: /^https?:\/\/(www\.)?cses\.fi\/problemset\/task\/\d+(?:\/.*)?$/i,
+      uva: /^https?:\/\/(www\.)?uva\.onlinejudge\.org\/.*problem=\d+.*$/i,
+      spoj: /^https?:\/\/(www\.)?spoj\.com\/problems\/[^\/]+(?:\/.*)?$/i
     };
 
     const pattern = validationPatterns[detectedPlatform];
@@ -734,6 +738,7 @@ export class ProblemsLibraryComponent implements OnInit {
    */
   onUrlChange(): void {
     this.urlValidationError = null;
+    this.isUrlWarning = false;
 
     if (!this.newProblem.url) {
       return;
@@ -743,12 +748,14 @@ export class ProblemsLibraryComponent implements OnInit {
     const validation = this.validateUrl(this.newProblem.url);
     if (!validation.valid) {
       this.urlValidationError = validation.message || 'URL inválida';
+      this.isUrlWarning = false;
       return;
     }
 
     // Show warning message if platform not recognized but URL is valid
     if (validation.warning && validation.message) {
       this.urlValidationError = validation.message;
+      this.isUrlWarning = true;
     }
 
     // Auto-detect and update platform (only when creating new problems)
