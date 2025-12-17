@@ -743,8 +743,9 @@ export class SubtopicDetailComponent implements OnInit {
     this.loadingProblems = true;
     this.problemPickerError = null;
 
+    const userId = this.currentUser.id;
     const observable = this.problemFilterView === 'personal'
-      ? this.problemsService.getPersonalProblems(this.currentUser.id)
+      ? this.problemsService.getPersonalProblems(userId)
       : this.problemsService.getTeamProblems();
 
     observable.subscribe({
