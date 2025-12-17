@@ -421,6 +421,7 @@ export class ProblemsLibraryComponent implements OnInit {
   isUrlWarning = false;
   subtopicFilter: string | null = null;
   subtopicName: string = '';
+  linkedProblemIds: string[] = [];
 
   constructor(
     private problemsService: ProblemsService,
@@ -512,11 +513,10 @@ export class ProblemsLibraryComponent implements OnInit {
   filterProblemsBySubtopic(problems: Problem[]): Problem[] {
     if (!this.subtopicFilter) return problems;
 
-    const linkedProblemIds = (this as any).linkedProblemIds || [];
-    if (linkedProblemIds.length === 0) return problems;
+    if (this.linkedProblemIds.length === 0) return problems;
 
     // Filter problems to only show those linked to this subtopic
-    return problems.filter(p => linkedProblemIds.includes(p._id));
+    return problems.filter(p => this.linkedProblemIds.includes(p._id));
   }
 
   canEdit(problem: Problem): boolean {
@@ -847,7 +847,7 @@ export class ProblemsLibraryComponent implements OnInit {
               
               // Store linked problem IDs for filtering
               if (subtopic.linkedProblems) {
-                (this as any).linkedProblemIds = subtopic.linkedProblems.map(lp => lp.problemId);
+                this.linkedProblemIds = subtopic.linkedProblems.map(lp => lp.problemId);
               }
               break;
             }
