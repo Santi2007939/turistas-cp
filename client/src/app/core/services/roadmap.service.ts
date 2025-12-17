@@ -20,6 +20,16 @@ export interface Resource {
   link: string;
 }
 
+export interface LinkedProblem {
+  _id?: string;
+  problemId: string;
+  title: string;
+  description?: string;
+  link?: string;
+  difficulty: 'easy' | 'medium' | 'hard' | 'very-hard';
+  addedAt?: Date;
+}
+
 export interface Subtopic {
   _id?: string;
   name: string;
@@ -27,7 +37,7 @@ export interface Subtopic {
   personalNotes?: string;
   sharedTheory?: string;
   codeSnippets?: CodeSnippet[];
-  linkedProblems?: any[];
+  linkedProblems?: LinkedProblem[];
   resources?: Resource[];
   order?: number;
 }

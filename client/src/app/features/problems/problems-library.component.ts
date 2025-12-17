@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProblemsService, Problem, PopulatedUser } from '../../core/services/problems.service';
 import { AuthService, User } from '../../core/services/auth.service';
 import { ThemesService, Theme } from '../../core/services/themes.service';
+import { RoadmapService } from '../../core/services/roadmap.service';
 
 @Component({
   selector: 'app-problems-library',
@@ -38,6 +39,24 @@ import { ThemesService, Theme } from '../../core/services/themes.service';
             Agregar Problema
           </button>
         </div>
+
+      <!-- Subtopic Filter Banner -->
+      <div *ngIf="subtopicFilter" class="mb-6 bg-blue-50 border-l-4 border-blue-500 rounded-lg p-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">🎯</span>
+            <div>
+              <h3 class="font-semibold text-blue-900">Filtrando por subtema</h3>
+              <p class="text-sm text-blue-700">{{ subtopicName || 'Cargando...' }}</p>
+            </div>
+          </div>
+          <button 
+            (click)="clearSubtopicFilter()"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm">
+            ✕ Limpiar filtro
+          </button>
+        </div>
+      </div>
 
       <!-- Selector for problem view -->
       <div class="mb-6 flex gap-4 items-center">
@@ -400,19 +419,34 @@ export class ProblemsLibraryComponent implements OnInit {
   availableThemes: Theme[] = [];
   urlValidationError: string | null = null;
   isUrlWarning = false;
+  subtopicFilter: string | null = null;
+  subtopicName: string = '';
 
   constructor(
     private problemsService: ProblemsService,
     private authService: AuthService,
-    private themesService: ThemesService
+    private themesService: ThemesService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private roadmapService: RoadmapService
   ) {}
 
   ngOnInit(): void {
     this.authService.currentUser$.subscribe(user => {
       this.currentUser = user;
       if (user) {
-        this.loadProblems();
         this.loadThemes();
+      }
+    });
+
+    // Check for subtopic filter in query params
+    this.route.queryParams.subscribe(params => {
+      this.subtopicFilter = params['subtopic'] || null;
+      if (this.subtopicFilter) {
+        this.loadSubtopicInfo();
+      }
+      if (this.currentUser) {
+        this.loadProblems();
       }
     });
   }
@@ -454,7 +488,14 @@ export class ProblemsLibraryComponent implements OnInit {
 
     observable.subscribe({
       next: (response) => {
-        this.problems = response.data.problems;
+        let problems = response.data.problems;
+        
+        // Filter by subtopic if filter is active
+        if (this.subtopicFilter) {
+          problems = this.filterProblemsBySubtopic(problems);
+        }
+        
+        this.problems = problems;
         this.loading = false;
       },
       error: (err) => {
@@ -463,6 +504,19 @@ export class ProblemsLibraryComponent implements OnInit {
         console.error('Error loading problems:', err);
       }
     });
+  }
+
+  /**
+   * Filter problems that are linked to the selected subtopic
+   */
+  filterProblemsBySubtopic(problems: Problem[]): Problem[] {
+    if (!this.subtopicFilter) return problems;
+
+    const linkedProblemIds = (this as any).linkedProblemIds || [];
+    if (linkedProblemIds.length === 0) return problems;
+
+    // Filter problems to only show those linked to this subtopic
+    return problems.filter(p => linkedProblemIds.includes(p._id));
   }
 
   canEdit(problem: Problem): boolean {
@@ -774,5 +828,42 @@ export class ProblemsLibraryComponent implements OnInit {
     if (detectedPlatform && !this.editingProblem) {
       this.newProblem.platform = detectedPlatform;
     }
+  }
+
+  /**
+   * Load subtopic information for display
+   */
+  loadSubtopicInfo(): void {
+    if (!this.currentUser || !this.subtopicFilter) return;
+
+    this.roadmapService.getPersonalRoadmap(this.currentUser.id).subscribe({
+      next: (response) => {
+        // Find the subtopic by ID across all nodes
+        for (const node of response.data.roadmap) {
+          if (node.subtopics) {
+            const subtopic = node.subtopics.find(st => st._id === this.subtopicFilter);
+            if (subtopic) {
+              this.subtopicName = subtopic.name;
+              
+              // Store linked problem IDs for filtering
+              if (subtopic.linkedProblems) {
+                (this as any).linkedProblemIds = subtopic.linkedProblems.map(lp => lp.problemId);
+              }
+              break;
+            }
+          }
+        }
+      },
+      error: (err) => {
+        console.error('Error loading subtopic info:', err);
+      }
+    });
+  }
+
+  /**
+   * Clear subtopic filter
+   */
+  clearSubtopicFilter(): void {
+    this.router.navigate(['/problems']);
   }
 }
