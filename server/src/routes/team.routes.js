@@ -202,12 +202,26 @@ router.put('/:id/links', asyncHandler(async (req, res) => {
 
   const { whatsappGroup, discordServer } = req.body;
 
+  // Validate WhatsApp URL
   if (whatsappGroup !== undefined) {
+    if (whatsappGroup && !whatsappGroup.match(/^https?:\/\/(chat\.)?whatsapp\.com\/.+/i)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid WhatsApp group URL format'
+      });
+    }
     team.links = team.links || {};
     team.links.whatsappGroup = whatsappGroup;
   }
 
+  // Validate Discord URL
   if (discordServer !== undefined) {
+    if (discordServer && !discordServer.match(/^https?:\/\/(www\.)?(discord\.gg|discord\.com\/invite)\/.+/i)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid Discord server URL format'
+      });
+    }
     team.links = team.links || {};
     team.links.discordServer = discordServer;
   }
@@ -245,6 +259,13 @@ router.put('/:id/template', asyncHandler(async (req, res) => {
   const { codeTemplate } = req.body;
 
   if (codeTemplate !== undefined) {
+    // Validate template size (max 100KB)
+    if (codeTemplate.length > 100000) {
+      return res.status(400).json({
+        success: false,
+        message: 'Code template is too large (max 100KB)'
+      });
+    }
     team.codeTemplate = codeTemplate;
     await team.save();
   }
