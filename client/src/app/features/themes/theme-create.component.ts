@@ -3,29 +3,16 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ThemesService, Theme, Subtheme } from '../../core/services/themes.service';
+import { NavbarComponent } from '../../shared/components/navbar.component';
 
 @Component({
   selector: 'app-theme-create',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, NavbarComponent],
   template: `
     <div class="min-h-screen bg-gray-100">
       <!-- Navigation -->
-      <nav class="bg-white shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="flex justify-between h-16">
-            <div class="flex items-center">
-              <h1 class="text-2xl font-bold text-blue-600">🏔️ Turistas CP</h1>
-            </div>
-            <div class="flex items-center space-x-4">
-              <a routerLink="/dashboard" class="text-gray-700 hover:text-blue-600">Dashboard</a>
-              <a routerLink="/themes" class="text-gray-700 hover:text-blue-600 font-semibold">Themes</a>
-              <a routerLink="/roadmap" class="text-gray-700 hover:text-blue-600">Roadmap</a>
-              <a routerLink="/problems" class="text-gray-700 hover:text-blue-600">Problems</a>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <app-navbar></app-navbar>
 
       <div class="container mx-auto px-4 py-8">
         <div class="max-w-3xl mx-auto">
