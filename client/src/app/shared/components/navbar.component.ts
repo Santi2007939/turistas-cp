@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 import { AuthService, User } from '../../core/services/auth.service';
 
 @Component({
@@ -165,9 +166,10 @@ import { AuthService, User } from '../../core/services/auth.service';
   `,
   styles: []
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
   currentUser: User | null = null;
   mobileMenuOpen = false;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private authService: AuthService,
@@ -175,9 +177,16 @@ export class NavbarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.authService.currentUser$.subscribe(user => {
-      this.currentUser = user;
-    });
+    this.authService.currentUser$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(user => {
+        this.currentUser = user;
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   toggleMobileMenu(): void {
