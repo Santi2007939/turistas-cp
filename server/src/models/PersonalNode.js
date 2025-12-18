@@ -37,8 +37,33 @@ const subtopicSchema = new mongoose.Schema({
     }
   }],
   linkedProblems: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Problem'
+    problemId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Problem',
+      required: true
+    },
+    title: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    description: {
+      type: String,
+      trim: true
+    },
+    link: {
+      type: String,
+      trim: true
+    },
+    difficulty: {
+      type: String,
+      enum: ['easy', 'medium', 'hard', 'very-hard'],
+      required: true
+    },
+    addedAt: {
+      type: Date,
+      default: Date.now
+    }
   }],
   resources: [{
     name: {
