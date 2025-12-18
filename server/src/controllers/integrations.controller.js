@@ -120,7 +120,37 @@ export const getSupportedLanguages = asyncHandler(async (req, res) => {
 // @access  Private
 export const getCodeTemplate = asyncHandler(async (req, res) => {
   const { language } = req.params;
-  const template = usacoIDEService.getTemplate(language);
+  const { teamId } = req.query;
+  
+  let template = usacoIDEService.getTemplate(language);
+  
+  // If teamId is provided, try to get team's custom template
+  if (teamId) {
+    const TeamConfig = (await import('../models/TeamConfig.js')).default;
+    const team = await TeamConfig.findById(teamId);
+    
+    if (!team) {
+      return res.status(404).json({
+        success: false,
+        message: 'Team not found'
+      });
+    }
+    
+    // Check if user is a member of the team
+    const isMember = team.members.some(m => m.userId.toString() === req.user._id.toString());
+    const isCoach = team.coach && team.coach.toString() === req.user._id.toString();
+    
+    if (!isMember && !isCoach && req.user.role !== 'admin') {
+      return res.status(403).json({
+        success: false,
+        message: 'Not authorized to access this team\'s template'
+      });
+    }
+    
+    if (team.codeTemplate) {
+      template = team.codeTemplate;
+    }
+  }
 
   res.json({
     success: true,
