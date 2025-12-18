@@ -167,8 +167,15 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   <h3 class="font-semibold text-gray-800">USACO IDE</h3>
                 </div>
                 <p class="text-sm text-gray-600 mb-3">Create shareable IDE links with your team's code template</p>
+                <select 
+                  [(ngModel)]="selectedLanguage"
+                  class="w-full border rounded px-3 py-2 mb-2 text-sm">
+                  <option value="cpp">C++</option>
+                  <option value="java">Java</option>
+                  <option value="python">Python</option>
+                </select>
                 <button 
-                  (click)="createUsacoLink()"
+                  (click)="createUsacoLink(selectedLanguage)"
                   [disabled]="creatingUsacoLink"
                   class="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm disabled:bg-gray-300">
                   {{ creatingUsacoLink ? 'Creating...' : 'Create IDE Link' }}
@@ -489,6 +496,7 @@ export class TeamDetailComponent implements OnInit {
   rpcContestsError: string | null = null;
   rpcContests: any[] = [];
   usacoLinkUrl = '';
+  selectedLanguage = 'cpp';
 
   constructor(
     private teamService: TeamService,
@@ -666,11 +674,11 @@ export class TeamDetailComponent implements OnInit {
     });
   }
 
-  createUsacoLink(): void {
+  createUsacoLink(language: string = 'cpp'): void {
     if (!this.teamId) return;
     
     this.creatingUsacoLink = true;
-    this.integrationsService.createUsacoPermalink('cpp', this.teamId).subscribe({
+    this.integrationsService.createUsacoPermalink(language, this.teamId).subscribe({
       next: (response) => {
         if (response.ok && response.url) {
           this.usacoLinkUrl = response.url;
@@ -706,13 +714,40 @@ export class TeamDetailComponent implements OnInit {
   }
 
   copyUsacoLink(): void {
-    if (this.usacoLinkUrl) {
+    if (!this.usacoLinkUrl) return;
+    
+    // Try modern clipboard API first
+    if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(this.usacoLinkUrl).then(() => {
-        // Could show a toast notification here
         console.log('Link copied to clipboard');
+        // Show success feedback
       }).catch(err => {
         console.error('Failed to copy link:', err);
+        this.fallbackCopy();
       });
+    } else {
+      // Fallback for browsers without clipboard API
+      this.fallbackCopy();
+    }
+  }
+
+  private fallbackCopy(): void {
+    // Create temporary textarea element
+    const textarea = document.createElement('textarea');
+    textarea.value = this.usacoLinkUrl;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    
+    try {
+      document.execCommand('copy');
+      console.log('Link copied using fallback method');
+    } catch (err) {
+      console.error('Fallback copy failed:', err);
+      this.error = 'Failed to copy link. Please copy it manually.';
+    } finally {
+      document.body.removeChild(textarea);
     }
   }
 }
