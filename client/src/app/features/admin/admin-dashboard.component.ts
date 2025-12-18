@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { AuthService, User } from '../../core/services/auth.service';
 import { environment } from '../../../environments/environment';
+import { NavbarComponent } from '../../shared/components/navbar.component';
 
 interface UserManagement extends User {
   _id: string;
@@ -13,28 +14,11 @@ interface UserManagement extends User {
 
 @Component({
   selector: 'app-admin-dashboard',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, NavbarComponent],
   template: `
     <div class="min-h-screen bg-gray-100">
       <!-- Navigation -->
-      <nav class="bg-white shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="flex justify-between h-16">
-            <div class="flex items-center">
-              <h1 class="text-2xl font-bold text-blue-600">🏔️ Turistas CP - Admin Panel</h1>
-            </div>
-            <div class="flex items-center space-x-4">
-              <span class="text-gray-700">{{ currentUser?.username }} (Admin)</span>
-              <button
-                (click)="logout()"
-                class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <app-navbar></app-navbar>
 
       <!-- Main Content -->
       <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
@@ -254,9 +238,5 @@ export class AdminDashboardComponent implements OnInit {
         this.error = err.error?.message || 'Error updating member status';
       }
     });
-  }
-
-  logout(): void {
-    this.authService.logout();
   }
 }

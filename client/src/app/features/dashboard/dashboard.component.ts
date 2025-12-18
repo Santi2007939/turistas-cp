@@ -3,35 +3,15 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService, User } from '../../core/services/auth.service';
 import { RoadmapService, PersonalNode } from '../../core/services/roadmap.service';
+import { NavbarComponent } from '../../shared/components/navbar.component';
 
 @Component({
     selector: 'app-dashboard',
-    imports: [CommonModule, RouterModule],
+    imports: [CommonModule, RouterModule, NavbarComponent],
     template: `
     <div class="min-h-screen bg-gray-100">
       <!-- Navigation -->
-      <nav class="bg-white shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="flex justify-between h-16">
-            <div class="flex items-center">
-              <h1 class="text-2xl font-bold text-blue-600">🏔️ Turistas CP</h1>
-            </div>
-            <div class="flex items-center space-x-4">
-              <a routerLink="/dashboard" class="text-gray-700 hover:text-blue-600">Dashboard</a>
-              <a routerLink="/themes" class="text-gray-700 hover:text-blue-600">Themes</a>
-              <a routerLink="/roadmap" class="text-gray-700 hover:text-blue-600">Roadmap</a>
-              <a routerLink="/problems" class="text-gray-700 hover:text-blue-600">Problems</a>
-              <span class="text-gray-700">{{ currentUser?.username }}</span>
-              <button
-                (click)="logout()"
-                class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <app-navbar></app-navbar>
 
       <!-- Main Content -->
       <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
@@ -149,9 +129,5 @@ export class DashboardComponent implements OnInit {
         console.error('Error loading roadmap stats:', err);
       }
     });
-  }
-
-  logout(): void {
-    this.authService.logout();
   }
 }
