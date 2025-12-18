@@ -2,13 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { ThemesService, Theme } from '../../core/services/themes.service';
+import { NavbarComponent } from '../../shared/components/navbar.component';
 
 @Component({
   selector: 'app-themes-list',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, NavbarComponent],
   template: `
-    <div class="container mx-auto px-4 py-8">
+    <div class="min-h-screen bg-gray-100">
+      <!-- Navigation -->
+      <app-navbar></app-navbar>
+      
+      <div class="container mx-auto px-4 py-8">
       <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold text-gray-800">Learning Themes</h1>
         <button 
@@ -71,6 +76,7 @@ import { ThemesService, Theme } from '../../core/services/themes.service';
           Create First Theme
         </button>
       </div>
+    </div>
     </div>
   `
 })

@@ -78,6 +78,20 @@ const teamConfigSchema = new mongoose.Schema({
       default: Date.now
     }
   }],
+  links: {
+    whatsappGroup: {
+      type: String,
+      trim: true
+    },
+    discordServer: {
+      type: String,
+      trim: true
+    }
+  },
+  codeTemplate: {
+    type: String,
+    default: ''
+  },
   createdAt: {
     type: Date,
     default: Date.now

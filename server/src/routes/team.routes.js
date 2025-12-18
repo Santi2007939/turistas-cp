@@ -179,6 +179,83 @@ router.delete('/:id/members/:userId', asyncHandler(async (req, res) => {
   });
 }));
 
+// @desc    Update team links (WhatsApp, Discord)
+// @route   PUT /api/team/:id/links
+// @access  Private/Team Owner/Admin
+router.put('/:id/links', asyncHandler(async (req, res) => {
+  const team = await TeamConfig.findById(req.params.id);
+
+  if (!team) {
+    return res.status(404).json({
+      success: false,
+      message: 'Team not found'
+    });
+  }
+
+  // Check if user is team owner or admin
+  if (team.coach.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+    return res.status(403).json({
+      success: false,
+      message: 'Not authorized to update team links'
+    });
+  }
+
+  const { whatsappGroup, discordServer } = req.body;
+
+  if (whatsappGroup !== undefined) {
+    team.links = team.links || {};
+    team.links.whatsappGroup = whatsappGroup;
+  }
+
+  if (discordServer !== undefined) {
+    team.links = team.links || {};
+    team.links.discordServer = discordServer;
+  }
+
+  await team.save();
+
+  res.json({
+    success: true,
+    message: 'Team links updated successfully',
+    data: { team }
+  });
+}));
+
+// @desc    Update team code template
+// @route   PUT /api/team/:id/template
+// @access  Private/Team Owner/Admin
+router.put('/:id/template', asyncHandler(async (req, res) => {
+  const team = await TeamConfig.findById(req.params.id);
+
+  if (!team) {
+    return res.status(404).json({
+      success: false,
+      message: 'Team not found'
+    });
+  }
+
+  // Check if user is team owner or admin
+  if (team.coach.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+    return res.status(403).json({
+      success: false,
+      message: 'Not authorized to update team template'
+    });
+  }
+
+  const { codeTemplate } = req.body;
+
+  if (codeTemplate !== undefined) {
+    team.codeTemplate = codeTemplate;
+    await team.save();
+  }
+
+  res.json({
+    success: true,
+    message: 'Team code template updated successfully',
+    data: { team }
+  });
+}));
+
 // @desc    Delete team
 // @route   DELETE /api/team/:id
 // @access  Private/Admin
