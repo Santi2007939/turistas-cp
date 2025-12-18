@@ -32,6 +32,11 @@ export interface TeamConfig {
     url: string;
     createdAt: Date;
   }>;
+  links?: {
+    whatsappGroup?: string;
+    discordServer?: string;
+  };
+  codeTemplate?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -104,5 +109,19 @@ export class TeamService {
    */
   leaveTeam(teamId: string): Observable<any> {
     return this.api.post(`/api/team/${teamId}/leave`, {});
+  }
+
+  /**
+   * Update team links (WhatsApp, Discord)
+   */
+  updateTeamLinks(teamId: string, links: { whatsappGroup?: string; discordServer?: string }): Observable<TeamResponse> {
+    return this.api.put<TeamResponse>(`/api/team/${teamId}/links`, links);
+  }
+
+  /**
+   * Update team code template
+   */
+  updateTeamTemplate(teamId: string, codeTemplate: string): Observable<TeamResponse> {
+    return this.api.put<TeamResponse>(`/api/team/${teamId}/template`, { codeTemplate });
   }
 }

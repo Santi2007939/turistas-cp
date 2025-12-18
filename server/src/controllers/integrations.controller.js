@@ -120,7 +120,18 @@ export const getSupportedLanguages = asyncHandler(async (req, res) => {
 // @access  Private
 export const getCodeTemplate = asyncHandler(async (req, res) => {
   const { language } = req.params;
-  const template = usacoIDEService.getTemplate(language);
+  const { teamId } = req.query;
+  
+  let template = usacoIDEService.getTemplate(language);
+  
+  // If teamId is provided, try to get team's custom template
+  if (teamId) {
+    const TeamConfig = (await import('../models/TeamConfig.js')).default;
+    const team = await TeamConfig.findById(teamId);
+    if (team && team.codeTemplate) {
+      template = team.codeTemplate;
+    }
+  }
 
   res.json({
     success: true,
