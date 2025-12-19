@@ -4,13 +4,17 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { RoadmapService, PersonalNode, PopulatedUser } from '../../core/services/roadmap.service';
 import { ThemesService, Theme } from '../../core/services/themes.service';
+import { NavbarComponent } from '../../shared/components/navbar.component';
 
 @Component({
   selector: 'app-roadmap',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, NavbarComponent],
   template: `
     <div class="min-h-screen bg-gray-50">
+      <!-- Navigation -->
+      <app-navbar></app-navbar>
+      
       <div class="container mx-auto px-4 py-8">
         <!-- Header Section -->
         <div class="bg-white rounded-lg shadow-sm p-6 mb-6">

@@ -48,6 +48,13 @@ import { AuthService, User } from '../../core/services/auth.service';
               Problems
             </a>
             <a 
+              routerLink="/team" 
+              routerLinkActive="text-blue-600 font-semibold"
+              [routerLinkActiveOptions]="{exact: false}"
+              class="text-gray-700 hover:text-blue-600 transition-colors px-3 py-2 rounded-md text-sm font-medium">
+              Team
+            </a>
+            <a 
               *ngIf="currentUser?.role === 'admin'"
               routerLink="/admin" 
               routerLinkActive="text-blue-600 font-semibold"
@@ -136,6 +143,14 @@ import { AuthService, User } from '../../core/services/auth.service';
             [routerLinkActiveOptions]="{exact: false}"
             class="text-gray-700 hover:bg-gray-100 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">
             Problems
+          </a>
+          <a 
+            routerLink="/team"
+            (click)="closeMobileMenu()"
+            routerLinkActive="bg-blue-50 text-blue-600 font-semibold"
+            [routerLinkActiveOptions]="{exact: false}"
+            class="text-gray-700 hover:bg-gray-100 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">
+            Team
           </a>
           <a 
             *ngIf="currentUser?.role === 'admin'"
