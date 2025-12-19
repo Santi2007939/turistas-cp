@@ -26,6 +26,10 @@ const teamConfigSchema = new mongoose.Schema({
       enum: ['leader', 'member'],
       default: 'member'
     },
+    isActive: {
+      type: Boolean,
+      default: true
+    },
     joinedAt: {
       type: Date,
       default: Date.now

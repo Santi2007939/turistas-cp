@@ -10,6 +10,9 @@ const router = express.Router();
 // Rate limiter for team join/leave operations (max 5 requests per minute per user)
 const teamActionLimiter = createRateLimiter(5, 60000, 'Too many team join/leave requests. Please try again later.');
 
+// Rate limiter for team management operations (max 10 requests per minute per user)
+const teamManagementLimiter = createRateLimiter(10, 60000, 'Too many team management requests. Please try again later.');
+
 // All routes require authentication
 router.use(protect);
 
@@ -58,7 +61,8 @@ router.post('/', authorize('admin'), asyncHandler(async (req, res) => {
     coach: req.user._id,
     members: [{
       userId: req.user._id,
-      role: 'leader'
+      role: 'leader',
+      isActive: true // First member (leader) is active
     }]
   };
 
@@ -142,7 +146,11 @@ router.post('/:id/members', asyncHandler(async (req, res) => {
     });
   }
 
-  team.members.push({ userId, role: 'member' });
+  team.members.push({ 
+    userId, 
+    role: 'member',
+    isActive: team.members.length <= 2 // First 3 members are active (0, 1, 2)
+  });
   await team.save();
 
   res.json({
@@ -324,7 +332,8 @@ router.post('/:id/join', teamActionLimiter, asyncHandler(async (req, res) => {
 
   team.members.push({ 
     userId: req.user._id, 
-    role: 'member' 
+    role: 'member',
+    isActive: team.members.length <= 2 // First 3 members are active (0, 1, 2)
   });
   await team.save();
 
@@ -334,6 +343,76 @@ router.post('/:id/join', teamActionLimiter, asyncHandler(async (req, res) => {
   res.json({
     success: true,
     message: 'Successfully joined the team',
+    data: { team: updatedTeam }
+  });
+}));
+
+// @desc    Toggle member active status
+// @route   PUT /api/team/:id/members/:userId/active
+// @access  Private/Team Owner/Admin
+router.put('/:id/members/:userId/active', teamManagementLimiter, asyncHandler(async (req, res) => {
+  const team = await TeamConfig.findById(req.params.id);
+
+  if (!team) {
+    return res.status(404).json({
+      success: false,
+      message: 'Team not found'
+    });
+  }
+
+  // Check if user is team leader or admin
+  const isLeader = team.members.some(m => 
+    m.userId.toString() === req.user._id.toString() && m.role === 'leader'
+  );
+  const isCoach = team.coach && team.coach.toString() === req.user._id.toString();
+  
+  if (!isLeader && !isCoach && req.user.role !== 'admin') {
+    return res.status(403).json({
+      success: false,
+      message: 'Not authorized to update member status'
+    });
+  }
+
+  // Find the member to update
+  const member = team.members.find(m => m.userId.toString() === req.params.userId);
+  
+  if (!member) {
+    return res.status(404).json({
+      success: false,
+      message: 'Member not found in team'
+    });
+  }
+
+  const { isActive } = req.body;
+  
+  if (typeof isActive !== 'boolean') {
+    return res.status(400).json({
+      success: false,
+      message: 'isActive must be a boolean value'
+    });
+  }
+
+  // Count current active members
+  const activeCount = team.members.filter(m => m.isActive).length;
+  
+  // If trying to activate and already at limit (3), prevent it
+  if (isActive && !member.isActive && activeCount >= 3) {
+    return res.status(400).json({
+      success: false,
+      message: 'Cannot activate member: maximum of 3 active members allowed'
+    });
+  }
+
+  // Update the member's active status
+  member.isActive = isActive;
+  await team.save();
+
+  const updatedTeam = await TeamConfig.findById(req.params.id)
+    .populate('coach members.userId', 'username email fullName');
+
+  res.json({
+    success: true,
+    message: `Member ${isActive ? 'activated' : 'deactivated'} successfully`,
     data: { team: updatedTeam }
   });
 }));
