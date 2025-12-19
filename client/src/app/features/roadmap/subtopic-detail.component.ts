@@ -5,13 +5,17 @@ import { FormsModule } from '@angular/forms';
 import { RoadmapService, PersonalNode, Subtopic, CodeSnippet, Resource, LinkedProblem } from '../../core/services/roadmap.service';
 import { ProblemsService, Problem } from '../../core/services/problems.service';
 import { AuthService, User } from '../../core/services/auth.service';
+import { NavbarComponent } from '../../shared/components/navbar.component';
 
 @Component({
   selector: 'app-subtopic-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, NavbarComponent],
   template: `
     <div class="min-h-screen bg-gray-50">
+      <!-- Navigation -->
+      <app-navbar></app-navbar>
+      
       <div class="container mx-auto px-4 py-8">
         <!-- Header -->
         <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
