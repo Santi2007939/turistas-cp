@@ -25,11 +25,18 @@ dotenv.config();
 const app = express();
 
 // Connect to database and initialize Team Turistas
-connectDB().then(() => {
-  // Initialize Team Turistas after database connection
-  initializeTeamTuristas().catch(err => {
-    console.error('Team initialization error:', err);
-  });
+// Note: Server starts regardless of team initialization status
+connectDB().then(async () => {
+  try {
+    // Initialize Team Turistas after database connection
+    await initializeTeamTuristas();
+  } catch (err) {
+    console.error('⚠️  Team initialization failed:', err.message);
+    console.log('   Server will continue running. You can manually initialize the team using: npm run init:team');
+  }
+}).catch(err => {
+  console.error('❌ Database connection failed:', err);
+  process.exit(1);
 });
 
 // Middleware

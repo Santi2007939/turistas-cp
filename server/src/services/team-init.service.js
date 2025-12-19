@@ -44,8 +44,14 @@ export async function initializeTeamTuristas() {
     
     try {
       if (fs.existsSync(templatePath)) {
-        codeTemplate = fs.readFileSync(templatePath, 'utf8');
-        console.log('   ✓ Loaded code template from plantilla.txt');
+        // Check file size before reading (max 100KB to prevent DoS)
+        const stats = fs.statSync(templatePath);
+        if (stats.size > 100000) {
+          console.log('   ⚠️  plantilla.txt is too large (max 100KB), using empty template');
+        } else {
+          codeTemplate = fs.readFileSync(templatePath, 'utf8');
+          console.log('   ✓ Loaded code template from plantilla.txt');
+        }
       }
     } catch (err) {
       console.log('   ⚠️  Could not load plantilla.txt, using empty template');
@@ -61,7 +67,7 @@ export async function initializeTeamTuristas() {
         role: 'leader',
         joinedAt: new Date()
       }] : [],
-      maxMembers: parseInt(process.env.TEAM_MAX_MEMBERS) || 50,
+      maxMembers: Math.min(parseInt(process.env.TEAM_MAX_MEMBERS, 10) || 50, 50),
       settings: {
         isPublic: true,
         allowJoinRequests: true,
