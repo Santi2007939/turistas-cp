@@ -15,7 +15,6 @@ import { ProblemsLibraryComponent } from './features/problems/problems-library.c
 import { ProblemDetailComponent } from './features/problems/problem-detail.component';
 import { TeamListComponent } from './features/team/team-list.component';
 import { TeamDetailComponent } from './features/team/team-detail.component';
-import { TeamCreateComponent } from './features/team/team-create.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },

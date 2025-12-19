@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from './config/database.js';
 import { errorHandler, notFound } from './middlewares/error.js';
+import { initializeTeamTuristas } from './services/team-init.service.js';
 
 // Import routes
 import authRoutes from './routes/auth.routes.js';
@@ -23,8 +24,20 @@ dotenv.config();
 // Create Express app
 const app = express();
 
-// Connect to database
-connectDB();
+// Connect to database and initialize Team Turistas
+// Note: Server starts regardless of team initialization status
+connectDB().then(async () => {
+  try {
+    // Initialize Team Turistas after database connection
+    await initializeTeamTuristas();
+  } catch (err) {
+    console.error('⚠️  Team initialization failed:', err.message);
+    console.log('   Server will continue running. You can manually initialize the team using: npm run init:team');
+  }
+}).catch(err => {
+  console.error('❌ Database connection failed:', err);
+  process.exit(1);
+});
 
 // Middleware
 app.use(cors({
