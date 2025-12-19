@@ -33,7 +33,6 @@ export const routes: Routes = [
   { path: 'problems', component: ProblemsLibraryComponent, canActivate: [AuthGuard] },
   { path: 'problems/:id', component: ProblemDetailComponent, canActivate: [AuthGuard] },
   { path: 'team', component: TeamListComponent, canActivate: [AuthGuard] },
-  { path: 'team/create', component: TeamCreateComponent, canActivate: [AuthGuard] },
   { path: 'team/:id', component: TeamDetailComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '/dashboard' }
 ];
