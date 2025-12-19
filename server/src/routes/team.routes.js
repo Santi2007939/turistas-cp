@@ -10,6 +10,9 @@ const router = express.Router();
 // Rate limiter for team join/leave operations (max 5 requests per minute per user)
 const teamActionLimiter = createRateLimiter(5, 60000, 'Too many team join/leave requests. Please try again later.');
 
+// Rate limiter for team management operations (max 10 requests per minute per user)
+const teamManagementLimiter = createRateLimiter(10, 60000, 'Too many team management requests. Please try again later.');
+
 // All routes require authentication
 router.use(protect);
 
@@ -347,7 +350,7 @@ router.post('/:id/join', teamActionLimiter, asyncHandler(async (req, res) => {
 // @desc    Toggle member active status
 // @route   PUT /api/team/:id/members/:userId/active
 // @access  Private/Team Owner/Admin
-router.put('/:id/members/:userId/active', asyncHandler(async (req, res) => {
+router.put('/:id/members/:userId/active', teamManagementLimiter, asyncHandler(async (req, res) => {
   const team = await TeamConfig.findById(req.params.id);
 
   if (!team) {
