@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TeamService, TeamConfig } from '../../core/services/team.service';
+import { environment } from '../../../environments/environment';
 
 /**
  * TeamListComponent now redirects directly to Team Turistas detail page
@@ -16,7 +17,7 @@ import { TeamService, TeamConfig } from '../../core/services/team.service';
       <div class="text-center">
         <div *ngIf="loading">
           <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p class="text-gray-600">Loading Team Turistas...</p>
+          <p class="text-gray-600">Loading {{ teamName }}...</p>
         </div>
         
         <div *ngIf="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
@@ -35,7 +36,7 @@ import { TeamService, TeamConfig } from '../../core/services/team.service';
 export class TeamListComponent implements OnInit {
   loading = true;
   error: string | null = null;
-  private readonly TEAM_TURISTAS_NAME = 'Team Turistas';
+  teamName = environment.teamName;
 
   constructor(
     private teamService: TeamService,
@@ -55,9 +56,9 @@ export class TeamListComponent implements OnInit {
       next: (response) => {
         const teams = response.data.teams;
         
-        // Find Team Turistas
+        // Find Team Turistas by name from environment config
         const teamTuristas = teams.find(team => 
-          team.name === this.TEAM_TURISTAS_NAME
+          team.name === this.teamName
         );
         
         if (teamTuristas) {
@@ -65,7 +66,7 @@ export class TeamListComponent implements OnInit {
           this.router.navigate(['/team', teamTuristas._id]);
         } else {
           // Team Turistas not found
-          this.error = `${this.TEAM_TURISTAS_NAME} not found. Please contact an administrator to initialize the team.`;
+          this.error = `${this.teamName} not found. Please contact an administrator to initialize the team.`;
           this.loading = false;
         }
       },

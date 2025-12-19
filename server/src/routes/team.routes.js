@@ -306,12 +306,16 @@ router.post('/:id/join', asyncHandler(async (req, res) => {
     });
   }
 
-  // Check if team allows join requests
-  if (!team.settings.allowJoinRequests && req.user.role !== 'admin') {
-    return res.status(403).json({
-      success: false,
-      message: 'This team does not allow join requests'
-    });
+  // Check if team allows join requests (admins can bypass this setting)
+  if (!team.settings.allowJoinRequests) {
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({
+        success: false,
+        message: 'This team does not allow join requests'
+      });
+    }
+    // Admin bypass - could log this for audit trail
+    console.log(`Admin user ${req.user.username} joined team ${team.name} bypassing join restrictions`);
   }
 
   team.members.push({ 

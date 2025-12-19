@@ -19,7 +19,8 @@ dotenv.config({ path: path.join(__dirname, '..', '.env') });
 import TeamConfig from '../src/models/TeamConfig.js';
 import User from '../src/models/User.js';
 
-const TEAM_NAME = 'Team Turistas';
+// Team name - can be configured via environment variable
+const TEAM_NAME = process.env.TEAM_NAME || 'Team Turistas';
 
 async function initializeTeamTuristas() {
   try {
@@ -41,8 +42,10 @@ async function initializeTeamTuristas() {
     const adminUser = await User.findOne({ role: 'admin' });
     
     if (!adminUser) {
-      console.log('Warning: No admin user found. Team will be created without a coach.');
-      console.log('You can assign a coach later by updating the team.');
+      console.error('❌ Error: No admin user found in the database.');
+      console.error('Please create at least one admin user before initializing Team Turistas.');
+      console.error('Team needs a leader/coach to be properly managed.');
+      process.exit(1);
     }
 
     // Load default code template from plantilla.txt
@@ -80,8 +83,12 @@ async function initializeTeamTuristas() {
       },
       excalidrawRooms: [],
       links: {
-        whatsappGroup: process.env.TEAM_WHATSAPP_GROUP || '',
-        discordServer: process.env.TEAM_DISCORD_SERVER || ''
+        whatsappGroup: process.env.TEAM_WHATSAPP_GROUP && process.env.TEAM_WHATSAPP_GROUP !== 'https://chat.whatsapp.com/your-group-link' 
+          ? process.env.TEAM_WHATSAPP_GROUP 
+          : undefined,
+        discordServer: process.env.TEAM_DISCORD_SERVER && process.env.TEAM_DISCORD_SERVER !== 'https://discord.gg/your-server-link'
+          ? process.env.TEAM_DISCORD_SERVER 
+          : undefined
       },
       codeTemplate: codeTemplate
     };
