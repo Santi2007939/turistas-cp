@@ -3,8 +3,12 @@ import TeamConfig from '../models/TeamConfig.js';
 import User from '../models/User.js';
 import { protect, authorize } from '../middlewares/auth.js';
 import { asyncHandler } from '../middlewares/error.js';
+import { createRateLimiter } from '../middlewares/rateLimiter.js';
 
 const router = express.Router();
+
+// Rate limiter for team join/leave operations (max 5 requests per minute per user)
+const teamActionLimiter = createRateLimiter(5, 60000, 'Too many team join/leave requests. Please try again later.');
 
 // All routes require authentication
 router.use(protect);
@@ -280,7 +284,7 @@ router.put('/:id/template', asyncHandler(async (req, res) => {
 // @desc    Join a team
 // @route   POST /api/team/:id/join
 // @access  Private
-router.post('/:id/join', asyncHandler(async (req, res) => {
+router.post('/:id/join', teamActionLimiter, asyncHandler(async (req, res) => {
   const team = await TeamConfig.findById(req.params.id);
 
   if (!team) {
@@ -337,7 +341,7 @@ router.post('/:id/join', asyncHandler(async (req, res) => {
 // @desc    Leave a team
 // @route   POST /api/team/:id/leave
 // @access  Private
-router.post('/:id/leave', asyncHandler(async (req, res) => {
+router.post('/:id/leave', teamActionLimiter, asyncHandler(async (req, res) => {
   const team = await TeamConfig.findById(req.params.id);
 
   if (!team) {
