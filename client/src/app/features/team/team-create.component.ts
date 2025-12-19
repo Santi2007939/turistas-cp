@@ -157,7 +157,7 @@ export class TeamCreateComponent {
   creating = false;
   error: string | null = null;
 
-  teamData: Partial<TeamConfig> = {
+  teamData = {
     name: '',
     description: '',
     maxMembers: 10,

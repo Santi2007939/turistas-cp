@@ -117,7 +117,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <div class="flex gap-2">
                   <a 
                     *ngIf="team.links?.whatsappGroup"
-                    [href]="team.links.whatsappGroup" 
+                    [href]="team.links?.whatsappGroup || ''" 
                     target="_blank"
                     class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded text-sm">
                     Open
@@ -140,7 +140,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <div class="flex gap-2">
                   <a 
                     *ngIf="team.links?.discordServer"
-                    [href]="team.links.discordServer" 
+                    [href]="team.links?.discordServer || ''" 
                     target="_blank"
                     class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded text-sm">
                     Open

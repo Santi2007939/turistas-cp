@@ -19,7 +19,7 @@ interface KanbanColumn {
 @Component({
   selector: 'app-roadmap-kanban',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, DragDropModule],
+  imports: [CommonModule, RouterModule, FormsModule, DragDropModule, NavbarComponent],
   template: `
     <div class="min-h-screen bg-gray-50">
       <!-- Navigation -->
