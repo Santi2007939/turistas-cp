@@ -5,6 +5,7 @@ import { ApiService } from './api.service';
 export interface TeamMember {
   userId: any;
   role: 'leader' | 'member';
+  isActive?: boolean;
   joinedAt: Date;
 }
 
@@ -123,5 +124,12 @@ export class TeamService {
    */
   updateTeamTemplate(teamId: string, codeTemplate: string): Observable<TeamResponse> {
     return this.api.put<TeamResponse>(`/api/team/${teamId}/template`, { codeTemplate });
+  }
+
+  /**
+   * Toggle member active status
+   */
+  toggleMemberActive(teamId: string, userId: string, isActive: boolean): Observable<TeamResponse> {
+    return this.api.put<TeamResponse>(`/api/team/${teamId}/members/${userId}/active`, { isActive });
   }
 }

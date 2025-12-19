@@ -65,6 +65,7 @@ export async function initializeTeamTuristas() {
       members: adminUser ? [{
         userId: adminUser._id,
         role: 'leader',
+        isActive: true, // First member (leader) is active
         joinedAt: new Date()
       }] : [],
       maxMembers: Math.min(parseInt(process.env.TEAM_MAX_MEMBERS, 10) || 50, 50),
