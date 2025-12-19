@@ -186,7 +186,12 @@ export class TeamCreateComponent {
     this.teamService.createTeam(this.teamData).subscribe({
       next: (response) => {
         // Navigate to the new team's detail page
-        this.router.navigate(['/team', response.data.team._id]);
+        if (response?.data?.team?._id) {
+          this.router.navigate(['/team', response.data.team._id]);
+        } else {
+          // If no ID is returned, navigate to team list
+          this.router.navigate(['/team']);
+        }
       },
       error: (err) => {
         this.error = 'Failed to create team. Please try again.';
