@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit, ElementRef, ViewChild } from '@angula
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { RoadmapService, PersonalNode } from '../../core/services/roadmap.service';
+import { NavbarComponent } from '../../shared/components/navbar.component';
 
 interface GraphNode {
   id: string;
@@ -16,9 +17,12 @@ interface GraphNode {
 @Component({
   selector: 'app-roadmap-graph',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, NavbarComponent],
   template: `
     <div class="min-h-screen bg-gray-50">
+      <!-- Navigation -->
+      <app-navbar></app-navbar>
+      
       <div class="container mx-auto px-4 py-8">
         <!-- Header -->
         <div class="bg-white rounded-lg shadow-sm p-6 mb-6">

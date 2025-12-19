@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { RoadmapService, PersonalNode } from '../../core/services/roadmap.service';
 import { ThemesService, Theme } from '../../core/services/themes.service';
+import { NavbarComponent } from '../../shared/components/navbar.component';
 
 interface KanbanColumn {
   id: string;
@@ -21,6 +22,9 @@ interface KanbanColumn {
   imports: [CommonModule, RouterModule, FormsModule, DragDropModule],
   template: `
     <div class="min-h-screen bg-gray-50">
+      <!-- Navigation -->
+      <app-navbar></app-navbar>
+      
       <div class="container mx-auto px-4 py-8">
         <!-- Header -->
         <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
