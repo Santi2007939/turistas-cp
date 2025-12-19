@@ -277,6 +277,103 @@ router.put('/:id/template', asyncHandler(async (req, res) => {
   });
 }));
 
+// @desc    Join a team
+// @route   POST /api/team/:id/join
+// @access  Private
+router.post('/:id/join', asyncHandler(async (req, res) => {
+  const team = await TeamConfig.findById(req.params.id);
+
+  if (!team) {
+    return res.status(404).json({
+      success: false,
+      message: 'Team not found'
+    });
+  }
+
+  // Check if team is full
+  if (team.members.length >= team.maxMembers) {
+    return res.status(400).json({
+      success: false,
+      message: 'Team is full'
+    });
+  }
+
+  // Check if user is already a member
+  if (team.members.some(m => m.userId.toString() === req.user._id.toString())) {
+    return res.status(400).json({
+      success: false,
+      message: 'You are already a member of this team'
+    });
+  }
+
+  // Check if team allows join requests
+  if (!team.settings.allowJoinRequests && req.user.role !== 'admin') {
+    return res.status(403).json({
+      success: false,
+      message: 'This team does not allow join requests'
+    });
+  }
+
+  team.members.push({ 
+    userId: req.user._id, 
+    role: 'member' 
+  });
+  await team.save();
+
+  const updatedTeam = await TeamConfig.findById(req.params.id)
+    .populate('coach members.userId', 'username email fullName');
+
+  res.json({
+    success: true,
+    message: 'Successfully joined the team',
+    data: { team: updatedTeam }
+  });
+}));
+
+// @desc    Leave a team
+// @route   POST /api/team/:id/leave
+// @access  Private
+router.post('/:id/leave', asyncHandler(async (req, res) => {
+  const team = await TeamConfig.findById(req.params.id);
+
+  if (!team) {
+    return res.status(404).json({
+      success: false,
+      message: 'Team not found'
+    });
+  }
+
+  // Check if user is a member
+  const memberIndex = team.members.findIndex(m => m.userId.toString() === req.user._id.toString());
+  
+  if (memberIndex === -1) {
+    return res.status(400).json({
+      success: false,
+      message: 'You are not a member of this team'
+    });
+  }
+
+  // Prevent the last leader from leaving
+  const member = team.members[memberIndex];
+  if (member.role === 'leader') {
+    const leaderCount = team.members.filter(m => m.role === 'leader').length;
+    if (leaderCount === 1) {
+      return res.status(400).json({
+        success: false,
+        message: 'Cannot leave: you are the only leader. Please assign another leader first.'
+      });
+    }
+  }
+
+  team.members.splice(memberIndex, 1);
+  await team.save();
+
+  res.json({
+    success: true,
+    message: 'Successfully left the team'
+  });
+}));
+
 // @desc    Delete team
 // @route   DELETE /api/team/:id
 // @access  Private/Admin
