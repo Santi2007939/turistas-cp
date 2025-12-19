@@ -9,7 +9,8 @@
     "dev": "nodemon src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "usaco:link": "node scripts/get-usaco-link-server.js",
-    "usaco:server": "USACO_HEADLESS=false npm run dev"
+    "usaco:server": "USACO_HEADLESS=false npm run dev",
+    "init:team": "node scripts/init-team-turistas.js"
   },
   "keywords": [
     "competitive-programming",

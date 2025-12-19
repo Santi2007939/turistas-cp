@@ -65,10 +65,10 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               <h3 class="text-lg font-semibold">💻 Problems</h3>
               <p class="mt-2 text-gray-600">Practice and exercises</p>
             </a>
-            <div class="bg-white overflow-hidden shadow rounded-lg p-6 opacity-50">
+            <a routerLink="/team" class="bg-white overflow-hidden shadow rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer">
               <h3 class="text-lg font-semibold">👥 Team Turistas</h3>
               <p class="mt-2 text-gray-600">Collaborative workspace</p>
-            </div>
+            </a>
             <div class="bg-white overflow-hidden shadow rounded-lg p-6 opacity-50">
               <h3 class="text-lg font-semibold">📅 Calendar</h3>
               <p class="mt-2 text-gray-600">Contests and events (Coming soon)</p>

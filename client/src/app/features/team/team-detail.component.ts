@@ -35,7 +35,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             <button 
               (click)="goBack()"
               class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
-              Back to Teams
+              Back to Dashboard
             </button>
           </div>
 
@@ -563,7 +563,7 @@ export class TeamDetailComponent implements OnInit {
 
     this.teamService.leaveTeam(this.teamId).subscribe({
       next: () => {
-        this.router.navigate(['/team']);
+        this.router.navigate(['/dashboard']);
       },
       error: (err) => {
         this.error = 'Failed to leave team.';
@@ -573,7 +573,7 @@ export class TeamDetailComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/team']);
+    this.router.navigate(['/dashboard']);
   }
 
   isTeamLeader(): boolean {
