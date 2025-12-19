@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from './config/database.js';
 import { errorHandler, notFound } from './middlewares/error.js';
+import { initializeTeamTuristas } from './services/team-init.service.js';
 
 // Import routes
 import authRoutes from './routes/auth.routes.js';
@@ -23,8 +24,13 @@ dotenv.config();
 // Create Express app
 const app = express();
 
-// Connect to database
-connectDB();
+// Connect to database and initialize Team Turistas
+connectDB().then(() => {
+  // Initialize Team Turistas after database connection
+  initializeTeamTuristas().catch(err => {
+    console.error('Team initialization error:', err);
+  });
+});
 
 // Middleware
 app.use(cors({
