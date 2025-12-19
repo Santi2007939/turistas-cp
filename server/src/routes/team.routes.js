@@ -146,7 +146,7 @@ router.post('/:id/members', asyncHandler(async (req, res) => {
   team.members.push({ 
     userId, 
     role: 'member',
-    isActive: team.members.length < 3 // First 3 members are active
+    isActive: team.members.length <= 2 // First 3 members are active (0, 1, 2)
   });
   await team.save();
 
@@ -330,7 +330,7 @@ router.post('/:id/join', teamActionLimiter, asyncHandler(async (req, res) => {
   team.members.push({ 
     userId: req.user._id, 
     role: 'member',
-    isActive: team.members.length < 3 // First 3 members are active
+    isActive: team.members.length <= 2 // First 3 members are active (0, 1, 2)
   });
   await team.save();
 

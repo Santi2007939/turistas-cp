@@ -816,7 +816,7 @@ export class TeamDetailComponent implements OnInit {
 
   getActiveMembers(): TeamMember[] {
     if (!this.team) return [];
-    return this.team.members.filter(m => m.isActive !== false);
+    return this.team.members.filter(m => m.isActive === true);
   }
 
   getInactiveMembers(): TeamMember[] {
