@@ -15,6 +15,7 @@ import contestsRoutes from './routes/contests.routes.js';
 import calendarRoutes from './routes/calendar.routes.js';
 import achievementsRoutes from './routes/achievements.routes.js';
 import integrationsRoutes from './routes/integrations.routes.js';
+import teamRoutes from './routes/team.routes.js';
 
 // Load environment variables
 dotenv.config();
@@ -54,6 +55,7 @@ app.use('/api/contests', contestsRoutes);
 app.use('/api/calendar', calendarRoutes);
 app.use('/api/achievements', achievementsRoutes);
 app.use('/api/integrations', integrationsRoutes);
+app.use('/api/team', teamRoutes);
 
 // 404 handler
 app.use(notFound);
