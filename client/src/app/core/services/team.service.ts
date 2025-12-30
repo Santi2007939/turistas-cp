@@ -9,6 +9,13 @@ export interface TeamMember {
   joinedAt: Date;
 }
 
+export interface CodeSession {
+  _id?: string;
+  name: string;
+  link: string;
+  createdAt: Date;
+}
+
 export interface TeamConfig {
   _id: string;
   name: string;
@@ -38,6 +45,7 @@ export interface TeamConfig {
     discordServer?: string;
   };
   codeTemplate?: string;
+  codeSessions?: CodeSession[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -131,5 +139,26 @@ export class TeamService {
    */
   toggleMemberActive(teamId: string, userId: string, isActive: boolean): Observable<TeamResponse> {
     return this.api.put<TeamResponse>(`/api/team/${teamId}/members/${userId}/active`, { isActive });
+  }
+
+  /**
+   * Add code session
+   */
+  addCodeSession(teamId: string, name: string, link: string): Observable<TeamResponse> {
+    return this.api.post<TeamResponse>(`/api/team/${teamId}/code-sessions`, { name, link });
+  }
+
+  /**
+   * Update code session name
+   */
+  updateCodeSession(teamId: string, sessionId: string, name: string): Observable<TeamResponse> {
+    return this.api.put<TeamResponse>(`/api/team/${teamId}/code-sessions/${sessionId}`, { name });
+  }
+
+  /**
+   * Delete code session
+   */
+  deleteCodeSession(teamId: string, sessionId: string): Observable<TeamResponse> {
+    return this.api.delete<TeamResponse>(`/api/team/${teamId}/code-sessions/${sessionId}`);
   }
 }

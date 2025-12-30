@@ -96,6 +96,20 @@ const teamConfigSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
+  codeSessions: [{
+    name: {
+      type: String,
+      required: true
+    },
+    link: {
+      type: String,
+      required: true
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now
+    }
+  }],
   createdAt: {
     type: Date,
     default: Date.now
