@@ -461,6 +461,174 @@ router.post('/:id/leave', teamActionLimiter, asyncHandler(async (req, res) => {
   });
 }));
 
+// @desc    Add code session to team
+// @route   POST /api/team/:id/code-sessions
+// @access  Private/Team Owner/Admin
+router.post('/:id/code-sessions', teamManagementLimiter, asyncHandler(async (req, res) => {
+  const team = await TeamConfig.findById(req.params.id);
+
+  if (!team) {
+    return res.status(404).json({
+      success: false,
+      message: 'Team not found'
+    });
+  }
+
+  // Check if user is team leader or admin
+  const isLeader = team.members.some(m => 
+    m.userId.toString() === req.user._id.toString() && m.role === 'leader'
+  );
+  const isCoach = team.coach && team.coach.toString() === req.user._id.toString();
+  
+  if (!isLeader && !isCoach && req.user.role !== 'admin') {
+    return res.status(403).json({
+      success: false,
+      message: 'Not authorized to add code sessions'
+    });
+  }
+
+  const { name, link } = req.body;
+
+  if (!name || !link) {
+    return res.status(400).json({
+      success: false,
+      message: 'Name and link are required'
+    });
+  }
+
+  // Validate link format (basic URL validation)
+  try {
+    new URL(link);
+  } catch (err) {
+    return res.status(400).json({
+      success: false,
+      message: 'Invalid URL format for link'
+    });
+  }
+
+  // Initialize codeSessions array if it doesn't exist
+  if (!team.codeSessions) {
+    team.codeSessions = [];
+  }
+
+  team.codeSessions.push({ name, link });
+  await team.save();
+
+  const updatedTeam = await TeamConfig.findById(req.params.id)
+    .populate('coach members.userId', 'username email fullName');
+
+  res.status(201).json({
+    success: true,
+    message: 'Code session added successfully',
+    data: { team: updatedTeam }
+  });
+}));
+
+// @desc    Update code session name
+// @route   PUT /api/team/:id/code-sessions/:sessionId
+// @access  Private/Team Owner/Admin
+router.put('/:id/code-sessions/:sessionId', teamManagementLimiter, asyncHandler(async (req, res) => {
+  const team = await TeamConfig.findById(req.params.id);
+
+  if (!team) {
+    return res.status(404).json({
+      success: false,
+      message: 'Team not found'
+    });
+  }
+
+  // Check if user is team leader or admin
+  const isLeader = team.members.some(m => 
+    m.userId.toString() === req.user._id.toString() && m.role === 'leader'
+  );
+  const isCoach = team.coach && team.coach.toString() === req.user._id.toString();
+  
+  if (!isLeader && !isCoach && req.user.role !== 'admin') {
+    return res.status(403).json({
+      success: false,
+      message: 'Not authorized to update code sessions'
+    });
+  }
+
+  const session = team.codeSessions.id(req.params.sessionId);
+
+  if (!session) {
+    return res.status(404).json({
+      success: false,
+      message: 'Code session not found'
+    });
+  }
+
+  const { name } = req.body;
+
+  if (!name) {
+    return res.status(400).json({
+      success: false,
+      message: 'Name is required'
+    });
+  }
+
+  session.name = name;
+  await team.save();
+
+  const updatedTeam = await TeamConfig.findById(req.params.id)
+    .populate('coach members.userId', 'username email fullName');
+
+  res.json({
+    success: true,
+    message: 'Code session updated successfully',
+    data: { team: updatedTeam }
+  });
+}));
+
+// @desc    Delete code session
+// @route   DELETE /api/team/:id/code-sessions/:sessionId
+// @access  Private/Team Owner/Admin
+router.delete('/:id/code-sessions/:sessionId', teamManagementLimiter, asyncHandler(async (req, res) => {
+  const team = await TeamConfig.findById(req.params.id);
+
+  if (!team) {
+    return res.status(404).json({
+      success: false,
+      message: 'Team not found'
+    });
+  }
+
+  // Check if user is team leader or admin
+  const isLeader = team.members.some(m => 
+    m.userId.toString() === req.user._id.toString() && m.role === 'leader'
+  );
+  const isCoach = team.coach && team.coach.toString() === req.user._id.toString();
+  
+  if (!isLeader && !isCoach && req.user.role !== 'admin') {
+    return res.status(403).json({
+      success: false,
+      message: 'Not authorized to delete code sessions'
+    });
+  }
+
+  const session = team.codeSessions.id(req.params.sessionId);
+
+  if (!session) {
+    return res.status(404).json({
+      success: false,
+      message: 'Code session not found'
+    });
+  }
+
+  session.deleteOne();
+  await team.save();
+
+  const updatedTeam = await TeamConfig.findById(req.params.id)
+    .populate('coach members.userId', 'username email fullName');
+
+  res.json({
+    success: true,
+    message: 'Code session deleted successfully',
+    data: { team: updatedTeam }
+  });
+}));
+
 // @desc    Delete team
 // @route   DELETE /api/team/:id
 // @access  Private/Admin
