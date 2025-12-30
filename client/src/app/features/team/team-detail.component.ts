@@ -300,8 +300,8 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                     Rename
                   </button>
                   <button
-                    *ngIf="isTeamLeader()"
-                    (click)="deleteSession(session._id)"
+                    *ngIf="isTeamLeader() && session._id"
+                    (click)="deleteSession(session._id!)"
                     class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded text-sm">
                     Delete
                   </button>
@@ -1101,7 +1101,7 @@ export class TeamDetailComponent implements OnInit {
     });
   }
 
-  deleteSession(sessionId: string | undefined): void {
+  deleteSession(sessionId: string): void {
     if (!this.teamId || !sessionId) return;
 
     if (!confirm('Are you sure you want to delete this code session?')) {
@@ -1148,17 +1148,17 @@ export class TeamDetailComponent implements OnInit {
   }
 
   private generateRoomId(): string {
-    // Generate a random 20-character ID
-    return Array.from({ length: 20 }, () => 
-      Math.floor(Math.random() * 16).toString(16)
-    ).join('');
+    // Generate a cryptographically secure random 20-character hex ID
+    const array = new Uint8Array(10);
+    crypto.getRandomValues(array);
+    return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
   }
 
   private generateRoomKey(): string {
-    // Generate a random 22-character key (base64url-like)
+    // Generate a cryptographically secure random 22-character key (base64url-like)
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
-    return Array.from({ length: 22 }, () => 
-      chars.charAt(Math.floor(Math.random() * chars.length))
-    ).join('');
+    const array = new Uint8Array(22);
+    crypto.getRandomValues(array);
+    return Array.from(array, byte => chars.charAt(byte % chars.length)).join('');
   }
 }
