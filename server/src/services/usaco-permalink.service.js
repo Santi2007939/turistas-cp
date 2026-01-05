@@ -118,6 +118,19 @@ class USACOPermalinkService {
       return { ok: false, reason: error.message };
     }
   }
+
+  /**
+   * Get service status
+   * @returns {Object} Service status information
+   */
+  getStatus() {
+    return {
+      available: true,
+      chromePath: process.env.CHROME_PATH || 'not configured',
+      headless: process.env.USACO_HEADLESS || 'default (true)',
+      supportedLanguages: ['cpp', 'java', 'py']
+    };
+  }
 }
 
 export default new USACOPermalinkService();
