@@ -26,7 +26,12 @@ getStatus() {
 ## Cambios Realizados
 
 ### 1. Archivo modificado: `server/src/services/usaco-permalink.service.js`
-- **Líneas 122-133**: Agregado método `getStatus()` que retorna información del estado del servicio
+- **Línea 1**: Importado módulo `existsSync` de `fs` para verificar la existencia del ejecutable de Chrome
+- **Líneas 124-138**: Agregado método `getStatus()` mejorado que:
+  - Verifica si Chrome está configurado
+  - Comprueba si el ejecutable de Chrome existe en el sistema
+  - Retorna información precisa sobre la disponibilidad del servicio
+  - Incluye nuevo campo `chromeExists` para indicar si el ejecutable existe
 
 ### 2. Archivo modificado: `server/.env.example`
 - **Líneas 22-31**: Agregadas variables de entorno necesarias para USACO:
@@ -46,11 +51,23 @@ node -e "import('./src/services/usaco-permalink.service.js').then(m => {
 });"
 ```
 
-**Resultado esperado:**
+**Resultado esperado (sin Chrome instalado):**
+```json
+{
+  "available": false,
+  "chromePath": "not configured",
+  "chromeExists": null,
+  "headless": "default (true)",
+  "supportedLanguages": ["cpp", "java", "py"]
+}
+```
+
+**Resultado esperado (con Chrome configurado):**
 ```json
 {
   "available": true,
-  "chromePath": "not configured",
+  "chromePath": "/usr/bin/google-chrome",
+  "chromeExists": true,
   "headless": "default (true)",
   "supportedLanguages": ["cpp", "java", "py"]
 }
@@ -78,14 +95,29 @@ curl -X GET http://localhost:3000/api/integrations/usaco-ide/status \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
 ```
 
-**Resultado esperado:**
+**Resultado esperado (sin Chrome configurado):**
+```json
+{
+  "ok": true,
+  "service": "usaco-permalink",
+  "envHeadless": null,
+  "available": false,
+  "chromePath": "not configured",
+  "chromeExists": null,
+  "headless": "default (true)",
+  "supportedLanguages": ["cpp", "java", "py"]
+}
+```
+
+**Resultado esperado (con Chrome configurado y disponible):**
 ```json
 {
   "ok": true,
   "service": "usaco-permalink",
   "envHeadless": null,
   "available": true,
-  "chromePath": "not configured",
+  "chromePath": "/usr/bin/google-chrome",
+  "chromeExists": true,
   "headless": "default (true)",
   "supportedLanguages": ["cpp", "java", "py"]
 }

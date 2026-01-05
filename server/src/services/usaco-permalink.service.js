@@ -1,4 +1,5 @@
 import puppeteer from 'puppeteer-core';
+import { existsSync } from 'fs';
 
 class USACOPermalinkService {
   async getPermalink(language = 'cpp', options = {}) {
@@ -124,9 +125,14 @@ class USACOPermalinkService {
    * @returns {Object} Service status information
    */
   getStatus() {
+    const chromePath = process.env.CHROME_PATH;
+    const isConfigured = !!chromePath;
+    const isAvailable = isConfigured && existsSync(chromePath);
+    
     return {
-      available: true,
-      chromePath: process.env.CHROME_PATH || 'not configured',
+      available: isAvailable,
+      chromePath: chromePath || 'not configured',
+      chromeExists: isConfigured ? isAvailable : null,
       headless: process.env.USACO_HEADLESS || 'default (true)',
       supportedLanguages: ['cpp', 'java', 'py']
     };
