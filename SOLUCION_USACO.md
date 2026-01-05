@@ -27,8 +27,12 @@ getStatus() {
 
 ### 1. Archivo modificado: `server/src/services/usaco-permalink.service.js`
 - **Línea 1**: Importado módulo `existsSync` de `fs` para verificar la existencia del ejecutable de Chrome
-- **Líneas 124-138**: Agregado método `getStatus()` mejorado que:
-  - Verifica si Chrome está configurado
+- **Líneas 123-143**: Agregado método `isValidChromePath()` para validar la ruta de Chrome
+  - Previene ataques de path traversal
+  - Verifica que la ruta contenga nombres válidos de ejecutables de Chrome/Chromium
+  - Valida el tipo de datos de entrada
+- **Líneas 145-162**: Agregado método `getStatus()` mejorado que:
+  - Valida la ruta de Chrome antes de verificar su existencia
   - Comprueba si el ejecutable de Chrome existe en el sistema
   - Retorna información precisa sobre la disponibilidad del servicio
   - Incluye nuevo campo `chromeExists` para indicar si el ejecutable existe
@@ -202,18 +206,20 @@ El servicio está integrado en el componente de equipos (`client/src/app/feature
 
 ## Consideraciones de Seguridad
 
-⚠️ **Importante**: El servicio está protegido con autenticación JWT, pero en producción se recomienda:
+⚠️ **Importante**: El servicio está protegido con autenticación JWT y validación de rutas, pero en producción se recomienda:
 
-1. Implementar rate limiting (máximo 10 requests por usuario cada 15 minutos)
-2. Usar un sistema de cola (Bull/Redis) para manejar requests concurrentes
-3. Configurar límites de recursos (timeout, memoria, concurrent browsers)
-4. Implementar logging y monitoreo completo
+1. ✅ **Validación de ruta de Chrome implementada**: Previene ataques de path traversal validando que CHROME_PATH apunte a ejecutables válidos de Chrome/Chromium
+2. Implementar rate limiting (máximo 10 requests por usuario cada 15 minutos)
+3. Usar un sistema de cola (Bull/Redis) para manejar requests concurrentes
+4. Configurar límites de recursos (timeout, memoria, concurrent browsers)
+5. Implementar logging y monitoreo completo
 
 Ver `server/README_USACO.md` sección "Security Considerations" para más detalles.
 
 ## Estado del Servicio
 
 - ✅ Método `getStatus()` implementado y funcionando
+- ✅ Validación de seguridad para CHROME_PATH implementada
 - ✅ Endpoint `/api/integrations/usaco-ide/status` operativo
 - ✅ Endpoint `/api/integrations/usaco-ide/permalink` operativo
 - ✅ Documentación actualizada

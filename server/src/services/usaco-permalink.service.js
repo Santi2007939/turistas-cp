@@ -121,13 +121,39 @@ class USACOPermalinkService {
   }
 
   /**
+   * Validate Chrome path to prevent path traversal attacks
+   * @param {string} path - Path to validate
+   * @returns {boolean} True if path appears to be a valid Chrome installation
+   */
+  isValidChromePath(path) {
+    if (!path || typeof path !== 'string') return false;
+    
+    // Common Chrome/Chromium executable names
+    const validExecutables = [
+      'chrome',
+      'google-chrome',
+      'google-chrome-stable',
+      'chromium',
+      'chromium-browser',
+      'Chrome',
+      'Chromium'
+    ];
+    
+    // Check if path contains any valid Chrome executable name
+    return validExecutables.some(exec => path.includes(exec));
+  }
+
+  /**
    * Get service status
    * @returns {Object} Service status information
    */
   getStatus() {
     const chromePath = process.env.CHROME_PATH;
     const isConfigured = !!chromePath;
-    const isAvailable = isConfigured && existsSync(chromePath);
+    
+    // Validate Chrome path to prevent path traversal attacks
+    const isValidPath = isConfigured && this.isValidChromePath(chromePath);
+    const isAvailable = isValidPath && existsSync(chromePath);
     
     return {
       available: isAvailable,
