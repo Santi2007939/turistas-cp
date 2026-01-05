@@ -137,3 +137,15 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Angular
+.angular/
+client/dist/
+client/.angular/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
