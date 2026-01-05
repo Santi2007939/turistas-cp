@@ -223,32 +223,26 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           <div class="mb-6">
             <h2 class="text-xl font-semibold text-gray-800 mb-3">Service Integrations</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <!-- USACO IDE -->
+              <!-- USACO IDE Sessions -->
               <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <div class="flex items-center gap-2 mb-2">
                   <span class="text-2xl">💻</span>
-                  <h3 class="font-semibold text-gray-800">USACO IDE</h3>
+                  <h3 class="font-semibold text-gray-800">USACO IDE Sessions</h3>
                 </div>
-                <p class="text-sm text-gray-600 mb-3">Create shareable IDE links with your team's code template</p>
-                <select 
-                  [(ngModel)]="selectedLanguage"
-                  class="w-full border rounded px-3 py-2 mb-2 text-sm">
-                  <option value="cpp">C++</option>
-                  <option value="java">Java</option>
-                  <option value="python">Python</option>
-                </select>
-                <button 
-                  (click)="createUsacoLink(selectedLanguage)"
-                  [disabled]="creatingUsacoLink"
-                  class="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm disabled:bg-gray-300">
-                  {{ creatingUsacoLink ? 'Creating...' : 'Create IDE Link' }}
-                </button>
-                <button 
-                  *ngIf="isTeamLeader()"
-                  (click)="openEditTemplateModal()"
-                  class="w-full mt-2 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded text-sm">
-                  Edit Code Template
-                </button>
+                <p class="text-sm text-gray-600 mb-3">Manage shareable IDE links with code templates</p>
+                <div class="flex gap-2">
+                  <button 
+                    *ngIf="isTeamLeader()"
+                    (click)="openAddSessionModal()"
+                    class="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm">
+                    Add Session
+                  </button>
+                  <button 
+                    (click)="openViewTemplatesModal()"
+                    class="flex-1 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded text-sm">
+                    View Templates
+                  </button>
+                </div>
               </div>
 
               <!-- Excalidraw -->
@@ -259,9 +253,9 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 </div>
                 <p class="text-sm text-gray-600 mb-3">Collaborate on diagrams and visualizations</p>
                 <button 
-                  (click)="showCreateExcalidrawModal = true"
+                  (click)="openExcalidraw()"
                   class="w-full bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded text-sm">
-                  Create Room
+                  Open Excalidraw
                 </button>
               </div>
 
@@ -277,6 +271,41 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   class="w-full bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded text-sm">
                   View Contests
                 </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Code Sessions List -->
+          <div *ngIf="team.codeSessions && team.codeSessions.length > 0" class="mb-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-3">Code Sessions</h2>
+            <div class="space-y-2">
+              <div 
+                *ngFor="let session of team.codeSessions" 
+                class="flex justify-between items-center bg-blue-50 border border-blue-200 rounded p-3">
+                <div class="flex-1">
+                  <p class="font-semibold text-gray-800">{{ session.name }}</p>
+                  <p class="text-sm text-gray-600">Created {{ session.createdAt | date:'mediumDate' }}</p>
+                </div>
+                <div class="flex gap-2">
+                  <a 
+                    [href]="session.link" 
+                    target="_blank"
+                    class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm">
+                    Open IDE
+                  </a>
+                  <button
+                    *ngIf="isTeamLeader()"
+                    (click)="openRenameSessionModal(session)"
+                    class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-2 rounded text-sm">
+                    Rename
+                  </button>
+                  <button
+                    *ngIf="isTeamLeader() && session._id"
+                    (click)="deleteSession(session._id!)"
+                    class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded text-sm">
+                    Delete
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -527,6 +556,136 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           </div>
         </div>
       </div>
+
+      <!-- Add Session Modal -->
+      <div 
+        *ngIf="showAddSessionModal" 
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        (click)="showAddSessionModal = false">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md" (click)="$event.stopPropagation()">
+          <h3 class="text-xl font-bold mb-4">Add Code Session</h3>
+          <input 
+            type="text"
+            [(ngModel)]="newSessionName"
+            placeholder="Session name (e.g., Practice Session 1)"
+            class="w-full border rounded px-3 py-2 mb-3">
+          <div class="mb-3">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Choose an option:</label>
+            <div class="space-y-2">
+              <label class="flex items-center">
+                <input type="radio" [(ngModel)]="sessionLinkOption" value="auto" class="mr-2">
+                <span class="text-sm">Auto-generate link with template</span>
+              </label>
+              <label class="flex items-center">
+                <input type="radio" [(ngModel)]="sessionLinkOption" value="manual" class="mr-2">
+                <span class="text-sm">Provide custom link</span>
+              </label>
+            </div>
+          </div>
+          <div *ngIf="sessionLinkOption === 'auto'" class="mb-3">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Language:</label>
+            <select 
+              [(ngModel)]="selectedLanguage"
+              class="w-full border rounded px-3 py-2 text-sm">
+              <option value="cpp">C++</option>
+              <option value="java">Java</option>
+              <option value="python">Python</option>
+            </select>
+          </div>
+          <div *ngIf="sessionLinkOption === 'manual'" class="mb-3">
+            <input 
+              type="url"
+              [(ngModel)]="customSessionLink"
+              placeholder="https://ide.usaco.guide/..."
+              class="w-full border rounded px-3 py-2">
+          </div>
+          <div class="flex gap-2 justify-end">
+            <button 
+              (click)="showAddSessionModal = false"
+              class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+              Cancel
+            </button>
+            <button 
+              (click)="addSession()"
+              [disabled]="!newSessionName || addingSession || (sessionLinkOption === 'manual' && !customSessionLink)"
+              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded disabled:bg-gray-300">
+              {{ addingSession ? 'Adding...' : 'Add Session' }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rename Session Modal -->
+      <div 
+        *ngIf="showRenameSessionModal" 
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        (click)="showRenameSessionModal = false">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md" (click)="$event.stopPropagation()">
+          <h3 class="text-xl font-bold mb-4">Rename Session</h3>
+          <input 
+            type="text"
+            [(ngModel)]="renameSessionName"
+            placeholder="New session name"
+            class="w-full border rounded px-3 py-2 mb-4">
+          <div class="flex gap-2 justify-end">
+            <button 
+              (click)="showRenameSessionModal = false"
+              class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+              Cancel
+            </button>
+            <button 
+              (click)="renameSession()"
+              [disabled]="!renameSessionName"
+              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded disabled:bg-gray-300">
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- View Templates Modal -->
+      <div 
+        *ngIf="showViewTemplatesModal" 
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+        (click)="showViewTemplatesModal = false">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
+          <h3 class="text-xl font-bold mb-4">Code Templates</h3>
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Select Language:</label>
+            <select 
+              [(ngModel)]="viewTemplateLanguage"
+              (ngModelChange)="loadTemplateForLanguage($event)"
+              class="w-full border rounded px-3 py-2">
+              <option value="cpp">C++</option>
+              <option value="java">Java</option>
+              <option value="python">Python</option>
+            </select>
+          </div>
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Template Code:</label>
+            <textarea 
+              [(ngModel)]="viewTemplateCode"
+              rows="20"
+              readonly
+              class="w-full border rounded px-3 py-2 font-mono text-sm bg-gray-50">
+            </textarea>
+          </div>
+          <div *ngIf="isTeamLeader()" class="mb-4">
+            <button 
+              (click)="openEditTemplateModal()"
+              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+              Edit Template
+            </button>
+          </div>
+          <div class="flex justify-end">
+            <button 
+              (click)="showViewTemplatesModal = false"
+              class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
     </div>
   `
@@ -545,16 +704,27 @@ export class TeamDetailComponent implements OnInit {
   showCreateExcalidrawModal = false;
   showRPCContestsModal = false;
   showUsacoLinkModal = false;
+  showAddSessionModal = false;
+  showRenameSessionModal = false;
+  showViewTemplatesModal = false;
 
   // Edit fields
   editedWhatsAppLink = '';
   editedDiscordLink = '';
   editedTemplate = '';
   newRoomName = '';
+  newSessionName = '';
+  customSessionLink = '';
+  sessionLinkOption = 'auto';
+  renameSessionName = '';
+  renameSessionId = '';
+  viewTemplateLanguage = 'cpp';
+  viewTemplateCode = '';
 
   // Integration states
   creatingRoom = false;
   creatingUsacoLink = false;
+  addingSession = false;
   loadingRPCContests = false;
   rpcContestsError: string | null = null;
   rpcContests: any[] = [];
@@ -838,5 +1008,157 @@ export class TeamDetailComponent implements OnInit {
         console.error('Error updating member status:', err);
       }
     });
+  }
+
+  openAddSessionModal(): void {
+    this.newSessionName = '';
+    this.customSessionLink = '';
+    this.sessionLinkOption = 'auto';
+    this.selectedLanguage = 'cpp';
+    this.showAddSessionModal = true;
+  }
+
+  addSession(): void {
+    if (!this.teamId || !this.newSessionName) return;
+
+    this.addingSession = true;
+
+    if (this.sessionLinkOption === 'auto') {
+      // Auto-generate link
+      this.integrationsService.createUsacoPermalink(this.selectedLanguage, this.teamId).subscribe({
+        next: (response) => {
+          if (response.ok && response.url) {
+            // Add session with generated link
+            this.teamService.addCodeSession(this.teamId!, this.newSessionName, response.url).subscribe({
+              next: (teamResponse) => {
+                this.team = teamResponse.data.team;
+                this.showAddSessionModal = false;
+                this.newSessionName = '';
+                this.customSessionLink = '';
+                this.addingSession = false;
+              },
+              error: (err) => {
+                this.error = 'Failed to add code session.';
+                this.addingSession = false;
+                console.error('Error adding session:', err);
+              }
+            });
+          } else {
+            this.error = 'Failed to generate USACO link: ' + (response.reason || 'Unknown error');
+            this.addingSession = false;
+          }
+        },
+        error: (err) => {
+          this.error = 'Failed to generate USACO link.';
+          this.addingSession = false;
+          console.error('Error generating link:', err);
+        }
+      });
+    } else {
+      // Use custom link
+      if (!this.customSessionLink) {
+        this.addingSession = false;
+        return;
+      }
+
+      this.teamService.addCodeSession(this.teamId, this.newSessionName, this.customSessionLink).subscribe({
+        next: (response) => {
+          this.team = response.data.team;
+          this.showAddSessionModal = false;
+          this.newSessionName = '';
+          this.customSessionLink = '';
+          this.addingSession = false;
+        },
+        error: (err) => {
+          this.error = 'Failed to add code session.';
+          this.addingSession = false;
+          console.error('Error adding session:', err);
+        }
+      });
+    }
+  }
+
+  openRenameSessionModal(session: any): void {
+    this.renameSessionId = session._id;
+    this.renameSessionName = session.name;
+    this.showRenameSessionModal = true;
+  }
+
+  renameSession(): void {
+    if (!this.teamId || !this.renameSessionId || !this.renameSessionName) return;
+
+    this.teamService.updateCodeSession(this.teamId, this.renameSessionId, this.renameSessionName).subscribe({
+      next: (response) => {
+        this.team = response.data.team;
+        this.showRenameSessionModal = false;
+        this.renameSessionId = '';
+        this.renameSessionName = '';
+      },
+      error: (err) => {
+        this.error = 'Failed to rename session.';
+        console.error('Error renaming session:', err);
+      }
+    });
+  }
+
+  deleteSession(sessionId: string): void {
+    if (!this.teamId || !sessionId) return;
+
+    if (!confirm('Are you sure you want to delete this code session?')) {
+      return;
+    }
+
+    this.teamService.deleteCodeSession(this.teamId, sessionId).subscribe({
+      next: (response) => {
+        this.team = response.data.team;
+      },
+      error: (err) => {
+        this.error = 'Failed to delete session.';
+        console.error('Error deleting session:', err);
+      }
+    });
+  }
+
+  openViewTemplatesModal(): void {
+    this.viewTemplateLanguage = 'cpp';
+    this.loadTemplateForLanguage('cpp');
+    this.showViewTemplatesModal = true;
+  }
+
+  loadTemplateForLanguage(language: string): void {
+    if (!this.teamId) return;
+
+    this.integrationsService.getCodeTemplate(language, this.teamId).subscribe({
+      next: (response) => {
+        this.viewTemplateCode = response.data.template || '';
+      },
+      error: (err) => {
+        this.error = 'Failed to load template.';
+        console.error('Error loading template:', err);
+      }
+    });
+  }
+
+  openExcalidraw(): void {
+    // Open Excalidraw in a new tab with a unique room
+    const roomId = this.generateRoomId();
+    const roomKey = this.generateRoomKey();
+    const excalidrawUrl = `https://excalidraw.com/#room=${roomId},${roomKey}`;
+    window.open(excalidrawUrl, '_blank');
+  }
+
+  private generateRoomId(): string {
+    // Generate a cryptographically secure random 20-character hex ID
+    const array = new Uint8Array(10);
+    crypto.getRandomValues(array);
+    return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+  }
+
+  private generateRoomKey(): string {
+    // Generate a cryptographically secure random 22-character key (base64url-like)
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+    const array = new Uint8Array(22);
+    crypto.getRandomValues(array);
+    return Array.from(array, byte => chars.charAt(byte % chars.length)).join('');
   }
 }
