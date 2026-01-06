@@ -118,6 +118,29 @@ class USACOPermalinkService {
       return { ok: false, reason: error.message };
     }
   }
+
+  /**
+   * Get service status and configuration
+   */
+  getStatus() {
+    const chromePath = process.env.CHROME_PATH;
+    const headlessEnv = process.env.USACO_HEADLESS;
+    
+    let available = false;
+    let headlessMode = 'default (true)';
+    
+    if (chromePath) {
+      available = true;
+      headlessMode = headlessEnv === 'false' ? 'false (from env)' : 'true (from env or default)';
+    }
+
+    return {
+      available,
+      chromePath: chromePath || null,
+      headless: headlessMode,
+      supportedLanguages: ['cpp', 'java', 'py']
+    };
+  }
 }
 
 export default new USACOPermalinkService();
