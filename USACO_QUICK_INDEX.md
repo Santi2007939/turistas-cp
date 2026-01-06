@@ -1,33 +1,35 @@
 # 🔍 Índice Rápido: Gestión de Sesiones USACO
 
-> **⚠️ Nota:** Los números de línea mencionados en estos documentos son aproximados y pueden cambiar con el tiempo. Use las referencias a nombres de archivos y funciones como guía principal.
+> **⚠️ Nota sobre líneas:** Los números de línea mencionados en estos documentos son aproximados (verificados en develop, commit 4961ef145, enero 2026) y pueden cambiar con el tiempo. Use las referencias a nombres de archivos y funciones como guía principal.
+
+> **📌 Branch importante:** La implementación completa está en branch `develop`. Los archivos marcados como "(develop only)" solo existen en ese branch.
 
 ## ¿Buscas información sobre sesiones USACO?
 
 Consulta estos documentos en orden:
 
 ### 1️⃣ **INICIO RÁPIDO** (¡Empieza aquí!)
-📄 **[USACO_SESSION_LOCATION_GUIDE.md](./USACO_SESSION_LOCATION_GUIDE.md)**
+📄 **[USACO_SESSION_LOCATION_GUIDE.md](./USACO_SESSION_LOCATION_GUIDE.md)** (Este PR)
 - 📍 Dónde encontrar el código
 - 🎯 Cómo verificar la funcionalidad  
 - 🔧 Troubleshooting común
 - 📝 Ejemplos de código
 
-### 2️⃣ **DOCUMENTACIÓN TÉCNICA COMPLETA**
+### 2️⃣ **DOCUMENTACIÓN TÉCNICA COMPLETA** (develop only)
 📄 **[USACO_SESSION_MANAGEMENT.md](./USACO_SESSION_MANAGEMENT.md)**
 - Especificación completa de API
 - Esquemas de base de datos
 - Diagramas de arquitectura
 - Guías de implementación frontend/backend
 
-### 3️⃣ **RESUMEN DE IMPLEMENTACIÓN**
+### 3️⃣ **RESUMEN DE IMPLEMENTACIÓN** (develop only)
 📄 **[IMPLEMENTATION_COMPLETE_USACO_SESSIONS.md](./IMPLEMENTATION_COMPLETE_USACO_SESSIONS.md)**
 - Checklist de funcionalidades ✅
 - Resumen ejecutivo
 - Resultados de pruebas
 - Métricas de calidad
 
-### 4️⃣ **SEGURIDAD**
+### 4️⃣ **SEGURIDAD** (develop only)
 📄 **[SECURITY_SUMMARY_USACO_SESSIONS.md](./SECURITY_SUMMARY_USACO_SESSIONS.md)**
 - Medidas de seguridad implementadas
 - Resultados de análisis CodeQL

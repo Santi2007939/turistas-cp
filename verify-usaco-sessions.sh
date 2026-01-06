@@ -5,12 +5,16 @@
 # Note: This script expects to be run from the repository root directory
 # Usage: ./verify-usaco-sessions.sh [branch_name]
 # Default branch: develop
+#
+# Some documentation files only exist in develop branch, not in this PR
 
 echo "🔍 Verificando Gestión de Sesiones USACO..."
 echo ""
 
-# Default branch to check
+# Target branch for verification (informational only in this version)
 TARGET_BRANCH="${1:-develop}"
+echo "ℹ️  Nota: Algunas documentaciones solo existen en branch '$TARGET_BRANCH'"
+echo ""
 
 # Colors
 GREEN='\033[0;32m'
@@ -57,11 +61,11 @@ check_file "client/src/app/core/services/integrations.service.ts" "Integrations 
 
 echo ""
 echo "📖 Documentation:"
-check_file "USACO_SESSION_LOCATION_GUIDE.md" "Location Guide"
-check_file "USACO_QUICK_INDEX.md" "Quick Index"
-check_file "USACO_SESSION_MANAGEMENT.md" "Session Management Guide"
-check_file "IMPLEMENTATION_COMPLETE_USACO_SESSIONS.md" "Implementation Summary"
-check_file "SECURITY_SUMMARY_USACO_SESSIONS.md" "Security Summary"
+check_file "USACO_SESSION_LOCATION_GUIDE.md" "Location Guide (this PR)"
+check_file "USACO_QUICK_INDEX.md" "Quick Index (this PR)"
+check_file "USACO_SESSION_MANAGEMENT.md" "Session Management Guide (develop only)"
+check_file "IMPLEMENTATION_COMPLETE_USACO_SESSIONS.md" "Implementation Summary (develop only)"
+check_file "SECURITY_SUMMARY_USACO_SESSIONS.md" "Security Summary (develop only)"
 
 echo ""
 echo "🔧 Backend Functionality:"

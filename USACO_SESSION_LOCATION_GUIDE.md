@@ -4,7 +4,9 @@
 
 Esta guía proporciona información clara sobre **dónde encontrar** el código y la funcionalidad de gestión de sesiones USACO en el repositorio `Santi2007939/turistas-cp`.
 
-> **⚠️ Nota sobre números de línea:** Los números de línea mencionados en esta guía son aproximados y fueron verificados en el branch `develop` al momento de escribir este documento. Pueden cambiar con actualizaciones del código. Use los nombres de funciones y secciones como referencia principal.
+> **⚠️ Nota sobre números de línea:** Los números de línea mencionados en esta guía son aproximados y fueron verificados en el branch `develop` (commit: 4961ef145) en enero 2026. Pueden cambiar con actualizaciones del código. Use los nombres de funciones y secciones como referencia principal.
+
+> **📌 Branch importante:** El código completo de sesiones USACO existe en el branch `develop`. Este documento puede consultarse desde cualquier branch, pero la implementación completa está en `develop`.
 
 ## 🎯 ¿Qué es la Gestión de Sesiones USACO?
 
