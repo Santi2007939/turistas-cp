@@ -118,6 +118,38 @@ class USACOPermalinkService {
       return { ok: false, reason: error.message };
     }
   }
+
+  /**
+   * Get service status and configuration
+   * @returns {Object} Service status information
+   * @property {boolean} available - Whether the service is available (Chrome path configured)
+   * @property {string|null} chromePath - Path to Chrome executable or null if not configured
+   * @property {string} headless - Headless mode setting ('true', 'false', or 'default')
+   * @property {string[]} supportedLanguages - Array of supported programming languages
+   * 
+   * Note: This method only checks if Chrome path is configured, not if Chrome is actually
+   * accessible. The actual availability is verified when attempting to launch the browser.
+   */
+  getStatus() {
+    const chromePath = process.env.CHROME_PATH;
+    const headlessEnv = process.env.USACO_HEADLESS;
+    
+    // Service is considered available if Chrome path is configured
+    // Actual accessibility is verified during browser launch
+    const available = !!chromePath;
+    
+    let headlessMode = 'default (true)';
+    if (headlessEnv !== undefined) {
+      headlessMode = headlessEnv === 'false' ? 'false (from env)' : 'true (from env)';
+    }
+
+    return {
+      available,
+      chromePath: chromePath || null,
+      headless: headlessMode,
+      supportedLanguages: ['cpp', 'java', 'py']
+    };
+  }
 }
 
 export default new USACOPermalinkService();
