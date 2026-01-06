@@ -1,9 +1,16 @@
 #!/bin/bash
-# Script de Verificación: Gestión de Sesiones USACO
-# Este script verifica que todos los archivos y funcionalidades existen
+# Verification Script: USACO Session Management
+# This script verifies that all files and functionalities exist
+# 
+# Note: This script expects to be run from the repository root directory
+# Usage: ./verify-usaco-sessions.sh [branch_name]
+# Default branch: develop
 
 echo "🔍 Verificando Gestión de Sesiones USACO..."
 echo ""
+
+# Default branch to check
+TARGET_BRANCH="${1:-develop}"
 
 # Colors
 GREEN='\033[0;32m'
@@ -85,7 +92,7 @@ else
     echo -e "${RED}⚠️  Algunas verificaciones fallaron.${NC}"
     echo ""
     echo "Es posible que estés en el branch incorrecto."
-    echo "Ejecuta: git checkout develop"
+    echo "Ejecuta: git checkout $TARGET_BRANCH"
     echo ""
     echo "Si el problema persiste, consulta USACO_SESSION_LOCATION_GUIDE.md"
     exit 1

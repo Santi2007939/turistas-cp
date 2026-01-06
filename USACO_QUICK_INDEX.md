@@ -1,5 +1,7 @@
 # 🔍 Índice Rápido: Gestión de Sesiones USACO
 
+> **⚠️ Nota:** Los números de línea mencionados en estos documentos son aproximados y pueden cambiar con el tiempo. Use las referencias a nombres de archivos y funciones como guía principal.
+
 ## ¿Buscas información sobre sesiones USACO?
 
 Consulta estos documentos en orden:

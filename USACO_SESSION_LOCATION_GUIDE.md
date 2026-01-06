@@ -4,6 +4,8 @@
 
 Esta guía proporciona información clara sobre **dónde encontrar** el código y la funcionalidad de gestión de sesiones USACO en el repositorio `Santi2007939/turistas-cp`.
 
+> **⚠️ Nota sobre números de línea:** Los números de línea mencionados en esta guía son aproximados y fueron verificados en el branch `develop` al momento de escribir este documento. Pueden cambiar con actualizaciones del código. Use los nombres de funciones y secciones como referencia principal.
+
 ## 🎯 ¿Qué es la Gestión de Sesiones USACO?
 
 El sistema permite a los equipos:
