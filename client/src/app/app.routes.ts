@@ -15,6 +15,7 @@ import { ProblemsLibraryComponent } from './features/problems/problems-library.c
 import { ProblemDetailComponent } from './features/problems/problem-detail.component';
 import { TeamListComponent } from './features/team/team-list.component';
 import { TeamDetailComponent } from './features/team/team-detail.component';
+import { CalendarComponent } from './features/calendar/calendar.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -31,6 +32,7 @@ export const routes: Routes = [
   { path: 'roadmap/:id/subtopics', component: SubtopicDetailComponent, canActivate: [AuthGuard] },
   { path: 'problems', component: ProblemsLibraryComponent, canActivate: [AuthGuard] },
   { path: 'problems/:id', component: ProblemDetailComponent, canActivate: [AuthGuard] },
+  { path: 'calendar', component: CalendarComponent, canActivate: [AuthGuard] },
   { path: 'team', component: TeamListComponent, canActivate: [AuthGuard] },
   { path: 'team/:id', component: TeamDetailComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '/dashboard' }

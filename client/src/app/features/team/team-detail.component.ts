@@ -406,12 +406,6 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded">
               Join Team
             </button>
-            <button 
-              *ngIf="isUserInTeam()"
-              (click)="leaveTeam()"
-              class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 rounded">
-              Leave Team
-            </button>
           </div>
         </div>
       </div>
