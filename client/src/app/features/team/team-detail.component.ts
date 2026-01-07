@@ -25,6 +25,10 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
         {{ error }}
       </div>
 
+      <div *ngIf="successMessage" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+        {{ successMessage }}
+      </div>
+
       <div *ngIf="team && !loading">
         <div class="bg-white rounded-lg shadow-md p-8 mb-6">
           <div class="flex justify-between items-start mb-6">
@@ -293,13 +297,13 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                     Open IDE
                   </a>
                   <button
-                    *ngIf="isTeamLeader()"
+                    *ngIf="isUserInTeam()"
                     (click)="openRenameSessionModal(session)"
                     class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-2 rounded text-sm">
                     Rename
                   </button>
                   <button
-                    *ngIf="isTeamLeader() && session._id"
+                    *ngIf="isUserInTeam() && session._id"
                     (click)="deleteSession(session._id!)"
                     class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded text-sm">
                     Delete
@@ -693,6 +697,7 @@ export class TeamDetailComponent implements OnInit {
   team: TeamConfig | null = null;
   loading = false;
   error: string | null = null;
+  successMessage: string | null = null;
   teamId: string | null = null;
   currentUserId: string | null = null;
 
@@ -1021,6 +1026,8 @@ export class TeamDetailComponent implements OnInit {
     if (!this.teamId || !this.newSessionName) return;
 
     this.addingSession = true;
+    this.error = null;
+    this.successMessage = null;
 
     if (this.sessionLinkOption === 'auto') {
       // Auto-generate link
@@ -1032,9 +1039,12 @@ export class TeamDetailComponent implements OnInit {
               next: (teamResponse) => {
                 this.team = teamResponse.data.team;
                 this.showAddSessionModal = false;
+                this.successMessage = `Code session "${this.newSessionName}" created successfully with auto-generated link!`;
                 this.newSessionName = '';
                 this.customSessionLink = '';
                 this.addingSession = false;
+                // Auto-hide success message after 5 seconds
+                setTimeout(() => this.successMessage = null, 5000);
               },
               error: (err) => {
                 this.error = 'Failed to add code session.';
@@ -1064,9 +1074,12 @@ export class TeamDetailComponent implements OnInit {
         next: (response) => {
           this.team = response.data.team;
           this.showAddSessionModal = false;
+          this.successMessage = `Code session "${this.newSessionName}" created successfully!`;
           this.newSessionName = '';
           this.customSessionLink = '';
           this.addingSession = false;
+          // Auto-hide success message after 5 seconds
+          setTimeout(() => this.successMessage = null, 5000);
         },
         error: (err) => {
           this.error = 'Failed to add code session.';
@@ -1090,8 +1103,11 @@ export class TeamDetailComponent implements OnInit {
       next: (response) => {
         this.team = response.data.team;
         this.showRenameSessionModal = false;
+        this.successMessage = `Session renamed to "${this.renameSessionName}" successfully!`;
         this.renameSessionId = '';
         this.renameSessionName = '';
+        // Auto-hide success message after 5 seconds
+        setTimeout(() => this.successMessage = null, 5000);
       },
       error: (err) => {
         this.error = 'Failed to rename session.';
@@ -1110,6 +1126,9 @@ export class TeamDetailComponent implements OnInit {
     this.teamService.deleteCodeSession(this.teamId, sessionId).subscribe({
       next: (response) => {
         this.team = response.data.team;
+        this.successMessage = 'Code session deleted successfully!';
+        // Auto-hide success message after 5 seconds
+        setTimeout(() => this.successMessage = null, 5000);
       },
       error: (err) => {
         this.error = 'Failed to delete session.';

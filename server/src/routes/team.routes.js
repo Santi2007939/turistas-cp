@@ -474,13 +474,12 @@ router.post('/:id/code-sessions', teamManagementLimiter, asyncHandler(async (req
     });
   }
 
-  // Check if user is team leader or admin
-  const isLeader = team.members.some(m => 
-    m.userId.toString() === req.user._id.toString() && m.role === 'leader'
+  // Check if user is a team member or admin
+  const isMember = team.members.some(m => 
+    m.userId.toString() === req.user._id.toString()
   );
-  const isCoach = team.coach && team.coach.toString() === req.user._id.toString();
   
-  if (!isLeader && !isCoach && req.user.role !== 'admin') {
+  if (!isMember && req.user.role !== 'admin') {
     return res.status(403).json({
       success: false,
       message: 'Not authorized to add code sessions'
@@ -537,13 +536,12 @@ router.put('/:id/code-sessions/:sessionId', teamManagementLimiter, asyncHandler(
     });
   }
 
-  // Check if user is team leader or admin
-  const isLeader = team.members.some(m => 
-    m.userId.toString() === req.user._id.toString() && m.role === 'leader'
+  // Check if user is a team member or admin
+  const isMember = team.members.some(m => 
+    m.userId.toString() === req.user._id.toString()
   );
-  const isCoach = team.coach && team.coach.toString() === req.user._id.toString();
   
-  if (!isLeader && !isCoach && req.user.role !== 'admin') {
+  if (!isMember && req.user.role !== 'admin') {
     return res.status(403).json({
       success: false,
       message: 'Not authorized to update code sessions'
@@ -594,13 +592,12 @@ router.delete('/:id/code-sessions/:sessionId', teamManagementLimiter, asyncHandl
     });
   }
 
-  // Check if user is team leader or admin
-  const isLeader = team.members.some(m => 
-    m.userId.toString() === req.user._id.toString() && m.role === 'leader'
+  // Check if user is a team member or admin
+  const isMember = team.members.some(m => 
+    m.userId.toString() === req.user._id.toString()
   );
-  const isCoach = team.coach && team.coach.toString() === req.user._id.toString();
   
-  if (!isLeader && !isCoach && req.user.role !== 'admin') {
+  if (!isMember && req.user.role !== 'admin') {
     return res.status(403).json({
       success: false,
       message: 'Not authorized to delete code sessions'
