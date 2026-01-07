@@ -95,8 +95,7 @@ const teamConfigSchema = new mongoose.Schema({
       required: true
     },
     linkedToCodeSessionId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'codeSessions'
+      type: String  // Store the code session ID as string
     },
     createdAt: {
       type: Date,
@@ -127,7 +126,7 @@ const teamConfigSchema = new mongoose.Schema({
       required: true
     },
     linkedExcalidrawSessions: [{
-      type: mongoose.Schema.Types.ObjectId
+      type: String  // Store Excalidraw session IDs as strings
     }],
     createdAt: {
       type: Date,

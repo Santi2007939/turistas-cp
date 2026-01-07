@@ -35,7 +35,11 @@ router.get('/', asyncHandler(async (req, res) => {
 
   const events = await CalendarEvent.find(query)
     .sort({ startTime: 1 })
-    .populate('createdBy contestId participants ownerId problemId', 'username name title');
+    .populate('createdBy', 'username')
+    .populate('ownerId', 'username')
+    .populate('contestId', 'name title')
+    .populate('problemId', 'title')
+    .populate('participants', 'username');
 
   res.json({
     success: true,

@@ -170,7 +170,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                     Join Group
                   </a>
                   <button 
-                    *ngIf="isTeamLeader()"
+                    *ngIf="isCoachOrAdmin()"
                     (click)="openEditWhatsAppModal()"
                     class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded text-sm">
                     {{ team.links?.whatsappGroup ? 'Edit Link' : 'Add Link' }}
@@ -206,7 +206,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                     Join Server
                   </a>
                   <button 
-                    *ngIf="isTeamLeader()"
+                    *ngIf="isCoachOrAdmin()"
                     (click)="openEditDiscordModal()"
                     class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded text-sm">
                     {{ team.links?.discordServer ? 'Edit Link' : 'Add Link' }}
@@ -718,7 +718,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               class="w-full border rounded px-3 py-2 font-mono text-sm bg-gray-50">
             </textarea>
           </div>
-          <div *ngIf="isTeamLeader()" class="mb-4">
+          <div *ngIf="isCoachOrAdmin()" class="mb-4">
             <button 
               (click)="openEditTemplateModal()"
               class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
@@ -969,7 +969,7 @@ export class TeamDetailComponent implements OnInit, OnDestroy {
     this.router.navigate(['/dashboard']);
   }
 
-  isTeamLeader(): boolean {
+  isCoachOrAdmin(): boolean {
     if (!this.team || !this.currentUserId) return false;
     return this.team.coach?._id === this.currentUserId;
   }
