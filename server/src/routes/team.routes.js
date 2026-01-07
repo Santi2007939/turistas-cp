@@ -463,7 +463,7 @@ router.post('/:id/leave', teamActionLimiter, asyncHandler(async (req, res) => {
 
 // @desc    Add code session to team
 // @route   POST /api/team/:id/code-sessions
-// @access  Private/Team Owner/Admin
+// @access  Private/Team Member/Admin
 router.post('/:id/code-sessions', teamManagementLimiter, asyncHandler(async (req, res) => {
   const team = await TeamConfig.findById(req.params.id);
 
@@ -525,7 +525,7 @@ router.post('/:id/code-sessions', teamManagementLimiter, asyncHandler(async (req
 
 // @desc    Update code session name
 // @route   PUT /api/team/:id/code-sessions/:sessionId
-// @access  Private/Team Owner/Admin
+// @access  Private/Team Member/Admin
 router.put('/:id/code-sessions/:sessionId', teamManagementLimiter, asyncHandler(async (req, res) => {
   const team = await TeamConfig.findById(req.params.id);
 
@@ -581,7 +581,7 @@ router.put('/:id/code-sessions/:sessionId', teamManagementLimiter, asyncHandler(
 
 // @desc    Delete code session
 // @route   DELETE /api/team/:id/code-sessions/:sessionId
-// @access  Private/Team Owner/Admin
+// @access  Private/Team Member/Admin
 router.delete('/:id/code-sessions/:sessionId', teamManagementLimiter, asyncHandler(async (req, res) => {
   const team = await TeamConfig.findById(req.params.id);
 
