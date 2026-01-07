@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -693,7 +693,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
     </div>
   `
 })
-export class TeamDetailComponent implements OnInit {
+export class TeamDetailComponent implements OnInit, OnDestroy {
   team: TeamConfig | null = null;
   loading = false;
   error: string | null = null;
@@ -734,6 +734,9 @@ export class TeamDetailComponent implements OnInit {
   rpcContests: any[] = [];
   usacoLinkUrl = '';
   selectedLanguage = 'cpp';
+  
+  // Timeout IDs for success message auto-hide
+  private successMessageTimeoutId: number | null = null;
 
   constructor(
     private teamService: TeamService,
@@ -753,6 +756,28 @@ export class TeamDetailComponent implements OnInit {
     if (this.teamId) {
       this.loadTeam(this.teamId);
     }
+  }
+
+  ngOnDestroy(): void {
+    // Clear any pending success message timeout
+    if (this.successMessageTimeoutId !== null) {
+      clearTimeout(this.successMessageTimeoutId);
+    }
+  }
+
+  private showSuccessMessage(message: string): void {
+    // Clear any existing timeout
+    if (this.successMessageTimeoutId !== null) {
+      clearTimeout(this.successMessageTimeoutId);
+    }
+    
+    this.successMessage = message;
+    
+    // Auto-hide after 5 seconds
+    this.successMessageTimeoutId = window.setTimeout(() => {
+      this.successMessage = null;
+      this.successMessageTimeoutId = null;
+    }, 5000);
   }
 
   loadTeam(id: string): void {
@@ -1039,12 +1064,10 @@ export class TeamDetailComponent implements OnInit {
               next: (teamResponse) => {
                 this.team = teamResponse.data.team;
                 this.showAddSessionModal = false;
-                this.successMessage = `Code session "${this.newSessionName}" created successfully with auto-generated link!`;
+                this.showSuccessMessage(`Code session "${this.newSessionName}" created successfully with auto-generated link!`);
                 this.newSessionName = '';
                 this.customSessionLink = '';
                 this.addingSession = false;
-                // Auto-hide success message after 5 seconds
-                setTimeout(() => this.successMessage = null, 5000);
               },
               error: (err) => {
                 this.error = 'Failed to add code session.';
@@ -1074,12 +1097,10 @@ export class TeamDetailComponent implements OnInit {
         next: (response) => {
           this.team = response.data.team;
           this.showAddSessionModal = false;
-          this.successMessage = `Code session "${this.newSessionName}" created successfully!`;
+          this.showSuccessMessage(`Code session "${this.newSessionName}" created successfully!`);
           this.newSessionName = '';
           this.customSessionLink = '';
           this.addingSession = false;
-          // Auto-hide success message after 5 seconds
-          setTimeout(() => this.successMessage = null, 5000);
         },
         error: (err) => {
           this.error = 'Failed to add code session.';
@@ -1103,11 +1124,9 @@ export class TeamDetailComponent implements OnInit {
       next: (response) => {
         this.team = response.data.team;
         this.showRenameSessionModal = false;
-        this.successMessage = `Session renamed to "${this.renameSessionName}" successfully!`;
+        this.showSuccessMessage(`Session renamed to "${this.renameSessionName}" successfully!`);
         this.renameSessionId = '';
         this.renameSessionName = '';
-        // Auto-hide success message after 5 seconds
-        setTimeout(() => this.successMessage = null, 5000);
       },
       error: (err) => {
         this.error = 'Failed to rename session.';
@@ -1126,9 +1145,7 @@ export class TeamDetailComponent implements OnInit {
     this.teamService.deleteCodeSession(this.teamId, sessionId).subscribe({
       next: (response) => {
         this.team = response.data.team;
-        this.successMessage = 'Code session deleted successfully!';
-        // Auto-hide success message after 5 seconds
-        setTimeout(() => this.successMessage = null, 5000);
+        this.showSuccessMessage('Code session deleted successfully!');
       },
       error: (err) => {
         this.error = 'Failed to delete session.';
