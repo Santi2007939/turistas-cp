@@ -2,8 +2,12 @@ import express from 'express';
 import CalendarEvent from '../models/CalendarEvent.js';
 import { protect } from '../middlewares/auth.js';
 import { asyncHandler } from '../middlewares/error.js';
+import { createRateLimiter } from '../middlewares/rateLimiter.js';
 
 const router = express.Router();
+
+// Rate limiter for calendar operations (max 20 requests per minute per user)
+const calendarLimiter = createRateLimiter(20, 60000, 'Too many calendar requests. Please try again later.');
 
 // All routes require authentication
 router.use(protect);
@@ -71,7 +75,7 @@ router.get('/:id', asyncHandler(async (req, res) => {
 // @desc    Create event
 // @route   POST /api/calendar
 // @access  Private
-router.post('/', asyncHandler(async (req, res) => {
+router.post('/', calendarLimiter, asyncHandler(async (req, res) => {
   const eventData = {
     ...req.body,
     createdBy: req.user._id
@@ -102,7 +106,7 @@ router.post('/', asyncHandler(async (req, res) => {
 // @desc    Update event
 // @route   PUT /api/calendar/:id
 // @access  Private
-router.put('/:id', asyncHandler(async (req, res) => {
+router.put('/:id', calendarLimiter, asyncHandler(async (req, res) => {
   const event = await CalendarEvent.findById(req.params.id);
 
   if (!event) {
@@ -168,7 +172,7 @@ router.put('/:id', asyncHandler(async (req, res) => {
 // @desc    Delete event
 // @route   DELETE /api/calendar/:id
 // @access  Private
-router.delete('/:id', asyncHandler(async (req, res) => {
+router.delete('/:id', calendarLimiter, asyncHandler(async (req, res) => {
   const event = await CalendarEvent.findById(req.params.id);
 
   if (!event) {
