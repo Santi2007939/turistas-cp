@@ -12,12 +12,12 @@ const calendarEventSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['contest', 'training', 'meeting', 'deadline', 'roadmap', 'problem', 'other'],
+    enum: ['contest', 'practice', 'training', 'meeting', 'deadline', 'roadmap', 'problem', 'clase_gpc', 'rpc', 'other'],
     default: 'other'
   },
   eventScope: {
     type: String,
-    enum: ['personal', 'team'],
+    enum: ['personal', 'team', 'public'],
     default: 'personal',
     required: true
   },

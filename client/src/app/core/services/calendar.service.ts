@@ -8,7 +8,7 @@ export interface CalendarEvent {
   description?: string;
   startTime: Date;
   endTime: Date;
-  type: 'contest' | 'practice' | 'meeting' | 'deadline' | 'other';
+  type: 'contest' | 'practice' | 'training' | 'meeting' | 'deadline' | 'roadmap' | 'problem' | 'clase_gpc' | 'rpc' | 'other';
   eventScope: 'personal' | 'team' | 'public';
   isPublic: boolean;
   teamId?: string;
