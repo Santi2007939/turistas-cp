@@ -5,8 +5,7 @@ import { TeamConfig, TeamMember } from '../../core/services/team.service';
  */
 export class TeamUtils {
   /**
-   * Check if a user is a member of a team
-   * Handles both string userId and populated user objects
+   * Check if user is a member of a team (excluding admin users)
    */
   static isUserInTeam(team: TeamConfig, userId: string | null): boolean {
     if (!userId || !team || !team.members) {
@@ -24,11 +23,11 @@ export class TeamUtils {
   }
 
   /**
-   * Get user's role in a team
+   * Check if user is active in a team
    */
-  static getUserRole(team: TeamConfig, userId: string | null): 'leader' | 'member' | null {
+  static isUserActive(team: TeamConfig, userId: string | null): boolean {
     if (!userId || !team || !team.members) {
-      return null;
+      return false;
     }
 
     const member = team.members.find(m => {
@@ -38,6 +37,6 @@ export class TeamUtils {
       return memberId === userId;
     });
 
-    return member ? member.role : null;
+    return member ? (member.isActive === true) : false;
   }
 }

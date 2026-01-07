@@ -12,8 +12,14 @@ const calendarEventSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['contest', 'training', 'meeting', 'deadline', 'other'],
+    enum: ['contest', 'training', 'meeting', 'deadline', 'roadmap', 'problem', 'other'],
     default: 'other'
+  },
+  eventScope: {
+    type: String,
+    enum: ['personal', 'team'],
+    default: 'personal',
+    required: true
   },
   startTime: {
     type: Date,
@@ -25,6 +31,10 @@ const calendarEventSchema = new mongoose.Schema({
   contestId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Contest'
+  },
+  problemId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Problem'
   },
   location: {
     type: String,
@@ -55,6 +65,10 @@ const calendarEventSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
+  ownerId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
   createdAt: {
     type: Date,
     default: Date.now
@@ -70,6 +84,8 @@ const calendarEventSchema = new mongoose.Schema({
 // Index for fetching events by date
 calendarEventSchema.index({ startTime: 1 });
 calendarEventSchema.index({ teamId: 1, startTime: 1 });
+calendarEventSchema.index({ ownerId: 1, startTime: 1 });
+calendarEventSchema.index({ eventScope: 1, teamId: 1 });
 
 const CalendarEvent = mongoose.model('CalendarEvent', calendarEventSchema);
 

@@ -57,17 +57,22 @@ export async function initializeTeamTuristas() {
       console.log('   ⚠️  Could not load plantilla.txt, using empty template');
     }
 
+    // Get all current members (users with isCurrentMember flag, excluding admins)
+    const currentMembers = await User.find({ 
+      isCurrentMember: true,
+      role: { $ne: 'admin' }
+    });
+
     // Prepare team data
     const teamData = {
       name: teamName,
       description: process.env.TEAM_DESCRIPTION || 'Equipo oficial de programación competitiva Team Turistas. ¡Bienvenidos todos los miembros!',
       coach: adminUser ? adminUser._id : null,
-      members: adminUser ? [{
-        userId: adminUser._id,
-        role: 'leader',
-        isActive: true, // First member (leader) is active
+      members: currentMembers.map((member, index) => ({
+        userId: member._id,
+        isActive: index < 3, // First 3 members are active
         joinedAt: new Date()
-      }] : [],
+      })),
       maxMembers: Math.min(parseInt(process.env.TEAM_MAX_MEMBERS, 10) || 50, 50),
       settings: {
         isPublic: true,
@@ -81,6 +86,7 @@ export async function initializeTeamTuristas() {
         averageRating: 0
       },
       excalidrawRooms: [],
+      excalidrawSessions: [],
       links: {
         whatsappGroup: process.env.TEAM_WHATSAPP_GROUP && 
                       process.env.TEAM_WHATSAPP_GROUP !== 'https://chat.whatsapp.com/your-group-link' 
