@@ -232,7 +232,6 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <p class="text-sm text-gray-600 mb-3">Manage shareable IDE links with code templates</p>
                 <div class="flex gap-2">
                   <button 
-                    *ngIf="isTeamLeader()"
                     (click)="openAddSessionModal()"
                     class="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm">
                     Add Session
