@@ -14,9 +14,9 @@ export interface CalendarEvent {
   teamId?: string;
   contestId?: string;
   problemId?: string;
-  participants?: any[];
-  createdBy?: any;
-  ownerId?: any;
+  participants?: Array<{ _id: string; username: string }>;
+  createdBy?: { _id: string; username: string } | string;
+  ownerId?: { _id: string; username: string } | string;
 }
 
 export interface CalendarResponse {

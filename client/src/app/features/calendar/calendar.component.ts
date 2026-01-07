@@ -6,6 +6,16 @@ import { CalendarService, CalendarEvent } from '../../core/services/calendar.ser
 import { AuthService, User } from '../../core/services/auth.service';
 import { NavbarComponent } from '../../shared/components/navbar.component';
 
+interface EventFormData {
+  title: string;
+  description: string;
+  type: 'contest' | 'practice' | 'meeting' | 'deadline' | 'other';
+  eventScope: 'personal' | 'team' | 'public';
+  startTime: string;
+  endTime: string;
+  isPublic: boolean;
+}
+
 @Component({
   selector: 'app-calendar',
   standalone: true,
@@ -198,7 +208,7 @@ export class CalendarComponent implements OnInit {
   editingEvent: CalendarEvent | null = null;
   currentUser: User | null = null;
 
-  formEvent: any = {
+  formEvent: EventFormData = {
     title: '',
     description: '',
     type: 'other',
@@ -334,18 +344,21 @@ export class CalendarComponent implements OnInit {
     if (this.currentUser.role === 'admin') return true;
     
     if (event.eventScope === 'personal') {
-      return event.ownerId?._id === this.currentUser.id || 
-             event.ownerId === this.currentUser.id ||
-             event.createdBy?._id === this.currentUser.id ||
-             event.createdBy === this.currentUser.id;
+      return this.isUserIdMatch(event.ownerId, this.currentUser.id) || 
+             this.isUserIdMatch(event.createdBy, this.currentUser.id);
     }
     
-    return event.createdBy?._id === this.currentUser.id || 
-           event.createdBy === this.currentUser.id;
+    return this.isUserIdMatch(event.createdBy, this.currentUser.id);
   }
 
   canDeleteEvent(event: CalendarEvent): boolean {
     return this.canEditEvent(event);
+  }
+
+  private isUserIdMatch(userId: { _id: string } | string | undefined, targetId: string): boolean {
+    if (!userId) return false;
+    if (typeof userId === 'string') return userId === targetId;
+    return userId._id === targetId;
   }
 
   getEventIcon(type: string): string {
