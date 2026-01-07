@@ -114,9 +114,11 @@ GET    /api/integrations/usaco-ide/status        ← Estado servicio
 ✅ Sí, completamente implementado en branch `develop`
 
 **¿Qué puede hacer?**
-✅ Crear, editar, eliminar sesiones
+✅ Crear, editar, eliminar sesiones (solo líderes/coaches)
 ✅ Auto-generar enlaces con plantillas
 ✅ Enlaces manuales
 ✅ Autorización por roles
+
+**⚠️ Importante:** Si solo ves "View Templates" es porque no tienes permisos de líder/coach.
 
 **Lee más:** `USACO_SESSION_LOCATION_GUIDE.md`

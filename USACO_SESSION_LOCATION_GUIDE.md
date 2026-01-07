@@ -106,12 +106,14 @@ Endpoints para generar enlaces:
 
 1. **Navegar a:** Dashboard → Team Turistas → Sección "USACO IDE Sessions"
 2. **Botones disponibles:**
-   - `Add Session` - Crear nueva sesión
-   - `View Templates` - Ver plantillas de código
+   - `Add Session` - Crear nueva sesión ⚠️ **Solo líderes/coaches**
+   - `View Templates` - Ver plantillas de código (todos los miembros)
 3. **Acciones por sesión:**
-   - `Open IDE` - Abrir en USACO IDE
-   - `Rename` - Cambiar nombre
-   - `Delete` - Eliminar sesión
+   - `Open IDE` - Abrir en USACO IDE (todos los miembros)
+   - `Rename` - Cambiar nombre ⚠️ **Solo líderes/coaches**
+   - `Delete` - Eliminar sesión ⚠️ **Solo líderes/coaches**
+
+> **⚠️ Importante:** Si solo ves el botón "View Templates", es porque no tienes rol de líder o coach en el equipo. Contacta a un administrador para obtener permisos de gestión.
 
 ### 2. Verificar API Endpoints
 
@@ -169,20 +171,31 @@ curl -X DELETE "http://localhost:3000/api/team/TEAM_ID/code-sessions/SESSION_ID"
 
 ### Quién Puede Gestionar Sesiones
 
-- ✅ **Líderes de Equipo** (Team Leaders)
-- ✅ **Entrenadores** (Coaches)
-- ✅ **Administradores** (Admins)
-- ❌ **Miembros Regulares** (Solo lectura)
+- ✅ **Líderes de Equipo** (Team Leaders) - Pueden crear/editar/eliminar sesiones
+- ✅ **Entrenadores** (Coaches) - Pueden crear/editar/eliminar sesiones
+- ✅ **Administradores** (Admins) - Acceso completo
+- ❌ **Miembros Regulares** - Solo pueden ver sesiones y plantillas (sin botón "Add Session")
 
 ### Verificación de Permisos
 
 El código verifica permisos en:
 - **Backend:** `server/src/routes/team.routes.js` (líneas 467-475, 530-538, 587-595)
-- **Frontend:** `client/src/app/features/team/team-detail.component.ts` (propiedad `isLeader`)
+- **Frontend:** `client/src/app/features/team/team-detail.component.ts` (método `isTeamLeader()` líneas ~812-818)
+
+**Síntoma común:** Si solo ves el botón "View Templates" y NO ves "Add Session", es porque no tienes permisos de líder/coach.
 
 ## 🛠️ Debugging y Troubleshooting
 
 ### Problemas Comunes
+
+#### 0. "Solo veo el botón View Templates"
+**Causa:**
+- No tienes rol de líder o coach en el equipo
+
+**Solución:**
+- Pide a un administrador que te asigne rol de líder o coach
+- O inicia sesión con una cuenta que tenga esos permisos
+- El método `isTeamLeader()` verifica: `member.role === 'leader' || team.coach._id === currentUserId`
 
 #### 1. "Sesión no se crea"
 **Verificar:**
