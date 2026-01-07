@@ -4,7 +4,6 @@ import { ApiService } from './api.service';
 
 export interface TeamMember {
   userId: any;
-  role: 'leader' | 'member';
   isActive?: boolean;
   joinedAt: Date;
 }
@@ -13,6 +12,17 @@ export interface CodeSession {
   _id?: string;
   name: string;
   link: string;
+  linkedExcalidrawSessions?: string[];
+  createdAt: Date;
+}
+
+export interface ExcalidrawSession {
+  _id?: string;
+  name: string;
+  roomId: string;
+  roomKey: string;
+  url: string;
+  linkedToCodeSessionId?: string;
   createdAt: Date;
 }
 
@@ -40,6 +50,7 @@ export interface TeamConfig {
     url: string;
     createdAt: Date;
   }>;
+  excalidrawSessions?: ExcalidrawSession[];
   links?: {
     whatsappGroup?: string;
     discordServer?: string;
@@ -160,5 +171,26 @@ export class TeamService {
    */
   deleteCodeSession(teamId: string, sessionId: string): Observable<TeamResponse> {
     return this.api.delete<TeamResponse>(`/api/team/${teamId}/code-sessions/${sessionId}`);
+  }
+
+  /**
+   * Add Excalidraw session
+   */
+  addExcalidrawSession(teamId: string, name: string, linkedToCodeSessionId?: string): Observable<TeamResponse> {
+    return this.api.post<TeamResponse>(`/api/team/${teamId}/excalidraw-sessions`, { name, linkedToCodeSessionId });
+  }
+
+  /**
+   * Update Excalidraw session
+   */
+  updateExcalidrawSession(teamId: string, sessionId: string, name: string, linkedToCodeSessionId?: string | null): Observable<TeamResponse> {
+    return this.api.put<TeamResponse>(`/api/team/${teamId}/excalidraw-sessions/${sessionId}`, { name, linkedToCodeSessionId });
+  }
+
+  /**
+   * Delete Excalidraw session
+   */
+  deleteExcalidrawSession(teamId: string, sessionId: string): Observable<TeamResponse> {
+    return this.api.delete<TeamResponse>(`/api/team/${teamId}/excalidraw-sessions/${sessionId}`);
   }
 }

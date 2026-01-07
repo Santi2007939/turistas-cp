@@ -95,18 +95,11 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   </p>
                 </div>
                 <div class="flex items-center gap-2">
-                  <span 
-                    *ngIf="member.role === 'leader'"
-                    class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded text-sm">
-                    Leader
-                  </span>
-                  <span 
-                    *ngIf="member.role === 'member'"
-                    class="bg-blue-100 text-blue-800 px-3 py-1 rounded text-sm">
+                  <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded text-sm">
                     Member
                   </span>
                   <button
-                    *ngIf="isTeamLeader() && member.role !== 'leader'"
+                    *ngIf="isTeamMemberOrCoach()"
                     (click)="toggleMemberActive(member, false)"
                     class="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1 rounded text-sm">
                     Set Inactive
@@ -138,7 +131,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                     Inactive
                   </span>
                   <button
-                    *ngIf="isTeamLeader() && getActiveMembers().length < 3"
+                    *ngIf="isTeamMemberOrCoach() && getActiveMembers().length < 3"
                     (click)="toggleMemberActive(member, true)"
                     class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">
                     Set Active
@@ -177,7 +170,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                     Join Group
                   </a>
                   <button 
-                    *ngIf="isTeamLeader()"
+                    *ngIf="isCoachOrAdmin()"
                     (click)="openEditWhatsAppModal()"
                     class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded text-sm">
                     {{ team.links?.whatsappGroup ? 'Edit Link' : 'Add Link' }}
@@ -213,7 +206,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                     Join Server
                   </a>
                   <button 
-                    *ngIf="isTeamLeader()"
+                    *ngIf="isCoachOrAdmin()"
                     (click)="openEditDiscordModal()"
                     class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded text-sm">
                     {{ team.links?.discordServer ? 'Edit Link' : 'Add Link' }}
@@ -248,17 +241,17 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 </div>
               </div>
 
-              <!-- Excalidraw -->
+              <!-- Excalidraw Sessions -->
               <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
                 <div class="flex items-center gap-2 mb-2">
                   <span class="text-2xl">✏️</span>
-                  <h3 class="font-semibold text-gray-800">Excalidraw</h3>
+                  <h3 class="font-semibold text-gray-800">Excalidraw Sessions</h3>
                 </div>
-                <p class="text-sm text-gray-600 mb-3">Collaborate on diagrams and visualizations</p>
+                <p class="text-sm text-gray-600 mb-3">Managed sessions for diagrams and visualizations</p>
                 <button 
-                  (click)="openExcalidraw()"
+                  (click)="openAddExcalidrawSessionModal()"
                   class="w-full bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded text-sm">
-                  Open Excalidraw
+                  Add Session
                 </button>
               </div>
 
@@ -280,31 +273,83 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
           <!-- Code Sessions List -->
           <div *ngIf="team.codeSessions && team.codeSessions.length > 0" class="mb-6">
-            <h2 class="text-xl font-semibold text-gray-800 mb-3">Code Sessions</h2>
-            <div class="space-y-2">
+            <h2 class="text-xl font-semibold text-gray-800 mb-3">USACO IDE Sessions</h2>
+            <div class="space-y-3">
               <div 
                 *ngFor="let session of team.codeSessions" 
-                class="flex justify-between items-center bg-blue-50 border border-blue-200 rounded p-3">
+                class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div class="flex justify-between items-start mb-2">
+                  <div class="flex-1">
+                    <p class="font-semibold text-gray-800">{{ session.name }}</p>
+                    <p class="text-sm text-gray-600">Created {{ session.createdAt | date:'mediumDate' }}</p>
+                  </div>
+                  <div class="flex gap-2">
+                    <a 
+                      [href]="session.link" 
+                      target="_blank"
+                      class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm">
+                      Open IDE
+                    </a>
+                    <button
+                      *ngIf="isUserInTeam()"
+                      (click)="openRenameSessionModal(session)"
+                      class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-2 rounded text-sm">
+                      Rename
+                    </button>
+                    <button
+                      *ngIf="isUserInTeam() && session._id"
+                      (click)="deleteSession(session._id!)"
+                      class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded text-sm">
+                      Delete
+                    </button>
+                  </div>
+                </div>
+                <!-- Linked Excalidraw Sessions -->
+                <div *ngIf="getLinkedExcalidrawSessions(session).length > 0" class="mt-3 pl-4 border-l-2 border-purple-300">
+                  <p class="text-sm font-medium text-gray-700 mb-2">Linked Excalidraw Sessions:</p>
+                  <div class="space-y-1">
+                    <div *ngFor="let excSession of getLinkedExcalidrawSessions(session)" class="flex items-center gap-2">
+                      <span class="text-purple-600 text-sm">✏️</span>
+                      <a [href]="excSession.url" target="_blank" class="text-sm text-purple-600 hover:underline">
+                        {{ excSession.name }}
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Excalidraw Sessions -->
+          <div *ngIf="team.excalidrawSessions && team.excalidrawSessions.length > 0" class="mb-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-3">Excalidraw Sessions</h2>
+            <div class="space-y-2">
+              <div 
+                *ngFor="let excSession of team.excalidrawSessions" 
+                class="flex justify-between items-center bg-purple-50 border border-purple-200 rounded p-3">
                 <div class="flex-1">
-                  <p class="font-semibold text-gray-800">{{ session.name }}</p>
-                  <p class="text-sm text-gray-600">Created {{ session.createdAt | date:'mediumDate' }}</p>
+                  <p class="font-semibold text-gray-800">{{ excSession.name }}</p>
+                  <p class="text-sm text-gray-600">Created {{ excSession.createdAt | date:'mediumDate' }}</p>
+                  <p *ngIf="excSession.linkedToCodeSessionId" class="text-sm text-purple-600 mt-1">
+                    🔗 Linked to: {{ getCodeSessionName(excSession.linkedToCodeSessionId) }}
+                  </p>
                 </div>
                 <div class="flex gap-2">
                   <a 
-                    [href]="session.link" 
+                    [href]="excSession.url" 
                     target="_blank"
-                    class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm">
-                    Open IDE
+                    class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded text-sm">
+                    Open Board
                   </a>
                   <button
                     *ngIf="isUserInTeam()"
-                    (click)="openRenameSessionModal(session)"
+                    (click)="openEditExcalidrawSessionModal(excSession)"
                     class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-2 rounded text-sm">
-                    Rename
+                    Edit
                   </button>
                   <button
-                    *ngIf="isUserInTeam() && session._id"
-                    (click)="deleteSession(session._id!)"
+                    *ngIf="isUserInTeam() && excSession._id"
+                    (click)="deleteExcalidrawSession(excSession._id!)"
                     class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded text-sm">
                     Delete
                   </button>
@@ -673,7 +718,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               class="w-full border rounded px-3 py-2 font-mono text-sm bg-gray-50">
             </textarea>
           </div>
-          <div *ngIf="isTeamLeader()" class="mb-4">
+          <div *ngIf="isCoachOrAdmin()" class="mb-4">
             <button 
               (click)="openEditTemplateModal()"
               class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
@@ -685,6 +730,84 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               (click)="showViewTemplatesModal = false"
               class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
               Close
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Excalidraw Session Modal -->
+      <div 
+        *ngIf="showAddExcalidrawSessionModal" 
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        (click)="showAddExcalidrawSessionModal = false">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md" (click)="$event.stopPropagation()">
+          <h3 class="text-xl font-bold mb-4">Add Excalidraw Session</h3>
+          <input 
+            type="text"
+            [(ngModel)]="newExcalidrawSessionName"
+            placeholder="Session name (e.g., Algorithm Design Board)"
+            class="w-full border rounded px-3 py-2 mb-3">
+          <div class="mb-3">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Link to Code Session (Optional):</label>
+            <select 
+              [(ngModel)]="linkedCodeSessionId"
+              class="w-full border rounded px-3 py-2 text-sm">
+              <option [ngValue]="null">-- No Link --</option>
+              <option *ngFor="let session of team?.codeSessions" [ngValue]="session._id">
+                {{ session.name }}
+              </option>
+            </select>
+          </div>
+          <div class="flex gap-2 justify-end">
+            <button 
+              (click)="showAddExcalidrawSessionModal = false"
+              class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+              Cancel
+            </button>
+            <button 
+              (click)="addExcalidrawSession()"
+              [disabled]="!newExcalidrawSessionName || addingExcalidrawSession"
+              class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded disabled:bg-gray-300">
+              {{ addingExcalidrawSession ? 'Adding...' : 'Add Session' }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit Excalidraw Session Modal -->
+      <div 
+        *ngIf="showEditExcalidrawSessionModal" 
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        (click)="showEditExcalidrawSessionModal = false">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md" (click)="$event.stopPropagation()">
+          <h3 class="text-xl font-bold mb-4">Edit Excalidraw Session</h3>
+          <input 
+            type="text"
+            [(ngModel)]="editExcalidrawSessionName"
+            placeholder="Session name"
+            class="w-full border rounded px-3 py-2 mb-3">
+          <div class="mb-3">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Link to Code Session (Optional):</label>
+            <select 
+              [(ngModel)]="editLinkedCodeSessionId"
+              class="w-full border rounded px-3 py-2 text-sm">
+              <option [ngValue]="null">-- No Link --</option>
+              <option *ngFor="let session of team?.codeSessions" [ngValue]="session._id">
+                {{ session.name }}
+              </option>
+            </select>
+          </div>
+          <div class="flex gap-2 justify-end">
+            <button 
+              (click)="showEditExcalidrawSessionModal = false"
+              class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+              Cancel
+            </button>
+            <button 
+              (click)="saveExcalidrawSession()"
+              [disabled]="!editExcalidrawSessionName"
+              class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded disabled:bg-gray-300">
+              Save
             </button>
           </div>
         </div>
@@ -711,6 +834,8 @@ export class TeamDetailComponent implements OnInit, OnDestroy {
   showAddSessionModal = false;
   showRenameSessionModal = false;
   showViewTemplatesModal = false;
+  showAddExcalidrawSessionModal = false;
+  showEditExcalidrawSessionModal = false;
 
   // Edit fields
   editedWhatsAppLink = '';
@@ -724,11 +849,17 @@ export class TeamDetailComponent implements OnInit, OnDestroy {
   renameSessionId = '';
   viewTemplateLanguage = 'cpp';
   viewTemplateCode = '';
+  newExcalidrawSessionName = '';
+  linkedCodeSessionId: string | null = null;
+  editExcalidrawSessionName = '';
+  editExcalidrawSessionId = '';
+  editLinkedCodeSessionId: string | null = null;
 
   // Integration states
   creatingRoom = false;
   creatingUsacoLink = false;
   addingSession = false;
+  addingExcalidrawSession = false;
   loadingRPCContests = false;
   rpcContestsError: string | null = null;
   rpcContests: any[] = [];
@@ -838,12 +969,17 @@ export class TeamDetailComponent implements OnInit, OnDestroy {
     this.router.navigate(['/dashboard']);
   }
 
-  isTeamLeader(): boolean {
+  isCoachOrAdmin(): boolean {
     if (!this.team || !this.currentUserId) return false;
-    const member = this.team.members.find(m => 
+    return this.team.coach?._id === this.currentUserId;
+  }
+
+  isTeamMemberOrCoach(): boolean {
+    if (!this.team || !this.currentUserId) return false;
+    const isMember = this.team.members.some(m => 
       (typeof m.userId === 'object' ? m.userId._id : m.userId) === this.currentUserId
     );
-    return member?.role === 'leader' || this.team.coach?._id === this.currentUserId;
+    return isMember || this.team.coach?._id === this.currentUserId;
   }
 
   openEditWhatsAppModal(): void {
@@ -1195,5 +1331,107 @@ export class TeamDetailComponent implements OnInit, OnDestroy {
     const array = new Uint8Array(22);
     crypto.getRandomValues(array);
     return Array.from(array, byte => chars.charAt(byte % chars.length)).join('');
+  }
+
+  openAddExcalidrawSessionModal(): void {
+    this.newExcalidrawSessionName = '';
+    this.linkedCodeSessionId = null;
+    this.showAddExcalidrawSessionModal = true;
+  }
+
+  addExcalidrawSession(): void {
+    if (!this.teamId || !this.newExcalidrawSessionName) return;
+
+    this.addingExcalidrawSession = true;
+    this.error = null;
+
+    this.teamService.addExcalidrawSession(
+      this.teamId, 
+      this.newExcalidrawSessionName, 
+      this.linkedCodeSessionId || undefined
+    ).subscribe({
+      next: (response) => {
+        this.team = response.data.team;
+        this.showAddExcalidrawSessionModal = false;
+        this.showSuccessMessage(`Excalidraw session "${this.newExcalidrawSessionName}" created successfully!`);
+        this.newExcalidrawSessionName = '';
+        this.linkedCodeSessionId = null;
+        this.addingExcalidrawSession = false;
+      },
+      error: (err) => {
+        this.error = 'Failed to add Excalidraw session.';
+        this.addingExcalidrawSession = false;
+        console.error('Error adding Excalidraw session:', err);
+      }
+    });
+  }
+
+  openEditExcalidrawSessionModal(session: any): void {
+    this.editExcalidrawSessionId = session._id;
+    this.editExcalidrawSessionName = session.name;
+    this.editLinkedCodeSessionId = session.linkedToCodeSessionId || null;
+    this.showEditExcalidrawSessionModal = true;
+  }
+
+  saveExcalidrawSession(): void {
+    if (!this.teamId || !this.editExcalidrawSessionId || !this.editExcalidrawSessionName) return;
+
+    this.teamService.updateExcalidrawSession(
+      this.teamId,
+      this.editExcalidrawSessionId,
+      this.editExcalidrawSessionName,
+      this.editLinkedCodeSessionId
+    ).subscribe({
+      next: (response) => {
+        this.team = response.data.team;
+        this.showEditExcalidrawSessionModal = false;
+        this.showSuccessMessage(`Excalidraw session updated successfully!`);
+        this.editExcalidrawSessionId = '';
+        this.editExcalidrawSessionName = '';
+        this.editLinkedCodeSessionId = null;
+      },
+      error: (err) => {
+        this.error = 'Failed to update Excalidraw session.';
+        console.error('Error updating Excalidraw session:', err);
+      }
+    });
+  }
+
+  deleteExcalidrawSession(sessionId: string): void {
+    if (!this.teamId || !sessionId) return;
+
+    if (!confirm('Are you sure you want to delete this Excalidraw session?')) {
+      return;
+    }
+
+    this.teamService.deleteExcalidrawSession(this.teamId, sessionId).subscribe({
+      next: (response) => {
+        this.team = response.data.team;
+        this.showSuccessMessage('Excalidraw session deleted successfully!');
+      },
+      error: (err) => {
+        this.error = 'Failed to delete Excalidraw session.';
+        console.error('Error deleting Excalidraw session:', err);
+      }
+    });
+  }
+
+  getLinkedExcalidrawSessions(codeSession: any): any[] {
+    if (!this.team || !this.team.excalidrawSessions || !codeSession.linkedExcalidrawSessions) {
+      return [];
+    }
+    
+    return this.team.excalidrawSessions.filter(excSession => 
+      codeSession.linkedExcalidrawSessions.includes(excSession._id)
+    );
+  }
+
+  getCodeSessionName(codeSessionId: string): string {
+    if (!this.team || !this.team.codeSessions) {
+      return 'Unknown';
+    }
+    
+    const session = this.team.codeSessions.find(s => s._id === codeSessionId);
+    return session ? session.name : 'Unknown';
   }
 }

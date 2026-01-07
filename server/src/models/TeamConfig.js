@@ -21,11 +21,6 @@ const teamConfigSchema = new mongoose.Schema({
       ref: 'User',
       required: true
     },
-    role: {
-      type: String,
-      enum: ['leader', 'member'],
-      default: 'member'
-    },
     isActive: {
       type: Boolean,
       default: true
@@ -82,6 +77,31 @@ const teamConfigSchema = new mongoose.Schema({
       default: Date.now
     }
   }],
+  excalidrawSessions: [{
+    name: {
+      type: String,
+      required: true
+    },
+    roomId: {
+      type: String,
+      required: true
+    },
+    roomKey: {
+      type: String,
+      required: true
+    },
+    url: {
+      type: String,
+      required: true
+    },
+    linkedToCodeSessionId: {
+      type: String  // Store the code session ID as string
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now
+    }
+  }],
   links: {
     whatsappGroup: {
       type: String,
@@ -105,6 +125,9 @@ const teamConfigSchema = new mongoose.Schema({
       type: String,
       required: true
     },
+    linkedExcalidrawSessions: [{
+      type: String  // Store Excalidraw session IDs as strings
+    }],
     createdAt: {
       type: Date,
       default: Date.now

@@ -58,13 +58,21 @@ router.get('/:id', asyncHandler(async (req, res) => {
 router.post('/', authorize('admin'), asyncHandler(async (req, res) => {
   const teamData = {
     ...req.body,
-    coach: req.user._id,
-    members: [{
-      userId: req.user._id,
-      role: 'leader',
-      isActive: true // First member (leader) is active
-    }]
+    coach: req.user._id
   };
+
+  // Get all current members (users with isCurrentMember flag)
+  const User = (await import('../models/User.js')).default;
+  const currentMembers = await User.find({ 
+    isCurrentMember: true,
+    role: { $ne: 'admin' } // Exclude admin users
+  });
+
+  // Add current members to the team (excluding admin)
+  teamData.members = currentMembers.map((member, index) => ({
+    userId: member._id,
+    isActive: index < 3 // First 3 members are active
+  }));
 
   const team = await TeamConfig.create(teamData);
 
@@ -148,7 +156,6 @@ router.post('/:id/members', asyncHandler(async (req, res) => {
 
   team.members.push({ 
     userId, 
-    role: 'member',
     isActive: team.members.length <= 2 // First 3 members are active (0, 1, 2)
   });
   await team.save();
@@ -332,7 +339,6 @@ router.post('/:id/join', teamActionLimiter, asyncHandler(async (req, res) => {
 
   team.members.push({ 
     userId: req.user._id, 
-    role: 'member',
     isActive: team.members.length <= 2 // First 3 members are active (0, 1, 2)
   });
   await team.save();
@@ -349,7 +355,7 @@ router.post('/:id/join', teamActionLimiter, asyncHandler(async (req, res) => {
 
 // @desc    Toggle member active status
 // @route   PUT /api/team/:id/members/:userId/active
-// @access  Private/Team Owner/Admin
+// @access  Private/Team Member/Admin
 router.put('/:id/members/:userId/active', teamManagementLimiter, asyncHandler(async (req, res) => {
   const team = await TeamConfig.findById(req.params.id);
 
@@ -360,13 +366,13 @@ router.put('/:id/members/:userId/active', teamManagementLimiter, asyncHandler(as
     });
   }
 
-  // Check if user is team leader or admin
-  const isLeader = team.members.some(m => 
-    m.userId.toString() === req.user._id.toString() && m.role === 'leader'
+  // Check if user is a team member or admin
+  const isMember = team.members.some(m => 
+    m.userId.toString() === req.user._id.toString()
   );
   const isCoach = team.coach && team.coach.toString() === req.user._id.toString();
   
-  if (!isLeader && !isCoach && req.user.role !== 'admin') {
+  if (!isMember && !isCoach && req.user.role !== 'admin') {
     return res.status(403).json({
       success: false,
       message: 'Not authorized to update member status'
@@ -438,18 +444,6 @@ router.post('/:id/leave', teamActionLimiter, asyncHandler(async (req, res) => {
       success: false,
       message: 'You are not a member of this team'
     });
-  }
-
-  // Prevent the last leader from leaving
-  const member = team.members[memberIndex];
-  if (member.role === 'leader') {
-    const leaderCount = team.members.filter(m => m.role === 'leader').length;
-    if (leaderCount === 1) {
-      return res.status(400).json({
-        success: false,
-        message: 'Cannot leave: you are the only leader. Please assign another leader first.'
-      });
-    }
   }
 
   team.members.splice(memberIndex, 1);
@@ -644,6 +638,222 @@ router.delete('/:id', authorize('admin'), asyncHandler(async (req, res) => {
   res.json({
     success: true,
     message: 'Team deleted successfully'
+  });
+}));
+
+// @desc    Add Excalidraw session to team
+// @route   POST /api/team/:id/excalidraw-sessions
+// @access  Private/Team Member/Admin
+router.post('/:id/excalidraw-sessions', teamManagementLimiter, asyncHandler(async (req, res) => {
+  const team = await TeamConfig.findById(req.params.id);
+
+  if (!team) {
+    return res.status(404).json({
+      success: false,
+      message: 'Team not found'
+    });
+  }
+
+  // Check if user is a team member or admin
+  const isMember = team.members.some(m => 
+    m.userId.toString() === req.user._id.toString()
+  );
+  
+  if (!isMember && req.user.role !== 'admin') {
+    return res.status(403).json({
+      success: false,
+      message: 'Not authorized to add Excalidraw sessions'
+    });
+  }
+
+  const { name, linkedToCodeSessionId } = req.body;
+
+  if (!name) {
+    return res.status(400).json({
+      success: false,
+      message: 'Session name is required'
+    });
+  }
+
+  // Import and use excalidraw service
+  const excalidrawService = (await import('../services/excalidraw.service.js')).default;
+  const roomId = excalidrawService.generateRoomId();
+  const roomKey = excalidrawService.generateRoomKey();
+  const url = excalidrawService.getShareableLink(roomId, roomKey);
+
+  // Initialize excalidrawSessions array if it doesn't exist
+  if (!team.excalidrawSessions) {
+    team.excalidrawSessions = [];
+  }
+
+  const newSession = {
+    name,
+    roomId,
+    roomKey,
+    url,
+    linkedToCodeSessionId: linkedToCodeSessionId || null
+  };
+
+  team.excalidrawSessions.push(newSession);
+
+  // If linking to a code session, update that session too
+  if (linkedToCodeSessionId) {
+    const codeSession = team.codeSessions.id(linkedToCodeSessionId);
+    if (codeSession) {
+      if (!codeSession.linkedExcalidrawSessions) {
+        codeSession.linkedExcalidrawSessions = [];
+      }
+      const sessionId = team.excalidrawSessions[team.excalidrawSessions.length - 1]._id;
+      codeSession.linkedExcalidrawSessions.push(sessionId);
+    }
+  }
+
+  await team.save();
+
+  const updatedTeam = await TeamConfig.findById(req.params.id)
+    .populate('coach members.userId', 'username email fullName');
+
+  res.status(201).json({
+    success: true,
+    message: 'Excalidraw session added successfully',
+    data: { team: updatedTeam }
+  });
+}));
+
+// @desc    Update Excalidraw session
+// @route   PUT /api/team/:id/excalidraw-sessions/:sessionId
+// @access  Private/Team Member/Admin
+router.put('/:id/excalidraw-sessions/:sessionId', teamManagementLimiter, asyncHandler(async (req, res) => {
+  const team = await TeamConfig.findById(req.params.id);
+
+  if (!team) {
+    return res.status(404).json({
+      success: false,
+      message: 'Team not found'
+    });
+  }
+
+  // Check if user is a team member or admin
+  const isMember = team.members.some(m => 
+    m.userId.toString() === req.user._id.toString()
+  );
+  
+  if (!isMember && req.user.role !== 'admin') {
+    return res.status(403).json({
+      success: false,
+      message: 'Not authorized to update Excalidraw sessions'
+    });
+  }
+
+  const session = team.excalidrawSessions.id(req.params.sessionId);
+
+  if (!session) {
+    return res.status(404).json({
+      success: false,
+      message: 'Excalidraw session not found'
+    });
+  }
+
+  const { name, linkedToCodeSessionId } = req.body;
+
+  if (name) {
+    session.name = name;
+  }
+
+  // Handle linking/unlinking
+  if (linkedToCodeSessionId !== undefined) {
+    const oldLinkedSessionId = session.linkedToCodeSessionId;
+
+    // Remove from old code session if exists
+    if (oldLinkedSessionId) {
+      const oldCodeSession = team.codeSessions.id(oldLinkedSessionId);
+      if (oldCodeSession && oldCodeSession.linkedExcalidrawSessions) {
+        oldCodeSession.linkedExcalidrawSessions = oldCodeSession.linkedExcalidrawSessions.filter(
+          id => id.toString() !== req.params.sessionId
+        );
+      }
+    }
+
+    // Add to new code session if provided
+    if (linkedToCodeSessionId) {
+      const newCodeSession = team.codeSessions.id(linkedToCodeSessionId);
+      if (newCodeSession) {
+        if (!newCodeSession.linkedExcalidrawSessions) {
+          newCodeSession.linkedExcalidrawSessions = [];
+        }
+        newCodeSession.linkedExcalidrawSessions.push(req.params.sessionId);
+      }
+    }
+
+    session.linkedToCodeSessionId = linkedToCodeSessionId || null;
+  }
+
+  await team.save();
+
+  const updatedTeam = await TeamConfig.findById(req.params.id)
+    .populate('coach members.userId', 'username email fullName');
+
+  res.json({
+    success: true,
+    message: 'Excalidraw session updated successfully',
+    data: { team: updatedTeam }
+  });
+}));
+
+// @desc    Delete Excalidraw session
+// @route   DELETE /api/team/:id/excalidraw-sessions/:sessionId
+// @access  Private/Team Member/Admin
+router.delete('/:id/excalidraw-sessions/:sessionId', teamManagementLimiter, asyncHandler(async (req, res) => {
+  const team = await TeamConfig.findById(req.params.id);
+
+  if (!team) {
+    return res.status(404).json({
+      success: false,
+      message: 'Team not found'
+    });
+  }
+
+  // Check if user is a team member or admin
+  const isMember = team.members.some(m => 
+    m.userId.toString() === req.user._id.toString()
+  );
+  
+  if (!isMember && req.user.role !== 'admin') {
+    return res.status(403).json({
+      success: false,
+      message: 'Not authorized to delete Excalidraw sessions'
+    });
+  }
+
+  const session = team.excalidrawSessions.id(req.params.sessionId);
+
+  if (!session) {
+    return res.status(404).json({
+      success: false,
+      message: 'Excalidraw session not found'
+    });
+  }
+
+  // Remove from linked code session if exists
+  if (session.linkedToCodeSessionId) {
+    const codeSession = team.codeSessions.id(session.linkedToCodeSessionId);
+    if (codeSession && codeSession.linkedExcalidrawSessions) {
+      codeSession.linkedExcalidrawSessions = codeSession.linkedExcalidrawSessions.filter(
+        id => id.toString() !== req.params.sessionId
+      );
+    }
+  }
+
+  session.deleteOne();
+  await team.save();
+
+  const updatedTeam = await TeamConfig.findById(req.params.id)
+    .populate('coach members.userId', 'username email fullName');
+
+  res.json({
+    success: true,
+    message: 'Excalidraw session deleted successfully',
+    data: { team: updatedTeam }
   });
 }));
 
