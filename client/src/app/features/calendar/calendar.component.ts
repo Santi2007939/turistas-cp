@@ -389,22 +389,18 @@ export class CalendarComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    const params: {
-      startDate?: string;
-      endDate?: string;
-      type?: string;
-      scope?: string;
-    } = {};
-    
-    if (this.filters.startDate) params.startDate = this.filters.startDate;
-    if (this.filters.endDate) params.endDate = this.filters.endDate;
-    if (this.filters.type) params.type = this.filters.type;
-    if (this.filters.scope) params.scope = this.filters.scope;
+    // Build params object for server-side filtering
+    const params = {
+      ...(this.filters.startDate && { startDate: this.filters.startDate }),
+      ...(this.filters.endDate && { endDate: this.filters.endDate }),
+      ...(this.filters.type && { type: this.filters.type }),
+      ...(this.filters.scope && { scope: this.filters.scope })
+    };
 
-    this.calendarService.getEvents(params).subscribe({
+    this.calendarService.getEvents(Object.keys(params).length > 0 ? params : undefined).subscribe({
       next: (response) => {
         this.events = response.data.events;
-        this.applyLocalFilters();
+        this.filteredEvents = this.events; // Server already filtered, use directly
         this.generateCalendarDays();
         this.loading = false;
       },
@@ -418,25 +414,6 @@ export class CalendarComponent implements OnInit {
 
   applyFilters(): void {
     this.loadEvents();
-  }
-
-  applyLocalFilters(): void {
-    this.filteredEvents = this.events.filter(event => {
-      if (this.filters.type && event.type !== this.filters.type) return false;
-      if (this.filters.scope && event.eventScope !== this.filters.scope) return false;
-      if (this.filters.startDate) {
-        const startFilter = new Date(this.filters.startDate);
-        const eventStart = new Date(event.startTime);
-        if (eventStart < startFilter) return false;
-      }
-      if (this.filters.endDate) {
-        const endFilter = new Date(this.filters.endDate);
-        endFilter.setHours(23, 59, 59, 999);
-        const eventEnd = new Date(event.endTime || event.startTime);
-        if (eventEnd > endFilter) return false;
-      }
-      return true;
-    });
   }
 
   clearFilters(): void {
