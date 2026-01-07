@@ -47,7 +47,17 @@ export class CalendarService {
     scope?: string;
     teamId?: string;
   }): Observable<CalendarResponse> {
-    return this.api.get<CalendarResponse>('/api/calendar', params);
+    let queryString = '';
+    if (params) {
+      const queryParams = new URLSearchParams();
+      if (params.startDate) queryParams.append('startDate', params.startDate);
+      if (params.endDate) queryParams.append('endDate', params.endDate);
+      if (params.type) queryParams.append('type', params.type);
+      if (params.scope) queryParams.append('scope', params.scope);
+      if (params.teamId) queryParams.append('teamId', params.teamId);
+      queryString = queryParams.toString() ? `?${queryParams.toString()}` : '';
+    }
+    return this.api.get<CalendarResponse>(`/api/calendar${queryString}`);
   }
 
   getEvent(id: string): Observable<SingleEventResponse> {
