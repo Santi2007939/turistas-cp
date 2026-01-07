@@ -9,11 +9,18 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 interface EventFormData {
   title: string;
   description: string;
-  type: 'contest' | 'practice' | 'meeting' | 'deadline' | 'other';
+  type: 'contest' | 'practice' | 'training' | 'meeting' | 'deadline' | 'roadmap' | 'problem' | 'clase_gpc' | 'rpc' | 'other';
   eventScope: 'personal' | 'team' | 'public';
   startTime: string;
   endTime: string;
   isPublic: boolean;
+}
+
+interface FilterData {
+  type: string;
+  scope: string;
+  startDate: string;
+  endDate: string;
 }
 
 @Component({
@@ -30,11 +37,86 @@ interface EventFormData {
         <div class="px-4 py-6 sm:px-0">
           <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold text-gray-800">📅 Calendar</h2>
-            <button 
-              (click)="showCreateModal = true"
-              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
-              Add Event
-            </button>
+            <div class="flex gap-2">
+              <!-- View Toggle -->
+              <div class="flex bg-white rounded-lg shadow overflow-hidden">
+                <button 
+                  (click)="viewMode = 'list'"
+                  [ngClass]="viewMode === 'list' ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'"
+                  class="px-4 py-2 text-sm font-medium transition-colors">
+                  📋 List
+                </button>
+                <button 
+                  (click)="viewMode = 'calendar'"
+                  [ngClass]="viewMode === 'calendar' ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'"
+                  class="px-4 py-2 text-sm font-medium transition-colors">
+                  📅 Calendar
+                </button>
+              </div>
+              <button 
+                (click)="showCreateModal = true"
+                class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+                Add Event
+              </button>
+            </div>
+          </div>
+
+          <!-- Filters Section -->
+          <div class="bg-white rounded-lg shadow p-4 mb-6">
+            <div class="flex flex-wrap gap-4 items-end">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                <select 
+                  [(ngModel)]="filters.type"
+                  (ngModelChange)="applyFilters()"
+                  class="border rounded px-3 py-2 text-sm">
+                  <option value="">All Types</option>
+                  <option value="contest">🏆 Contest</option>
+                  <option value="practice">💻 Practice</option>
+                  <option value="training">📚 Training</option>
+                  <option value="meeting">👥 Meeting</option>
+                  <option value="deadline">⏰ Deadline</option>
+                  <option value="clase_gpc">🎓 Clase GPC</option>
+                  <option value="rpc">🌐 RPC</option>
+                  <option value="roadmap">🗺️ Roadmap</option>
+                  <option value="problem">🧩 Problem</option>
+                  <option value="other">📌 Other</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Scope</label>
+                <select 
+                  [(ngModel)]="filters.scope"
+                  (ngModelChange)="applyFilters()"
+                  class="border rounded px-3 py-2 text-sm">
+                  <option value="">All Scopes</option>
+                  <option value="personal">Personal</option>
+                  <option value="team">Team</option>
+                  <option value="public">Public</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+                <input 
+                  type="date"
+                  [(ngModel)]="filters.startDate"
+                  (ngModelChange)="applyFilters()"
+                  class="border rounded px-3 py-2 text-sm">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">End Date</label>
+                <input 
+                  type="date"
+                  [(ngModel)]="filters.endDate"
+                  (ngModelChange)="applyFilters()"
+                  class="border rounded px-3 py-2 text-sm">
+              </div>
+              <button 
+                (click)="clearFilters()"
+                class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded text-sm">
+                Clear Filters
+              </button>
+            </div>
           </div>
 
           <!-- Error Message -->
@@ -52,14 +134,14 @@ interface EventFormData {
             <p class="text-gray-600">Loading events...</p>
           </div>
 
-          <!-- Events List -->
-          <div *ngIf="!loading" class="space-y-4">
-            <div *ngIf="events.length === 0" class="bg-white rounded-lg shadow p-8 text-center">
+          <!-- List View -->
+          <div *ngIf="!loading && viewMode === 'list'" class="space-y-4">
+            <div *ngIf="filteredEvents.length === 0" class="bg-white rounded-lg shadow p-8 text-center">
               <p class="text-gray-600">No events found. Create your first event!</p>
             </div>
 
             <div 
-              *ngFor="let event of events" 
+              *ngFor="let event of filteredEvents" 
               class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow">
               <div class="flex justify-between items-start">
                 <div class="flex-1">
@@ -73,7 +155,7 @@ interface EventFormData {
                     <p><strong>End:</strong> {{ event.endTime | date:'medium' }}</p>
                     <div class="flex gap-2 mt-2">
                       <span class="px-2 py-1 rounded text-xs" [ngClass]="getEventTypeClass(event.type)">
-                        {{ event.type }}
+                        {{ getEventTypeName(event.type) }}
                       </span>
                       <span class="px-2 py-1 rounded text-xs" [ngClass]="getEventScopeClass(event.eventScope)">
                         {{ event.eventScope }}
@@ -98,6 +180,57 @@ interface EventFormData {
               </div>
             </div>
           </div>
+
+          <!-- Calendar View -->
+          <div *ngIf="!loading && viewMode === 'calendar'" class="bg-white rounded-lg shadow">
+            <!-- Calendar Header -->
+            <div class="flex justify-between items-center p-4 border-b">
+              <button 
+                (click)="previousMonth()"
+                class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded">
+                ← Previous
+              </button>
+              <h3 class="text-lg font-semibold">{{ currentMonth | date:'MMMM yyyy' }}</h3>
+              <button 
+                (click)="nextMonth()"
+                class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded">
+                Next →
+              </button>
+            </div>
+            
+            <!-- Calendar Grid -->
+            <div class="grid grid-cols-7 gap-px bg-gray-200">
+              <!-- Day Headers -->
+              <div *ngFor="let day of weekDays" class="bg-gray-100 p-2 text-center text-sm font-medium text-gray-700">
+                {{ day }}
+              </div>
+              
+              <!-- Calendar Days -->
+              <div 
+                *ngFor="let day of calendarDays" 
+                class="bg-white min-h-24 p-1 border-t"
+                [ngClass]="{'bg-gray-50': !day.isCurrentMonth}">
+                <div class="text-sm text-gray-500 mb-1" [ngClass]="{'text-gray-400': !day.isCurrentMonth, 'font-bold text-blue-600': day.isToday}">
+                  {{ day.date.getDate() }}
+                </div>
+                <div class="space-y-1">
+                  <div 
+                    *ngFor="let event of day.events.slice(0, 3)" 
+                    (click)="editEvent(event)"
+                    class="text-xs p-1 rounded cursor-pointer truncate"
+                    [ngClass]="getEventTypeClass(event.type)"
+                    [title]="event.title">
+                    {{ getEventIcon(event.type) }} {{ event.title }}
+                  </div>
+                  <div 
+                    *ngIf="day.events.length > 3" 
+                    class="text-xs text-gray-500 pl-1">
+                    +{{ day.events.length - 3 }} more
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -106,7 +239,7 @@ interface EventFormData {
         *ngIf="showCreateModal" 
         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
         (click)="showCreateModal = false">
-        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md" (click)="$event.stopPropagation()">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md max-h-screen overflow-y-auto" (click)="$event.stopPropagation()">
           <h3 class="text-xl font-bold mb-4">{{ editingEvent ? 'Edit Event' : 'Create New Event' }}</h3>
           
           <div class="space-y-4">
@@ -134,11 +267,16 @@ interface EventFormData {
               <select 
                 [(ngModel)]="formEvent.type"
                 class="w-full border rounded px-3 py-2">
-                <option value="contest">Contest</option>
-                <option value="practice">Practice</option>
-                <option value="meeting">Meeting</option>
-                <option value="deadline">Deadline</option>
-                <option value="other">Other</option>
+                <option value="contest">🏆 Contest</option>
+                <option value="practice">💻 Practice</option>
+                <option value="training">📚 Training</option>
+                <option value="meeting">👥 Meeting</option>
+                <option value="deadline">⏰ Deadline</option>
+                <option value="clase_gpc">🎓 Clase GPC</option>
+                <option value="rpc">🌐 RPC</option>
+                <option value="roadmap">🗺️ Roadmap</option>
+                <option value="problem">🧩 Problem</option>
+                <option value="other">📌 Other</option>
               </select>
             </div>
 
@@ -200,6 +338,7 @@ interface EventFormData {
 })
 export class CalendarComponent implements OnInit {
   events: CalendarEvent[] = [];
+  filteredEvents: CalendarEvent[] = [];
   loading = false;
   error: string | null = null;
   successMessage: string | null = null;
@@ -207,6 +346,22 @@ export class CalendarComponent implements OnInit {
   saving = false;
   editingEvent: CalendarEvent | null = null;
   currentUser: User | null = null;
+  
+  // View mode toggle
+  viewMode: 'list' | 'calendar' = 'list';
+  
+  // Calendar view properties
+  currentMonth: Date = new Date();
+  weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  calendarDays: Array<{ date: Date; isCurrentMonth: boolean; isToday: boolean; events: CalendarEvent[] }> = [];
+
+  // Filter properties
+  filters: FilterData = {
+    type: '',
+    scope: '',
+    startDate: '',
+    endDate: ''
+  };
 
   formEvent: EventFormData = {
     title: '',
@@ -234,9 +389,19 @@ export class CalendarComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    this.calendarService.getEvents().subscribe({
+    // Build params object for server-side filtering
+    const params = {
+      ...(this.filters.startDate && { startDate: this.filters.startDate }),
+      ...(this.filters.endDate && { endDate: this.filters.endDate }),
+      ...(this.filters.type && { type: this.filters.type }),
+      ...(this.filters.scope && { scope: this.filters.scope })
+    };
+
+    this.calendarService.getEvents(Object.keys(params).length > 0 ? params : undefined).subscribe({
       next: (response) => {
         this.events = response.data.events;
+        this.filteredEvents = this.events; // Server already filtered, use directly
+        this.generateCalendarDays();
         this.loading = false;
       },
       error: (err) => {
@@ -245,6 +410,74 @@ export class CalendarComponent implements OnInit {
         console.error('Error loading events:', err);
       }
     });
+  }
+
+  applyFilters(): void {
+    this.loadEvents();
+  }
+
+  clearFilters(): void {
+    this.filters = {
+      type: '',
+      scope: '',
+      startDate: '',
+      endDate: ''
+    };
+    this.loadEvents();
+  }
+
+  // Calendar view methods
+  generateCalendarDays(): void {
+    const year = this.currentMonth.getFullYear();
+    const month = this.currentMonth.getMonth();
+    
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    
+    const startDate = new Date(firstDay);
+    startDate.setDate(startDate.getDate() - startDate.getDay());
+    
+    const endDate = new Date(lastDay);
+    endDate.setDate(endDate.getDate() + (6 - endDate.getDay()));
+    
+    const days: Array<{ date: Date; isCurrentMonth: boolean; isToday: boolean; events: CalendarEvent[] }> = [];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const currentDate = new Date(startDate);
+    while (currentDate <= endDate) {
+      const dayDate = new Date(currentDate);
+      const isCurrentMonth = currentDate.getMonth() === month;
+      const isToday = currentDate.getTime() === today.getTime();
+      
+      const dayEvents = this.filteredEvents.filter(event => {
+        const eventDate = new Date(event.startTime);
+        return eventDate.getFullYear() === dayDate.getFullYear() &&
+               eventDate.getMonth() === dayDate.getMonth() &&
+               eventDate.getDate() === dayDate.getDate();
+      });
+      
+      days.push({
+        date: dayDate,
+        isCurrentMonth,
+        isToday,
+        events: dayEvents
+      });
+      
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+    
+    this.calendarDays = days;
+  }
+
+  previousMonth(): void {
+    this.currentMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() - 1, 1);
+    this.generateCalendarDays();
+  }
+
+  nextMonth(): void {
+    this.currentMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() + 1, 1);
+    this.generateCalendarDays();
   }
 
   editEvent(event: CalendarEvent): void {
@@ -365,19 +598,45 @@ export class CalendarComponent implements OnInit {
     const icons: { [key: string]: string } = {
       'contest': '🏆',
       'practice': '💻',
+      'training': '📚',
       'meeting': '👥',
       'deadline': '⏰',
+      'clase_gpc': '🎓',
+      'rpc': '🌐',
+      'roadmap': '🗺️',
+      'problem': '🧩',
       'other': '📌'
     };
     return icons[type] || '📌';
+  }
+
+  getEventTypeName(type: string): string {
+    const names: { [key: string]: string } = {
+      'contest': 'Contest',
+      'practice': 'Practice',
+      'training': 'Training',
+      'meeting': 'Meeting',
+      'deadline': 'Deadline',
+      'clase_gpc': 'Clase GPC',
+      'rpc': 'RPC',
+      'roadmap': 'Roadmap',
+      'problem': 'Problem',
+      'other': 'Other'
+    };
+    return names[type] || type;
   }
 
   getEventTypeClass(type: string): string {
     const classes: { [key: string]: string } = {
       'contest': 'bg-yellow-100 text-yellow-800',
       'practice': 'bg-blue-100 text-blue-800',
+      'training': 'bg-cyan-100 text-cyan-800',
       'meeting': 'bg-green-100 text-green-800',
       'deadline': 'bg-red-100 text-red-800',
+      'clase_gpc': 'bg-orange-100 text-orange-800',
+      'rpc': 'bg-pink-100 text-pink-800',
+      'roadmap': 'bg-teal-100 text-teal-800',
+      'problem': 'bg-violet-100 text-violet-800',
       'other': 'bg-gray-100 text-gray-800'
     };
     return classes[type] || 'bg-gray-100 text-gray-800';
