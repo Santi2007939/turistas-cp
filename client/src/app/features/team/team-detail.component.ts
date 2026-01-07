@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -23,6 +23,10 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
       <div *ngIf="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
         {{ error }}
+      </div>
+
+      <div *ngIf="successMessage" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+        {{ successMessage }}
       </div>
 
       <div *ngIf="team && !loading">
@@ -293,13 +297,13 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                     Open IDE
                   </a>
                   <button
-                    *ngIf="isTeamLeader()"
+                    *ngIf="isUserInTeam()"
                     (click)="openRenameSessionModal(session)"
                     class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-2 rounded text-sm">
                     Rename
                   </button>
                   <button
-                    *ngIf="isTeamLeader() && session._id"
+                    *ngIf="isUserInTeam() && session._id"
                     (click)="deleteSession(session._id!)"
                     class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded text-sm">
                     Delete
@@ -689,10 +693,11 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
     </div>
   `
 })
-export class TeamDetailComponent implements OnInit {
+export class TeamDetailComponent implements OnInit, OnDestroy {
   team: TeamConfig | null = null;
   loading = false;
   error: string | null = null;
+  successMessage: string | null = null;
   teamId: string | null = null;
   currentUserId: string | null = null;
 
@@ -729,6 +734,9 @@ export class TeamDetailComponent implements OnInit {
   rpcContests: any[] = [];
   usacoLinkUrl = '';
   selectedLanguage = 'cpp';
+  
+  // Timeout IDs for success message auto-hide
+  private successMessageTimeoutId: number | null = null;
 
   constructor(
     private teamService: TeamService,
@@ -748,6 +756,28 @@ export class TeamDetailComponent implements OnInit {
     if (this.teamId) {
       this.loadTeam(this.teamId);
     }
+  }
+
+  ngOnDestroy(): void {
+    // Clear any pending success message timeout
+    if (this.successMessageTimeoutId !== null) {
+      clearTimeout(this.successMessageTimeoutId);
+    }
+  }
+
+  private showSuccessMessage(message: string): void {
+    // Clear any existing timeout
+    if (this.successMessageTimeoutId !== null) {
+      clearTimeout(this.successMessageTimeoutId);
+    }
+    
+    this.successMessage = message;
+    
+    // Auto-hide after 5 seconds
+    this.successMessageTimeoutId = window.setTimeout(() => {
+      this.successMessage = null;
+      this.successMessageTimeoutId = null;
+    }, 5000);
   }
 
   loadTeam(id: string): void {
@@ -1021,6 +1051,8 @@ export class TeamDetailComponent implements OnInit {
     if (!this.teamId || !this.newSessionName) return;
 
     this.addingSession = true;
+    this.error = null;
+    this.successMessage = null;
 
     if (this.sessionLinkOption === 'auto') {
       // Auto-generate link
@@ -1032,6 +1064,7 @@ export class TeamDetailComponent implements OnInit {
               next: (teamResponse) => {
                 this.team = teamResponse.data.team;
                 this.showAddSessionModal = false;
+                this.showSuccessMessage(`Code session "${this.newSessionName}" created successfully with auto-generated link!`);
                 this.newSessionName = '';
                 this.customSessionLink = '';
                 this.addingSession = false;
@@ -1064,6 +1097,7 @@ export class TeamDetailComponent implements OnInit {
         next: (response) => {
           this.team = response.data.team;
           this.showAddSessionModal = false;
+          this.showSuccessMessage(`Code session "${this.newSessionName}" created successfully!`);
           this.newSessionName = '';
           this.customSessionLink = '';
           this.addingSession = false;
@@ -1090,6 +1124,7 @@ export class TeamDetailComponent implements OnInit {
       next: (response) => {
         this.team = response.data.team;
         this.showRenameSessionModal = false;
+        this.showSuccessMessage(`Session renamed to "${this.renameSessionName}" successfully!`);
         this.renameSessionId = '';
         this.renameSessionName = '';
       },
@@ -1110,6 +1145,7 @@ export class TeamDetailComponent implements OnInit {
     this.teamService.deleteCodeSession(this.teamId, sessionId).subscribe({
       next: (response) => {
         this.team = response.data.team;
+        this.showSuccessMessage('Code session deleted successfully!');
       },
       error: (err) => {
         this.error = 'Failed to delete session.';
