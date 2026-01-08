@@ -188,7 +188,6 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               </div>
             </div>
           </div>
-          </div>
           <div class="bg-white rounded-2xl p-4 hover:shadow-md transition-shadow" style="box-shadow: 0 2px 8px rgba(74, 59, 51, 0.05);">
             <div class="flex items-center gap-3">
               <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
