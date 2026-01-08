@@ -13,45 +13,62 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule, NavbarComponent],
   template: `
-    <div class="min-h-screen bg-gray-100">
+    <div class="min-h-screen" style="background-color: #FCF9F5;">
       <!-- Navigation -->
       <app-navbar></app-navbar>
 
-      <div class="container mx-auto px-4 py-8">
+      <div class="container mx-auto px-6 py-8">
         <div class="flex justify-between items-center mb-6">
-          <h1 class="text-3xl font-bold text-gray-800">Biblioteca de Problemas</h1>
+          <h1 class="text-3xl font-bold flex items-center gap-2" style="color: #2D2622;">
+            <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="#4A3B33" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="16 18 22 12 16 6"/>
+              <polyline points="8 6 2 12 8 18"/>
+            </svg>
+            Biblioteca de Problemas
+          </h1>
           <button 
             (click)="openAddProblemModal()"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            class="text-white font-bold py-2 px-4 rounded-xl flex items-center gap-2"
+            style="background-color: #8B5E3C;">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
             Agregar Problema
           </button>
         </div>
 
       <!-- Subtopic Filter Banner -->
-      <div *ngIf="subtopicFilter" class="mb-6 bg-blue-50 border-l-4 border-blue-500 rounded-lg p-4">
+      <div *ngIf="subtopicFilter" class="mb-6 bg-white rounded-2xl p-4 border-l-4" style="border-color: #8B5E3C; box-shadow: 0 2px 8px rgba(74, 59, 51, 0.05);">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-3">
-            <span class="text-2xl">🎯</span>
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="#8B5E3C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <circle cx="12" cy="12" r="6"/>
+              <circle cx="12" cy="12" r="2"/>
+            </svg>
             <div>
-              <h3 class="font-semibold text-blue-900">Filtrando por subtema</h3>
-              <p class="text-sm text-blue-700">{{ subtopicName || 'Cargando...' }}</p>
+              <h3 class="font-semibold" style="color: #2D2622;">Filtrando por subtema</h3>
+              <p class="text-sm" style="color: #4A3B33;">{{ subtopicName || 'Cargando...' }}</p>
             </div>
           </div>
           <button 
             (click)="clearSubtopicFilter()"
-            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm">
-            ✕ Limpiar filtro
+            class="text-white px-4 py-2 rounded-xl text-sm"
+            style="background-color: #8B5E3C;">
+            Limpiar filtro
           </button>
         </div>
       </div>
 
       <!-- Selector for problem view -->
       <div class="mb-6 flex gap-4 items-center">
-        <label class="font-semibold text-gray-700">Ver:</label>
+        <label class="font-semibold" style="color: #4A3B33;">Ver:</label>
         <select 
           [(ngModel)]="selectedView"
           (change)="onViewChange()"
-          class="border rounded px-4 py-2 bg-white">
+          class="rounded-xl px-4 py-2 bg-white focus:outline-none focus:ring-2"
+          style="border: 1px solid #EAE3DB; color: #2D2622;">
           <option value="personal">Mi cuenta</option>
           <option value="team">Equipo</option>
           <option value="members">Miembros</option>
@@ -59,18 +76,19 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
       </div>
 
       <div *ngIf="loading" class="text-center py-8">
-        <p class="text-gray-600">Cargando problemas...</p>
+        <p style="color: #4A3B33;">Cargando problemas...</p>
       </div>
 
-      <div *ngIf="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-        {{ error }}
+      <div *ngIf="error" class="bg-white rounded-2xl border-l-4 border-red-500 px-6 py-4 mb-4" style="box-shadow: 0 2px 8px rgba(74, 59, 51, 0.05);">
+        <p class="text-red-700">{{ error }}</p>
       </div>
 
       <!-- Problems Grid - New Design -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div 
           *ngFor="let problem of problems" 
-          class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow border-l-4"
+          class="bg-white rounded-2xl p-6 hover:shadow-lg transition-shadow border-l-4"
+          style="box-shadow: 0 2px 8px rgba(74, 59, 51, 0.05);"
           [ngClass]="{
             'border-gray-400': problem.status === 'pending',
             'border-green-500': problem.status === 'ac',
@@ -80,23 +98,15 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           <!-- Problem Header -->
           <div class="mb-4">
             <div class="flex justify-between items-start mb-2">
-              <h2 class="text-lg font-bold text-gray-800 flex-1">{{ problem.title }}</h2>
+              <h2 class="text-lg font-bold flex-1" style="color: #2D2622;">{{ problem.title }}</h2>
             </div>
             
             <!-- Rating and Status Row -->
             <div class="flex gap-2 items-center mb-3">
               <span 
                 *ngIf="problem.rating"
-                class="px-3 py-1 text-sm font-semibold rounded"
-                [ngClass]="{
-                  'bg-gray-200 text-gray-800': problem.rating < 1200,
-                  'bg-green-200 text-green-800': problem.rating >= 1200 && problem.rating < 1400,
-                  'bg-cyan-200 text-cyan-800': problem.rating >= 1400 && problem.rating < 1600,
-                  'bg-blue-200 text-blue-800': problem.rating >= 1600 && problem.rating < 1900,
-                  'bg-purple-200 text-purple-800': problem.rating >= 1900 && problem.rating < 2100,
-                  'bg-orange-200 text-orange-800': problem.rating >= 2100 && problem.rating < 2400,
-                  'bg-red-200 text-red-800': problem.rating >= 2400
-                }">
+                class="px-3 py-1 text-sm font-medium rounded-full"
+                style="background-color: #F2E9E1; color: #4A3B33;">
                 ★ {{ problem.rating }}
               </span>
               
@@ -104,12 +114,8 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 *ngIf="canEdit(problem)"
                 [(ngModel)]="problem.status"
                 (change)="updateProblemStatus(problem)"
-                class="px-3 py-1 text-sm rounded border"
-                [ngClass]="{
-                  'bg-gray-100 text-gray-800 border-gray-300': problem.status === 'pending',
-                  'bg-green-100 text-green-800 border-green-300': problem.status === 'ac',
-                  'bg-red-100 text-red-800 border-red-300': problem.status === 'wa'
-                }">
+                class="px-3 py-1 text-sm rounded-full"
+                style="border: 1px solid #EAE3DB;">
                 <option value="pending">Pendiente</option>
                 <option value="ac">AC</option>
                 <option value="wa">WA</option>
@@ -117,29 +123,27 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               
               <span
                 *ngIf="!canEdit(problem)"
-                class="px-3 py-1 text-sm rounded"
-                [ngClass]="{
-                  'bg-gray-100 text-gray-800': problem.status === 'pending',
-                  'bg-green-100 text-green-800': problem.status === 'ac',
-                  'bg-red-100 text-red-800': problem.status === 'wa'
-                }">
+                class="px-3 py-1 text-sm rounded-full"
+                style="background-color: #F2E9E1; color: #4A3B33;">
                 {{ problem.status === 'pending' ? 'Pendiente' : problem.status === 'ac' ? 'AC' : 'WA' }}
               </span>
             </div>
 
             <!-- Platform Badge -->
-            <div class="mb-3">
-              <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
+            <div class="mb-3 flex flex-wrap gap-2">
+              <span class="text-xs px-3 py-1 rounded-full" style="background-color: #F2E9E1; color: #4A3B33;">
                 {{ problem.platform }}
               </span>
               <span 
                 *ngIf="problem.owner === 'personal'"
-                class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded ml-2">
+                class="text-xs px-3 py-1 rounded-full"
+                style="background-color: #F2E9E1; color: #8B5E3C;">
                 Personal
               </span>
               <span 
                 *ngIf="problem.owner === 'team'"
-                class="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded ml-2">
+                class="text-xs px-3 py-1 rounded-full"
+                style="background-color: #F2E9E1; color: #8B5E3C;">
                 Equipo
               </span>
             </div>
@@ -151,36 +155,50 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           <div class="flex gap-2 mt-4">
             <a 
               [routerLink]="['/problems', problem._id]"
-              class="flex-1 bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded text-sm text-center">
+              class="flex-1 text-white px-4 py-2 rounded-xl text-sm text-center"
+              style="background-color: #8B5E3C;">
               Ver Detalles
             </a>
             <a 
               *ngIf="problem.url"
               [href]="problem.url" 
               target="_blank"
-              class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded text-sm">
-              🔗
+              class="text-white px-3 py-2 rounded-xl text-sm flex items-center justify-center"
+              style="background-color: #D4A373;">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+              </svg>
             </a>
             <button 
               *ngIf="canEdit(problem)"
               (click)="openEditProblemModal(problem)"
-              class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-2 rounded text-sm">
-              ✎
+              class="px-3 py-2 rounded-xl text-sm flex items-center justify-center"
+              style="background-color: #F2E9E1; color: #4A3B33;">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
             </button>
           </div>
 
-          <div *ngIf="problem.createdBy" class="mt-3 text-xs text-gray-500">
+          <div *ngIf="problem.createdBy" class="mt-3 text-xs" style="color: #4A3B33;">
             Creado por: {{ getCreatorName(problem) }}
           </div>
         </div>
       </div>
 
       <div *ngIf="!loading && problems.length === 0" class="text-center py-12">
-        <p class="text-gray-600 text-lg mb-4">No hay problemas en esta vista.</p>
+        <svg class="w-16 h-16 mx-auto mb-4" viewBox="0 0 24 24" fill="none" stroke="#4A3B33" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="16 18 22 12 16 6"/>
+          <polyline points="8 6 2 12 8 18"/>
+        </svg>
+        <p class="text-lg mb-4" style="color: #4A3B33;">No hay problemas en esta vista.</p>
         <button 
           *ngIf="selectedView === 'personal'"
           (click)="openAddProblemModal()"
-          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          class="text-white font-bold py-2 px-4 rounded-xl"
+          style="background-color: #8B5E3C;">
           Agregar Primer Problema
         </button>
       </div>
@@ -188,32 +206,34 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
       <!-- Add/Edit Problem Modal -->
       <div 
         *ngIf="showAddProblemModal" 
-        class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-          <h3 class="text-xl font-bold mb-4">
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-2xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto" style="box-shadow: 0 4px 20px rgba(74, 59, 51, 0.1);">
+          <h3 class="text-xl font-bold mb-4" style="color: #2D2622;">
             {{ editingProblem ? 'Editar Problema' : 'Agregar Problema' }}
           </h3>
           
           <div class="space-y-4">
             <div>
-              <label class="block text-gray-700 text-sm font-bold mb-2">Título *</label>
+              <label class="block text-sm font-bold mb-2" style="color: #4A3B33;">Título *</label>
               <input 
                 type="text"
                 [(ngModel)]="newProblem.title"
-                class="w-full border rounded px-3 py-2"
+                class="w-full rounded-xl px-3 py-2"
+                style="border: 1px solid #EAE3DB; color: #2D2622;"
                 placeholder="Nombre del problema">
             </div>
 
             <!-- URL Field (optional for all platforms) -->
             <div>
-              <label class="block text-gray-700 text-sm font-bold mb-2">
+              <label class="block text-sm font-bold mb-2" style="color: #4A3B33;">
                 URL del Problema (Opcional)
               </label>
               <input 
                 type="url"
                 [(ngModel)]="newProblem.url"
                 (ngModelChange)="onUrlChange()"
-                class="w-full border rounded px-3 py-2"
+                class="w-full rounded-xl px-3 py-2"
+                style="border: 1px solid #EAE3DB; color: #2D2622;"
                 [class.border-red-500]="urlValidationError && !isUrlWarning"
                 [class.border-yellow-500]="urlValidationError && isUrlWarning"
                 placeholder="https://codeforces.com/problemset/problem/1234/A">

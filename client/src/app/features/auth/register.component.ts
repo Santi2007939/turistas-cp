@@ -10,73 +10,81 @@ import { environment } from '../../../environments/environment';
     selector: 'app-register',
     imports: [CommonModule, FormsModule, RouterModule],
     template: `
-    <div class="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600 py-12 px-4 sm:px-6 lg:px-8">
-      <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-2xl">
+    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8" style="background-color: #FCF9F5;">
+      <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-2xl" style="box-shadow: 0 4px 20px rgba(74, 59, 51, 0.1);">
         <div>
-          <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            🏔️ Turistas CP
+          <h2 class="mt-6 text-center text-3xl font-extrabold flex items-center justify-center gap-2" style="color: #8B5E3C;">
+            <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8 3l4 8 5-5 5 15H2L8 3z"/>
+            </svg>
+            Turistas CP
           </h2>
-          <p class="mt-2 text-center text-sm text-gray-600">
+          <p class="mt-2 text-center text-sm" style="color: #4A3B33;">
             {{ usersExist ? 'Crea tu cuenta' : 'Crea la cuenta de administrador' }}
           </p>
         </div>
         <form class="mt-8 space-y-6" (ngSubmit)="onSubmit()">
           <div class="space-y-4">
             <div>
-              <label for="username" class="block text-sm font-medium text-gray-700">Usuario</label>
+              <label for="username" class="block text-sm font-medium" style="color: #4A3B33;">Usuario</label>
               <input
                 id="username"
                 name="username"
                 type="text"
                 [(ngModel)]="formData.username"
                 required
-                class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                class="mt-1 appearance-none relative block w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 sm:text-sm"
+                style="border: 1px solid #EAE3DB; color: #2D2622;"
                 placeholder="Nombre de usuario"
               />
             </div>
             <div>
-              <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+              <label for="email" class="block text-sm font-medium" style="color: #4A3B33;">Email</label>
               <input
                 id="email"
                 name="email"
                 type="email"
                 [(ngModel)]="formData.email"
                 required
-                class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                class="mt-1 appearance-none relative block w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 sm:text-sm"
+                style="border: 1px solid #EAE3DB; color: #2D2622;"
                 placeholder="tu@email.com"
               />
             </div>
             <div>
-              <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
+              <label for="password" class="block text-sm font-medium" style="color: #4A3B33;">Contraseña</label>
               <input
                 id="password"
                 name="password"
                 type="password"
                 [(ngModel)]="formData.password"
                 required
-                class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                class="mt-1 appearance-none relative block w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 sm:text-sm"
+                style="border: 1px solid #EAE3DB; color: #2D2622;"
                 placeholder="Mínimo 6 caracteres"
               />
             </div>
             <div>
-              <label for="fullName" class="block text-sm font-medium text-gray-700">Nombre completo (opcional)</label>
+              <label for="fullName" class="block text-sm font-medium" style="color: #4A3B33;">Nombre completo (opcional)</label>
               <input
                 id="fullName"
                 name="fullName"
                 type="text"
                 [(ngModel)]="formData.fullName"
-                class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                class="mt-1 appearance-none relative block w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 sm:text-sm"
+                style="border: 1px solid #EAE3DB; color: #2D2622;"
                 placeholder="Tu nombre completo"
               />
             </div>
             <div *ngIf="usersExist">
-              <label for="codeforcesHandle" class="block text-sm font-medium text-gray-700">Handle de Codeforces (opcional)</label>
+              <label for="codeforcesHandle" class="block text-sm font-medium" style="color: #4A3B33;">Handle de Codeforces (opcional)</label>
               <input
                 id="codeforcesHandle"
                 name="codeforcesHandle"
                 type="text"
                 [(ngModel)]="formData.codeforcesHandle"
-                class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                class="mt-1 appearance-none relative block w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 sm:text-sm"
+                style="border: 1px solid #EAE3DB; color: #2D2622;"
                 placeholder="tu_handle"
               />
             </div>
@@ -90,15 +98,16 @@ import { environment } from '../../../environments/environment';
             <button
               type="submit"
               [disabled]="loading"
-              class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50"
+              class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50"
+              style="background-color: #8B5E3C;"
             >
               {{ loading ? 'Registrando...' : 'Registrarse' }}
             </button>
           </div>
 
           <div class="text-center text-sm">
-            <span class="text-gray-600">¿Ya tienes cuenta? </span>
-            <a routerLink="/auth/login" class="font-medium text-primary-600 hover:text-primary-500">
+            <span style="color: #4A3B33;">¿Ya tienes cuenta? </span>
+            <a routerLink="/auth/login" class="font-medium hover:underline" style="color: #8B5E3C;">
               Inicia sesión
             </a>
           </div>
