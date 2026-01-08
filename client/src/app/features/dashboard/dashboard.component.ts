@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 import { AuthService, User } from '../../core/services/auth.service';
 import { RoadmapService, PersonalNode } from '../../core/services/roadmap.service';
 import { IntegrationsService, CodeforcesUserInfo } from '../../core/services/integrations.service';
@@ -168,7 +169,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
   `,
     styles: []
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   currentUser: User | null = null;
   roadmapStats: {
     total: number;
@@ -182,6 +183,8 @@ export class DashboardComponent implements OnInit {
   loadingCodeforcesStats = false;
   codeforcesError: string | null = null;
 
+  private destroy$ = new Subject<void>();
+
   constructor(
     private authService: AuthService,
     private roadmapService: RoadmapService,
@@ -189,15 +192,22 @@ export class DashboardComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.authService.currentUser$.subscribe(user => {
-      this.currentUser = user;
-      if (user) {
-        this.loadRoadmapStats();
-        if (user.codeforcesHandle) {
-          this.loadCodeforcesStats();
+    this.authService.currentUser$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(user => {
+        this.currentUser = user;
+        if (user) {
+          this.loadRoadmapStats();
+          if (user.codeforcesHandle) {
+            this.loadCodeforcesStats();
+          }
         }
-      }
-    });
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   loadRoadmapStats(): void {

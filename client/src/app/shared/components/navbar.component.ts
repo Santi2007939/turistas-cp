@@ -65,7 +65,7 @@ import { AuthService, User } from '../../core/services/auth.service';
             </a>
             
             <!-- Profile Dropdown -->
-            <div class="relative">
+            <div class="relative profile-dropdown-container">
               <button
                 (click)="toggleProfileDropdown()"
                 class="flex items-center gap-2 text-gray-700 hover:text-blue-600 transition-colors px-3 py-2 rounded-md text-sm font-medium">
@@ -332,6 +332,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     codeforcesHandle: ''
   };
   private destroy$ = new Subject<void>();
+  private profileSuccessTimeout: ReturnType<typeof setTimeout> | null = null;
 
   constructor(
     private authService: AuthService,
@@ -349,12 +350,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    if (this.profileSuccessTimeout) {
+      clearTimeout(this.profileSuccessTimeout);
+    }
   }
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     const target = event.target as HTMLElement;
-    if (!target.closest('.relative')) {
+    if (!target.closest('.profile-dropdown-container')) {
       this.profileDropdownOpen = false;
     }
   }
@@ -404,12 +408,17 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.savingProfile = true;
     this.profileError = null;
     this.profileSuccess = null;
+    
+    // Clear any existing timeout
+    if (this.profileSuccessTimeout) {
+      clearTimeout(this.profileSuccessTimeout);
+    }
 
     this.authService.updateProfile(this.editProfileData).subscribe({
       next: () => {
         this.savingProfile = false;
         this.profileSuccess = 'Perfil actualizado correctamente';
-        setTimeout(() => {
+        this.profileSuccessTimeout = setTimeout(() => {
           this.editingProfile = false;
           this.profileSuccess = null;
         }, 1500);
