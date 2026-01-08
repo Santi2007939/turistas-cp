@@ -49,7 +49,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           </div>
 
           <!-- Team Achievements & Statistics Section -->
-          <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+          <div id="achievements-section" class="bg-white rounded-lg shadow-lg p-6 mb-6">
             <div class="flex justify-between items-center mb-4">
               <h3 class="text-xl font-bold text-gray-800">🏆 Logros del Equipo y Estadísticas</h3>
               <button 
@@ -229,6 +229,9 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
     styles: []
 })
 export class DashboardComponent implements OnInit {
+  // Problem status constant to avoid magic strings
+  private readonly PROBLEM_STATUS_ACCEPTED = 'ac' as const;
+
   currentUser: User | null = null;
   roadmapStats: {
     total: number;
@@ -308,7 +311,7 @@ export class DashboardComponent implements OnInit {
       next: (response) => {
         const problems = response.data.problems;
         this.problemStats.total = problems.length;
-        this.problemStats.solved = problems.filter(p => p.status === 'ac').length;
+        this.problemStats.solved = problems.filter(p => p.status === this.PROBLEM_STATUS_ACCEPTED).length;
         this.problemStats.successRate = this.problemStats.total > 0 
           ? Math.round((this.problemStats.solved / this.problemStats.total) * 100)
           : 0;
@@ -371,8 +374,8 @@ export class DashboardComponent implements OnInit {
   }
 
   scrollToAchievements(): void {
-    // Scroll to the achievements section
-    const element = document.querySelector('.bg-white.rounded-lg.shadow-lg');
+    // Scroll to the achievements section using the element's ID
+    const element = document.getElementById('achievements-section');
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
