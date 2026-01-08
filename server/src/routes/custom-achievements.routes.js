@@ -3,8 +3,13 @@ import CustomAchievement from '../models/CustomAchievement.js';
 import TeamConfig from '../models/TeamConfig.js';
 import { protect } from '../middlewares/auth.js';
 import { asyncHandler } from '../middlewares/error.js';
+import { createRateLimiter } from '../middlewares/rateLimiter.js';
 
 const router = express.Router();
+
+// Rate limiter for achievement operations (max 30 requests per minute for reads, 10 for writes)
+const achievementReadLimiter = createRateLimiter(30, 60000, 'Too many achievement requests. Please try again later.');
+const achievementWriteLimiter = createRateLimiter(10, 60000, 'Too many achievement modification requests. Please try again later.');
 
 // All routes require authentication
 router.use(protect);
@@ -12,8 +17,9 @@ router.use(protect);
 // @desc    Get all custom achievements (personal + team where user is member)
 // @route   GET /api/custom-achievements
 // @access  Private
-router.get('/', asyncHandler(async (req, res) => {
-  // Get user's personal achievements
+router.get('/', achievementReadLimiter, asyncHandler(async (req, res) => {
+  // Get ALL personal achievements (users can view everyone's achievements, edit only their own)
+  // This follows the app pattern: "puedes ver el de todos, pero solo puedes editar el tuyo"
   const personalAchievements = await CustomAchievement.find({
     scope: 'personal',
     isActive: true
@@ -46,7 +52,7 @@ router.get('/', asyncHandler(async (req, res) => {
 // @desc    Get user's own custom achievements
 // @route   GET /api/custom-achievements/my
 // @access  Private
-router.get('/my', asyncHandler(async (req, res) => {
+router.get('/my', achievementReadLimiter, asyncHandler(async (req, res) => {
   const achievements = await CustomAchievement.find({
     createdBy: req.user._id,
     isActive: true
@@ -62,7 +68,7 @@ router.get('/my', asyncHandler(async (req, res) => {
 // @desc    Get single custom achievement
 // @route   GET /api/custom-achievements/:id
 // @access  Private
-router.get('/:id', asyncHandler(async (req, res) => {
+router.get('/:id', achievementReadLimiter, asyncHandler(async (req, res) => {
   const achievement = await CustomAchievement.findById(req.params.id)
     .populate('createdBy', 'username fullName')
     .populate('teamId', 'name members');
@@ -83,7 +89,7 @@ router.get('/:id', asyncHandler(async (req, res) => {
 // @desc    Create custom achievement
 // @route   POST /api/custom-achievements
 // @access  Private
-router.post('/', asyncHandler(async (req, res) => {
+router.post('/', achievementWriteLimiter, asyncHandler(async (req, res) => {
   const { name, description, photo, category, scope, teamId, achievedAt } = req.body;
 
   // If team achievement, verify user is member of the team
@@ -140,7 +146,7 @@ router.post('/', asyncHandler(async (req, res) => {
 // @desc    Update custom achievement
 // @route   PUT /api/custom-achievements/:id
 // @access  Private (owner for personal, active team member for team)
-router.put('/:id', asyncHandler(async (req, res) => {
+router.put('/:id', achievementWriteLimiter, asyncHandler(async (req, res) => {
   const achievement = await CustomAchievement.findById(req.params.id);
 
   if (!achievement) {
@@ -205,7 +211,7 @@ router.put('/:id', asyncHandler(async (req, res) => {
 // @desc    Delete custom achievement
 // @route   DELETE /api/custom-achievements/:id
 // @access  Private (owner for personal, active team member for team)
-router.delete('/:id', asyncHandler(async (req, res) => {
+router.delete('/:id', achievementWriteLimiter, asyncHandler(async (req, res) => {
   const achievement = await CustomAchievement.findById(req.params.id);
 
   if (!achievement) {

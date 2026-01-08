@@ -291,7 +291,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 </div>
 
                 <h4 class="font-bold text-gray-800 mb-1">{{ achievement.name }}</h4>
-                <p class="text-sm text-gray-600 mb-2 line-clamp-2">{{ achievement.description }}</p>
+                <p class="text-sm text-gray-600 mb-2 truncate" [title]="achievement.description">{{ achievement.description }}</p>
 
                 <div class="text-xs text-gray-500 mb-2">
                   <span>📅 {{ achievement.achievedAt | date:'mediumDate' }}</span>
@@ -440,14 +440,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
       </div>
     </div>
   `,
-  styles: [`
-    .line-clamp-2 {
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-  `]
+  styles: []
 })
 export class StatisticsComponent implements OnInit {
   private readonly PROBLEM_STATUS_ACCEPTED = 'ac' as const;
@@ -654,13 +647,23 @@ export class StatisticsComponent implements OnInit {
         // Filter teams where current user is an active member
         this.userTeams = response.data.teams.filter(team => 
           team.members.some(m => {
-            const userId = typeof m.userId === 'object' ? m.userId._id : m.userId;
-            return userId === this.currentUser?.id && m.isActive === true;
+            const memberId = this.extractUserId(m.userId);
+            return memberId === this.currentUser?.id && m.isActive === true;
           })
         );
       },
       error: (err) => console.error('Error loading teams:', err)
     });
+  }
+
+  /**
+   * Extract user ID from a populated or non-populated userId field
+   */
+  private extractUserId(userId: any): string | null {
+    if (!userId) return null;
+    if (typeof userId === 'string') return userId;
+    if (typeof userId === 'object' && userId._id) return userId._id;
+    return null;
   }
 
   // Custom achievements methods
