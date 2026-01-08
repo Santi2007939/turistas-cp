@@ -16,7 +16,7 @@ interface UserManagement extends User {
   selector: 'app-admin-dashboard',
   imports: [CommonModule, RouterModule, NavbarComponent],
   template: `
-    <div class="min-h-screen bg-gray-100">
+    <div class="min-h-screen bg-[#F4F4F4]">
       <!-- Navigation -->
       <app-navbar></app-navbar>
 
@@ -41,7 +41,7 @@ interface UserManagement extends User {
           </div>
 
           <!-- Users Table -->
-          <div *ngIf="!loading" class="bg-white shadow overflow-hidden sm:rounded-lg">
+          <div *ngIf="!loading" class="bg-white  overflow-hidden sm:">
             <table class="min-w-full divide-y divide-gray-200">
               <thead class="bg-gray-50">
                 <tr>
@@ -74,7 +74,7 @@ interface UserManagement extends User {
                     {{ user.email }}
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold "
                           [class.bg-purple-100]="user.role === 'admin'"
                           [class.text-purple-800]="user.role === 'admin'"
                           [class.bg-blue-100]="user.role === 'student'"
@@ -83,7 +83,7 @@ interface UserManagement extends User {
                     </span>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold "
                           [class.bg-green-100]="user.isActive"
                           [class.text-green-800]="user.isActive"
                           [class.bg-red-100]="!user.isActive"
@@ -92,10 +92,10 @@ interface UserManagement extends User {
                     </span>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold "
                           [class.bg-green-100]="user.isCurrentMember"
                           [class.text-green-800]="user.isCurrentMember"
-                          [class.bg-gray-100]="!user.isCurrentMember"
+                          [class.bg-[#F4F4F4]]="!user.isCurrentMember"
                           [class.text-gray-800]="!user.isCurrentMember">
                       {{ user.isCurrentMember ? 'Sí' : 'No' }}
                     </span>

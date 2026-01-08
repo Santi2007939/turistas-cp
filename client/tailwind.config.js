@@ -18,6 +18,22 @@ module.exports = {
           800: '#075985',
           900: '#0c4a6e',
         },
+        // Safe Room Design System Colors
+        'sr-background': '#F4F4F4',
+        'sr-surface': '#FFFFFF',
+        'sr-primary': '#1A1A1A',
+        'sr-accent': '#FFB400',
+        'sr-border': '#D1D1D1',
+      },
+      fontFamily: {
+        'mono': ['Roboto Mono', 'monospace'],
+        'sans': ['Inter', 'system-ui', 'sans-serif'],
+      },
+      borderRadius: {
+        'sr': '2px',
+      },
+      spacing: {
+        'sr': '24px',
       },
     },
   },
