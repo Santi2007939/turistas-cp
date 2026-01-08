@@ -23,6 +23,27 @@ export interface UsacoPermalinkResponse {
   reason?: string;
 }
 
+export interface CodeforcesUserInfo {
+  handle: string;
+  rating?: number;
+  maxRating?: number;
+  rank?: string;
+  maxRank?: string;
+  contribution?: number;
+  friendOfCount?: number;
+  avatar?: string;
+  titlePhoto?: string;
+  registrationTimeSeconds?: number;
+  lastOnlineTimeSeconds?: number;
+}
+
+export interface CodeforcesUserResponse {
+  success: boolean;
+  data: {
+    userInfo: CodeforcesUserInfo;
+  };
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -77,5 +98,12 @@ export class IntegrationsService {
    */
   getUsacoPermalinkStatus(): Observable<any> {
     return this.api.get('/api/integrations/usaco-ide/status');
+  }
+
+  /**
+   * Get Codeforces user info by handle
+   */
+  getCodeforcesUser(handle: string): Observable<CodeforcesUserResponse> {
+    return this.api.get<CodeforcesUserResponse>(`/api/integrations/codeforces/user/${handle}`);
   }
 }
