@@ -16,6 +16,7 @@ import { ProblemDetailComponent } from './features/problems/problem-detail.compo
 import { TeamListComponent } from './features/team/team-list.component';
 import { TeamDetailComponent } from './features/team/team-detail.component';
 import { CalendarComponent } from './features/calendar/calendar.component';
+import { StatisticsComponent } from './features/statistics/statistics.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -23,6 +24,7 @@ export const routes: Routes = [
   { path: 'auth/register', component: RegisterComponent },
   { path: 'admin', component: AdminDashboardComponent, canActivate: [AuthGuard] },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
+  { path: 'statistics', component: StatisticsComponent, canActivate: [AuthGuard] },
   { path: 'themes', component: ThemesListComponent, canActivate: [AuthGuard] },
   { path: 'themes/create', component: ThemeCreateComponent, canActivate: [AuthGuard] },
   { path: 'themes/:id', component: ThemeDetailComponent, canActivate: [AuthGuard] },
