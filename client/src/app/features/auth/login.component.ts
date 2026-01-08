@@ -8,10 +8,11 @@ import { AuthService } from '../../core/services/auth.service';
     selector: 'app-login',
     imports: [CommonModule, FormsModule, RouterModule],
     template: `
-    <div class="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600 py-12 px-4 sm:px-6 lg:px-8">
-      <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-2xl">
+    <!-- Safe Room Login -->
+    <div class="min-h-screen flex items-center justify-center bg-[#F4F4F4] py-12 px-4">
+      <div class="max-w-md w-full space-y-8 bg-white p-8 border-2 border-[#D1D1D1]">
         <div>
-          <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          <h2 class="mt-6 text-center text-3xl font-bold text-[#1A1A1A] font-mono">
             🏔️ Turistas CP
           </h2>
           <p class="mt-2 text-center text-sm text-gray-600">
@@ -20,39 +21,39 @@ import { AuthService } from '../../core/services/auth.service';
         </div>
 
         <!-- Success message from registration -->
-        <div *ngIf="successMessage" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
+        <div *ngIf="successMessage" class="bg-green-50 border-2 border-green-600 text-green-700 px-4 py-3">
           {{ successMessage }}
         </div>
 
         <form class="mt-8 space-y-6" (ngSubmit)="onSubmit()">
-          <div class="rounded-md shadow-sm -space-y-px">
+          <div class="space-y-4">
             <div>
-              <label for="email" class="sr-only">Email</label>
+              <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
               <input
                 id="email"
                 name="email"
                 type="email"
                 [(ngModel)]="credentials.email"
                 required
-                class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm"
+                class="appearance-none relative block w-full px-4 py-3 border-2 border-[#D1D1D1] placeholder-gray-400 text-[#1A1A1A] focus:outline-none focus:border-[#1A1A1A] text-sm"
                 placeholder="Email"
               />
             </div>
             <div>
-              <label for="password" class="sr-only">Contraseña</label>
+              <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
               <input
                 id="password"
                 name="password"
                 type="password"
                 [(ngModel)]="credentials.password"
                 required
-                class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm"
+                class="appearance-none relative block w-full px-4 py-3 border-2 border-[#D1D1D1] placeholder-gray-400 text-[#1A1A1A] focus:outline-none focus:border-[#1A1A1A] text-sm"
                 placeholder="Contraseña"
               />
             </div>
           </div>
 
-          <div *ngIf="error" class="text-red-500 text-sm text-center">
+          <div *ngIf="error" class="text-red-600 text-sm text-center">
             {{ error }}
           </div>
 
@@ -60,7 +61,7 @@ import { AuthService } from '../../core/services/auth.service';
             <button
               type="submit"
               [disabled]="loading"
-              class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50"
+              class="group relative w-full flex justify-center py-3 px-4 border-2 border-[#1A1A1A] text-sm font-medium text-white bg-[#1A1A1A] hover:bg-gray-800 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {{ loading ? 'Iniciando sesión...' : 'Iniciar sesión' }}
             </button>
@@ -68,7 +69,7 @@ import { AuthService } from '../../core/services/auth.service';
 
           <div class="text-center text-sm">
             <span class="text-gray-600">¿No tienes cuenta? </span>
-            <a routerLink="/auth/register" class="font-medium text-primary-600 hover:text-primary-500">
+            <a routerLink="/auth/register" class="font-medium text-[#1A1A1A] hover:text-[#FFB400]">
               Regístrate
             </a>
           </div>

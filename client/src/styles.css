@@ -3,6 +3,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================
+   SAFE ROOM DESIGN SYSTEM
+   Minimalista, Industrial, Alta Precisión
+   ============================================ */
+
 /* Global styles */
 * {
   margin: 0;
@@ -10,14 +15,167 @@
   box-sizing: border-box;
 }
 
+/* Safe Room Typography */
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #F4F4F4;
+}
+
+/* Headings use Roboto Mono */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Roboto Mono', monospace;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  font-family: 'Roboto Mono', source-code-pro, Menlo, Monaco, Consolas, monospace;
+}
+
+/* ============================================
+   SAFE ROOM TOKENS - Base Layer
+   ============================================ */
+
+@layer base {
+  /* 
+   * Safe Room border-radius: 2px global
+   * Using !important to override Tailwind's rounded utilities
+   * This ensures consistent industrial aesthetic across all components
+   */
+  button, 
+  input, 
+  select, 
+  textarea,
+  .btn,
+  [class*="rounded"] {
+    border-radius: 2px !important;
+  }
+  
+  /* Override rounded-full for avatars and progress indicators */
+  .rounded-full {
+    border-radius: 9999px !important;
+  }
+}
+
+/* ============================================
+   SAFE ROOM COMPONENTS
+   ============================================ */
+
+@layer components {
+  /* Safe Room Card */
+  .sr-card {
+    @apply bg-white p-6 border-2 border-sr-border;
+    border-radius: 2px;
+    box-shadow: none;
+  }
+  
+  /* Safe Room Button - Primary */
+  .sr-btn-primary {
+    @apply bg-sr-primary text-white px-4 py-2 font-medium transition-colors;
+    border-radius: 2px;
+    box-shadow: none;
+  }
+  
+  .sr-btn-primary:hover {
+    @apply bg-gray-800;
+  }
+  
+  /* Safe Room Button - Secondary */
+  .sr-btn-secondary {
+    @apply bg-white text-sr-primary px-4 py-2 font-medium border-2 border-sr-primary transition-colors;
+    border-radius: 2px;
+    box-shadow: none;
+  }
+  
+  .sr-btn-secondary:hover {
+    @apply bg-gray-100;
+  }
+  
+  /* Safe Room Input */
+  .sr-input {
+    @apply w-full px-4 py-2 border-2 border-sr-border bg-white text-gray-800 focus:border-sr-primary focus:outline-none;
+    border-radius: 2px;
+  }
+  
+  /* Safe Room Progress Bar - Active state uses Hazard Yellow */
+  .sr-progress {
+    @apply h-2 bg-gray-200 overflow-hidden;
+    border-radius: 2px;
+  }
+  
+  .sr-progress-bar {
+    @apply h-full transition-all duration-300;
+    background-color: #FFB400;
+  }
+  
+  /* Safe Room Table */
+  .sr-table {
+    @apply w-full border-collapse;
+  }
+  
+  .sr-table th,
+  .sr-table td {
+    @apply border border-sr-border px-4 py-3 text-left;
+  }
+  
+  .sr-table thead {
+    @apply bg-gray-50;
+  }
+  
+  /* Safe Room Badge */
+  .sr-badge {
+    @apply inline-flex items-center px-2 py-1 text-xs font-medium;
+    border-radius: 2px;
+  }
+  
+  /* Safe Room Status - In Progress (Hazard Yellow) */
+  .sr-status-active {
+    background-color: #FFB400;
+    color: #1A1A1A;
+  }
+  
+  /* Safe Room Container */
+  .sr-container {
+    @apply p-6;
+  }
+  
+  /* Safe Room Stat Number */
+  .sr-stat {
+    font-family: 'Roboto Mono', monospace;
+    @apply text-2xl font-bold;
+  }
+}
+
+/* ============================================
+   SAFE ROOM UTILITIES
+   ============================================ */
+
+@layer utilities {
+  /* Remove all shadows globally */
+  .shadow, .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl {
+    box-shadow: none !important;
+  }
+  
+  /* Safe Room border utility */
+  .sr-border {
+    border: 2px solid #D1D1D1;
+  }
+  
+  /* Safe Room accent color */
+  .sr-accent {
+    color: #FFB400;
+  }
+  
+  .sr-accent-bg {
+    background-color: #FFB400;
+  }
+  
+  /* Font family utilities */
+  .font-mono-heading {
+    font-family: 'Roboto Mono', monospace;
+  }
+  
+  .font-inter {
+    font-family: 'Inter', sans-serif;
+  }
 }

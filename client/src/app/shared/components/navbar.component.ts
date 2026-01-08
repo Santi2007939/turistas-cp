@@ -10,57 +10,58 @@ import { AuthService, User } from '../../core/services/auth.service';
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
   template: `
-    <nav class="bg-white shadow-lg fixed top-0 left-0 right-0 z-50">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Safe Room Navbar: Pure white, no elevation, 2px solid #1A1A1A bottom border -->
+    <nav class="bg-white fixed top-0 left-0 right-0 z-50 border-b-2 border-[#1A1A1A]">
+      <div class="max-w-7xl mx-auto px-6">
         <div class="flex justify-between h-16">
           <!-- Logo and Brand -->
           <div class="flex items-center">
-            <h1 class="text-2xl font-bold text-blue-600">🏔️ Turistas CP</h1>
+            <h1 class="text-2xl font-bold text-[#1A1A1A] font-mono">🏔️ Turistas CP</h1>
           </div>
 
           <!-- Desktop Navigation -->
           <div class="hidden md:flex items-center space-x-4">
             <a 
               routerLink="/dashboard" 
-              routerLinkActive="text-blue-600 font-semibold"
+              routerLinkActive="text-[#1A1A1A] font-semibold border-b-2 border-[#FFB400]"
               [routerLinkActiveOptions]="{exact: false}"
-              class="text-gray-700 hover:text-blue-600 transition-colors px-3 py-2 rounded-md text-sm font-medium">
+              class="text-gray-600 hover:text-[#1A1A1A] transition-colors px-3 py-2 text-sm font-medium">
               Dashboard
             </a>
             <a 
               routerLink="/themes" 
-              routerLinkActive="text-blue-600 font-semibold"
+              routerLinkActive="text-[#1A1A1A] font-semibold border-b-2 border-[#FFB400]"
               [routerLinkActiveOptions]="{exact: false}"
-              class="text-gray-700 hover:text-blue-600 transition-colors px-3 py-2 rounded-md text-sm font-medium">
+              class="text-gray-600 hover:text-[#1A1A1A] transition-colors px-3 py-2 text-sm font-medium">
               Themes
             </a>
             <a 
               routerLink="/roadmap" 
-              routerLinkActive="text-blue-600 font-semibold"
+              routerLinkActive="text-[#1A1A1A] font-semibold border-b-2 border-[#FFB400]"
               [routerLinkActiveOptions]="{exact: false}"
-              class="text-gray-700 hover:text-blue-600 transition-colors px-3 py-2 rounded-md text-sm font-medium">
+              class="text-gray-600 hover:text-[#1A1A1A] transition-colors px-3 py-2 text-sm font-medium">
               Roadmap
             </a>
             <a 
               routerLink="/problems" 
-              routerLinkActive="text-blue-600 font-semibold"
+              routerLinkActive="text-[#1A1A1A] font-semibold border-b-2 border-[#FFB400]"
               [routerLinkActiveOptions]="{exact: false}"
-              class="text-gray-700 hover:text-blue-600 transition-colors px-3 py-2 rounded-md text-sm font-medium">
+              class="text-gray-600 hover:text-[#1A1A1A] transition-colors px-3 py-2 text-sm font-medium">
               Problems
             </a>
             <a 
               routerLink="/team" 
-              routerLinkActive="text-blue-600 font-semibold"
+              routerLinkActive="text-[#1A1A1A] font-semibold border-b-2 border-[#FFB400]"
               [routerLinkActiveOptions]="{exact: false}"
-              class="text-gray-700 hover:text-blue-600 transition-colors px-3 py-2 rounded-md text-sm font-medium">
+              class="text-gray-600 hover:text-[#1A1A1A] transition-colors px-3 py-2 text-sm font-medium">
               Team
             </a>
             <a 
               *ngIf="currentUser?.role === 'admin'"
               routerLink="/admin" 
-              routerLinkActive="text-blue-600 font-semibold"
+              routerLinkActive="text-[#1A1A1A] font-semibold border-b-2 border-[#FFB400]"
               [routerLinkActiveOptions]="{exact: false}"
-              class="text-gray-700 hover:text-blue-600 transition-colors px-3 py-2 rounded-md text-sm font-medium">
+              class="text-gray-600 hover:text-[#1A1A1A] transition-colors px-3 py-2 text-sm font-medium">
               Admin
             </a>
             
@@ -68,27 +69,29 @@ import { AuthService, User } from '../../core/services/auth.service';
             <div class="relative profile-dropdown-container">
               <button
                 (click)="toggleProfileDropdown()"
-                class="flex items-center gap-2 text-gray-700 hover:text-blue-600 transition-colors px-3 py-2 rounded-md text-sm font-medium">
-                <span>👤</span>
+                class="flex items-center gap-2 text-gray-600 hover:text-[#1A1A1A] transition-colors px-3 py-2 text-sm font-medium">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
                 <span>{{ currentUser?.username }}</span>
                 <svg class="w-4 h-4 transition-transform" [ngClass]="{'rotate-180': profileDropdownOpen}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
               
-              <!-- Dropdown Menu -->
+              <!-- Dropdown Menu - Safe Room Style -->
               <div 
                 *ngIf="profileDropdownOpen"
-                class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50">
+                class="absolute right-0 mt-2 w-80 bg-white border-2 border-[#D1D1D1] py-2 z-50">
                 
                 <!-- Profile Info Section -->
-                <div class="px-4 py-3 border-b border-gray-100">
+                <div class="px-6 py-4 border-b-2 border-[#D1D1D1]">
                   <div class="flex items-center gap-3 mb-3">
-                    <div class="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white text-xl font-bold">
+                    <div class="w-12 h-12 bg-[#1A1A1A] flex items-center justify-center text-white text-xl font-bold font-mono">
                       {{ currentUser?.username?.charAt(0)?.toUpperCase() }}
                     </div>
                     <div>
-                      <p class="font-semibold text-gray-800">{{ currentUser?.username }}</p>
+                      <p class="font-semibold text-[#1A1A1A]">{{ currentUser?.username }}</p>
                       <p class="text-sm text-gray-500">{{ currentUser?.email }}</p>
                     </div>
                   </div>
@@ -97,12 +100,12 @@ import { AuthService, User } from '../../core/services/auth.service';
                   <div class="space-y-2 text-sm">
                     <div class="flex justify-between">
                       <span class="text-gray-500">Nombre completo:</span>
-                      <span class="text-gray-800 font-medium">{{ currentUser?.fullName || 'No especificado' }}</span>
+                      <span class="text-[#1A1A1A] font-medium">{{ currentUser?.fullName || 'No especificado' }}</span>
                     </div>
                     <div class="flex justify-between">
                       <span class="text-gray-500">Codeforces Handle:</span>
-                      <span *ngIf="currentUser?.codeforcesHandle" class="text-blue-600 font-medium">
-                        <a [href]="'https://codeforces.com/profile/' + currentUser?.codeforcesHandle" target="_blank" rel="noopener noreferrer" class="hover:underline">
+                      <span *ngIf="currentUser?.codeforcesHandle" class="text-[#1A1A1A] font-medium">
+                        <a [href]="'https://codeforces.com/profile/' + currentUser?.codeforcesHandle" target="_blank" rel="noopener noreferrer" class="hover:text-[#FFB400]">
                           {{ currentUser?.codeforcesHandle }}
                         </a>
                       </span>
@@ -110,17 +113,17 @@ import { AuthService, User } from '../../core/services/auth.service';
                     </div>
                     <div class="flex justify-between">
                       <span class="text-gray-500">Rol:</span>
-                      <span class="text-gray-800 font-medium capitalize">{{ currentUser?.role }}</span>
+                      <span class="text-[#1A1A1A] font-medium capitalize">{{ currentUser?.role }}</span>
                     </div>
                   </div>
                 </div>
 
                 <!-- Edit Profile Button -->
-                <div class="px-4 py-2 border-b border-gray-100">
+                <div class="px-6 py-3 border-b-2 border-[#D1D1D1]">
                   <button 
                     *ngIf="!editingProfile"
                     (click)="startEditProfile()"
-                    class="w-full text-left text-blue-600 hover:text-blue-800 text-sm font-medium py-1">
+                    class="w-full text-left text-[#1A1A1A] hover:text-[#FFB400] text-sm font-medium py-1">
                     ✏️ Editar Perfil
                   </button>
                   
@@ -131,7 +134,7 @@ import { AuthService, User } from '../../core/services/auth.service';
                       <input 
                         type="text"
                         [(ngModel)]="editProfileData.fullName"
-                        class="w-full border rounded px-2 py-1 text-sm"
+                        class="w-full border-2 border-[#D1D1D1] px-3 py-2 text-sm focus:border-[#1A1A1A] focus:outline-none"
                         placeholder="Tu nombre completo">
                     </div>
                     <div>
@@ -139,39 +142,39 @@ import { AuthService, User } from '../../core/services/auth.service';
                       <input 
                         type="text"
                         [(ngModel)]="editProfileData.codeforcesHandle"
-                        class="w-full border rounded px-2 py-1 text-sm"
+                        class="w-full border-2 border-[#D1D1D1] px-3 py-2 text-sm focus:border-[#1A1A1A] focus:outline-none"
                         placeholder="tu_handle">
                     </div>
                     <div class="flex gap-2">
                       <button 
                         (click)="saveProfile()"
                         [disabled]="savingProfile"
-                        class="flex-1 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm disabled:bg-gray-300">
+                        class="flex-1 bg-[#1A1A1A] hover:bg-gray-800 text-white px-3 py-2 text-sm disabled:bg-gray-300">
                         {{ savingProfile ? 'Guardando...' : 'Guardar' }}
                       </button>
                       <button 
                         (click)="cancelEditProfile()"
-                        class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm">
+                        class="bg-white border-2 border-[#1A1A1A] hover:bg-gray-100 text-[#1A1A1A] px-3 py-2 text-sm">
                         Cancelar
                       </button>
                     </div>
-                    <p *ngIf="profileError" class="text-red-500 text-xs">{{ profileError }}</p>
-                    <p *ngIf="profileSuccess" class="text-green-500 text-xs">{{ profileSuccess }}</p>
+                    <p *ngIf="profileError" class="text-red-600 text-xs">{{ profileError }}</p>
+                    <p *ngIf="profileSuccess" class="text-green-600 text-xs">{{ profileSuccess }}</p>
                   </div>
                 </div>
 
                 <!-- Links -->
-                <div class="px-4 py-2">
+                <div class="px-6 py-3">
                   <a 
                     routerLink="/statistics"
                     (click)="closeProfileDropdown()"
-                    class="block text-gray-700 hover:text-blue-600 text-sm py-1">
+                    class="block text-gray-600 hover:text-[#1A1A1A] text-sm py-1">
                     📊 Ver Estadísticas y Logros
                   </a>
                 </div>
 
                 <!-- Logout -->
-                <div class="px-4 py-2 border-t border-gray-100">
+                <div class="px-6 py-3 border-t-2 border-[#D1D1D1]">
                   <button
                     (click)="logout()"
                     class="w-full text-left text-red-600 hover:text-red-800 text-sm font-medium py-1">
@@ -187,7 +190,7 @@ import { AuthService, User } from '../../core/services/auth.service';
             <button
               (click)="toggleMobileMenu()"
               type="button"
-              class="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+              class="inline-flex items-center justify-center p-2 text-gray-600 hover:text-[#1A1A1A] hover:bg-gray-100 focus:outline-none"
               aria-controls="mobile-menu"
               [attr.aria-expanded]="mobileMenuOpen">
               <span class="sr-only">Open main menu</span>
@@ -218,70 +221,70 @@ import { AuthService, User } from '../../core/services/auth.service';
         </div>
       </div>
 
-      <!-- Mobile menu -->
+      <!-- Mobile menu - Safe Room Style -->
       <div 
         *ngIf="mobileMenuOpen" 
         class="md:hidden" 
         id="mobile-menu">
-        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t">
+        <div class="px-4 pt-2 pb-3 space-y-1 bg-white border-t-2 border-[#D1D1D1]">
           <a 
             routerLink="/dashboard"
             (click)="closeMobileMenu()"
-            routerLinkActive="bg-blue-50 text-blue-600 font-semibold"
+            routerLinkActive="bg-gray-100 text-[#1A1A1A] font-semibold border-l-4 border-[#FFB400]"
             [routerLinkActiveOptions]="{exact: false}"
-            class="text-gray-700 hover:bg-gray-100 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">
+            class="text-gray-600 hover:bg-gray-100 hover:text-[#1A1A1A] block px-3 py-2 text-base font-medium">
             Dashboard
           </a>
           <a 
             routerLink="/themes"
             (click)="closeMobileMenu()"
-            routerLinkActive="bg-blue-50 text-blue-600 font-semibold"
+            routerLinkActive="bg-gray-100 text-[#1A1A1A] font-semibold border-l-4 border-[#FFB400]"
             [routerLinkActiveOptions]="{exact: false}"
-            class="text-gray-700 hover:bg-gray-100 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">
+            class="text-gray-600 hover:bg-gray-100 hover:text-[#1A1A1A] block px-3 py-2 text-base font-medium">
             Themes
           </a>
           <a 
             routerLink="/roadmap"
             (click)="closeMobileMenu()"
-            routerLinkActive="bg-blue-50 text-blue-600 font-semibold"
+            routerLinkActive="bg-gray-100 text-[#1A1A1A] font-semibold border-l-4 border-[#FFB400]"
             [routerLinkActiveOptions]="{exact: false}"
-            class="text-gray-700 hover:bg-gray-100 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">
+            class="text-gray-600 hover:bg-gray-100 hover:text-[#1A1A1A] block px-3 py-2 text-base font-medium">
             Roadmap
           </a>
           <a 
             routerLink="/problems"
             (click)="closeMobileMenu()"
-            routerLinkActive="bg-blue-50 text-blue-600 font-semibold"
+            routerLinkActive="bg-gray-100 text-[#1A1A1A] font-semibold border-l-4 border-[#FFB400]"
             [routerLinkActiveOptions]="{exact: false}"
-            class="text-gray-700 hover:bg-gray-100 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">
+            class="text-gray-600 hover:bg-gray-100 hover:text-[#1A1A1A] block px-3 py-2 text-base font-medium">
             Problems
           </a>
           <a 
             routerLink="/team"
             (click)="closeMobileMenu()"
-            routerLinkActive="bg-blue-50 text-blue-600 font-semibold"
+            routerLinkActive="bg-gray-100 text-[#1A1A1A] font-semibold border-l-4 border-[#FFB400]"
             [routerLinkActiveOptions]="{exact: false}"
-            class="text-gray-700 hover:bg-gray-100 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">
+            class="text-gray-600 hover:bg-gray-100 hover:text-[#1A1A1A] block px-3 py-2 text-base font-medium">
             Team
           </a>
           <a 
             *ngIf="currentUser?.role === 'admin'"
             routerLink="/admin"
             (click)="closeMobileMenu()"
-            routerLinkActive="bg-blue-50 text-blue-600 font-semibold"
+            routerLinkActive="bg-gray-100 text-[#1A1A1A] font-semibold border-l-4 border-[#FFB400]"
             [routerLinkActiveOptions]="{exact: false}"
-            class="text-gray-700 hover:bg-gray-100 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">
+            class="text-gray-600 hover:bg-gray-100 hover:text-[#1A1A1A] block px-3 py-2 text-base font-medium">
             Admin
           </a>
           
           <!-- Mobile Profile Section -->
-          <div class="border-t border-gray-200 pt-4 pb-3">
+          <div class="border-t-2 border-[#D1D1D1] pt-4 pb-3 mt-4">
             <div class="flex items-center px-3 mb-3">
-              <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold mr-3">
+              <div class="w-10 h-10 bg-[#1A1A1A] flex items-center justify-center text-white font-bold font-mono mr-3">
                 {{ currentUser?.username?.charAt(0)?.toUpperCase() }}
               </div>
               <div>
-                <div class="text-base font-medium text-gray-800">{{ currentUser?.username }}</div>
+                <div class="text-base font-medium text-[#1A1A1A]">{{ currentUser?.username }}</div>
                 <div class="text-sm text-gray-500">{{ currentUser?.email }}</div>
               </div>
             </div>
@@ -289,11 +292,11 @@ import { AuthService, User } from '../../core/services/auth.service';
             <div class="px-3 space-y-2 text-sm mb-3">
               <div class="flex justify-between">
                 <span class="text-gray-500">Nombre:</span>
-                <span class="text-gray-800">{{ currentUser?.fullName || 'No especificado' }}</span>
+                <span class="text-[#1A1A1A]">{{ currentUser?.fullName || 'No especificado' }}</span>
               </div>
               <div class="flex justify-between">
                 <span class="text-gray-500">Codeforces:</span>
-                <span class="text-blue-600">{{ currentUser?.codeforcesHandle || 'No vinculado' }}</span>
+                <span class="text-[#1A1A1A]">{{ currentUser?.codeforcesHandle || 'No vinculado' }}</span>
               </div>
             </div>
 
@@ -301,12 +304,12 @@ import { AuthService, User } from '../../core/services/auth.service';
               <a
                 routerLink="/statistics"
                 (click)="closeMobileMenu()"
-                class="block w-full text-left bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-md text-base font-medium">
+                class="block w-full text-left bg-[#1A1A1A] hover:bg-gray-800 text-white px-4 py-2 text-base font-medium">
                 📊 Estadísticas y Logros
               </a>
               <button
                 (click)="logout()"
-                class="block w-full text-left bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-md text-base font-medium">
+                class="block w-full text-left bg-white border-2 border-red-600 hover:bg-red-50 text-red-600 px-4 py-2 text-base font-medium">
                 🚪 Cerrar Sesión
               </button>
             </div>

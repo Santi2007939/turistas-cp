@@ -9,16 +9,17 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
   standalone: true,
   imports: [CommonModule, RouterModule, NavbarComponent],
   template: `
-    <div class="min-h-screen bg-gray-100">
+    <!-- Safe Room Themes List -->
+    <div class="min-h-screen bg-[#F4F4F4]">
       <!-- Navigation -->
       <app-navbar></app-navbar>
       
-      <div class="container mx-auto px-4 py-8">
+      <div class="container mx-auto px-6 py-8">
       <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold text-gray-800">Learning Themes</h1>
+        <h1 class="text-3xl font-bold text-[#1A1A1A] font-mono">Learning Themes</h1>
         <button 
           (click)="navigateToCreate()"
-          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          class="bg-[#1A1A1A] hover:bg-gray-800 text-white font-medium py-2 px-4">
           Create New Theme
         </button>
       </div>
@@ -27,24 +28,24 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
         <p class="text-gray-600">Loading themes...</p>
       </div>
 
-      <div *ngIf="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+      <div *ngIf="error" class="bg-red-50 border-2 border-red-600 text-red-700 px-6 py-4 mb-4">
         {{ error }}
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div 
           *ngFor="let theme of themes" 
-          class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer"
+          class="bg-white p-6 border-2 border-[#D1D1D1] hover:border-[#1A1A1A] transition-colors cursor-pointer"
           (click)="navigateToDetail(theme._id)">
           <div class="flex justify-between items-start mb-4">
-            <h2 class="text-xl font-semibold text-gray-800">{{ theme.name }}</h2>
+            <h2 class="text-xl font-semibold text-[#1A1A1A] font-mono">{{ theme.name }}</h2>
             <span 
-              class="px-3 py-1 text-xs font-semibold rounded-full"
+              class="px-3 py-1 text-xs font-semibold"
               [ngClass]="{
-                'bg-green-100 text-green-800': theme.difficulty === 'beginner',
-                'bg-yellow-100 text-yellow-800': theme.difficulty === 'intermediate',
-                'bg-orange-100 text-orange-800': theme.difficulty === 'advanced',
-                'bg-red-100 text-red-800': theme.difficulty === 'expert'
+                'bg-[#F4F4F4] text-[#1A1A1A] border border-[#D1D1D1]': theme.difficulty === 'beginner',
+                'bg-[#FFB400] text-[#1A1A1A]': theme.difficulty === 'intermediate',
+                'bg-[#1A1A1A] text-white': theme.difficulty === 'advanced',
+                'bg-red-600 text-white': theme.difficulty === 'expert'
               }">
               {{ theme.difficulty }}
             </span>
@@ -53,7 +54,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           <p class="text-gray-600 mb-4">{{ theme.description || 'No description available' }}</p>
           
           <div class="mb-4">
-            <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">
+            <span class="inline-block bg-[#F4F4F4] px-3 py-1 text-sm font-medium text-[#1A1A1A] border border-[#D1D1D1] mr-2">
               {{ theme.category }}
             </span>
           </div>
@@ -61,7 +62,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           <div class="flex flex-wrap gap-2">
             <span 
               *ngFor="let tag of theme.tags" 
-              class="inline-block bg-blue-100 rounded-full px-2 py-1 text-xs text-blue-800">
+              class="inline-block bg-white px-2 py-1 text-xs text-gray-600 border border-[#D1D1D1]">
               #{{ tag }}
             </span>
           </div>
@@ -72,7 +73,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
         <p class="text-gray-600 text-lg">No themes available yet.</p>
         <button 
           (click)="navigateToCreate()"
-          class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          class="mt-4 bg-[#1A1A1A] hover:bg-gray-800 text-white font-medium py-2 px-4">
           Create First Theme
         </button>
       </div>
