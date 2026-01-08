@@ -10,57 +10,57 @@ import { AuthService, User } from '../../core/services/auth.service';
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
   template: `
-    <nav class="bg-white shadow-lg fixed top-0 left-0 right-0 z-50">
+    <nav class="bg-deep-sea fixed top-0 left-0 right-0 z-50">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
           <!-- Logo and Brand -->
           <div class="flex items-center">
-            <h1 class="text-2xl font-bold text-blue-600">🏔️ Turistas CP</h1>
+            <h1 class="text-2xl font-bold text-white">🏔️ Turistas CP</h1>
           </div>
 
           <!-- Desktop Navigation -->
           <div class="hidden md:flex items-center space-x-4">
             <a 
               routerLink="/dashboard" 
-              routerLinkActive="text-blue-600 font-semibold"
+              routerLinkActive="!opacity-100 font-semibold"
               [routerLinkActiveOptions]="{exact: false}"
-              class="text-gray-700 hover:text-blue-600 transition-colors px-3 py-2 rounded-md text-sm font-medium">
+              class="text-white opacity-80 hover:opacity-100 transition-opacity px-3 py-2 rounded-kinetic text-sm font-medium">
               Dashboard
             </a>
             <a 
               routerLink="/themes" 
-              routerLinkActive="text-blue-600 font-semibold"
+              routerLinkActive="!opacity-100 font-semibold"
               [routerLinkActiveOptions]="{exact: false}"
-              class="text-gray-700 hover:text-blue-600 transition-colors px-3 py-2 rounded-md text-sm font-medium">
+              class="text-white opacity-80 hover:opacity-100 transition-opacity px-3 py-2 rounded-kinetic text-sm font-medium">
               Themes
             </a>
             <a 
               routerLink="/roadmap" 
-              routerLinkActive="text-blue-600 font-semibold"
+              routerLinkActive="!opacity-100 font-semibold"
               [routerLinkActiveOptions]="{exact: false}"
-              class="text-gray-700 hover:text-blue-600 transition-colors px-3 py-2 rounded-md text-sm font-medium">
+              class="text-white opacity-80 hover:opacity-100 transition-opacity px-3 py-2 rounded-kinetic text-sm font-medium">
               Roadmap
             </a>
             <a 
               routerLink="/problems" 
-              routerLinkActive="text-blue-600 font-semibold"
+              routerLinkActive="!opacity-100 font-semibold"
               [routerLinkActiveOptions]="{exact: false}"
-              class="text-gray-700 hover:text-blue-600 transition-colors px-3 py-2 rounded-md text-sm font-medium">
+              class="text-white opacity-80 hover:opacity-100 transition-opacity px-3 py-2 rounded-kinetic text-sm font-medium">
               Problems
             </a>
             <a 
               routerLink="/team" 
-              routerLinkActive="text-blue-600 font-semibold"
+              routerLinkActive="!opacity-100 font-semibold"
               [routerLinkActiveOptions]="{exact: false}"
-              class="text-gray-700 hover:text-blue-600 transition-colors px-3 py-2 rounded-md text-sm font-medium">
+              class="text-white opacity-80 hover:opacity-100 transition-opacity px-3 py-2 rounded-kinetic text-sm font-medium">
               Team
             </a>
             <a 
               *ngIf="currentUser?.role === 'admin'"
               routerLink="/admin" 
-              routerLinkActive="text-blue-600 font-semibold"
+              routerLinkActive="!opacity-100 font-semibold"
               [routerLinkActiveOptions]="{exact: false}"
-              class="text-gray-700 hover:text-blue-600 transition-colors px-3 py-2 rounded-md text-sm font-medium">
+              class="text-white opacity-80 hover:opacity-100 transition-opacity px-3 py-2 rounded-kinetic text-sm font-medium">
               Admin
             </a>
             
@@ -68,7 +68,7 @@ import { AuthService, User } from '../../core/services/auth.service';
             <div class="relative profile-dropdown-container">
               <button
                 (click)="toggleProfileDropdown()"
-                class="flex items-center gap-2 text-gray-700 hover:text-blue-600 transition-colors px-3 py-2 rounded-md text-sm font-medium">
+                class="flex items-center gap-2 text-white opacity-80 hover:opacity-100 transition-opacity px-3 py-2 rounded-kinetic text-sm font-medium">
                 <span>👤</span>
                 <span>{{ currentUser?.username }}</span>
                 <svg class="w-4 h-4 transition-transform" [ngClass]="{'rotate-180': profileDropdownOpen}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -79,84 +79,84 @@ import { AuthService, User } from '../../core/services/auth.service';
               <!-- Dropdown Menu -->
               <div 
                 *ngIf="profileDropdownOpen"
-                class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50">
+                class="absolute right-0 mt-2 w-80 bg-white rounded-kinetic border border-card-border py-2 z-50">
                 
                 <!-- Profile Info Section -->
-                <div class="px-4 py-3 border-b border-gray-100">
+                <div class="px-4 py-3 border-b border-card-border">
                   <div class="flex items-center gap-3 mb-3">
-                    <div class="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white text-xl font-bold">
+                    <div class="w-12 h-12 rounded-kinetic bg-electric-blue flex items-center justify-center text-deep-sea text-xl font-bold">
                       {{ currentUser?.username?.charAt(0)?.toUpperCase() }}
                     </div>
                     <div>
-                      <p class="font-semibold text-gray-800">{{ currentUser?.username }}</p>
-                      <p class="text-sm text-gray-500">{{ currentUser?.email }}</p>
+                      <p class="font-bold text-deep-sea">{{ currentUser?.username }}</p>
+                      <p class="text-sm text-icon-gray">{{ currentUser?.email }}</p>
                     </div>
                   </div>
                   
                   <!-- Profile Details -->
                   <div class="space-y-2 text-sm">
                     <div class="flex justify-between">
-                      <span class="text-gray-500">Nombre completo:</span>
-                      <span class="text-gray-800 font-medium">{{ currentUser?.fullName || 'No especificado' }}</span>
+                      <span class="text-icon-gray">Nombre completo:</span>
+                      <span class="text-deep-sea font-medium">{{ currentUser?.fullName || 'No especificado' }}</span>
                     </div>
                     <div class="flex justify-between">
-                      <span class="text-gray-500">Codeforces Handle:</span>
-                      <span *ngIf="currentUser?.codeforcesHandle" class="text-blue-600 font-medium">
+                      <span class="text-icon-gray">Codeforces Handle:</span>
+                      <span *ngIf="currentUser?.codeforcesHandle" class="text-electric-blue font-medium">
                         <a [href]="'https://codeforces.com/profile/' + currentUser?.codeforcesHandle" target="_blank" rel="noopener noreferrer" class="hover:underline">
                           {{ currentUser?.codeforcesHandle }}
                         </a>
                       </span>
-                      <span *ngIf="!currentUser?.codeforcesHandle" class="text-gray-400">No vinculado</span>
+                      <span *ngIf="!currentUser?.codeforcesHandle" class="text-icon-gray">No vinculado</span>
                     </div>
                     <div class="flex justify-between">
-                      <span class="text-gray-500">Rol:</span>
-                      <span class="text-gray-800 font-medium capitalize">{{ currentUser?.role }}</span>
+                      <span class="text-icon-gray">Rol:</span>
+                      <span class="text-deep-sea font-medium capitalize">{{ currentUser?.role }}</span>
                     </div>
                   </div>
                 </div>
 
                 <!-- Edit Profile Button -->
-                <div class="px-4 py-2 border-b border-gray-100">
+                <div class="px-4 py-2 border-b border-card-border">
                   <button 
                     *ngIf="!editingProfile"
                     (click)="startEditProfile()"
-                    class="w-full text-left text-blue-600 hover:text-blue-800 text-sm font-medium py-1">
+                    class="w-full text-left text-electric-blue hover:opacity-80 text-sm font-medium py-1">
                     ✏️ Editar Perfil
                   </button>
                   
                   <!-- Edit Form -->
                   <div *ngIf="editingProfile" class="space-y-3">
                     <div>
-                      <label class="block text-xs font-medium text-gray-600 mb-1">Nombre Completo</label>
+                      <label class="block text-xs font-medium text-icon-gray mb-1">Nombre Completo</label>
                       <input 
                         type="text"
                         [(ngModel)]="editProfileData.fullName"
-                        class="w-full border rounded px-2 py-1 text-sm"
+                        class="w-full border border-card-border rounded-kinetic px-2 py-1 text-sm"
                         placeholder="Tu nombre completo">
                     </div>
                     <div>
-                      <label class="block text-xs font-medium text-gray-600 mb-1">Handle de Codeforces</label>
+                      <label class="block text-xs font-medium text-icon-gray mb-1">Handle de Codeforces</label>
                       <input 
                         type="text"
                         [(ngModel)]="editProfileData.codeforcesHandle"
-                        class="w-full border rounded px-2 py-1 text-sm"
+                        class="w-full border border-card-border rounded-kinetic px-2 py-1 text-sm"
                         placeholder="tu_handle">
                     </div>
                     <div class="flex gap-2">
                       <button 
                         (click)="saveProfile()"
                         [disabled]="savingProfile"
-                        class="flex-1 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm disabled:bg-gray-300">
+                        class="flex-1 bg-electric-blue hover:opacity-90 text-deep-sea px-3 py-1 rounded-kinetic text-sm disabled:bg-gray-300">
                         {{ savingProfile ? 'Guardando...' : 'Guardar' }}
                       </button>
                       <button 
                         (click)="cancelEditProfile()"
-                        class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm">
+                        class="bg-icon-gray hover:opacity-90 text-white px-3 py-1 rounded-kinetic text-sm">
                         Cancelar
                       </button>
                     </div>
                     <p *ngIf="profileError" class="text-red-500 text-xs">{{ profileError }}</p>
-                    <p *ngIf="profileSuccess" class="text-green-500 text-xs">{{ profileSuccess }}</p>
+                    <p *ngIf="profileSuccess" class="text-electric-blue text-xs">{{ profileSuccess }}</p>
                   </div>
                 </div>
 
@@ -165,16 +165,16 @@ import { AuthService, User } from '../../core/services/auth.service';
                   <a 
                     routerLink="/statistics"
                     (click)="closeProfileDropdown()"
-                    class="block text-gray-700 hover:text-blue-600 text-sm py-1">
+                    class="block text-deep-sea hover:text-electric-blue text-sm py-1">
                     📊 Ver Estadísticas y Logros
                   </a>
                 </div>
 
                 <!-- Logout -->
-                <div class="px-4 py-2 border-t border-gray-100">
+                <div class="px-4 py-2 border-t border-card-border">
                   <button
                     (click)="logout()"
-                    class="w-full text-left text-red-600 hover:text-red-800 text-sm font-medium py-1">
+                    class="w-full text-left text-red-500 hover:text-red-600 text-sm font-medium py-1">
                     🚪 Cerrar Sesión
                   </button>
                 </div>
@@ -187,7 +187,7 @@ import { AuthService, User } from '../../core/services/auth.service';
             <button
               (click)="toggleMobileMenu()"
               type="button"
-              class="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+              class="inline-flex items-center justify-center p-2 rounded-kinetic text-white opacity-80 hover:opacity-100 focus:outline-none"
               aria-controls="mobile-menu"
               [attr.aria-expanded]="mobileMenuOpen">
               <span class="sr-only">Open main menu</span>
@@ -223,77 +223,77 @@ import { AuthService, User } from '../../core/services/auth.service';
         *ngIf="mobileMenuOpen" 
         class="md:hidden" 
         id="mobile-menu">
-        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t">
+        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-card-bg border-t border-card-border">
           <a 
             routerLink="/dashboard"
             (click)="closeMobileMenu()"
-            routerLinkActive="bg-blue-50 text-blue-600 font-semibold"
+            routerLinkActive="bg-electric-blue/10 text-electric-blue font-semibold"
             [routerLinkActiveOptions]="{exact: false}"
-            class="text-gray-700 hover:bg-gray-100 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">
+            class="text-deep-sea hover:bg-card-bg hover:text-electric-blue block px-3 py-2 rounded-kinetic text-base font-medium">
             Dashboard
           </a>
           <a 
             routerLink="/themes"
             (click)="closeMobileMenu()"
-            routerLinkActive="bg-blue-50 text-blue-600 font-semibold"
+            routerLinkActive="bg-electric-blue/10 text-electric-blue font-semibold"
             [routerLinkActiveOptions]="{exact: false}"
-            class="text-gray-700 hover:bg-gray-100 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">
+            class="text-deep-sea hover:bg-card-bg hover:text-electric-blue block px-3 py-2 rounded-kinetic text-base font-medium">
             Themes
           </a>
           <a 
             routerLink="/roadmap"
             (click)="closeMobileMenu()"
-            routerLinkActive="bg-blue-50 text-blue-600 font-semibold"
+            routerLinkActive="bg-electric-blue/10 text-electric-blue font-semibold"
             [routerLinkActiveOptions]="{exact: false}"
-            class="text-gray-700 hover:bg-gray-100 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">
+            class="text-deep-sea hover:bg-card-bg hover:text-electric-blue block px-3 py-2 rounded-kinetic text-base font-medium">
             Roadmap
           </a>
           <a 
             routerLink="/problems"
             (click)="closeMobileMenu()"
-            routerLinkActive="bg-blue-50 text-blue-600 font-semibold"
+            routerLinkActive="bg-electric-blue/10 text-electric-blue font-semibold"
             [routerLinkActiveOptions]="{exact: false}"
-            class="text-gray-700 hover:bg-gray-100 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">
+            class="text-deep-sea hover:bg-card-bg hover:text-electric-blue block px-3 py-2 rounded-kinetic text-base font-medium">
             Problems
           </a>
           <a 
             routerLink="/team"
             (click)="closeMobileMenu()"
-            routerLinkActive="bg-blue-50 text-blue-600 font-semibold"
+            routerLinkActive="bg-electric-blue/10 text-electric-blue font-semibold"
             [routerLinkActiveOptions]="{exact: false}"
-            class="text-gray-700 hover:bg-gray-100 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">
+            class="text-deep-sea hover:bg-card-bg hover:text-electric-blue block px-3 py-2 rounded-kinetic text-base font-medium">
             Team
           </a>
           <a 
             *ngIf="currentUser?.role === 'admin'"
             routerLink="/admin"
             (click)="closeMobileMenu()"
-            routerLinkActive="bg-blue-50 text-blue-600 font-semibold"
+            routerLinkActive="bg-electric-blue/10 text-electric-blue font-semibold"
             [routerLinkActiveOptions]="{exact: false}"
-            class="text-gray-700 hover:bg-gray-100 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">
+            class="text-deep-sea hover:bg-card-bg hover:text-electric-blue block px-3 py-2 rounded-kinetic text-base font-medium">
             Admin
           </a>
           
           <!-- Mobile Profile Section -->
-          <div class="border-t border-gray-200 pt-4 pb-3">
+          <div class="border-t border-card-border pt-4 pb-3">
             <div class="flex items-center px-3 mb-3">
-              <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold mr-3">
+              <div class="w-10 h-10 rounded-kinetic bg-electric-blue flex items-center justify-center text-deep-sea font-bold mr-3">
                 {{ currentUser?.username?.charAt(0)?.toUpperCase() }}
               </div>
               <div>
-                <div class="text-base font-medium text-gray-800">{{ currentUser?.username }}</div>
-                <div class="text-sm text-gray-500">{{ currentUser?.email }}</div>
+                <div class="text-base font-bold text-deep-sea">{{ currentUser?.username }}</div>
+                <div class="text-sm text-icon-gray">{{ currentUser?.email }}</div>
               </div>
             </div>
             
             <div class="px-3 space-y-2 text-sm mb-3">
               <div class="flex justify-between">
-                <span class="text-gray-500">Nombre:</span>
-                <span class="text-gray-800">{{ currentUser?.fullName || 'No especificado' }}</span>
+                <span class="text-icon-gray">Nombre:</span>
+                <span class="text-deep-sea">{{ currentUser?.fullName || 'No especificado' }}</span>
               </div>
               <div class="flex justify-between">
-                <span class="text-gray-500">Codeforces:</span>
-                <span class="text-blue-600">{{ currentUser?.codeforcesHandle || 'No vinculado' }}</span>
+                <span class="text-icon-gray">Codeforces:</span>
+                <span class="text-electric-blue">{{ currentUser?.codeforcesHandle || 'No vinculado' }}</span>
               </div>
             </div>
 
@@ -301,12 +301,12 @@ import { AuthService, User } from '../../core/services/auth.service';
               <a
                 routerLink="/statistics"
                 (click)="closeMobileMenu()"
-                class="block w-full text-left bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-md text-base font-medium">
+                class="block w-full text-left bg-electric-blue hover:opacity-90 text-deep-sea px-3 py-2 rounded-kinetic text-base font-medium">
                 📊 Estadísticas y Logros
               </a>
               <button
                 (click)="logout()"
-                class="block w-full text-left bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-md text-base font-medium">
+                class="block w-full text-left bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-kinetic text-base font-medium">
                 🚪 Cerrar Sesión
               </button>
             </div>

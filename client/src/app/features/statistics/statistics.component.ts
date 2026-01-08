@@ -15,7 +15,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule, NavbarComponent],
   template: `
-    <div class="min-h-screen bg-gray-100">
+    <div class="min-h-screen bg-white">
       <!-- Navigation -->
       <app-navbar></app-navbar>
 
@@ -23,104 +23,102 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
       <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div class="px-4 py-6 sm:px-0">
           <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-gray-800">📊 Estadísticas y Logros</h2>
-            <a routerLink="/dashboard" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg">
+            <h2 class="text-2xl font-bold text-deep-sea">📊 Estadísticas y Logros</h2>
+            <a routerLink="/dashboard" class="bg-icon-gray hover:opacity-90 text-white px-4 py-2 rounded-kinetic font-medium">
               Volver al Dashboard
             </a>
           </div>
 
           <!-- Success/Error Messages -->
-          <div *ngIf="successMessage" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+          <div *ngIf="successMessage" class="bg-electric-blue/10 border border-electric-blue text-deep-sea px-4 py-3 rounded-kinetic mb-4">
             {{ successMessage }}
           </div>
-          <div *ngIf="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          <div *ngIf="errorMessage" class="bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded-kinetic mb-4">
             {{ errorMessage }}
           </div>
 
           <!-- Roadmap Statistics -->
-          <div *ngIf="roadmapStats" class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg shadow-lg p-6 mb-6 text-white">
-            <h3 class="text-xl font-bold mb-4">📈 Tu Progreso en el Roadmap</h3>
+          <div *ngIf="roadmapStats" class="bg-card-bg border border-card-border rounded-kinetic p-6 mb-6">
+            <h3 class="text-xl font-bold text-deep-sea mb-4">📈 Tu Progreso en el Roadmap</h3>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div class="text-center">
-                <div class="text-3xl font-bold">{{ roadmapStats.total }}</div>
-                <div class="text-sm opacity-90">Temas Totales</div>
+                <div class="text-4xl font-bold text-deep-sea">{{ roadmapStats.total }}</div>
+                <div class="text-sm text-icon-gray font-medium">Temas Totales</div>
               </div>
               <div class="text-center">
-                <div class="text-3xl font-bold">{{ roadmapStats.inProgress }}</div>
-                <div class="text-sm opacity-90">En Progreso</div>
+                <div class="text-4xl font-bold text-deep-sea">{{ roadmapStats.inProgress }}</div>
+                <div class="text-sm text-icon-gray font-medium">En Progreso</div>
               </div>
               <div class="text-center">
-                <div class="text-3xl font-bold">{{ roadmapStats.completed }}</div>
-                <div class="text-sm opacity-90">Completados</div>
+                <div class="text-4xl font-bold text-deep-sea">{{ roadmapStats.completed }}</div>
+                <div class="text-sm text-icon-gray font-medium">Completados</div>
               </div>
               <div class="text-center">
-                <div class="text-3xl font-bold">{{ roadmapStats.averageProgress }}%</div>
-                <div class="text-sm opacity-90">Progreso Promedio</div>
+                <div class="text-4xl font-bold text-electric-blue">{{ roadmapStats.averageProgress }}%</div>
+                <div class="text-sm text-icon-gray font-medium">Progreso Promedio</div>
               </div>
             </div>
             <div class="mt-4">
-              <div class="bg-white bg-opacity-20 rounded-full h-3 overflow-hidden">
-                <div class="bg-white h-3 rounded-full transition-all duration-500" [style.width.%]="roadmapStats.averageProgress"></div>
+              <div class="bg-card-border rounded-kinetic h-3 overflow-hidden">
+                <div class="bg-electric-blue h-3 rounded-kinetic transition-all duration-500" [style.width.%]="roadmapStats.averageProgress"></div>
               </div>
             </div>
           </div>
 
           <!-- Problem Statistics -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
+            <div class="bg-card-bg border border-card-border rounded-kinetic p-4">
               <div class="flex items-center gap-2 mb-2">
-                <span class="text-2xl">📈</span>
-                <h4 class="font-semibold text-gray-800">Codeforces</h4>
+                <span class="text-icon-gray text-xl">📈</span>
+                <h4 class="font-bold text-deep-sea">Codeforces</h4>
               </div>
-              <p class="text-2xl font-bold text-blue-600">{{ currentUser?.codeforcesHandle || 'Sin handle' }}</p>
-              <p class="text-sm text-gray-600">Handle vinculado</p>
+              <p class="text-3xl font-bold text-deep-sea">{{ currentUser?.codeforcesHandle || 'Sin handle' }}</p>
+              <p class="text-sm text-icon-gray">Handle vinculado</p>
             </div>
 
-            <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 border border-green-200">
+            <div class="bg-card-bg border border-card-border rounded-kinetic p-4">
               <div class="flex items-center gap-2 mb-2">
-                <span class="text-2xl">✅</span>
-                <h4 class="font-semibold text-gray-800">Ejercicios Resueltos</h4>
+                <span class="text-icon-gray text-xl">✅</span>
+                <h4 class="font-bold text-deep-sea">Ejercicios Resueltos</h4>
               </div>
-              <p class="text-2xl font-bold text-green-600">{{ problemStats.solved }}</p>
-              <p class="text-sm text-gray-600">de {{ problemStats.total }} totales</p>
+              <p class="text-3xl font-bold text-deep-sea">{{ problemStats.solved }}</p>
+              <p class="text-sm text-icon-gray">de {{ problemStats.total }} totales</p>
             </div>
 
-            <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg p-4 border border-orange-200">
+            <div class="bg-card-bg border border-card-border rounded-kinetic p-4">
               <div class="flex items-center gap-2 mb-2">
-                <span class="text-2xl">🔥</span>
-                <h4 class="font-semibold text-gray-800">Actividad</h4>
+                <span class="text-icon-gray text-xl">🔥</span>
+                <h4 class="font-bold text-deep-sea">Actividad</h4>
               </div>
-              <p class="text-2xl font-bold text-orange-600">{{ activityStreak }}</p>
-              <p class="text-sm text-gray-600">Días activo este mes</p>
+              <p class="text-3xl font-bold text-deep-sea">{{ activityStreak }}</p>
+              <p class="text-sm text-icon-gray">Días activo este mes</p>
             </div>
           </div>
 
           <!-- System Achievements Section -->
-          <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">🎖️ Logros del Sistema</h3>
-            <p class="text-sm text-gray-500 mb-4">
+          <div class="bg-card-bg border border-card-border rounded-kinetic p-6 mb-6">
+            <h3 class="text-xl font-bold text-deep-sea mb-4">🎖️ Logros del Sistema</h3>
+            <p class="text-sm text-icon-gray mb-4">
               Los logros del sistema son reconocimientos automáticos que se desbloquean al alcanzar ciertos hitos, 
               como resolver un número específico de problemas, participar en contests, o mantener una racha de actividad.
               Actualmente, el sistema de logros automáticos está en desarrollo. Por ahora, puedes crear tus propios logros personalizados abajo.
             </p>
             
             <div *ngIf="loadingAchievements" class="text-center py-4">
-              <p class="text-gray-500">Cargando logros...</p>
+              <p class="text-icon-gray">Cargando logros...</p>
             </div>
 
             <div *ngIf="!loadingAchievements && systemAchievements.length === 0" class="text-center py-4">
-              <p class="text-gray-500">¡Aún no has desbloqueado logros del sistema! Sigue practicando para ganar medallas automáticas.</p>
+              <p class="text-icon-gray">¡Aún no has desbloqueado logros del sistema! Sigue practicando para ganar medallas automáticas.</p>
             </div>
 
             <div *ngIf="!loadingAchievements && systemAchievements.length > 0" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
               <div 
                 *ngFor="let achievement of systemAchievements" 
-                class="bg-gradient-to-br rounded-lg p-3 text-center border"
-                [ngClass]="getAchievementClass(achievement.rarity)">
+                class="bg-white border border-card-border rounded-kinetic p-3 text-center">
                 <div class="text-3xl mb-1">{{ achievement.icon || getDefaultAchievementIcon(achievement.type) }}</div>
-                <p class="text-sm font-medium truncate" [title]="achievement.name">{{ achievement.name }}</p>
-                <span class="text-xs px-2 py-0.5 rounded-full mt-1 inline-block"
-                      [ngClass]="getAchievementBadgeClass(achievement.rarity)">
+                <p class="text-sm font-medium text-deep-sea truncate" [title]="achievement.name">{{ achievement.name }}</p>
+                <span class="text-xs px-2 py-0.5 rounded-kinetic mt-1 inline-block bg-card-border text-icon-gray">
                   {{ achievement.rarity }}
                 </span>
               </div>
@@ -128,12 +126,12 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           </div>
 
           <!-- Custom Achievements (Logros) Section -->
-          <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+          <div class="bg-card-bg border border-card-border rounded-kinetic p-6 mb-6">
             <div class="flex justify-between items-center mb-4">
-              <h3 class="text-xl font-bold text-gray-800">🏆 Mis Logros Personalizados</h3>
+              <h3 class="text-xl font-bold text-deep-sea">🏆 Mis Logros Personalizados</h3>
               <button 
                 (click)="openCreateAchievementModal()"
-                class="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2">
+                class="bg-electric-blue hover:opacity-90 text-deep-sea px-4 py-2 rounded-kinetic font-medium flex items-center gap-2">
                 <span>➕</span>
                 Nuevo Logro
               </button>
@@ -143,20 +141,20 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             <div class="flex gap-2 mb-4">
               <button 
                 (click)="filterAchievements = 'all'"
-                [ngClass]="{'bg-blue-500 text-white': filterAchievements === 'all', 'bg-gray-200 text-gray-700': filterAchievements !== 'all'}"
-                class="px-4 py-2 rounded-lg text-sm font-medium">
+                [ngClass]="{'bg-electric-blue text-deep-sea': filterAchievements === 'all', 'bg-white border border-card-border text-deep-sea': filterAchievements !== 'all'}"
+                class="px-4 py-2 rounded-kinetic text-sm font-medium">
                 Todos
               </button>
               <button 
                 (click)="filterAchievements = 'personal'"
-                [ngClass]="{'bg-blue-500 text-white': filterAchievements === 'personal', 'bg-gray-200 text-gray-700': filterAchievements !== 'personal'}"
-                class="px-4 py-2 rounded-lg text-sm font-medium">
+                [ngClass]="{'bg-electric-blue text-deep-sea': filterAchievements === 'personal', 'bg-white border border-card-border text-deep-sea': filterAchievements !== 'personal'}"
+                class="px-4 py-2 rounded-kinetic text-sm font-medium">
                 Personales
               </button>
               <button 
                 (click)="filterAchievements = 'team'"
-                [ngClass]="{'bg-blue-500 text-white': filterAchievements === 'team', 'bg-gray-200 text-gray-700': filterAchievements !== 'team'}"
-                class="px-4 py-2 rounded-lg text-sm font-medium">
+                [ngClass]="{'bg-electric-blue text-deep-sea': filterAchievements === 'team', 'bg-white border border-card-border text-deep-sea': filterAchievements !== 'team'}"
+                class="px-4 py-2 rounded-kinetic text-sm font-medium">
                 Del Equipo
               </button>
             </div>
@@ -165,44 +163,43 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             <div class="flex gap-2 mb-4">
               <button 
                 (click)="filterCategory = 'all'"
-                [ngClass]="{'bg-purple-500 text-white': filterCategory === 'all', 'bg-gray-200 text-gray-700': filterCategory !== 'all'}"
-                class="px-3 py-1 rounded-lg text-xs font-medium">
+                [ngClass]="{'bg-deep-sea text-white': filterCategory === 'all', 'bg-white border border-card-border text-deep-sea': filterCategory !== 'all'}"
+                class="px-3 py-1 rounded-kinetic text-xs font-medium">
                 Todas las Categorías
               </button>
               <button 
                 (click)="filterCategory = 'rating'"
-                [ngClass]="{'bg-purple-500 text-white': filterCategory === 'rating', 'bg-gray-200 text-gray-700': filterCategory !== 'rating'}"
-                class="px-3 py-1 rounded-lg text-xs font-medium">
+                [ngClass]="{'bg-deep-sea text-white': filterCategory === 'rating', 'bg-white border border-card-border text-deep-sea': filterCategory !== 'rating'}"
+                class="px-3 py-1 rounded-kinetic text-xs font-medium">
                 ⭐ Rating
               </button>
               <button 
                 (click)="filterCategory = 'contest'"
-                [ngClass]="{'bg-purple-500 text-white': filterCategory === 'contest', 'bg-gray-200 text-gray-700': filterCategory !== 'contest'}"
-                class="px-3 py-1 rounded-lg text-xs font-medium">
+                [ngClass]="{'bg-deep-sea text-white': filterCategory === 'contest', 'bg-white border border-card-border text-deep-sea': filterCategory !== 'contest'}"
+                class="px-3 py-1 rounded-kinetic text-xs font-medium">
                 🏆 Contest
               </button>
             </div>
 
             <div *ngIf="loadingCustomAchievements" class="text-center py-4">
-              <p class="text-gray-500">Cargando logros personalizados...</p>
+              <p class="text-icon-gray">Cargando logros personalizados...</p>
             </div>
 
             <div *ngIf="!loadingCustomAchievements && getFilteredAchievements().length === 0" class="text-center py-8">
-              <p class="text-gray-500 mb-2">No hay logros en esta categoría.</p>
-              <p class="text-sm text-gray-400">¡Crea tu primer logro para guardar tus recuerdos e inspiración!</p>
+              <p class="text-icon-gray mb-2">No hay logros en esta categoría.</p>
+              <p class="text-sm text-icon-gray">¡Crea tu primer logro para guardar tus recuerdos e inspiración!</p>
             </div>
 
             <div *ngIf="!loadingCustomAchievements && getFilteredAchievements().length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <div 
                 *ngFor="let achievement of getFilteredAchievements()" 
-                class="bg-gradient-to-br rounded-lg p-4 border-2 relative"
-                [ngClass]="achievement.scope === 'team' ? 'from-blue-50 to-blue-100 border-blue-300' : 'from-yellow-50 to-orange-100 border-yellow-300'">
+                class="bg-white border border-card-border rounded-kinetic p-4 relative">
                 
                 <!-- Scope badge -->
                 <div class="absolute top-2 right-2">
                   <span 
-                    class="text-xs px-2 py-1 rounded-full"
-                    [ngClass]="achievement.scope === 'team' ? 'bg-blue-200 text-blue-800' : 'bg-yellow-200 text-yellow-800'">
+                    class="text-xs px-2 py-1 rounded-kinetic"
+                    [ngClass]="achievement.scope === 'team' ? 'bg-electric-blue/10 text-electric-blue' : 'bg-card-bg text-icon-gray'">
                     {{ achievement.scope === 'team' ? '👥 Equipo' : '👤 Personal' }}
                   </span>
                 </div>
@@ -212,23 +209,23 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   <img 
                     [src]="achievement.photo" 
                     [alt]="achievement.name"
-                    class="w-full h-32 object-cover rounded-lg">
+                    class="w-full h-32 object-cover rounded-kinetic">
                 </div>
 
                 <!-- Category icon -->
-                <div class="text-3xl mb-2">
+                <div class="text-3xl mb-2 text-icon-gray">
                   {{ achievement.category === 'rating' ? '⭐' : '🏆' }}
                 </div>
 
-                <h4 class="font-bold text-gray-800 mb-1">{{ achievement.name }}</h4>
-                <p class="text-sm text-gray-600 mb-2 truncate" [title]="achievement.description">{{ achievement.description }}</p>
+                <h4 class="font-bold text-deep-sea mb-1">{{ achievement.name }}</h4>
+                <p class="text-sm text-icon-gray mb-2 truncate" [title]="achievement.description">{{ achievement.description }}</p>
 
-                <div class="text-xs text-gray-500 mb-2">
+                <div class="text-xs text-icon-gray mb-2">
                   <span>📅 {{ achievement.achievedAt | date:'mediumDate' }}</span>
                   <span class="ml-2">por {{ achievement.createdBy?.username }}</span>
                 </div>
 
-                <div *ngIf="achievement.scope === 'team' && achievement.teamId" class="text-xs text-blue-600 mb-2">
+                <div *ngIf="achievement.scope === 'team' && achievement.teamId" class="text-xs text-electric-blue mb-2">
                   🏢 {{ achievement.teamId.name }}
                 </div>
 
@@ -236,12 +233,12 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <div *ngIf="canEditAchievement(achievement)" class="flex gap-2 mt-3">
                   <button 
                     (click)="openEditAchievementModal(achievement)"
-                    class="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
+                    class="flex-1 bg-electric-blue hover:opacity-90 text-deep-sea px-3 py-1 rounded-kinetic text-sm font-medium">
                     Editar
                   </button>
                   <button 
                     (click)="deleteAchievement(achievement)"
-                    class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">
+                    class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-kinetic text-sm">
                     🗑️
                   </button>
                 </div>
@@ -256,87 +253,87 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
         *ngIf="showAchievementModal" 
         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
         (click)="closeAchievementModal()">
-        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
-          <h3 class="text-xl font-bold mb-4">
+        <div class="bg-white border border-card-border rounded-kinetic p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
+          <h3 class="text-xl font-bold text-deep-sea mb-4">
             {{ editingAchievement ? 'Editar Logro' : 'Nuevo Logro' }}
           </h3>
 
           <div class="space-y-4">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Nombre *</label>
+              <label class="block text-sm font-medium text-deep-sea mb-1">Nombre *</label>
               <input 
                 type="text"
                 [(ngModel)]="achievementFormData.name"
-                class="w-full border rounded-lg px-3 py-2"
+                class="w-full border border-card-border rounded-kinetic px-3 py-2"
                 placeholder="Ej: Primer Top 100 en Codeforces"
                 maxlength="100">
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Descripción *</label>
+              <label class="block text-sm font-medium text-deep-sea mb-1">Descripción *</label>
               <textarea 
                 [(ngModel)]="achievementFormData.description"
-                class="w-full border rounded-lg px-3 py-2"
+                class="w-full border border-card-border rounded-kinetic px-3 py-2"
                 rows="3"
                 placeholder="Describe el logro y por qué es especial para ti"
                 maxlength="500"></textarea>
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">URL de Foto (opcional)</label>
+              <label class="block text-sm font-medium text-deep-sea mb-1">URL de Foto (opcional)</label>
               <input 
                 type="url"
                 [(ngModel)]="achievementFormData.photo"
-                class="w-full border rounded-lg px-3 py-2"
+                class="w-full border border-card-border rounded-kinetic px-3 py-2"
                 placeholder="https://ejemplo.com/foto.jpg">
-              <p class="text-xs text-gray-500 mt-1">Puedes usar una URL de imagen externa</p>
+              <p class="text-xs text-icon-gray mt-1">Puedes usar una URL de imagen externa</p>
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Categoría *</label>
+              <label class="block text-sm font-medium text-deep-sea mb-1">Categoría *</label>
               <div class="flex gap-2">
                 <button 
                   type="button"
                   (click)="achievementFormData.category = 'rating'"
-                  [ngClass]="{'bg-purple-500 text-white': achievementFormData.category === 'rating', 'bg-gray-200 text-gray-700': achievementFormData.category !== 'rating'}"
-                  class="flex-1 px-4 py-2 rounded-lg font-medium">
+                  [ngClass]="{'bg-deep-sea text-white': achievementFormData.category === 'rating', 'bg-white border border-card-border text-deep-sea': achievementFormData.category !== 'rating'}"
+                  class="flex-1 px-4 py-2 rounded-kinetic font-medium">
                   ⭐ Rating
                 </button>
                 <button 
                   type="button"
                   (click)="achievementFormData.category = 'contest'"
-                  [ngClass]="{'bg-purple-500 text-white': achievementFormData.category === 'contest', 'bg-gray-200 text-gray-700': achievementFormData.category !== 'contest'}"
-                  class="flex-1 px-4 py-2 rounded-lg font-medium">
+                  [ngClass]="{'bg-deep-sea text-white': achievementFormData.category === 'contest', 'bg-white border border-card-border text-deep-sea': achievementFormData.category !== 'contest'}"
+                  class="flex-1 px-4 py-2 rounded-kinetic font-medium">
                   🏆 Contest
                 </button>
               </div>
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Tipo *</label>
+              <label class="block text-sm font-medium text-deep-sea mb-1">Tipo *</label>
               <div class="flex gap-2">
                 <button 
                   type="button"
                   (click)="achievementFormData.scope = 'personal'"
-                  [ngClass]="{'bg-yellow-500 text-white': achievementFormData.scope === 'personal', 'bg-gray-200 text-gray-700': achievementFormData.scope !== 'personal'}"
-                  class="flex-1 px-4 py-2 rounded-lg font-medium">
+                  [ngClass]="{'bg-electric-blue text-deep-sea': achievementFormData.scope === 'personal', 'bg-white border border-card-border text-deep-sea': achievementFormData.scope !== 'personal'}"
+                  class="flex-1 px-4 py-2 rounded-kinetic font-medium">
                   👤 Personal
                 </button>
                 <button 
                   type="button"
                   (click)="achievementFormData.scope = 'team'"
-                  [ngClass]="{'bg-blue-500 text-white': achievementFormData.scope === 'team', 'bg-gray-200 text-gray-700': achievementFormData.scope !== 'team'}"
-                  class="flex-1 px-4 py-2 rounded-lg font-medium">
+                  [ngClass]="{'bg-electric-blue text-deep-sea': achievementFormData.scope === 'team', 'bg-white border border-card-border text-deep-sea': achievementFormData.scope !== 'team'}"
+                  class="flex-1 px-4 py-2 rounded-kinetic font-medium">
                   👥 Equipo
                 </button>
               </div>
             </div>
 
             <div *ngIf="achievementFormData.scope === 'team'">
-              <label class="block text-sm font-medium text-gray-700 mb-1">Seleccionar Equipo *</label>
+              <label class="block text-sm font-medium text-deep-sea mb-1">Seleccionar Equipo *</label>
               <select 
                 [(ngModel)]="achievementFormData.teamId"
-                class="w-full border rounded-lg px-3 py-2">
+                class="w-full border border-card-border rounded-kinetic px-3 py-2">
                 <option value="">-- Selecciona un equipo --</option>
                 <option *ngFor="let team of userTeams" [value]="team._id">
                   {{ team.name }}
@@ -345,24 +342,24 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Fecha del Logro</label>
+              <label class="block text-sm font-medium text-deep-sea mb-1">Fecha del Logro</label>
               <input 
                 type="date"
                 [(ngModel)]="achievementFormData.achievedAt"
-                class="w-full border rounded-lg px-3 py-2">
+                class="w-full border border-card-border rounded-kinetic px-3 py-2">
             </div>
           </div>
 
           <div class="flex gap-2 justify-end mt-6">
             <button 
               (click)="closeAchievementModal()"
-              class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg">
+              class="bg-icon-gray hover:opacity-90 text-white px-4 py-2 rounded-kinetic font-medium">
               Cancelar
             </button>
             <button 
               (click)="saveAchievement()"
               [disabled]="savingAchievement || !isAchievementFormValid()"
-              class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg disabled:bg-gray-300">
+              class="bg-electric-blue hover:opacity-90 text-deep-sea px-4 py-2 rounded-kinetic font-medium disabled:bg-gray-300">
               {{ savingAchievement ? 'Guardando...' : (editingAchievement ? 'Actualizar' : 'Crear') }}
             </button>
           </div>

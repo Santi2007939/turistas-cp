@@ -11,33 +11,33 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule, NavbarComponent],
   template: `
-    <div class="min-h-screen bg-gray-50">
+    <div class="min-h-screen bg-white">
       <!-- Navigation -->
       <app-navbar></app-navbar>
       
       <div class="container mx-auto px-4 py-8">
         <!-- Header Section -->
-        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+        <div class="bg-card-bg border border-card-border rounded-kinetic p-6 mb-6">
           <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
             <div>
-              <h1 class="text-3xl font-bold text-gray-800 mb-2">🗺️ Mi Roadmap</h1>
-              <p class="text-gray-600">Gestiona tu ruta de aprendizaje personalizada</p>
+              <h1 class="text-3xl font-bold text-deep-sea mb-2">🗺️ Mi Roadmap</h1>
+              <p class="text-icon-gray">Gestiona tu ruta de aprendizaje personalizada</p>
             </div>
             <div class="flex gap-2">
               <button 
                 routerLink="/roadmap/kanban"
-                class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all">
+                class="bg-deep-sea hover:opacity-90 text-white font-bold py-2 px-4 rounded-kinetic transition-all">
                 📋 Kanban
               </button>
               <button 
                 routerLink="/roadmap/graph"
-                class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all">
+                class="bg-deep-sea hover:opacity-90 text-white font-bold py-2 px-4 rounded-kinetic transition-all">
                 📊 Gráfica
               </button>
               <button 
                 *ngIf="selectedView === 'personal'"
                 (click)="showAddThemeModal = true"
-                class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center gap-2">
+                class="bg-electric-blue hover:opacity-90 text-deep-sea font-bold py-3 px-6 rounded-kinetic transition-all flex items-center gap-2">
                 <span class="text-xl">+</span>
                 <span>Agregar Tema</span>
               </button>
@@ -48,11 +48,11 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           <div class="mt-6 flex flex-col md:flex-row gap-4">
             <!-- View Selector -->
             <div class="flex gap-2 items-center">
-              <label class="font-semibold text-gray-700 text-sm">Vista:</label>
+              <label class="font-bold text-deep-sea text-sm">Vista:</label>
               <select 
                 [(ngModel)]="selectedView"
                 (change)="onViewChange()"
-                class="border border-gray-300 rounded-lg px-4 py-2 bg-white hover:border-blue-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all">
+                class="border border-card-border rounded-kinetic px-4 py-2 bg-white hover:border-electric-blue focus:border-electric-blue focus:ring-2 focus:ring-electric-blue/20 transition-all">
                 <option value="personal">Mi roadmap</option>
                 <option value="members">Miembros</option>
               </select>
@@ -65,16 +65,16 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 [(ngModel)]="searchQuery"
                 (input)="applyFilters()"
                 placeholder="🔍 Buscar tema..."
-                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all">
+                class="w-full border border-card-border rounded-kinetic px-4 py-2 focus:border-electric-blue focus:ring-2 focus:ring-electric-blue/20 transition-all">
             </div>
 
             <!-- Filter by Status -->
             <div class="flex gap-2 items-center">
-              <label class="font-semibold text-gray-700 text-sm">Estado:</label>
+              <label class="font-bold text-deep-sea text-sm">Estado:</label>
               <select 
                 [(ngModel)]="filterStatus"
                 (change)="applyFilters()"
-                class="border border-gray-300 rounded-lg px-4 py-2 bg-white hover:border-blue-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all">
+                class="border border-card-border rounded-kinetic px-4 py-2 bg-white hover:border-electric-blue focus:border-electric-blue focus:ring-2 focus:ring-electric-blue/20 transition-all">
                 <option value="">Todos</option>
                 <option value="not-started">No iniciado</option>
                 <option value="in-progress">En progreso</option>
@@ -85,11 +85,11 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
             <!-- Sort Options -->
             <div class="flex gap-2 items-center">
-              <label class="font-semibold text-gray-700 text-sm">Ordenar:</label>
+              <label class="font-bold text-deep-sea text-sm">Ordenar:</label>
               <select 
                 [(ngModel)]="sortBy"
                 (change)="applyFilters()"
-                class="border border-gray-300 rounded-lg px-4 py-2 bg-white hover:border-blue-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all">
+                class="border border-card-border rounded-kinetic px-4 py-2 bg-white hover:border-electric-blue focus:border-electric-blue focus:ring-2 focus:ring-electric-blue/20 transition-all">
                 <option value="name">Nombre</option>
                 <option value="progress">Progreso</option>
                 <option value="lastPracticed">Última práctica</option>
@@ -101,30 +101,30 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
         <!-- Loading State with Skeleton -->
         <div *ngIf="loading" class="space-y-4">
-          <div class="bg-white rounded-lg shadow p-6 animate-pulse">
-            <div class="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
-            <div class="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
-            <div class="h-2 bg-gray-200 rounded w-full"></div>
+          <div class="bg-card-bg border border-card-border rounded-kinetic p-6 animate-pulse">
+            <div class="h-4 bg-card-border rounded w-3/4 mb-4"></div>
+            <div class="h-4 bg-card-border rounded w-1/2 mb-4"></div>
+            <div class="h-2 bg-card-border rounded w-full"></div>
           </div>
-          <div class="bg-white rounded-lg shadow p-6 animate-pulse">
-            <div class="h-4 bg-gray-200 rounded w-2/3 mb-4"></div>
-            <div class="h-4 bg-gray-200 rounded w-1/3 mb-4"></div>
-            <div class="h-2 bg-gray-200 rounded w-full"></div>
+          <div class="bg-card-bg border border-card-border rounded-kinetic p-6 animate-pulse">
+            <div class="h-4 bg-card-border rounded w-2/3 mb-4"></div>
+            <div class="h-4 bg-card-border rounded w-1/3 mb-4"></div>
+            <div class="h-2 bg-card-border rounded w-full"></div>
           </div>
         </div>
 
         <!-- Error State -->
-        <div *ngIf="error" class="bg-red-50 border-l-4 border-red-500 rounded-lg p-6 mb-6 shadow-sm">
+        <div *ngIf="error" class="bg-red-50 border-l-4 border-red-500 rounded-kinetic p-6 mb-6">
           <div class="flex items-start">
             <div class="flex-shrink-0">
               <span class="text-2xl">⚠️</span>
             </div>
             <div class="ml-3">
-              <h3 class="text-red-800 font-semibold">Error al cargar roadmap</h3>
+              <h3 class="text-red-800 font-bold">Error al cargar roadmap</h3>
               <p class="text-red-700 mt-1">{{ error }}</p>
               <button 
                 (click)="loadRoadmap()"
-                class="mt-3 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all">
+                class="mt-3 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-kinetic text-sm font-bold transition-all">
                 Reintentar
               </button>
             </div>
@@ -133,39 +133,39 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
         <!-- Progress Overview -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6" *ngIf="!loading && filteredNodes.length > 0">
-          <div class="bg-white rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow">
+          <div class="bg-card-bg border border-card-border rounded-kinetic p-4 hover:border-electric-blue transition-colors">
             <div class="flex items-center gap-3">
-              <div class="text-3xl">⏳</div>
+              <div class="text-2xl text-icon-gray">⏳</div>
               <div class="flex-1">
-                <p class="text-gray-600 text-sm font-semibold">No iniciado</p>
-                <p class="text-2xl font-bold text-gray-700">{{ getCountByStatus('not-started') }}</p>
+                <p class="text-icon-gray text-sm font-bold">No iniciado</p>
+                <p class="text-3xl font-bold text-deep-sea">{{ getCountByStatus('not-started') }}</p>
               </div>
             </div>
           </div>
-          <div class="bg-white rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow">
+          <div class="bg-card-bg border border-card-border rounded-kinetic p-4 hover:border-electric-blue transition-colors">
             <div class="flex items-center gap-3">
-              <div class="text-3xl">🔄</div>
+              <div class="text-2xl text-icon-gray">🔄</div>
               <div class="flex-1">
-                <p class="text-gray-600 text-sm font-semibold">En progreso</p>
-                <p class="text-2xl font-bold text-blue-600">{{ getCountByStatus('in-progress') }}</p>
+                <p class="text-icon-gray text-sm font-bold">En progreso</p>
+                <p class="text-3xl font-bold text-deep-sea">{{ getCountByStatus('in-progress') }}</p>
               </div>
             </div>
           </div>
-          <div class="bg-white rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow">
+          <div class="bg-card-bg border border-card-border rounded-kinetic p-4 hover:border-electric-blue transition-colors">
             <div class="flex items-center gap-3">
-              <div class="text-3xl">✅</div>
+              <div class="text-2xl text-icon-gray">✅</div>
               <div class="flex-1">
-                <p class="text-gray-600 text-sm font-semibold">Completado</p>
-                <p class="text-2xl font-bold text-green-600">{{ getCountByStatus('completed') }}</p>
+                <p class="text-icon-gray text-sm font-bold">Completado</p>
+                <p class="text-3xl font-bold text-deep-sea">{{ getCountByStatus('completed') }}</p>
               </div>
             </div>
           </div>
-          <div class="bg-white rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow">
+          <div class="bg-card-bg border border-card-border rounded-kinetic p-4 hover:border-electric-blue transition-colors">
             <div class="flex items-center gap-3">
-              <div class="text-3xl">🏆</div>
+              <div class="text-2xl text-icon-gray">🏆</div>
               <div class="flex-1">
-                <p class="text-gray-600 text-sm font-semibold">Dominado</p>
-                <p class="text-2xl font-bold text-purple-600">{{ getCountByStatus('mastered') }}</p>
+                <p class="text-icon-gray text-sm font-bold">Dominado</p>
+                <p class="text-3xl font-bold text-deep-sea">{{ getCountByStatus('mastered') }}</p>
               </div>
             </div>
           </div>
@@ -173,8 +173,8 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
         <!-- Results Count -->
         <div class="mb-4" *ngIf="!loading && nodes.length > 0">
-          <p class="text-sm text-gray-600">
-            Mostrando <span class="font-semibold">{{ filteredNodes.length }}</span> de <span class="font-semibold">{{ nodes.length }}</span> temas
+          <p class="text-sm text-icon-gray">
+            Mostrando <span class="font-bold text-deep-sea">{{ filteredNodes.length }}</span> de <span class="font-bold text-deep-sea">{{ nodes.length }}</span> temas
           </p>
         </div>
 
@@ -182,43 +182,43 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
         <div class="space-y-4">
           <div 
             *ngFor="let node of filteredNodes" 
-          class="bg-white rounded-lg shadow-sm p-6 hover:shadow-lg transition-all border-l-4"
+          class="bg-card-bg border border-card-border rounded-kinetic p-6 hover:border-electric-blue transition-all border-l-4"
           [ngClass]="{
-            'border-gray-300': node.status === 'not-started',
-            'border-blue-500': node.status === 'in-progress',
-            'border-green-500': node.status === 'completed',
-            'border-purple-500': node.status === 'mastered'
+            'border-l-card-border': node.status === 'not-started',
+            'border-l-electric-blue': node.status === 'in-progress',
+            'border-l-green-500': node.status === 'completed',
+            'border-l-deep-sea': node.status === 'mastered'
           }">
           <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-4">
             <div class="flex-1">
               <div class="flex items-start gap-3 mb-3">
-                <div class="text-3xl">
+                <div class="text-2xl text-icon-gray">
                   {{ node.status === 'not-started' ? '⏳' : node.status === 'in-progress' ? '🔄' : node.status === 'completed' ? '✅' : '🏆' }}
                 </div>
                 <div class="flex-1">
-                  <h2 class="text-xl font-bold text-gray-800 mb-1">
+                  <h2 class="text-xl font-bold text-deep-sea mb-1">
                     {{ node.themeId?.name || 'Theme' }}
                   </h2>
-                  <p class="text-gray-600 text-sm">{{ node.themeId?.description || '' }}</p>
+                  <p class="text-icon-gray text-sm">{{ node.themeId?.description || '' }}</p>
                 </div>
               </div>
               
               <div class="flex flex-wrap gap-2 mb-3">
                 <span 
-                  class="px-3 py-1 text-xs font-semibold rounded-full"
+                  class="px-3 py-1 text-xs font-bold rounded-kinetic"
                   [ngClass]="{
-                    'bg-gray-100 text-gray-700': node.status === 'not-started',
-                    'bg-blue-100 text-blue-700': node.status === 'in-progress',
+                    'bg-card-border text-icon-gray': node.status === 'not-started',
+                    'bg-electric-blue/10 text-electric-blue': node.status === 'in-progress',
                     'bg-green-100 text-green-700': node.status === 'completed',
-                    'bg-purple-100 text-purple-700': node.status === 'mastered'
+                    'bg-deep-sea text-white': node.status === 'mastered'
                   }">
                   {{ getStatusLabel(node.status) }}
                 </span>
-                <span class="bg-indigo-100 text-indigo-700 rounded-full px-3 py-1 text-xs font-semibold">
+                <span class="bg-card-border text-icon-gray rounded-kinetic px-3 py-1 text-xs font-bold">
                   📚 {{ node.themeId?.category }}
                 </span>
                 <span 
-                  class="px-3 py-1 text-xs font-semibold rounded-full"
+                  class="px-3 py-1 text-xs font-bold rounded-kinetic"
                   [ngClass]="{
                     'bg-green-100 text-green-700': node.themeId?.difficulty === 'beginner',
                     'bg-yellow-100 text-yellow-700': node.themeId?.difficulty === 'intermediate',
@@ -231,30 +231,25 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
               <!-- Progress Bar -->
               <div class="mb-3">
-                <div class="flex justify-between text-sm font-semibold mb-2">
-                  <span class="text-gray-700">Progreso</span>
-                  <span class="text-blue-600">{{ node.progress }}%</span>
+                <div class="flex justify-between text-sm font-bold mb-2">
+                  <span class="text-deep-sea">Progreso</span>
+                  <span class="text-electric-blue">{{ node.progress }}%</span>
                 </div>
-                <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                <div class="w-full bg-card-border rounded-kinetic h-3 overflow-hidden">
                   <div 
-                    class="h-3 rounded-full transition-all duration-500 ease-out"
-                    [ngClass]="{
-                      'bg-gray-400': node.progress === 0,
-                      'bg-blue-500': node.progress > 0 && node.progress < 100,
-                      'bg-green-500': node.progress === 100
-                    }"
+                    class="h-3 rounded-kinetic transition-all duration-500 ease-out bg-electric-blue"
                     [style.width.%]="node.progress">
                   </div>
                 </div>
               </div>
 
-              <div *ngIf="node.notes" class="bg-gray-50 rounded-lg p-3 mb-3">
-                <p class="text-xs text-gray-500 font-semibold mb-1">Notas:</p>
-                <p class="text-sm text-gray-700">{{ node.notes }}</p>
+              <div *ngIf="node.notes" class="bg-white border border-card-border rounded-kinetic p-3 mb-3">
+                <p class="text-xs text-icon-gray font-bold mb-1">Notas:</p>
+                <p class="text-sm text-deep-sea">{{ node.notes }}</p>
               </div>
 
               <div class="flex items-center gap-4 text-xs">
-                <div *ngIf="node.lastPracticed" class="flex items-center gap-2 text-gray-500">
+                <div *ngIf="node.lastPracticed" class="flex items-center gap-2 text-icon-gray">
                   <span>🕐</span>
                   <span>Última práctica: {{ node.lastPracticed | date:'short' }}</span>
                 </div>
@@ -262,7 +257,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                      [ngClass]="{
                        'text-red-600 font-bold': isOverdue(node.dueDate),
                        'text-orange-600': isDueSoon(node.dueDate),
-                       'text-gray-500': !isOverdue(node.dueDate) && !isDueSoon(node.dueDate)
+                       'text-icon-gray': !isOverdue(node.dueDate) && !isDueSoon(node.dueDate)
                      }">
                   <span>📅</span>
                   <span>Vence: {{ node.dueDate | date:'short' }}</span>
@@ -275,26 +270,26 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               <a 
                 *ngIf="selectedView === 'personal'"
                 [routerLink]="['/roadmap', node._id, 'subtopics']"
-                class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all shadow-sm hover:shadow-md text-center">
+                class="bg-electric-blue hover:opacity-90 text-deep-sea px-4 py-2 rounded-kinetic text-sm font-bold transition-all text-center">
                 📝 Subtemas
               </a>
               <button 
                 *ngIf="selectedView === 'personal'"
                 (click)="editNode(node)"
-                class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all shadow-sm hover:shadow-md">
+                class="bg-deep-sea hover:opacity-90 text-white px-4 py-2 rounded-kinetic text-sm font-bold transition-all">
                 ✏️ Actualizar
               </button>
               <button 
                 *ngIf="selectedView === 'personal'"
                 (click)="confirmDelete(node._id, node.themeId?.name || 'este tema')"
-                class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all shadow-sm hover:shadow-md">
+                class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-kinetic text-sm font-bold transition-all">
                 🗑️ Eliminar
               </button>
               <div 
                 *ngIf="selectedView === 'members'"
-                class="bg-blue-50 rounded-lg px-4 py-2 text-center">
-                <p class="text-xs text-gray-500 font-semibold mb-1">Miembro</p>
-                <p class="text-sm text-blue-700 font-bold">{{ getUserName(node) }}</p>
+                class="bg-electric-blue/10 rounded-kinetic px-4 py-2 text-center">
+                <p class="text-xs text-icon-gray font-bold mb-1">Miembro</p>
+                <p class="text-sm text-electric-blue font-bold">{{ getUserName(node) }}</p>
               </div>
             </div>
           </div>
@@ -302,30 +297,30 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
       </div>
 
       <!-- Empty State -->
-      <div *ngIf="!loading && nodes.length === 0" class="bg-white rounded-lg shadow-sm p-12 text-center">
+      <div *ngIf="!loading && nodes.length === 0" class="bg-card-bg border border-card-border rounded-kinetic p-12 text-center">
         <div class="text-6xl mb-4">🗺️</div>
-        <h3 class="text-2xl font-bold text-gray-800 mb-3">Tu roadmap está vacío</h3>
-        <p class="text-gray-600 mb-6 max-w-md mx-auto">
+        <h3 class="text-2xl font-bold text-deep-sea mb-3">Tu roadmap está vacío</h3>
+        <p class="text-icon-gray mb-6 max-w-md mx-auto">
           Comienza a agregar temas a tu roadmap para hacer seguimiento de tu progreso de aprendizaje.
         </p>
         <button 
           *ngIf="selectedView === 'personal'"
           (click)="showAddThemeModal = true"
-          class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:shadow-lg transition-all">
+          class="bg-electric-blue hover:opacity-90 text-deep-sea font-bold py-3 px-8 rounded-kinetic transition-all">
           ➕ Agregar mi primer tema
         </button>
       </div>
 
       <!-- No Results State -->
-      <div *ngIf="!loading && nodes.length > 0 && filteredNodes.length === 0" class="bg-white rounded-lg shadow-sm p-12 text-center">
+      <div *ngIf="!loading && nodes.length > 0 && filteredNodes.length === 0" class="bg-card-bg border border-card-border rounded-kinetic p-12 text-center">
         <div class="text-6xl mb-4">🔍</div>
-        <h3 class="text-2xl font-bold text-gray-800 mb-3">No se encontraron resultados</h3>
-        <p class="text-gray-600 mb-6">
+        <h3 class="text-2xl font-bold text-deep-sea mb-3">No se encontraron resultados</h3>
+        <p class="text-icon-gray mb-6">
           Intenta ajustar los filtros o la búsqueda para encontrar lo que buscas.
         </p>
         <button 
           (click)="clearFilters()"
-          class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:shadow-lg transition-all">
+          class="bg-icon-gray hover:opacity-90 text-white font-bold py-3 px-8 rounded-kinetic transition-all">
           Limpiar filtros
         </button>
       </div>
@@ -336,23 +331,23 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
         *ngIf="showAddThemeModal" 
         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
         (click)="showAddThemeModal = false">
-        <div class="bg-white rounded-xl shadow-2xl p-8 w-full max-w-lg" (click)="$event.stopPropagation()">
+        <div class="bg-white border border-card-border rounded-kinetic p-8 w-full max-w-lg" (click)="$event.stopPropagation()">
           <div class="flex items-center gap-3 mb-6">
-            <span class="text-3xl">➕</span>
-            <h3 class="text-2xl font-bold text-gray-800">Agregar Tema al Roadmap</h3>
+            <span class="text-2xl text-icon-gray">➕</span>
+            <h3 class="text-2xl font-bold text-deep-sea">Agregar Tema al Roadmap</h3>
           </div>
           
           <div class="mb-6">
-            <label class="block text-gray-700 text-sm font-bold mb-2">Selecciona un tema</label>
+            <label class="block text-deep-sea text-sm font-bold mb-2">Selecciona un tema</label>
             <select 
               [(ngModel)]="selectedThemeId"
-              class="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all">
+              class="w-full border border-card-border rounded-kinetic px-4 py-3 focus:border-electric-blue focus:ring-2 focus:ring-electric-blue/20 transition-all">
               <option value="">Elige un tema...</option>
               <option *ngFor="let theme of availableThemes" [value]="theme._id">
                 {{ theme.name }} ({{ theme.category }} - {{ theme.difficulty }})
               </option>
             </select>
-            <p class="text-xs text-gray-500 mt-2">
+            <p class="text-xs text-icon-gray mt-2">
               El tema se agregará con estado "No iniciado" y progreso 0%
             </p>
           </div>
@@ -360,13 +355,13 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           <div class="flex gap-3 justify-end">
             <button 
               (click)="showAddThemeModal = false"
-              class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-3 rounded-lg transition-all">
+              class="bg-card-bg hover:bg-card-border text-deep-sea font-bold px-6 py-3 rounded-kinetic transition-all">
               Cancelar
             </button>
             <button 
               (click)="addThemeToRoadmap()"
               [disabled]="!selectedThemeId"
-              class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg disabled:bg-gray-300 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg">
+              class="bg-electric-blue hover:opacity-90 text-deep-sea font-bold px-6 py-3 rounded-kinetic disabled:bg-gray-300 disabled:cursor-not-allowed transition-all">
               Agregar tema
             </button>
           </div>
@@ -378,17 +373,17 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
         *ngIf="showUpdateModal && editingNode" 
         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
         (click)="showUpdateModal = false">
-        <div class="bg-white rounded-xl shadow-2xl p-8 w-full max-w-lg" (click)="$event.stopPropagation()">
+        <div class="bg-white border border-card-border rounded-kinetic p-8 w-full max-w-lg" (click)="$event.stopPropagation()">
           <div class="flex items-center gap-3 mb-6">
-            <span class="text-3xl">✏️</span>
-            <h3 class="text-2xl font-bold text-gray-800">Actualizar Progreso</h3>
+            <span class="text-2xl text-icon-gray">✏️</span>
+            <h3 class="text-2xl font-bold text-deep-sea">Actualizar Progreso</h3>
           </div>
           
           <div class="mb-5">
-            <label class="block text-gray-700 text-sm font-bold mb-2">Estado</label>
+            <label class="block text-deep-sea text-sm font-bold mb-2">Estado</label>
             <select 
               [(ngModel)]="editingNode.status"
-              class="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all">
+              class="w-full border border-card-border rounded-kinetic px-4 py-3 focus:border-electric-blue focus:ring-2 focus:ring-electric-blue/20 transition-all">
               <option value="not-started">⏳ No iniciado</option>
               <option value="in-progress">🔄 En progreso</option>
               <option value="completed">✅ Completado</option>
@@ -397,60 +392,55 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           </div>
 
           <div class="mb-5">
-            <label class="block text-gray-700 text-sm font-bold mb-2">Progreso (%)</label>
+            <label class="block text-deep-sea text-sm font-bold mb-2">Progreso (%)</label>
             <div class="flex items-center gap-4">
               <input 
                 type="range" 
                 [(ngModel)]="editingNode.progress"
                 min="0"
                 max="100"
-                class="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                class="flex-1 h-2 bg-card-border rounded-kinetic appearance-none cursor-pointer">
               <input 
                 type="number" 
                 [(ngModel)]="editingNode.progress"
                 min="0"
                 max="100"
-                class="w-20 border-2 border-gray-300 rounded-lg px-3 py-2 text-center font-bold focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all">
+                class="w-20 border border-card-border rounded-kinetic px-3 py-2 text-center font-bold focus:border-electric-blue focus:ring-2 focus:ring-electric-blue/20 transition-all">
             </div>
-            <div class="mt-2 w-full bg-gray-200 rounded-full h-2">
+            <div class="mt-2 w-full bg-card-border rounded-kinetic h-2">
               <div 
-                class="h-2 rounded-full transition-all"
-                [ngClass]="{
-                  'bg-gray-400': editingNode.progress === 0,
-                  'bg-blue-500': editingNode.progress > 0 && editingNode.progress < 100,
-                  'bg-green-500': editingNode.progress === 100
-                }"
+                class="h-2 rounded-kinetic transition-all bg-electric-blue"
                 [style.width.%]="editingNode.progress">
               </div>
             </div>
           </div>
 
           <div class="mb-5">
-            <label class="block text-gray-700 text-sm font-bold mb-2">Fecha límite (opcional)</label>
+            <label class="block text-deep-sea text-sm font-bold mb-2">Fecha límite (opcional)</label>
             <input 
               type="date"
               [(ngModel)]="editingNode.dueDate"
-              class="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all">
+              class="w-full border border-card-border rounded-kinetic px-4 py-3 focus:border-electric-blue focus:ring-2 focus:ring-electric-blue/20 transition-all">
           </div>
 
           <div class="mb-6">
-            <label class="block text-gray-700 text-sm font-bold mb-2">Notas</label>
+            <label class="block text-deep-sea text-sm font-bold mb-2">Notas</label>
             <textarea 
               [(ngModel)]="editingNode.notes"
               rows="4"
               placeholder="Agrega notas sobre tu progreso, recursos útiles, etc."
-              class="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all resize-none"></textarea>
+              class="w-full border border-card-border rounded-kinetic px-4 py-3 focus:border-electric-blue focus:ring-2 focus:ring-electric-blue/20 transition-all resize-none"></textarea>
           </div>
 
           <div class="flex gap-3 justify-end">
             <button 
               (click)="showUpdateModal = false"
-              class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-3 rounded-lg transition-all">
+              class="bg-card-bg hover:bg-card-border text-deep-sea font-bold px-6 py-3 rounded-kinetic transition-all">
               Cancelar
             </button>
             <button 
               (click)="saveNodeUpdate()"
-              class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg transition-all shadow-md hover:shadow-lg">
+              class="bg-electric-blue hover:opacity-90 text-deep-sea font-bold px-6 py-3 rounded-kinetic transition-all">
               💾 Guardar cambios
             </button>
           </div>
@@ -462,26 +452,26 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
         *ngIf="showDeleteConfirmation" 
         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
         (click)="showDeleteConfirmation = false">
-        <div class="bg-white rounded-xl shadow-2xl p-8 w-full max-w-md" (click)="$event.stopPropagation()">
+        <div class="bg-white border border-card-border rounded-kinetic p-8 w-full max-w-md" (click)="$event.stopPropagation()">
           <div class="flex items-center gap-3 mb-4">
-            <span class="text-4xl">⚠️</span>
-            <h3 class="text-2xl font-bold text-gray-800">Confirmar eliminación</h3>
+            <span class="text-3xl text-icon-gray">⚠️</span>
+            <h3 class="text-2xl font-bold text-deep-sea">Confirmar eliminación</h3>
           </div>
           
-          <p class="text-gray-600 mb-6">
-            ¿Estás seguro de que quieres eliminar <span class="font-bold text-gray-800">"{{ nodeToDeleteName }}"</span> de tu roadmap?
+          <p class="text-icon-gray mb-6">
+            ¿Estás seguro de que quieres eliminar <span class="font-bold text-deep-sea">"{{ nodeToDeleteName }}"</span> de tu roadmap?
             Esta acción no se puede deshacer.
           </p>
 
           <div class="flex gap-3 justify-end">
             <button 
               (click)="showDeleteConfirmation = false"
-              class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-3 rounded-lg transition-all">
+              class="bg-card-bg hover:bg-card-border text-deep-sea font-bold px-6 py-3 rounded-kinetic transition-all">
               Cancelar
             </button>
             <button 
               (click)="deleteNode(nodeToDelete)"
-              class="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-3 rounded-lg transition-all shadow-md hover:shadow-lg">
+              class="bg-red-500 hover:bg-red-600 text-white font-bold px-6 py-3 rounded-kinetic transition-all">
               Eliminar
             </button>
           </div>
