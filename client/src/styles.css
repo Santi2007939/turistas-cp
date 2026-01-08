@@ -37,7 +37,11 @@ code {
    ============================================ */
 
 @layer base {
-  /* Safe Room border-radius: 2px global */
+  /* 
+   * Safe Room border-radius: 2px global
+   * Using !important to override Tailwind's rounded utilities
+   * This ensures consistent industrial aesthetic across all components
+   */
   button, 
   input, 
   select, 
@@ -47,7 +51,7 @@ code {
     border-radius: 2px !important;
   }
   
-  /* Override rounded-full for specific use cases */
+  /* Override rounded-full for avatars and progress indicators */
   .rounded-full {
     border-radius: 9999px !important;
   }
