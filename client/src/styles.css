@@ -3,7 +3,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Global styles */
+/* Caracal Matte Design System - Global styles */
 * {
   margin: 0;
   padding: 0;
@@ -16,8 +16,48 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #FCF9F5;
+  color: #2D2622;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+/* Caracal Matte Card Styles */
+.caracal-card {
+  background-color: #FFFFFF;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(74, 59, 51, 0.05);
+}
+
+/* Caracal Matte Button Styles */
+.caracal-btn-primary {
+  background-color: #8B5E3C;
+  color: white;
+  border-radius: 12px;
+}
+
+.caracal-btn-primary:hover {
+  background-color: #7A5235;
+}
+
+.caracal-btn-secondary {
+  background-color: #D4A373;
+  color: white;
+  border-radius: 12px;
+}
+
+.caracal-btn-secondary:hover {
+  background-color: #C49565;
+}
+
+/* Caracal Matte Badge/Pill Styles */
+.caracal-badge {
+  background-color: #F2E9E1;
+  color: #4A3B33;
+  border-radius: 9999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
 }
