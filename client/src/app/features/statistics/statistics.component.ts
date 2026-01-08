@@ -37,72 +37,6 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             {{ errorMessage }}
           </div>
 
-          <!-- Profile Section -->
-          <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-            <div class="flex justify-between items-center mb-4">
-              <h3 class="text-xl font-bold text-gray-800">👤 Mi Perfil</h3>
-              <button 
-                *ngIf="!editingProfile"
-                (click)="startEditProfile()"
-                class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm">
-                Editar Perfil
-              </button>
-            </div>
-            
-            <div *ngIf="!editingProfile" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div class="bg-gray-50 rounded-lg p-4">
-                <p class="text-sm text-gray-600">Nombre de Usuario</p>
-                <p class="text-lg font-semibold text-gray-800">{{ currentUser?.username }}</p>
-              </div>
-              <div class="bg-gray-50 rounded-lg p-4">
-                <p class="text-sm text-gray-600">Email</p>
-                <p class="text-lg font-semibold text-gray-800">{{ currentUser?.email }}</p>
-              </div>
-              <div class="bg-gray-50 rounded-lg p-4">
-                <p class="text-sm text-gray-600">Nombre Completo</p>
-                <p class="text-lg font-semibold text-gray-800">{{ currentUser?.fullName || 'No especificado' }}</p>
-              </div>
-              <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
-                <p class="text-sm text-blue-600">Handle de Codeforces</p>
-                <p class="text-lg font-semibold text-blue-800">{{ currentUser?.codeforcesHandle || 'No vinculado' }}</p>
-              </div>
-            </div>
-
-            <!-- Edit Profile Form -->
-            <div *ngIf="editingProfile" class="space-y-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Nombre Completo</label>
-                <input 
-                  type="text"
-                  [(ngModel)]="editProfileData.fullName"
-                  class="w-full border rounded-lg px-3 py-2"
-                  placeholder="Tu nombre completo">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Handle de Codeforces</label>
-                <input 
-                  type="text"
-                  [(ngModel)]="editProfileData.codeforcesHandle"
-                  class="w-full border rounded-lg px-3 py-2"
-                  placeholder="Tu handle de Codeforces (ej: tourist)">
-                <p class="text-sm text-gray-500 mt-1">Este handle se usará para rastrear tu progreso en Codeforces</p>
-              </div>
-              <div class="flex gap-2">
-                <button 
-                  (click)="saveProfile()"
-                  [disabled]="savingProfile"
-                  class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg disabled:bg-gray-300">
-                  {{ savingProfile ? 'Guardando...' : 'Guardar Cambios' }}
-                </button>
-                <button 
-                  (click)="cancelEditProfile()"
-                  class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg">
-                  Cancelar
-                </button>
-              </div>
-            </div>
-          </div>
-
           <!-- Roadmap Statistics -->
           <div *ngIf="roadmapStats" class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg shadow-lg p-6 mb-6 text-white">
             <h3 class="text-xl font-bold mb-4">📈 Tu Progreso en el Roadmap</h3>
@@ -132,7 +66,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           </div>
 
           <!-- Problem Statistics -->
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
               <div class="flex items-center gap-2 mb-2">
                 <span class="text-2xl">📈</span>
@@ -151,15 +85,6 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               <p class="text-sm text-gray-600">de {{ problemStats.total }} totales</p>
             </div>
 
-            <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 border border-purple-200">
-              <div class="flex items-center gap-2 mb-2">
-                <span class="text-2xl">🎯</span>
-                <h4 class="font-semibold text-gray-800">Desempeño</h4>
-              </div>
-              <p class="text-2xl font-bold text-purple-600">{{ problemStats.successRate }}%</p>
-              <p class="text-sm text-gray-600">Tasa de éxito</p>
-            </div>
-
             <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg p-4 border border-orange-200">
               <div class="flex items-center gap-2 mb-2">
                 <span class="text-2xl">🔥</span>
@@ -173,13 +98,18 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           <!-- System Achievements Section -->
           <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
             <h3 class="text-xl font-bold text-gray-800 mb-4">🎖️ Logros del Sistema</h3>
+            <p class="text-sm text-gray-500 mb-4">
+              Los logros del sistema son reconocimientos automáticos que se desbloquean al alcanzar ciertos hitos, 
+              como resolver un número específico de problemas, participar en contests, o mantener una racha de actividad.
+              Actualmente, el sistema de logros automáticos está en desarrollo. Por ahora, puedes crear tus propios logros personalizados abajo.
+            </p>
             
             <div *ngIf="loadingAchievements" class="text-center py-4">
               <p class="text-gray-500">Cargando logros...</p>
             </div>
 
             <div *ngIf="!loadingAchievements && systemAchievements.length === 0" class="text-center py-4">
-              <p class="text-gray-500">¡Aún no has desbloqueado logros! Sigue practicando para ganar medallas.</p>
+              <p class="text-gray-500">¡Aún no has desbloqueado logros del sistema! Sigue practicando para ganar medallas automáticas.</p>
             </div>
 
             <div *ngIf="!loadingAchievements && systemAchievements.length > 0" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
@@ -446,14 +376,6 @@ export class StatisticsComponent implements OnInit {
   private readonly PROBLEM_STATUS_ACCEPTED = 'ac' as const;
 
   currentUser: User | null = null;
-  
-  // Profile editing
-  editingProfile = false;
-  savingProfile = false;
-  editProfileData = {
-    fullName: '',
-    codeforcesHandle: ''
-  };
 
   // Roadmap stats
   roadmapStats: {
@@ -466,8 +388,7 @@ export class StatisticsComponent implements OnInit {
   // Problem stats
   problemStats = {
     total: 0,
-    solved: 0,
-    successRate: 0
+    solved: 0
   };
   activityStreak = 0;
 
@@ -532,35 +453,6 @@ export class StatisticsComponent implements OnInit {
     });
   }
 
-  // Profile methods
-  startEditProfile(): void {
-    this.editProfileData = {
-      fullName: this.currentUser?.fullName || '',
-      codeforcesHandle: this.currentUser?.codeforcesHandle || ''
-    };
-    this.editingProfile = true;
-  }
-
-  cancelEditProfile(): void {
-    this.editingProfile = false;
-  }
-
-  saveProfile(): void {
-    this.savingProfile = true;
-    this.authService.updateProfile(this.editProfileData).subscribe({
-      next: () => {
-        this.savingProfile = false;
-        this.editingProfile = false;
-        this.showSuccess('Perfil actualizado correctamente');
-      },
-      error: (err) => {
-        this.savingProfile = false;
-        this.showError('Error al actualizar el perfil');
-        console.error('Error updating profile:', err);
-      }
-    });
-  }
-
   // Stats loading methods
   loadRoadmapStats(): void {
     this.roadmapService.getRoadmap().subscribe({
@@ -588,9 +480,6 @@ export class StatisticsComponent implements OnInit {
         const problems = response.data.problems;
         this.problemStats.total = problems.length;
         this.problemStats.solved = problems.filter(p => p.status === this.PROBLEM_STATUS_ACCEPTED).length;
-        this.problemStats.successRate = this.problemStats.total > 0 
-          ? Math.round((this.problemStats.solved / this.problemStats.total) * 100)
-          : 0;
       },
       error: (err) => console.error('Error loading problem stats:', err)
     });

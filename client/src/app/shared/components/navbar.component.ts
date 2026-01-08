@@ -1,13 +1,14 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { AuthService, User } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   template: `
     <nav class="bg-white shadow-lg fixed top-0 left-0 right-0 z-50">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -62,12 +63,123 @@ import { AuthService, User } from '../../core/services/auth.service';
               class="text-gray-700 hover:text-blue-600 transition-colors px-3 py-2 rounded-md text-sm font-medium">
               Admin
             </a>
-            <span class="text-gray-700">{{ currentUser?.username }}</span>
-            <button
-              (click)="logout()"
-              class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
-              Logout
-            </button>
+            
+            <!-- Profile Dropdown -->
+            <div class="relative profile-dropdown-container">
+              <button
+                (click)="toggleProfileDropdown()"
+                class="flex items-center gap-2 text-gray-700 hover:text-blue-600 transition-colors px-3 py-2 rounded-md text-sm font-medium">
+                <span>👤</span>
+                <span>{{ currentUser?.username }}</span>
+                <svg class="w-4 h-4 transition-transform" [ngClass]="{'rotate-180': profileDropdownOpen}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              
+              <!-- Dropdown Menu -->
+              <div 
+                *ngIf="profileDropdownOpen"
+                class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50">
+                
+                <!-- Profile Info Section -->
+                <div class="px-4 py-3 border-b border-gray-100">
+                  <div class="flex items-center gap-3 mb-3">
+                    <div class="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white text-xl font-bold">
+                      {{ currentUser?.username?.charAt(0)?.toUpperCase() }}
+                    </div>
+                    <div>
+                      <p class="font-semibold text-gray-800">{{ currentUser?.username }}</p>
+                      <p class="text-sm text-gray-500">{{ currentUser?.email }}</p>
+                    </div>
+                  </div>
+                  
+                  <!-- Profile Details -->
+                  <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                      <span class="text-gray-500">Nombre completo:</span>
+                      <span class="text-gray-800 font-medium">{{ currentUser?.fullName || 'No especificado' }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-gray-500">Codeforces Handle:</span>
+                      <span *ngIf="currentUser?.codeforcesHandle" class="text-blue-600 font-medium">
+                        <a [href]="'https://codeforces.com/profile/' + currentUser?.codeforcesHandle" target="_blank" rel="noopener noreferrer" class="hover:underline">
+                          {{ currentUser?.codeforcesHandle }}
+                        </a>
+                      </span>
+                      <span *ngIf="!currentUser?.codeforcesHandle" class="text-gray-400">No vinculado</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-gray-500">Rol:</span>
+                      <span class="text-gray-800 font-medium capitalize">{{ currentUser?.role }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Edit Profile Button -->
+                <div class="px-4 py-2 border-b border-gray-100">
+                  <button 
+                    *ngIf="!editingProfile"
+                    (click)="startEditProfile()"
+                    class="w-full text-left text-blue-600 hover:text-blue-800 text-sm font-medium py-1">
+                    ✏️ Editar Perfil
+                  </button>
+                  
+                  <!-- Edit Form -->
+                  <div *ngIf="editingProfile" class="space-y-3">
+                    <div>
+                      <label class="block text-xs font-medium text-gray-600 mb-1">Nombre Completo</label>
+                      <input 
+                        type="text"
+                        [(ngModel)]="editProfileData.fullName"
+                        class="w-full border rounded px-2 py-1 text-sm"
+                        placeholder="Tu nombre completo">
+                    </div>
+                    <div>
+                      <label class="block text-xs font-medium text-gray-600 mb-1">Handle de Codeforces</label>
+                      <input 
+                        type="text"
+                        [(ngModel)]="editProfileData.codeforcesHandle"
+                        class="w-full border rounded px-2 py-1 text-sm"
+                        placeholder="tu_handle">
+                    </div>
+                    <div class="flex gap-2">
+                      <button 
+                        (click)="saveProfile()"
+                        [disabled]="savingProfile"
+                        class="flex-1 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm disabled:bg-gray-300">
+                        {{ savingProfile ? 'Guardando...' : 'Guardar' }}
+                      </button>
+                      <button 
+                        (click)="cancelEditProfile()"
+                        class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm">
+                        Cancelar
+                      </button>
+                    </div>
+                    <p *ngIf="profileError" class="text-red-500 text-xs">{{ profileError }}</p>
+                    <p *ngIf="profileSuccess" class="text-green-500 text-xs">{{ profileSuccess }}</p>
+                  </div>
+                </div>
+
+                <!-- Links -->
+                <div class="px-4 py-2">
+                  <a 
+                    routerLink="/statistics"
+                    (click)="closeProfileDropdown()"
+                    class="block text-gray-700 hover:text-blue-600 text-sm py-1">
+                    📊 Ver Estadísticas y Logros
+                  </a>
+                </div>
+
+                <!-- Logout -->
+                <div class="px-4 py-2 border-t border-gray-100">
+                  <button
+                    (click)="logout()"
+                    class="w-full text-left text-red-600 hover:text-red-800 text-sm font-medium py-1">
+                    🚪 Cerrar Sesión
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- Mobile menu button -->
@@ -161,15 +273,41 @@ import { AuthService, User } from '../../core/services/auth.service';
             class="text-gray-700 hover:bg-gray-100 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">
             Admin
           </a>
+          
+          <!-- Mobile Profile Section -->
           <div class="border-t border-gray-200 pt-4 pb-3">
-            <div class="flex items-center px-3">
-              <div class="text-base font-medium text-gray-800">{{ currentUser?.username }}</div>
+            <div class="flex items-center px-3 mb-3">
+              <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold mr-3">
+                {{ currentUser?.username?.charAt(0)?.toUpperCase() }}
+              </div>
+              <div>
+                <div class="text-base font-medium text-gray-800">{{ currentUser?.username }}</div>
+                <div class="text-sm text-gray-500">{{ currentUser?.email }}</div>
+              </div>
             </div>
-            <div class="mt-3 px-2">
+            
+            <div class="px-3 space-y-2 text-sm mb-3">
+              <div class="flex justify-between">
+                <span class="text-gray-500">Nombre:</span>
+                <span class="text-gray-800">{{ currentUser?.fullName || 'No especificado' }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">Codeforces:</span>
+                <span class="text-blue-600">{{ currentUser?.codeforcesHandle || 'No vinculado' }}</span>
+              </div>
+            </div>
+
+            <div class="mt-3 px-2 space-y-2">
+              <a
+                routerLink="/statistics"
+                (click)="closeMobileMenu()"
+                class="block w-full text-left bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-md text-base font-medium">
+                📊 Estadísticas y Logros
+              </a>
               <button
                 (click)="logout()"
                 class="block w-full text-left bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-md text-base font-medium">
-                Logout
+                🚪 Cerrar Sesión
               </button>
             </div>
           </div>
@@ -184,7 +322,17 @@ import { AuthService, User } from '../../core/services/auth.service';
 export class NavbarComponent implements OnInit, OnDestroy {
   currentUser: User | null = null;
   mobileMenuOpen = false;
+  profileDropdownOpen = false;
+  editingProfile = false;
+  savingProfile = false;
+  profileError: string | null = null;
+  profileSuccess: string | null = null;
+  editProfileData = {
+    fullName: '',
+    codeforcesHandle: ''
+  };
   private destroy$ = new Subject<void>();
+  private profileSuccessTimeout: ReturnType<typeof setTimeout> | null = null;
 
   constructor(
     private authService: AuthService,
@@ -202,18 +350,90 @@ export class NavbarComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    if (this.profileSuccessTimeout) {
+      clearTimeout(this.profileSuccessTimeout);
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.profile-dropdown-container')) {
+      this.profileDropdownOpen = false;
+    }
   }
 
   toggleMobileMenu(): void {
     this.mobileMenuOpen = !this.mobileMenuOpen;
+    this.profileDropdownOpen = false;
   }
 
   closeMobileMenu(): void {
     this.mobileMenuOpen = false;
   }
 
+  toggleProfileDropdown(): void {
+    this.profileDropdownOpen = !this.profileDropdownOpen;
+    if (!this.profileDropdownOpen) {
+      this.editingProfile = false;
+      this.profileError = null;
+      this.profileSuccess = null;
+    }
+  }
+
+  closeProfileDropdown(): void {
+    this.profileDropdownOpen = false;
+    this.editingProfile = false;
+    this.profileError = null;
+    this.profileSuccess = null;
+  }
+
+  startEditProfile(): void {
+    this.editProfileData = {
+      fullName: this.currentUser?.fullName || '',
+      codeforcesHandle: this.currentUser?.codeforcesHandle || ''
+    };
+    this.editingProfile = true;
+    this.profileError = null;
+    this.profileSuccess = null;
+  }
+
+  cancelEditProfile(): void {
+    this.editingProfile = false;
+    this.profileError = null;
+    this.profileSuccess = null;
+  }
+
+  saveProfile(): void {
+    this.savingProfile = true;
+    this.profileError = null;
+    this.profileSuccess = null;
+    
+    // Clear any existing timeout
+    if (this.profileSuccessTimeout) {
+      clearTimeout(this.profileSuccessTimeout);
+    }
+
+    this.authService.updateProfile(this.editProfileData).subscribe({
+      next: () => {
+        this.savingProfile = false;
+        this.profileSuccess = 'Perfil actualizado correctamente';
+        this.profileSuccessTimeout = setTimeout(() => {
+          this.editingProfile = false;
+          this.profileSuccess = null;
+        }, 1500);
+      },
+      error: (err) => {
+        this.savingProfile = false;
+        this.profileError = 'Error al actualizar el perfil';
+        console.error('Error updating profile:', err);
+      }
+    });
+  }
+
   logout(): void {
     this.closeMobileMenu();
+    this.closeProfileDropdown();
     this.authService.logout();
   }
 }
