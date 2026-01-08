@@ -208,15 +208,16 @@ interface FilterData {
               <!-- Calendar Days -->
               <div 
                 *ngFor="let day of calendarDays" 
-                class="bg-white min-h-24 p-1 border-t"
-                [ngClass]="{'bg-gray-50': !day.isCurrentMonth}">
+                (click)="openCreateEventForDay(day.date)"
+                class="bg-white min-h-24 p-1 border-t cursor-pointer hover:bg-blue-50 transition-colors"
+                [ngClass]="{'bg-gray-50 hover:bg-gray-100': !day.isCurrentMonth}">
                 <div class="text-sm text-gray-500 mb-1" [ngClass]="{'text-gray-400': !day.isCurrentMonth, 'font-bold text-blue-600': day.isToday}">
                   {{ day.date.getDate() }}
                 </div>
                 <div class="space-y-1">
                   <div 
                     *ngFor="let event of day.events.slice(0, 3)" 
-                    (click)="editEvent(event)"
+                    (click)="editEvent(event); $event.stopPropagation()"
                     class="text-xs p-1 rounded cursor-pointer truncate"
                     [ngClass]="getEventTypeClass(event.type)"
                     [title]="event.title">
@@ -478,6 +479,29 @@ export class CalendarComponent implements OnInit {
   nextMonth(): void {
     this.currentMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() + 1, 1);
     this.generateCalendarDays();
+  }
+
+  openCreateEventForDay(date: Date): void {
+    // Create start time at 9:00 AM on the selected day
+    const startTime = new Date(date);
+    startTime.setHours(9, 0, 0, 0);
+    
+    // Create end time at 10:00 AM on the selected day (1 hour duration default)
+    const endTime = new Date(date);
+    endTime.setHours(10, 0, 0, 0);
+    
+    // Reset form with the selected date pre-filled
+    this.editingEvent = null;
+    this.formEvent = {
+      title: '',
+      description: '',
+      type: 'other',
+      eventScope: 'personal',
+      startTime: this.formatDateForInput(startTime),
+      endTime: this.formatDateForInput(endTime),
+      isPublic: false
+    };
+    this.showCreateModal = true;
   }
 
   editEvent(event: CalendarEvent): void {
