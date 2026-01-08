@@ -13,33 +13,33 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule, NavbarComponent],
   template: `
-    <div class="min-h-screen bg-gray-100">
+    <div class="min-h-screen bg-white">
       <!-- Navigation -->
       <app-navbar></app-navbar>
 
       <div class="container mx-auto px-4 py-8">
         <div class="flex justify-between items-center mb-6">
-          <h1 class="text-3xl font-bold text-gray-800">Biblioteca de Problemas</h1>
+          <h1 class="text-3xl font-bold text-deep-sea">Biblioteca de Problemas</h1>
           <button 
             (click)="openAddProblemModal()"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            class="bg-electric-blue hover:opacity-90 text-deep-sea font-bold py-2 px-4 rounded-kinetic">
             Agregar Problema
           </button>
         </div>
 
       <!-- Subtopic Filter Banner -->
-      <div *ngIf="subtopicFilter" class="mb-6 bg-blue-50 border-l-4 border-blue-500 rounded-lg p-4">
+      <div *ngIf="subtopicFilter" class="mb-6 bg-electric-blue/10 border-l-4 border-electric-blue rounded-kinetic p-4">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-3">
-            <span class="text-2xl">🎯</span>
+            <span class="text-xl text-icon-gray">🎯</span>
             <div>
-              <h3 class="font-semibold text-blue-900">Filtrando por subtema</h3>
-              <p class="text-sm text-blue-700">{{ subtopicName || 'Cargando...' }}</p>
+              <h3 class="font-bold text-deep-sea">Filtrando por subtema</h3>
+              <p class="text-sm text-icon-gray">{{ subtopicName || 'Cargando...' }}</p>
             </div>
           </div>
           <button 
             (click)="clearSubtopicFilter()"
-            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm">
+            class="bg-deep-sea hover:opacity-90 text-white px-4 py-2 rounded-kinetic text-sm font-medium">
             ✕ Limpiar filtro
           </button>
         </div>
@@ -47,11 +47,11 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
       <!-- Selector for problem view -->
       <div class="mb-6 flex gap-4 items-center">
-        <label class="font-semibold text-gray-700">Ver:</label>
+        <label class="font-bold text-deep-sea">Ver:</label>
         <select 
           [(ngModel)]="selectedView"
           (change)="onViewChange()"
-          class="border rounded px-4 py-2 bg-white">
+          class="border border-card-border rounded-kinetic px-4 py-2 bg-white focus:border-electric-blue focus:ring-2 focus:ring-electric-blue/20">
           <option value="personal">Mi cuenta</option>
           <option value="team">Equipo</option>
           <option value="members">Miembros</option>
@@ -59,10 +59,10 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
       </div>
 
       <div *ngIf="loading" class="text-center py-8">
-        <p class="text-gray-600">Cargando problemas...</p>
+        <p class="text-icon-gray">Cargando problemas...</p>
       </div>
 
-      <div *ngIf="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+      <div *ngIf="error" class="bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded-kinetic mb-4">
         {{ error }}
       </div>
 
@@ -70,33 +70,24 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div 
           *ngFor="let problem of problems" 
-          class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow border-l-4"
+          class="bg-card-bg border border-card-border rounded-kinetic p-6 hover:border-electric-blue transition-colors border-l-4"
           [ngClass]="{
-            'border-gray-400': problem.status === 'pending',
-            'border-green-500': problem.status === 'ac',
-            'border-red-500': problem.status === 'wa'
+            'border-l-card-border': problem.status === 'pending',
+            'border-l-green-500': problem.status === 'ac',
+            'border-l-red-500': problem.status === 'wa'
           }">
           
           <!-- Problem Header -->
           <div class="mb-4">
             <div class="flex justify-between items-start mb-2">
-              <h2 class="text-lg font-bold text-gray-800 flex-1">{{ problem.title }}</h2>
+              <h2 class="text-lg font-bold text-deep-sea flex-1">{{ problem.title }}</h2>
             </div>
             
             <!-- Rating and Status Row -->
             <div class="flex gap-2 items-center mb-3">
               <span 
                 *ngIf="problem.rating"
-                class="px-3 py-1 text-sm font-semibold rounded"
-                [ngClass]="{
-                  'bg-gray-200 text-gray-800': problem.rating < 1200,
-                  'bg-green-200 text-green-800': problem.rating >= 1200 && problem.rating < 1400,
-                  'bg-cyan-200 text-cyan-800': problem.rating >= 1400 && problem.rating < 1600,
-                  'bg-blue-200 text-blue-800': problem.rating >= 1600 && problem.rating < 1900,
-                  'bg-purple-200 text-purple-800': problem.rating >= 1900 && problem.rating < 2100,
-                  'bg-orange-200 text-orange-800': problem.rating >= 2100 && problem.rating < 2400,
-                  'bg-red-200 text-red-800': problem.rating >= 2400
-                }">
+                class="px-3 py-1 text-sm font-bold rounded-kinetic bg-card-border text-deep-sea">
                 ★ {{ problem.rating }}
               </span>
               
@@ -104,11 +95,11 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 *ngIf="canEdit(problem)"
                 [(ngModel)]="problem.status"
                 (change)="updateProblemStatus(problem)"
-                class="px-3 py-1 text-sm rounded border"
+                class="px-3 py-1 text-sm rounded-kinetic border border-card-border"
                 [ngClass]="{
-                  'bg-gray-100 text-gray-800 border-gray-300': problem.status === 'pending',
-                  'bg-green-100 text-green-800 border-green-300': problem.status === 'ac',
-                  'bg-red-100 text-red-800 border-red-300': problem.status === 'wa'
+                  'bg-white text-icon-gray': problem.status === 'pending',
+                  'bg-green-100 text-green-800': problem.status === 'ac',
+                  'bg-red-100 text-red-800': problem.status === 'wa'
                 }">
                 <option value="pending">Pendiente</option>
                 <option value="ac">AC</option>
@@ -117,9 +108,9 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               
               <span
                 *ngIf="!canEdit(problem)"
-                class="px-3 py-1 text-sm rounded"
+                class="px-3 py-1 text-sm rounded-kinetic"
                 [ngClass]="{
-                  'bg-gray-100 text-gray-800': problem.status === 'pending',
+                  'bg-card-border text-icon-gray': problem.status === 'pending',
                   'bg-green-100 text-green-800': problem.status === 'ac',
                   'bg-red-100 text-red-800': problem.status === 'wa'
                 }">
@@ -129,17 +120,17 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
             <!-- Platform Badge -->
             <div class="mb-3">
-              <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
+              <span class="bg-electric-blue/10 text-electric-blue text-xs px-2 py-1 rounded-kinetic font-medium">
                 {{ problem.platform }}
               </span>
               <span 
                 *ngIf="problem.owner === 'personal'"
-                class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded ml-2">
+                class="bg-card-border text-icon-gray text-xs px-2 py-1 rounded-kinetic ml-2 font-medium">
                 Personal
               </span>
               <span 
                 *ngIf="problem.owner === 'team'"
-                class="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded ml-2">
+                class="bg-deep-sea text-white text-xs px-2 py-1 rounded-kinetic ml-2 font-medium">
                 Equipo
               </span>
             </div>
@@ -151,36 +142,36 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           <div class="flex gap-2 mt-4">
             <a 
               [routerLink]="['/problems', problem._id]"
-              class="flex-1 bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded text-sm text-center">
+              class="flex-1 bg-electric-blue hover:opacity-90 text-deep-sea px-4 py-2 rounded-kinetic text-sm text-center font-medium">
               Ver Detalles
             </a>
             <a 
               *ngIf="problem.url"
               [href]="problem.url" 
               target="_blank"
-              class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded text-sm">
+              class="bg-deep-sea hover:opacity-90 text-white px-3 py-2 rounded-kinetic text-sm">
               🔗
             </a>
             <button 
               *ngIf="canEdit(problem)"
               (click)="openEditProblemModal(problem)"
-              class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-2 rounded text-sm">
+              class="bg-icon-gray hover:opacity-90 text-white px-3 py-2 rounded-kinetic text-sm">
               ✎
             </button>
           </div>
 
-          <div *ngIf="problem.createdBy" class="mt-3 text-xs text-gray-500">
+          <div *ngIf="problem.createdBy" class="mt-3 text-xs text-icon-gray">
             Creado por: {{ getCreatorName(problem) }}
           </div>
         </div>
       </div>
 
       <div *ngIf="!loading && problems.length === 0" class="text-center py-12">
-        <p class="text-gray-600 text-lg mb-4">No hay problemas en esta vista.</p>
+        <p class="text-icon-gray text-lg mb-4">No hay problemas en esta vista.</p>
         <button 
           *ngIf="selectedView === 'personal'"
           (click)="openAddProblemModal()"
-          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          class="bg-electric-blue hover:opacity-90 text-deep-sea font-bold py-2 px-4 rounded-kinetic">
           Agregar Primer Problema
         </button>
       </div>
@@ -188,32 +179,32 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
       <!-- Add/Edit Problem Modal -->
       <div 
         *ngIf="showAddProblemModal" 
-        class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-          <h3 class="text-xl font-bold mb-4">
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white border border-card-border rounded-kinetic p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+          <h3 class="text-xl font-bold text-deep-sea mb-4">
             {{ editingProblem ? 'Editar Problema' : 'Agregar Problema' }}
           </h3>
           
           <div class="space-y-4">
             <div>
-              <label class="block text-gray-700 text-sm font-bold mb-2">Título *</label>
+              <label class="block text-deep-sea text-sm font-bold mb-2">Título *</label>
               <input 
                 type="text"
                 [(ngModel)]="newProblem.title"
-                class="w-full border rounded px-3 py-2"
+                class="w-full border border-card-border rounded-kinetic px-3 py-2 focus:border-electric-blue focus:ring-2 focus:ring-electric-blue/20"
                 placeholder="Nombre del problema">
             </div>
 
             <!-- URL Field (optional for all platforms) -->
             <div>
-              <label class="block text-gray-700 text-sm font-bold mb-2">
+              <label class="block text-deep-sea text-sm font-bold mb-2">
                 URL del Problema (Opcional)
               </label>
               <input 
                 type="url"
                 [(ngModel)]="newProblem.url"
                 (ngModelChange)="onUrlChange()"
-                class="w-full border rounded px-3 py-2"
+                class="w-full border border-card-border rounded-kinetic px-3 py-2 focus:border-electric-blue focus:ring-2 focus:ring-electric-blue/20"
                 [class.border-red-500]="urlValidationError && !isUrlWarning"
                 [class.border-yellow-500]="urlValidationError && isUrlWarning"
                 placeholder="https://codeforces.com/problemset/problem/1234/A">
@@ -223,16 +214,16 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                  [class.text-yellow-600]="isUrlWarning">
                 {{ urlValidationError }}
               </p>
-              <p class="text-xs text-gray-600 mt-1">
+              <p class="text-xs text-icon-gray mt-1">
                 La plataforma se detectará automáticamente desde la URL.
               </p>
             </div>
 
             <div>
-              <label class="block text-gray-700 text-sm font-bold mb-2">Plataforma</label>
+              <label class="block text-deep-sea text-sm font-bold mb-2">Plataforma</label>
               <select 
                 [(ngModel)]="newProblem.platform"
-                class="w-full border rounded px-3 py-2"
+                class="w-full border border-card-border rounded-kinetic px-3 py-2 focus:border-electric-blue focus:ring-2 focus:ring-electric-blue/20"
                 [disabled]="!!editingProblem">
                 <option value="codeforces">Codeforces</option>
                 <option value="atcoder">AtCoder</option>
@@ -248,36 +239,36 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
             <!-- Codeforces Auto-Fetch Button (shown when platform is Codeforces) -->
             <div *ngIf="!editingProblem && newProblem.platform === 'codeforces' && newProblem.url" 
-                 class="bg-blue-50 border border-blue-200 rounded p-4">
-              <p class="text-sm text-gray-700 mb-2">
+                 class="bg-electric-blue/10 border border-electric-blue rounded-kinetic p-4">
+              <p class="text-sm text-deep-sea mb-2">
                 ¿Quieres obtener automáticamente los datos de este problema de Codeforces?
               </p>
               <button 
                 (click)="fetchCodeforcesData()"
                 [disabled]="fetchingCodeforces || !!urlValidationError"
-                class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded disabled:bg-gray-300 w-full">
+                class="bg-electric-blue hover:opacity-90 text-deep-sea px-4 py-2 rounded-kinetic disabled:bg-gray-300 w-full font-medium">
                 {{ fetchingCodeforces ? 'Obteniendo datos...' : '🔄 Obtener Datos de Codeforces' }}
               </button>
-              <p class="text-xs text-gray-600 mt-2">
+              <p class="text-xs text-icon-gray mt-2">
                 Esto llenará automáticamente el título, rating y otros detalles.
               </p>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <label class="block text-gray-700 text-sm font-bold mb-2">Rating</label>
+                <label class="block text-deep-sea text-sm font-bold mb-2">Rating</label>
                 <input 
                   type="number"
                   [(ngModel)]="newProblem.rating"
-                  class="w-full border rounded px-3 py-2"
+                  class="w-full border border-card-border rounded-kinetic px-3 py-2 focus:border-electric-blue focus:ring-2 focus:ring-electric-blue/20"
                   placeholder="800, 1200, 1600...">
               </div>
 
               <div>
-                <label class="block text-gray-700 text-sm font-bold mb-2">Estado</label>
+                <label class="block text-deep-sea text-sm font-bold mb-2">Estado</label>
                 <select 
                   [(ngModel)]="newProblem.status"
-                  class="w-full border rounded px-3 py-2">
+                  class="w-full border border-card-border rounded-kinetic px-3 py-2 focus:border-electric-blue focus:ring-2 focus:ring-electric-blue/20">
                   <option value="pending">Pendiente</option>
                   <option value="ac">AC</option>
                   <option value="wa">WA</option>
@@ -286,27 +277,27 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             </div>
 
             <div>
-              <label class="block text-gray-700 text-sm font-bold mb-2">Owner</label>
+              <label class="block text-deep-sea text-sm font-bold mb-2">Owner</label>
               <select 
                 [(ngModel)]="newProblem.owner"
-                class="w-full border rounded px-3 py-2">
+                class="w-full border border-card-border rounded-kinetic px-3 py-2 focus:border-electric-blue focus:ring-2 focus:ring-electric-blue/20">
                 <option value="personal">Personal</option>
                 <option value="team">Equipo</option>
               </select>
             </div>
 
             <!-- Themes Section -->
-            <div class="border rounded p-4 bg-gray-50">
-              <label class="block text-gray-700 text-sm font-bold mb-3">Temas y Subtemas</label>
+            <div class="border border-card-border rounded-kinetic p-4 bg-card-bg">
+              <label class="block text-deep-sea text-sm font-bold mb-3">Temas y Subtemas</label>
               
               <div class="space-y-3">
-                <div *ngFor="let themeAssoc of newProblem.themes; let i = index" class="border rounded p-3 bg-white">
+                <div *ngFor="let themeAssoc of newProblem.themes; let i = index" class="border border-card-border rounded-kinetic p-3 bg-white">
                   <div class="flex justify-between items-start mb-2">
                     <div class="flex-1">
                       <select 
                         [(ngModel)]="themeAssoc.themeId"
                         (change)="onModalThemeChange(i)"
-                        class="w-full border rounded px-3 py-2">
+                        class="w-full border border-card-border rounded-kinetic px-3 py-2 focus:border-electric-blue focus:ring-2 focus:ring-electric-blue/20">
                         <option value="">Seleccionar tema...</option>
                         <option *ngFor="let theme of availableThemes" [value]="theme._id">
                           {{ theme.name }}
@@ -315,22 +306,22 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                     </div>
                     <button 
                       (click)="removeModalTheme(i)"
-                      class="ml-2 text-red-600 hover:text-red-800">
+                      class="ml-2 text-red-500 hover:text-red-600">
                       ✕
                     </button>
                   </div>
 
                   <div *ngIf="themeAssoc.themeId && getModalThemeSubthemes(themeAssoc.themeId).length > 0" class="mt-2">
-                    <label class="block text-xs text-gray-600 mb-2">Subtemas:</label>
+                    <label class="block text-xs text-icon-gray mb-2">Subtemas:</label>
                     <div class="space-y-1">
                       <label 
                         *ngFor="let subtheme of getModalThemeSubthemes(themeAssoc.themeId)"
-                        class="flex items-center gap-2 text-sm">
+                        class="flex items-center gap-2 text-sm text-deep-sea">
                         <input 
                           type="checkbox"
                           [checked]="isModalSubthemeSelected(i, subtheme.name)"
                           (change)="toggleModalSubtheme(i, subtheme.name)"
-                          class="rounded">
+                          class="rounded-kinetic">
                         <span>{{ subtheme.name }}</span>
                       </label>
                     </div>
@@ -339,7 +330,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
                 <button 
                   (click)="addModalThemeAssociation()"
-                  class="w-full border-2 border-dashed border-gray-300 rounded py-2 text-gray-600 hover:border-blue-500 hover:text-blue-500 transition-colors text-sm">
+                  class="w-full border-2 border-dashed border-card-border rounded-kinetic py-2 text-icon-gray hover:border-electric-blue hover:text-electric-blue transition-colors text-sm">
                   + Agregar Tema
                 </button>
               </div>
@@ -351,13 +342,13 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           <div class="flex gap-2 justify-end mt-6">
             <button 
               (click)="cancelAddProblem()"
-              class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+              class="bg-icon-gray hover:opacity-90 text-white px-4 py-2 rounded-kinetic font-medium">
               Cancelar
             </button>
             <button 
               (click)="saveProblem()"
               [disabled]="!newProblem.title"
-              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded disabled:bg-gray-300">
+              class="bg-electric-blue hover:opacity-90 text-deep-sea px-4 py-2 rounded-kinetic font-medium disabled:bg-gray-300">
               {{ editingProblem ? 'Actualizar' : 'Guardar' }}
             </button>
           </div>

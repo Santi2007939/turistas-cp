@@ -8,24 +8,24 @@ import { AuthService } from '../../core/services/auth.service';
     selector: 'app-login',
     imports: [CommonModule, FormsModule, RouterModule],
     template: `
-    <div class="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600 py-12 px-4 sm:px-6 lg:px-8">
-      <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-2xl">
+    <div class="min-h-screen flex items-center justify-center bg-white py-12 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-md w-full space-y-8 bg-card-bg border border-card-border p-8 rounded-kinetic">
         <div>
-          <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          <h2 class="mt-6 text-center text-3xl font-bold text-deep-sea">
             🏔️ Turistas CP
           </h2>
-          <p class="mt-2 text-center text-sm text-gray-600">
+          <p class="mt-2 text-center text-sm text-icon-gray">
             Inicia sesión en tu cuenta
           </p>
         </div>
 
         <!-- Success message from registration -->
-        <div *ngIf="successMessage" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
+        <div *ngIf="successMessage" class="bg-electric-blue/10 border border-electric-blue text-deep-sea px-4 py-3 rounded-kinetic relative">
           {{ successMessage }}
         </div>
 
         <form class="mt-8 space-y-6" (ngSubmit)="onSubmit()">
-          <div class="rounded-md shadow-sm -space-y-px">
+          <div class="rounded-kinetic -space-y-px">
             <div>
               <label for="email" class="sr-only">Email</label>
               <input
@@ -34,7 +34,7 @@ import { AuthService } from '../../core/services/auth.service';
                 type="email"
                 [(ngModel)]="credentials.email"
                 required
-                class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm"
+                class="appearance-none rounded-t-kinetic relative block w-full px-3 py-2 border border-card-border placeholder-icon-gray text-deep-sea focus:outline-none focus:ring-2 focus:ring-electric-blue focus:border-electric-blue focus:z-10 sm:text-sm"
                 placeholder="Email"
               />
             </div>
@@ -46,7 +46,7 @@ import { AuthService } from '../../core/services/auth.service';
                 type="password"
                 [(ngModel)]="credentials.password"
                 required
-                class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm"
+                class="appearance-none rounded-b-kinetic relative block w-full px-3 py-2 border border-card-border placeholder-icon-gray text-deep-sea focus:outline-none focus:ring-2 focus:ring-electric-blue focus:border-electric-blue focus:z-10 sm:text-sm"
                 placeholder="Contraseña"
               />
             </div>
@@ -60,15 +60,15 @@ import { AuthService } from '../../core/services/auth.service';
             <button
               type="submit"
               [disabled]="loading"
-              class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50"
+              class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-kinetic text-deep-sea bg-electric-blue hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-electric-blue disabled:opacity-50"
             >
               {{ loading ? 'Iniciando sesión...' : 'Iniciar sesión' }}
             </button>
           </div>
 
           <div class="text-center text-sm">
-            <span class="text-gray-600">¿No tienes cuenta? </span>
-            <a routerLink="/auth/register" class="font-medium text-primary-600 hover:text-primary-500">
+            <span class="text-icon-gray">¿No tienes cuenta? </span>
+            <a routerLink="/auth/register" class="font-medium text-electric-blue hover:opacity-80">
               Regístrate
             </a>
           </div>

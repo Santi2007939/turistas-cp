@@ -1,9 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Global styles */
+/* Kinetic Drift Design System - Global Styles */
 * {
   margin: 0;
   padding: 0;
@@ -11,13 +12,70 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
+  font-weight: 500;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #FFFFFF;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+/* Kinetic Drift Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+}
+
+/* Kinetic Drift Card Component */
+@layer components {
+  .kinetic-card {
+    background-color: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    box-shadow: none;
+  }
+
+  .kinetic-btn-primary {
+    background-color: #38BDF8;
+    color: #0F172A;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+
+  .kinetic-btn-primary:hover {
+    background-color: #0ea5e9;
+    color: white;
+  }
+
+  .kinetic-progress-bar {
+    background-color: #E2E8F0;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .kinetic-progress-fill {
+    background-color: #38BDF8;
+    height: 100%;
+    border-radius: 8px;
+    transition: width 0.5s ease;
+  }
+
+  .kinetic-stat {
+    color: #0F172A;
+    font-weight: 700;
+  }
+
+  .kinetic-icon {
+    color: #64748B;
+  }
+
+  /* Remove all shadows globally for flat design */
+  .shadow, .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl {
+    box-shadow: none !important;
+  }
 }
