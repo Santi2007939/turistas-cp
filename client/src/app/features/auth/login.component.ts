@@ -12,8 +12,12 @@ import { AuthService } from '../../core/services/auth.service';
     <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8" style="background-color: #FCF9F5;">
       <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-[12px]" style="border: 1px solid #EAE3DB;">
         <div>
-          <h2 class="mt-6 text-center text-3xl font-semibold" style="color: #8B5E3C;">
-            🏔️ Turistas CP
+          <h2 class="mt-6 text-center text-3xl font-semibold flex items-center justify-center gap-2" style="color: #8B5E3C;">
+            <!-- Lucide Mountain icon -->
+            <svg class="w-8 h-8" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 20l4-12 4 6 4-8 4 14H4z" />
+            </svg>
+            Turistas CP
           </h2>
           <p class="mt-2 text-center text-sm" style="color: #4A3B33;">
             Inicia sesión en tu cuenta

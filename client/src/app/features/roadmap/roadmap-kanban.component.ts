@@ -30,21 +30,35 @@ interface KanbanColumn {
         <div class="bg-white rounded-[12px] p-6 mb-6" style="border: 1px solid #EAE3DB;">
           <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
             <div>
-              <h1 class="text-2xl font-semibold mb-2" style="color: #2D2622;">📋 Kanban Board</h1>
+              <h1 class="text-2xl font-semibold mb-2 flex items-center gap-2" style="color: #2D2622;">
+                <!-- Lucide LayoutList icon -->
+                <svg class="w-6 h-6" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                </svg>
+                Kanban Board
+              </h1>
               <p style="color: #4A3B33;">Visualiza y organiza tu roadmap con vista Kanban</p>
             </div>
             <div class="flex gap-2">
               <button 
                 routerLink="/roadmap"
-                class="font-medium py-2 px-4 rounded-[12px] transition-all"
+                class="font-medium py-2 px-4 rounded-[12px] transition-all flex items-center gap-2"
                 style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
-                📝 Vista Lista
+                <!-- Lucide List icon -->
+                <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
+                </svg>
+                Vista Lista
               </button>
               <button 
                 routerLink="/roadmap/graph"
-                class="text-white font-medium py-2 px-4 rounded-[12px] transition-all"
+                class="text-white font-medium py-2 px-4 rounded-[12px] transition-all flex items-center gap-2"
                 style="background-color: #8B5E3C;">
-                📊 Vista Gráfica
+                <!-- Lucide BarChart2 icon -->
+                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M18 20V10m-6 10V4M6 20v-6" />
+                </svg>
+                Vista Gráfica
               </button>
             </div>
           </div>
@@ -52,14 +66,20 @@ interface KanbanColumn {
 
         <!-- Loading State -->
         <div *ngIf="loading" class="text-center py-12">
-          <div class="text-4xl mb-4">⏳</div>
+          <!-- Lucide Loader icon -->
+          <svg class="w-12 h-12 mx-auto mb-4 animate-spin" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
           <p style="color: #4A3B33;">Cargando roadmap...</p>
         </div>
 
         <!-- Error State -->
         <div *ngIf="error" class="bg-white rounded-[12px] p-6 mb-6" style="border-left: 4px solid #8B5E3C; border-right: 1px solid #EAE3DB; border-top: 1px solid #EAE3DB; border-bottom: 1px solid #EAE3DB;">
           <div class="flex items-start">
-            <span class="text-2xl mr-3">⚠️</span>
+            <!-- Lucide AlertTriangle icon -->
+            <svg class="w-6 h-6 mr-3" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
             <div>
               <h3 class="font-semibold" style="color: #2D2622;">Error</h3>
               <p class="mt-1" style="color: #4A3B33;">{{ error }}</p>
@@ -82,7 +102,21 @@ interface KanbanColumn {
                style="border: 1px solid #EAE3DB;">
             <div class="flex items-center justify-between mb-4">
               <div class="flex items-center gap-2">
-                <span class="text-2xl">{{ column.icon }}</span>
+                <ng-container [ngSwitch]="column.id">
+                  <!-- Clock icon for todo -->
+                  <svg *ngSwitchCase="'todo'" class="w-6 h-6" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="12" cy="12" r="10" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2" />
+                  </svg>
+                  <!-- RefreshCw icon for in-progress -->
+                  <svg *ngSwitchCase="'in-progress'" class="w-6 h-6" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" />
+                  </svg>
+                  <!-- CheckCircle icon for done -->
+                  <svg *ngSwitchDefault class="w-6 h-6" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </ng-container>
                 <h3 class="text-lg font-semibold" style="color: #2D2622;">{{ column.title }}</h3>
                 <span class="px-2 py-1 rounded-[12px] text-sm font-semibold"
                       style="background-color: #FCF9F5; color: #4A3B33; border: 1px solid #EAE3DB;">
@@ -181,7 +215,10 @@ interface KanbanColumn {
         <!-- Empty State -->
         <div *ngIf="!loading && !error && allNodes.length === 0" 
              class="bg-white rounded-[12px] p-12 text-center" style="border: 1px solid #EAE3DB;">
-          <div class="text-6xl mb-4">📋</div>
+          <!-- Lucide LayoutList icon -->
+          <svg class="w-16 h-16 mx-auto mb-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+          </svg>
           <h3 class="text-2xl font-semibold mb-3" style="color: #2D2622;">No hay temas en tu roadmap</h3>
           <p class="mb-6" style="color: #4A3B33;">
             Agrega temas para empezar a organizar tu aprendizaje en el tablero Kanban.
