@@ -64,6 +64,20 @@ export interface ProblemResponse {
   };
 }
 
+export interface CheckDuplicateResponse {
+  success: boolean;
+  data: {
+    exists: boolean;
+    problems: {
+      _id: string;
+      title: string;
+      platform: string;
+      owner: 'personal' | 'team';
+      createdBy: PopulatedUser;
+    }[];
+  };
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -112,10 +126,19 @@ export class ProblemsService {
   }
 
   /**
-   * Create a new problem
+   * Check if a problem already exists (for duplicate detection)
    */
-  createProblem(problem: Partial<Problem>): Observable<ProblemResponse> {
-    return this.api.post<ProblemResponse>('/api/problems', problem);
+  checkDuplicate(data: { url?: string; platform?: string; platformId?: string; owner: string }): Observable<CheckDuplicateResponse> {
+    return this.api.post<CheckDuplicateResponse>('/api/problems/check-duplicate', data);
+  }
+
+  /**
+   * Create a new problem
+   * @param problem Problem data
+   * @param forceCreate If true, allows creating personal copy of existing problem
+   */
+  createProblem(problem: Partial<Problem>, forceCreate: boolean = false): Observable<ProblemResponse> {
+    return this.api.post<ProblemResponse>('/api/problems', { ...problem, forceCreate });
   }
 
   /**

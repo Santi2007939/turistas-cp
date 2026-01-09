@@ -132,15 +132,82 @@ router.get('/:id', asyncHandler(async (req, res) => {
   });
 }));
 
+// @desc    Check if a problem exists by URL
+// @route   POST /api/problems/check-duplicate
+// @access  Private
+router.post('/check-duplicate', asyncHandler(async (req, res) => {
+  const { url, platform, platformId, owner } = req.body;
+  const userId = req.user._id.toString();
+
+  // Only check for duplicates when creating personal problems
+  if (owner !== 'personal') {
+    return res.json({
+      success: true,
+      data: { exists: false, problems: [] }
+    });
+  }
+
+  // Build query to find existing problems with same URL or platform/platformId
+  const queryConditions = [];
+  
+  if (url) {
+    queryConditions.push({ url: url });
+  }
+  
+  if (platform && platformId) {
+    queryConditions.push({ platform: platform, platformId: platformId });
+  }
+
+  if (queryConditions.length === 0) {
+    return res.json({
+      success: true,
+      data: { exists: false, problems: [] }
+    });
+  }
+
+  // Find existing problems (excluding user's own problems)
+  const existingProblems = await Problem.find({
+    $and: [
+      { $or: queryConditions },
+      { createdBy: { $ne: userId } }
+    ]
+  }).populate('createdBy', 'username');
+
+  res.json({
+    success: true,
+    data: {
+      exists: existingProblems.length > 0,
+      problems: existingProblems.map(p => ({
+        _id: p._id,
+        title: p.title,
+        platform: p.platform,
+        owner: p.owner,
+        createdBy: p.createdBy
+      }))
+    }
+  });
+}));
+
 // @desc    Create problem
 // @route   POST /api/problems
 // @access  Private
 router.post('/', asyncHandler(async (req, res) => {
+  const { forceCreate, ...restBody } = req.body;
+  
   const problemData = {
-    ...req.body,
+    ...restBody,
     addedBy: req.user._id,
     createdBy: req.user._id
   };
+
+  // For personal problems, clear platformId to avoid unique constraint issues
+  // when user wants to track a problem that exists as team or another personal problem
+  if (problemData.owner === 'personal' && forceCreate) {
+    // Generate a unique platformId suffix for personal copies
+    problemData.platformId = problemData.platformId 
+      ? `${problemData.platformId}-personal-${req.user._id}` 
+      : undefined;
+  }
 
   const problem = await Problem.create(problemData);
 

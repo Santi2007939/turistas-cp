@@ -364,6 +364,59 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           </div>
         </div>
       </div>
+
+      <!-- Duplicate Problem Modal -->
+      <div 
+        *ngIf="showDuplicateModal" 
+        class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+        <div class="bg-white rounded-[12px] p-6 w-full max-w-lg" style="border: 1px solid #EAE3DB;">
+          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">
+            ⚠️ Problema Existente Detectado
+          </h3>
+          
+          <p class="mb-4" style="color: #4A3B33;">
+            Este problema ya ha sido agregado por otro miembro del equipo. 
+            ¿Deseas crear tu propia copia personal para registrar tu propio enfoque y progreso?
+          </p>
+
+          <div class="space-y-3 mb-6">
+            <p class="text-sm font-medium" style="color: #2D2622;">Problemas existentes:</p>
+            <div 
+              *ngFor="let dup of duplicateProblems" 
+              class="p-3 rounded-[12px]"
+              style="background-color: #FCF9F5; border: 1px solid #EAE3DB;">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="font-medium" style="color: #2D2622;">{{ dup.title }}</p>
+                  <p class="text-xs" style="color: #4A3B33;">
+                    Creado por: {{ dup.createdBy?.username || 'Usuario' }} 
+                    ({{ dup.owner === 'team' ? 'Equipo' : 'Personal' }})
+                  </p>
+                </div>
+                <span class="text-xs px-2 py-1 rounded-[12px]" 
+                      style="background-color: #FCF9F5; color: #8B5E3C; border: 1px solid #EAE3DB;">
+                  {{ dup.platform }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex gap-3 justify-end">
+            <button 
+              (click)="cancelCreateDuplicate()"
+              class="px-4 py-2 rounded-[12px] font-medium"
+              style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
+              Cancelar
+            </button>
+            <button 
+              (click)="confirmCreateDuplicate()"
+              class="text-white px-4 py-2 rounded-[12px] font-medium"
+              style="background-color: #8B5E3C;">
+              Crear mi copia personal
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
     </div>
   `,
@@ -410,6 +463,11 @@ export class ProblemsLibraryComponent implements OnInit {
   subtopicFilter: string | null = null;
   subtopicName: string = '';
   linkedProblemIds: string[] = [];
+  
+  // Duplicate detection
+  showDuplicateModal = false;
+  duplicateProblems: any[] = [];
+  pendingProblemData: any = null;
 
   constructor(
     private problemsService: ProblemsService,
@@ -601,7 +659,7 @@ export class ProblemsLibraryComponent implements OnInit {
     };
 
     if (this.editingProblem) {
-      // Update existing problem
+      // Update existing problem - no duplicate check needed
       this.problemsService.updateProblem(this.editingProblem._id, problemData).subscribe({
         next: () => {
           this.showAddProblemModal = false;
@@ -615,19 +673,68 @@ export class ProblemsLibraryComponent implements OnInit {
         }
       });
     } else {
-      // Create new problem
-      this.problemsService.createProblem(problemData).subscribe({
-        next: () => {
-          this.showAddProblemModal = false;
-          this.resetNewProblem();
-          this.loadProblems();
-        },
-        error: (err) => {
-          this.error = 'Error al crear problema.';
-          console.error('Error creating problem:', err);
-        }
-      });
+      // Check for duplicates when creating new personal problems
+      if (problemData.owner === 'personal' && problemData.url) {
+        this.pendingProblemData = problemData;
+        this.checkForDuplicates(problemData);
+      } else {
+        // Create directly without duplicate check
+        this.createProblemDirectly(problemData, false);
+      }
     }
+  }
+
+  checkForDuplicates(problemData: any): void {
+    this.problemsService.checkDuplicate({
+      url: problemData.url,
+      platform: problemData.platform,
+      owner: problemData.owner
+    }).subscribe({
+      next: (response) => {
+        if (response.data.exists && response.data.problems.length > 0) {
+          // Show duplicate modal
+          this.duplicateProblems = response.data.problems;
+          this.showDuplicateModal = true;
+        } else {
+          // No duplicates, create directly
+          this.createProblemDirectly(problemData, false);
+        }
+      },
+      error: (err) => {
+        // If check fails, proceed with creation anyway
+        console.error('Error checking duplicates:', err);
+        this.createProblemDirectly(problemData, false);
+      }
+    });
+  }
+
+  createProblemDirectly(problemData: any, forceCreate: boolean): void {
+    this.problemsService.createProblem(problemData, forceCreate).subscribe({
+      next: () => {
+        this.showAddProblemModal = false;
+        this.showDuplicateModal = false;
+        this.resetNewProblem();
+        this.pendingProblemData = null;
+        this.duplicateProblems = [];
+        this.loadProblems();
+      },
+      error: (err) => {
+        this.error = 'Error al crear problema.';
+        console.error('Error creating problem:', err);
+      }
+    });
+  }
+
+  confirmCreateDuplicate(): void {
+    if (this.pendingProblemData) {
+      this.createProblemDirectly(this.pendingProblemData, true);
+    }
+  }
+
+  cancelCreateDuplicate(): void {
+    this.showDuplicateModal = false;
+    this.pendingProblemData = null;
+    this.duplicateProblems = [];
   }
 
   updateProblemStatus(problem: Problem): void {
@@ -653,6 +760,9 @@ export class ProblemsLibraryComponent implements OnInit {
     this.editingProblem = null;
     this.urlValidationError = null;
     this.isUrlWarning = false;
+    this.showDuplicateModal = false;
+    this.pendingProblemData = null;
+    this.duplicateProblems = [];
   }
 
   resetNewProblem(): void {
