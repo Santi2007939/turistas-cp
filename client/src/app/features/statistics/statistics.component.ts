@@ -400,7 +400,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 class="w-full rounded-[12px] px-4 py-3"
                 style="border: 1px solid #EAE3DB; color: #2D2622;">
                 <option value="">Selecciona un equipo...</option>
-                <option *ngFor="let team of userTeams" [value]="team._id">{{ team.name }}</option>
+                <option *ngFor="let team of userTeams" [value]="team._id || ''">{{ team.name }}</option>
               </select>
             </div>
 
