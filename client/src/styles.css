@@ -118,4 +118,40 @@
     background-color: #D4A373;
     color: #2D2622;
   }
+
+  /* Matte-Drift Date Input - Styled calendar picker */
+  input[type="date"],
+  input[type="datetime-local"] {
+    @apply px-4 py-3 rounded-[12px] transition-colors;
+    border: 1px solid #EAE3DB;
+    background-color: #FFFFFF;
+    color: #2D2622;
+    font-family: 'Public Sans', system-ui, sans-serif;
+  }
+
+  input[type="date"]:focus,
+  input[type="datetime-local"]:focus {
+    outline: none;
+    border-color: #8B5E3C;
+    box-shadow: 0 0 0 2px rgba(139, 94, 60, 0.1);
+  }
+
+  /* Style the calendar icon */
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.7;
+    filter: invert(25%) sepia(30%) saturate(500%) hue-rotate(346deg);
+    transition: opacity 0.2s;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator:hover,
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+  }
+
+  /* Firefox date input styling */
+  input[type="date"]::-moz-calendar-picker-indicator {
+    cursor: pointer;
+  }
 }
