@@ -77,6 +77,17 @@ import { AuthService, User } from '../../core/services/auth.service';
               Team
             </a>
             <a 
+              routerLink="/calendar" 
+              routerLinkActive="nav-active"
+              [routerLinkActiveOptions]="{exact: false}"
+              class="nav-link">
+              <!-- Lucide Calendar icon (line style) -->
+              <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              Calendar
+            </a>
+            <a 
               *ngIf="currentUser?.role === 'admin'"
               routerLink="/admin" 
               routerLinkActive="nav-active"
@@ -314,6 +325,14 @@ import { AuthService, User } from '../../core/services/auth.service';
             [routerLinkActiveOptions]="{exact: false}"
             class="mobile-nav-link">
             Team
+          </a>
+          <a 
+            routerLink="/calendar"
+            (click)="closeMobileMenu()"
+            routerLinkActive="mobile-nav-active"
+            [routerLinkActiveOptions]="{exact: false}"
+            class="mobile-nav-link">
+            Calendar
           </a>
           <a 
             *ngIf="currentUser?.role === 'admin'"
