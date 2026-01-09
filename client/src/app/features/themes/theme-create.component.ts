@@ -114,7 +114,13 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
               <!-- Subthemes -->
               <div class="rounded-[12px] p-4" style="background-color: #FCF9F5; border: 1px solid #EAE3DB;">
-                <label class="block text-sm font-medium mb-3" style="color: #2D2622;">Subthemes</label>
+                <label class="block text-sm font-medium mb-3 flex items-center gap-2" style="color: #2D2622;">
+                  <!-- Lucide Layers icon -->
+                  <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                  </svg>
+                  Subthemes
+                </label>
                 
                 <div class="space-y-3 mb-3">
                   <div *ngFor="let subtheme of theme.subthemes; let i = index" class="rounded-[12px] p-3 bg-white" style="border: 1px solid #EAE3DB;">
@@ -129,8 +135,12 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                       <button 
                         type="button"
                         (click)="removeSubtheme(i)"
-                        class="text-red-600 hover:text-red-800 px-3">
-                        ✕
+                        class="px-3"
+                        style="color: #4A3B33;">
+                        <!-- Lucide X icon -->
+                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
                       </button>
                     </div>
                     <textarea 
@@ -146,15 +156,25 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <button 
                   type="button"
                   (click)="addSubtheme()"
-                  class="w-full border-2 border-dashed rounded-[12px] py-2 transition-colors"
+                  class="w-full border-2 border-dashed rounded-[12px] py-2 transition-colors flex items-center justify-center gap-2"
                   style="border-color: #EAE3DB; color: #4A3B33;">
-                  + Add Subtheme
+                  <!-- Lucide Plus icon -->
+                  <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                  </svg>
+                  Add Subtheme
                 </button>
               </div>
 
               <!-- Resources -->
               <div class="rounded-[12px] p-4" style="background-color: #FCF9F5; border: 1px solid #EAE3DB;">
-                <label class="block text-sm font-medium mb-3" style="color: #2D2622;">Learning Resources</label>
+                <label class="block text-sm font-medium mb-3 flex items-center gap-2" style="color: #2D2622;">
+                  <!-- Lucide BookOpen icon -->
+                  <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                  Learning Resources
+                </label>
                 
                 <div class="space-y-3 mb-3">
                   <div *ngFor="let resource of theme.resources; let i = index" class="rounded-[12px] p-3 bg-white" style="border: 1px solid #EAE3DB;">
@@ -180,8 +200,12 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                       <button 
                         type="button"
                         (click)="removeResource(i)"
-                        class="text-red-600 hover:text-red-800 px-3">
-                        ✕
+                        class="px-3"
+                        style="color: #4A3B33;">
+                        <!-- Lucide X icon -->
+                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
                       </button>
                     </div>
                     <input 
@@ -197,9 +221,13 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <button 
                   type="button"
                   (click)="addResource()"
-                  class="w-full border-2 border-dashed rounded-[12px] py-2 transition-colors"
+                  class="w-full border-2 border-dashed rounded-[12px] py-2 transition-colors flex items-center justify-center gap-2"
                   style="border-color: #EAE3DB; color: #4A3B33;">
-                  + Add Resource
+                  <!-- Lucide Plus icon -->
+                  <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                  </svg>
+                  Add Resource
                 </button>
               </div>
 
@@ -215,8 +243,12 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <button 
                   type="submit"
                   [disabled]="!isFormValid() || saving"
-                  class="text-white px-6 py-2 rounded-[12px] disabled:opacity-50"
+                  class="text-white px-6 py-2 rounded-[12px] disabled:opacity-50 flex items-center gap-2"
                   style="background-color: #8B5E3C;">
+                  <!-- Lucide Save icon -->
+                  <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                  </svg>
                   {{ saving ? 'Creating...' : 'Create Theme' }}
                 </button>
               </div>
