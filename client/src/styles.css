@@ -136,22 +136,61 @@
     box-shadow: 0 0 0 2px rgba(139, 94, 60, 0.1);
   }
 
-  /* Style the calendar icon */
+  /* Style the calendar icon - Matte-Drift themed */
   input[type="date"]::-webkit-calendar-picker-indicator,
   input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
     opacity: 0.7;
-    filter: invert(25%) sepia(30%) saturate(500%) hue-rotate(346deg);
-    transition: opacity 0.2s;
+    /* Filter to match #4A3B33 (caracal icon color) */
+    filter: invert(23%) sepia(10%) saturate(1200%) hue-rotate(346deg) brightness(95%);
+    transition: all 0.2s ease;
   }
 
   input[type="date"]::-webkit-calendar-picker-indicator:hover,
   input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
     opacity: 1;
+    background-color: #FCF9F5;
   }
 
   /* Firefox date input styling */
   input[type="date"]::-moz-calendar-picker-indicator {
     cursor: pointer;
   }
+}
+
+/* Matte-Drift Calendar Picker Override (Chrome/Edge) */
+::-webkit-datetime-edit {
+  padding: 0;
+  font-family: 'Public Sans', system-ui, sans-serif;
+}
+
+::-webkit-datetime-edit-fields-wrapper {
+  padding: 0;
+}
+
+::-webkit-datetime-edit-text {
+  color: #4A3B33;
+  padding: 0 4px;
+}
+
+::-webkit-datetime-edit-month-field,
+::-webkit-datetime-edit-day-field,
+::-webkit-datetime-edit-year-field,
+::-webkit-datetime-edit-hour-field,
+::-webkit-datetime-edit-minute-field,
+::-webkit-datetime-edit-ampm-field {
+  color: #2D2622;
+}
+
+::-webkit-datetime-edit-month-field:focus,
+::-webkit-datetime-edit-day-field:focus,
+::-webkit-datetime-edit-year-field:focus,
+::-webkit-datetime-edit-hour-field:focus,
+::-webkit-datetime-edit-minute-field:focus,
+::-webkit-datetime-edit-ampm-field:focus {
+  background-color: #FCF9F5;
+  border-radius: 4px;
+  outline: none;
 }

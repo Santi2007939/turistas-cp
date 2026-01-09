@@ -12,17 +12,23 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule, NavbarComponent],
   template: `
-    <div class="min-h-screen bg-gray-50">
+    <!-- Matte-Drift Problem Detail -->
+    <div class="min-h-screen" style="background-color: #FCF9F5;">
       <!-- Navigation -->
       <app-navbar></app-navbar>
 
       <!-- Header with back button -->
-      <div class="bg-white border-b">
+      <div class="bg-white" style="border-bottom: 1px solid #EAE3DB;">
         <div class="max-w-5xl mx-auto px-6 py-4">
           <button 
             (click)="goBack()"
-            class="flex items-center text-gray-600 hover:text-gray-900 transition-colors">
-            <span class="mr-2">←</span> Volver a Problemas
+            class="flex items-center transition-colors font-medium"
+            style="color: #4A3B33;">
+            <!-- Lucide ArrowLeft icon -->
+            <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Volver a Problemas
           </button>
         </div>
       </div>
@@ -30,38 +36,30 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
       <!-- Main Content -->
       <div class="max-w-5xl mx-auto px-6 py-8">
         <div *ngIf="loading" class="text-center py-12">
-          <p class="text-gray-600">Cargando problema...</p>
+          <p style="color: #4A3B33;">Cargando problema...</p>
         </div>
 
-        <div *ngIf="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <div *ngIf="error" class="bg-white rounded-[12px] px-4 py-3 mb-4" style="border: 1px solid #EAE3DB; color: #8B5E3C;">
           {{ error }}
         </div>
 
         <div *ngIf="problem && !loading" class="space-y-6">
           <!-- Title Section -->
-          <div class="bg-white rounded-lg shadow-sm p-8 border">
-            <h1 class="text-4xl font-bold text-gray-900 mb-4">{{ problem.title }}</h1>
+          <div class="bg-white rounded-[12px] p-8" style="border: 1px solid #EAE3DB;">
+            <h1 class="text-3xl font-semibold mb-4" style="color: #2D2622;">{{ problem.title }}</h1>
             
             <!-- Metadata Row -->
             <div class="flex flex-wrap gap-3 items-center mb-6">
               <!-- Platform Badge -->
-              <span class="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full font-medium">
+              <span class="text-sm px-3 py-1 rounded-[12px] font-medium" style="background-color: #FCF9F5; color: #8B5E3C; border: 1px solid #EAE3DB;">
                 {{ problem.platform }}
               </span>
 
               <!-- Rating Badge -->
               <span 
                 *ngIf="problem.rating"
-                class="px-3 py-1 text-sm font-semibold rounded-full"
-                [ngClass]="{
-                  'bg-gray-200 text-gray-800': problem.rating < 1200,
-                  'bg-green-200 text-green-800': problem.rating >= 1200 && problem.rating < 1400,
-                  'bg-cyan-200 text-cyan-800': problem.rating >= 1400 && problem.rating < 1600,
-                  'bg-blue-200 text-blue-800': problem.rating >= 1600 && problem.rating < 1900,
-                  'bg-purple-200 text-purple-800': problem.rating >= 1900 && problem.rating < 2100,
-                  'bg-orange-200 text-orange-800': problem.rating >= 2100 && problem.rating < 2400,
-                  'bg-red-200 text-red-800': problem.rating >= 2400
-                }">
+                class="px-3 py-1 text-sm font-semibold font-mono rounded-[12px]"
+                style="background-color: #FCF9F5; color: #8B5E3C; border: 1px solid #EAE3DB;">
                 ★ {{ problem.rating }}
               </span>
 
@@ -70,11 +68,11 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 *ngIf="canEdit"
                 [(ngModel)]="problem.status"
                 (change)="updateStatus()"
-                class="px-3 py-1 text-sm rounded-full border-2 font-medium"
-                [ngClass]="{
-                  'bg-gray-50 text-gray-800 border-gray-300': problem.status === 'pending',
-                  'bg-green-50 text-green-800 border-green-300': problem.status === 'ac',
-                  'bg-red-50 text-red-800 border-red-300': problem.status === 'wa'
+                class="px-3 py-1 text-sm rounded-[12px] font-medium"
+                [ngStyle]="{
+                  'background-color': '#FCF9F5',
+                  'color': problem.status === 'pending' ? '#4A3B33' : problem.status === 'ac' ? '#8B5E3C' : '#A05E4A',
+                  'border': '1px solid ' + (problem.status === 'pending' ? '#EAE3DB' : problem.status === 'ac' ? '#D4A373' : '#A05E4A')
                 }">
                 <option value="pending">Pendiente</option>
                 <option value="ac">✓ AC</option>
@@ -83,23 +81,20 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
               <span
                 *ngIf="!canEdit"
-                class="px-3 py-1 text-sm rounded-full font-medium"
-                [ngClass]="{
-                  'bg-gray-100 text-gray-800': problem.status === 'pending',
-                  'bg-green-100 text-green-800': problem.status === 'ac',
-                  'bg-red-100 text-red-800': problem.status === 'wa'
+                class="px-3 py-1 text-sm rounded-[12px] font-medium"
+                [ngStyle]="{
+                  'background-color': '#FCF9F5',
+                  'color': problem.status === 'pending' ? '#4A3B33' : problem.status === 'ac' ? '#8B5E3C' : '#A05E4A',
+                  'border': '1px solid ' + (problem.status === 'pending' ? '#EAE3DB' : problem.status === 'ac' ? '#D4A373' : '#A05E4A')
                 }">
                 {{ problem.status === 'pending' ? 'Pendiente' : problem.status === 'ac' ? '✓ AC' : '✗ WA' }}
               </span>
 
               <!-- Owner Badge -->
               <span 
-                class="px-3 py-1 text-sm rounded-full font-medium"
-                [ngClass]="{
-                  'bg-purple-100 text-purple-800': problem.owner === 'personal',
-                  'bg-indigo-100 text-indigo-800': problem.owner === 'team'
-                }">
-                {{ problem.owner === 'personal' ? 'Personal' : 'Equipo' }}
+                class="px-3 py-1 text-sm rounded-[12px] font-medium"
+                style="background-color: #FCF9F5; color: #2D2622; border: 1px solid #EAE3DB;">
+                {{ problem.owner === 'personal' ? '👤 Personal' : '👥 Equipo' }}
               </span>
             </div>
 
@@ -108,29 +103,34 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               <a 
                 [href]="problem.url" 
                 target="_blank"
-                class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium">
-                <span class="mr-2">🔗</span> Ver problema en {{ problem.platform }}
-                <span class="ml-1">↗</span>
+                class="inline-flex items-center font-medium"
+                style="color: #8B5E3C;">
+                <!-- Lucide ExternalLink icon -->
+                <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+                Ver problema en {{ problem.platform }}
               </a>
             </div>
 
             <!-- Description -->
-            <div *ngIf="problem.description" class="text-gray-700 leading-relaxed">
+            <div *ngIf="problem.description" class="leading-relaxed" style="color: #4A3B33;">
               <p class="whitespace-pre-wrap">{{ problem.description }}</p>
             </div>
 
             <!-- Themes and Subthemes -->
             <div *ngIf="problem.themes && problem.themes.length > 0" class="mt-6">
-              <h3 class="text-sm font-semibold text-gray-600 mb-3">Temas:</h3>
+              <h3 class="text-sm font-semibold mb-3" style="color: #2D2622;">Temas:</h3>
               <div class="space-y-2">
                 <div *ngFor="let themeAssoc of problem.themes" class="flex flex-wrap items-center gap-2">
-                  <span class="bg-indigo-100 text-indigo-800 text-sm px-3 py-1 rounded">
+                  <span class="text-sm px-3 py-1 rounded-[12px]" style="background-color: #FCF9F5; color: #8B5E3C; border: 1px solid #EAE3DB;">
                     {{ getThemeName(themeAssoc.themeId) }}
                   </span>
-                  <span *ngIf="themeAssoc.subthemes && themeAssoc.subthemes.length > 0" class="text-gray-400">→</span>
+                  <span *ngIf="themeAssoc.subthemes && themeAssoc.subthemes.length > 0" style="color: #EAE3DB;">→</span>
                   <span 
                     *ngFor="let subtheme of themeAssoc.subthemes"
-                    class="bg-indigo-50 text-indigo-700 text-xs px-2 py-1 rounded border border-indigo-200">
+                    class="text-xs px-2 py-1 rounded-[12px]"
+                    style="background-color: #FCF9F5; color: #4A3B33; border: 1px solid #EAE3DB;">
                     {{ subtheme }}
                   </span>
                 </div>
@@ -141,102 +141,131 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             <button 
               *ngIf="canEdit"
               (click)="openThemesModal()"
-              class="mt-4 text-sm text-blue-600 hover:text-blue-800 font-medium">
-              + Editar temas
+              class="mt-4 text-sm font-medium"
+              style="color: #8B5E3C;">
+              <!-- Lucide Plus icon -->
+              <svg class="w-4 h-4 inline mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+              </svg>
+              Editar temas
             </button>
           </div>
 
           <!-- Metacognition Section -->
-          <div class="bg-white rounded-lg shadow-sm p-8 border">
+          <div class="bg-white rounded-[12px] p-8" style="border: 1px solid #EAE3DB;">
             <div class="flex justify-between items-center mb-6">
-              <h2 class="text-2xl font-bold text-gray-900">🧠 Metacognición</h2>
+              <h2 class="text-2xl font-semibold" style="color: #2D2622;">🧠 Metacognición</h2>
               <button 
                 *ngIf="canEdit"
                 (click)="addMetacognitionEntry()"
-                class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                + Agregar Entrada
+                class="text-white px-4 py-2 rounded-[12px] text-sm font-medium transition-colors"
+                style="background-color: #8B5E3C;">
+                <!-- Lucide Plus icon -->
+                <svg class="w-4 h-4 inline mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                Agregar Entrada
               </button>
             </div>
 
-            <div *ngIf="problem.metacognition && problem.metacognition.length === 0" class="text-gray-500 italic">
+            <div *ngIf="problem.metacognition && problem.metacognition.length === 0" class="italic" style="color: #4A3B33;">
               No hay entradas de metacognición aún.
             </div>
 
             <div class="space-y-4">
               <div 
                 *ngFor="let entry of problem.metacognition; let i = index"
-                class="border-l-4 border-blue-400 bg-blue-50 p-4 rounded-r-lg">
+                class="border-l-4 p-4 rounded-r-[12px]"
+                style="border-left-color: #D4A373; background-color: #FCF9F5;">
                 <div class="flex justify-between items-start mb-2">
                   <div class="flex items-center gap-3">
-                    <span class="bg-blue-200 text-blue-800 text-xs font-semibold px-2 py-1 rounded">
+                    <span class="text-xs font-semibold font-mono px-2 py-1 rounded-[12px]" style="background-color: #D4A373; color: #2D2622;">
                       {{ entry.time }} min
                     </span>
-                    <span *ngIf="entry.createdAt" class="text-xs text-gray-500">
+                    <span *ngIf="entry.createdAt" class="text-xs" style="color: #4A3B33;">
                       {{ formatDate(entry.createdAt) }}
                     </span>
                   </div>
                   <button 
                     *ngIf="canEdit"
                     (click)="deleteMetacognitionEntry(i)"
-                    class="text-red-600 hover:text-red-800 text-sm">
-                    ✕
+                    class="text-sm"
+                    style="color: #A05E4A;">
+                    <!-- Lucide X icon -->
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
                   </button>
                 </div>
-                <p class="text-gray-700 leading-relaxed whitespace-pre-wrap">{{ entry.description }}</p>
+                <p class="leading-relaxed whitespace-pre-wrap" style="color: #2D2622;">{{ entry.description }}</p>
               </div>
             </div>
           </div>
 
           <!-- Takeaways Section -->
-          <div class="bg-white rounded-lg shadow-sm p-8 border">
+          <div class="bg-white rounded-[12px] p-8" style="border: 1px solid #EAE3DB;">
             <div class="flex justify-between items-center mb-6">
-              <h2 class="text-2xl font-bold text-gray-900">💡 Aprendizajes Clave</h2>
+              <h2 class="text-2xl font-semibold" style="color: #2D2622;">💡 Aprendizajes Clave</h2>
               <button 
                 *ngIf="canEdit"
                 (click)="addTakeaway()"
-                class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                + Agregar
+                class="text-white px-4 py-2 rounded-[12px] text-sm font-medium transition-colors"
+                style="background-color: #D4A373;">
+                <!-- Lucide Plus icon -->
+                <svg class="w-4 h-4 inline mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                Agregar
               </button>
             </div>
 
-            <div *ngIf="problem.takeaways && problem.takeaways.length === 0" class="text-gray-500 italic">
+            <div *ngIf="problem.takeaways && problem.takeaways.length === 0" class="italic" style="color: #4A3B33;">
               No hay aprendizajes registrados aún.
             </div>
 
             <ul class="space-y-3">
               <li 
                 *ngFor="let takeaway of problem.takeaways; let i = index"
-                class="flex items-start gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
-                <span class="text-green-600 text-xl flex-shrink-0">✓</span>
-                <span class="text-gray-700 flex-1">{{ takeaway }}</span>
+                class="flex items-start gap-3 p-3 rounded-[12px] transition-colors"
+                style="background-color: #FCF9F5;">
+                <!-- Lucide Check icon -->
+                <svg class="w-5 h-5 flex-shrink-0 mt-0.5" style="color: #D4A373;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="flex-1" style="color: #2D2622;">{{ takeaway }}</span>
                 <button 
                   *ngIf="canEdit"
                   (click)="deleteTakeaway(i)"
-                  class="text-red-600 hover:text-red-800 text-sm flex-shrink-0">
-                  ✕
+                  class="text-sm flex-shrink-0"
+                  style="color: #A05E4A;">
+                  <!-- Lucide X icon -->
+                  <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
                 </button>
               </li>
             </ul>
           </div>
 
           <!-- Analysis Section -->
-          <div class="bg-white rounded-lg shadow-sm p-8 border">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6">📊 Análisis</h2>
+          <div class="bg-white rounded-[12px] p-8" style="border: 1px solid #EAE3DB;">
+            <h2 class="text-2xl font-semibold mb-6" style="color: #2D2622;">📊 Análisis</h2>
             
             <div *ngIf="canEdit" class="space-y-4">
               <textarea
                 [(ngModel)]="problem.analysis"
                 (blur)="updateAnalysis()"
                 rows="8"
-                class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                class="w-full rounded-[12px] px-4 py-3"
+                style="border: 1px solid #EAE3DB; color: #2D2622;"
                 placeholder="Escribe tu análisis del problema aquí...&#10;&#10;Puedes incluir:&#10;- Approach utilizado&#10;- Complejidad temporal y espacial&#10;- Dificultades encontradas&#10;- Optimizaciones consideradas"></textarea>
             </div>
 
             <div *ngIf="!canEdit && problem.analysis" class="prose max-w-none">
-              <p class="text-gray-700 leading-relaxed whitespace-pre-wrap">{{ problem.analysis }}</p>
+              <p class="leading-relaxed whitespace-pre-wrap" style="color: #2D2622;">{{ problem.analysis }}</p>
             </div>
 
-            <div *ngIf="!canEdit && !problem.analysis" class="text-gray-500 italic">
+            <div *ngIf="!canEdit && !problem.analysis" class="italic" style="color: #4A3B33;">
               No hay análisis disponible.
             </div>
           </div>
@@ -248,27 +277,30 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
       <!-- Metacognition Entry Modal -->
       <div 
         *ngIf="showMetacognitionModal" 
-        class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg">
-          <h3 class="text-xl font-bold mb-4">Nueva Entrada de Metacognición</h3>
+        class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4"
+        (click)="cancelMetacognitionEntry()">
+        <div class="bg-white rounded-[12px] p-6 w-full max-w-lg" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
+          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">Nueva Entrada de Metacognición</h3>
           
           <div class="space-y-4">
             <div>
-              <label class="block text-gray-700 text-sm font-bold mb-2">Tiempo (minutos)</label>
+              <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Tiempo (minutos)</label>
               <input 
                 type="number"
                 [(ngModel)]="newMetacognition.time"
                 min="0"
-                class="w-full border rounded px-3 py-2"
+                class="w-full rounded-[12px] px-4 py-3 font-mono"
+                style="border: 1px solid #EAE3DB; color: #2D2622;"
                 placeholder="30">
             </div>
 
             <div>
-              <label class="block text-gray-700 text-sm font-bold mb-2">Descripción</label>
+              <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Descripción</label>
               <textarea 
                 [(ngModel)]="newMetacognition.description"
                 rows="5"
-                class="w-full border rounded px-3 py-2"
+                class="w-full rounded-[12px] px-4 py-3"
+                style="border: 1px solid #EAE3DB; color: #2D2622;"
                 placeholder="¿Qué estabas pensando en este momento? ¿Qué estrategias consideraste?"></textarea>
             </div>
           </div>
@@ -276,13 +308,15 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           <div class="flex gap-2 justify-end mt-6">
             <button 
               (click)="cancelMetacognitionEntry()"
-              class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+              class="px-4 py-2 rounded-[12px] font-medium"
+              style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
               Cancelar
             </button>
             <button 
               (click)="saveMetacognitionEntry()"
               [disabled]="!newMetacognition.time || !newMetacognition.description"
-              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded disabled:bg-gray-300">
+              class="text-white px-4 py-2 rounded-[12px] font-medium disabled:opacity-50"
+              style="background-color: #8B5E3C;">
               Guardar
             </button>
           </div>
@@ -292,17 +326,19 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
       <!-- Takeaway Modal -->
       <div 
         *ngIf="showTakeawayModal" 
-        class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg">
-          <h3 class="text-xl font-bold mb-4">Nuevo Aprendizaje Clave</h3>
+        class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4"
+        (click)="cancelTakeaway()">
+        <div class="bg-white rounded-[12px] p-6 w-full max-w-lg" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
+          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">Nuevo Aprendizaje Clave</h3>
           
           <div class="space-y-4">
             <div>
-              <label class="block text-gray-700 text-sm font-bold mb-2">Aprendizaje</label>
+              <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Aprendizaje</label>
               <textarea 
                 [(ngModel)]="newTakeaway"
                 rows="3"
-                class="w-full border rounded px-3 py-2"
+                class="w-full rounded-[12px] px-4 py-3"
+                style="border: 1px solid #EAE3DB; color: #2D2622;"
                 placeholder="Describe lo que aprendiste de este problema..."></textarea>
             </div>
           </div>
@@ -310,13 +346,15 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           <div class="flex gap-2 justify-end mt-6">
             <button 
               (click)="cancelTakeaway()"
-              class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+              class="px-4 py-2 rounded-[12px] font-medium"
+              style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
               Cancelar
             </button>
             <button 
               (click)="saveTakeaway()"
               [disabled]="!newTakeaway"
-              class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-300">
+              class="text-white px-4 py-2 rounded-[12px] font-medium disabled:opacity-50"
+              style="background-color: #D4A373;">
               Guardar
             </button>
           </div>
@@ -326,19 +364,21 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
       <!-- Themes Modal -->
       <div 
         *ngIf="showThemesModal" 
-        class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-          <h3 class="text-xl font-bold mb-4">Editar Temas y Subtemas</h3>
+        class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4"
+        (click)="cancelThemes()">
+        <div class="bg-white rounded-[12px] p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
+          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">Editar Temas y Subtemas</h3>
           
           <div class="space-y-4">
-            <div *ngFor="let themeAssoc of editingThemes; let i = index" class="border rounded p-4">
+            <div *ngFor="let themeAssoc of editingThemes; let i = index" class="rounded-[12px] p-4" style="border: 1px solid #EAE3DB;">
               <div class="flex justify-between items-start mb-3">
                 <div class="flex-1">
-                  <label class="block text-gray-700 text-sm font-bold mb-2">Tema</label>
+                  <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Tema</label>
                   <select 
                     [(ngModel)]="themeAssoc.themeId"
                     (change)="onThemeChange(i)"
-                    class="w-full border rounded px-3 py-2">
+                    class="w-full rounded-[12px] px-4 py-3"
+                    style="border: 1px solid #EAE3DB; color: #2D2622;">
                     <option value="">Seleccionar tema...</option>
                     <option *ngFor="let theme of availableThemes" [value]="theme._id">
                       {{ theme.name }}
@@ -347,13 +387,17 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 </div>
                 <button 
                   (click)="removeTheme(i)"
-                  class="ml-2 text-red-600 hover:text-red-800 mt-8">
-                  ✕
+                  class="ml-2 mt-8"
+                  style="color: #A05E4A;">
+                  <!-- Lucide X icon -->
+                  <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
                 </button>
               </div>
 
               <div *ngIf="themeAssoc.themeId && getThemeSubthemes(themeAssoc.themeId).length > 0">
-                <label class="block text-gray-700 text-sm font-bold mb-2">Subtemas</label>
+                <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Subtemas</label>
                 <div class="space-y-2">
                   <label 
                     *ngFor="let subtheme of getThemeSubthemes(themeAssoc.themeId)"
@@ -363,7 +407,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                       [checked]="isSubthemeSelected(i, subtheme.name)"
                       (change)="toggleSubtheme(i, subtheme.name)"
                       class="rounded">
-                    <span class="text-sm">{{ subtheme.name }}</span>
+                    <span class="text-sm" style="color: #2D2622;">{{ subtheme.name }}</span>
                   </label>
                 </div>
               </div>
@@ -371,20 +415,27 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
             <button 
               (click)="addThemeAssociation()"
-              class="w-full border-2 border-dashed border-gray-300 rounded py-3 text-gray-600 hover:border-blue-500 hover:text-blue-500 transition-colors">
-              + Agregar Tema
+              class="w-full border-2 border-dashed rounded-[12px] py-3 transition-colors"
+              style="border-color: #EAE3DB; color: #4A3B33;">
+              <!-- Lucide Plus icon -->
+              <svg class="w-4 h-4 inline mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+              </svg>
+              Agregar Tema
             </button>
           </div>
 
           <div class="flex gap-2 justify-end mt-6">
             <button 
               (click)="cancelThemes()"
-              class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+              class="px-4 py-2 rounded-[12px] font-medium"
+              style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
               Cancelar
             </button>
             <button 
               (click)="saveThemes()"
-              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+              class="text-white px-4 py-2 rounded-[12px] font-medium"
+              style="background-color: #8B5E3C;">
               Guardar
             </button>
           </div>

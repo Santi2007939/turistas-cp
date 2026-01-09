@@ -286,83 +286,150 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
         class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4"
         (click)="closeAchievementModal()">
         <div class="bg-white rounded-[12px] p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
-          <h3 class="text-xl font-bold mb-4">
+          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">
             {{ editingAchievement ? 'Editar Logro' : 'Nuevo Logro' }}
           </h3>
 
           <div class="space-y-4">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Nombre *</label>
+              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Nombre *</label>
               <input 
                 type="text"
                 [(ngModel)]="achievementFormData.name"
-                class="w-full border rounded-lg px-3 py-2"
+                class="w-full rounded-[12px] px-4 py-3"
+                style="border: 1px solid #EAE3DB; color: #2D2622;"
                 placeholder="Ej: Primer Top 100 en Codeforces"
                 maxlength="100">
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Descripción *</label>
+              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Descripción *</label>
               <textarea 
                 [(ngModel)]="achievementFormData.description"
-                class="w-full border rounded-lg px-3 py-2"
+                class="w-full rounded-[12px] px-4 py-3"
+                style="border: 1px solid #EAE3DB; color: #2D2622;"
                 rows="3"
                 placeholder="Describe el logro y por qué es especial para ti"
                 maxlength="500"></textarea>
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">URL de Foto (opcional)</label>
+              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">URL de Foto (opcional)</label>
               <input 
                 type="url"
                 [(ngModel)]="achievementFormData.photo"
-                class="w-full border rounded-lg px-3 py-2"
+                class="w-full rounded-[12px] px-4 py-3"
+                style="border: 1px solid #EAE3DB; color: #2D2622;"
                 placeholder="https://ejemplo.com/foto.jpg">
-              <p class="text-xs text-gray-500 mt-1">Puedes usar una URL de imagen externa</p>
+              <p class="text-xs mt-1" style="color: #4A3B33;">Puedes usar una URL de imagen externa</p>
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Categoría *</label>
+              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Categoría *</label>
               <div class="flex gap-2">
                 <button 
                   type="button"
                   (click)="achievementFormData.category = 'rating'"
-                  [ngClass]="{'bg-purple-500 text-white': achievementFormData.category === 'rating', 'bg-gray-200 text-gray-700': achievementFormData.category !== 'rating'}"
-                  class="flex-1 px-4 py-2 rounded-lg font-medium">
+                  class="flex-1 px-4 py-2 rounded-[12px] font-medium"
+                  [ngStyle]="{
+                    'background-color': achievementFormData.category === 'rating' ? '#8B5E3C' : '#FCF9F5',
+                    'color': achievementFormData.category === 'rating' ? '#FFFFFF' : '#2D2622',
+                    'border': '1px solid ' + (achievementFormData.category === 'rating' ? '#8B5E3C' : '#EAE3DB')
+                  }">
                   ⭐ Rating
                 </button>
                 <button 
                   type="button"
                   (click)="achievementFormData.category = 'contest'"
-                  [ngClass]="{'bg-purple-500 text-white': achievementFormData.category === 'contest', 'bg-gray-200 text-gray-700': achievementFormData.category !== 'contest'}"
-                  class="flex-1 px-4 py-2 rounded-lg font-medium">
+                  class="flex-1 px-4 py-2 rounded-[12px] font-medium"
+                  [ngStyle]="{
+                    'background-color': achievementFormData.category === 'contest' ? '#8B5E3C' : '#FCF9F5',
+                    'color': achievementFormData.category === 'contest' ? '#FFFFFF' : '#2D2622',
+                    'border': '1px solid ' + (achievementFormData.category === 'contest' ? '#8B5E3C' : '#EAE3DB')
+                  }">
                   🏆 Contest
                 </button>
               </div>
             </div>
 
-            <!-- Hidden scope field - defaults to personal since app manages single group -->
-            <input type="hidden" [(ngModel)]="achievementFormData.scope" value="personal">
+            <!-- Scope field - Personal or Team -->
+            <div>
+              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Tipo de Logro *</label>
+              <div class="flex gap-2">
+                <button 
+                  type="button"
+                  (click)="achievementFormData.scope = 'personal'"
+                  class="flex-1 px-4 py-2 rounded-[12px] font-medium"
+                  [ngStyle]="{
+                    'background-color': achievementFormData.scope === 'personal' ? '#8B5E3C' : '#FCF9F5',
+                    'color': achievementFormData.scope === 'personal' ? '#FFFFFF' : '#2D2622',
+                    'border': '1px solid ' + (achievementFormData.scope === 'personal' ? '#8B5E3C' : '#EAE3DB')
+                  }">
+                  <!-- Lucide User icon -->
+                  <svg class="w-4 h-4 inline mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                  Personal
+                </button>
+                <button 
+                  type="button"
+                  (click)="achievementFormData.scope = 'team'"
+                  class="flex-1 px-4 py-2 rounded-[12px] font-medium"
+                  [ngStyle]="{
+                    'background-color': achievementFormData.scope === 'team' ? '#8B5E3C' : '#FCF9F5',
+                    'color': achievementFormData.scope === 'team' ? '#FFFFFF' : '#2D2622',
+                    'border': '1px solid ' + (achievementFormData.scope === 'team' ? '#8B5E3C' : '#EAE3DB')
+                  }">
+                  <!-- Lucide Users icon -->
+                  <svg class="w-4 h-4 inline mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
+                  Del Equipo
+                </button>
+              </div>
+              <p class="text-xs mt-1" style="color: #4A3B33;">
+                {{ achievementFormData.scope === 'personal' ? 'Este logro es tuyo y solo tú lo verás.' : 'Este logro será visible para todos los miembros del equipo.' }}
+              </p>
+            </div>
+
+            <!-- Team selection (shown only when scope is team) -->
+            <div *ngIf="achievementFormData.scope === 'team' && userTeams.length > 0">
+              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Equipo *</label>
+              <select 
+                [(ngModel)]="achievementFormData.teamId"
+                class="w-full rounded-[12px] px-4 py-3"
+                style="border: 1px solid #EAE3DB; color: #2D2622;">
+                <option value="">Selecciona un equipo...</option>
+                <option *ngFor="let team of userTeams" [value]="team._id || ''">{{ team.name }}</option>
+              </select>
+            </div>
+
+            <div *ngIf="achievementFormData.scope === 'team' && userTeams.length === 0" class="rounded-[12px] p-3" style="background-color: #FCF9F5; border: 1px solid #EAE3DB;">
+              <p class="text-sm" style="color: #4A3B33;">No perteneces a ningún equipo activo. Los logros de equipo requieren membresía en un equipo.</p>
+            </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Fecha del Logro</label>
+              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Fecha del Logro</label>
               <input 
                 type="date"
                 [(ngModel)]="achievementFormData.achievedAt"
-                class="w-full border rounded-lg px-3 py-2">
+                class="w-full rounded-[12px] px-4 py-3"
+                style="border: 1px solid #EAE3DB; color: #2D2622;">
             </div>
           </div>
 
           <div class="flex gap-2 justify-end mt-6">
             <button 
               (click)="closeAchievementModal()"
-              class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg">
+              class="px-4 py-2 rounded-[12px] font-medium"
+              style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
               Cancelar
             </button>
             <button 
               (click)="saveAchievement()"
               [disabled]="savingAchievement || !isAchievementFormValid()"
-              class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg disabled:bg-gray-300">
+              class="text-white px-4 py-2 rounded-[12px] font-medium disabled:opacity-50"
+              style="background-color: #8B5E3C;">
               {{ savingAchievement ? 'Guardando...' : (editingAchievement ? 'Actualizar' : 'Crear') }}
             </button>
           </div>
