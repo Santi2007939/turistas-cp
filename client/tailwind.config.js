@@ -6,18 +6,38 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: {
-          50: '#f0f9ff',
-          100: '#e0f2fe',
-          200: '#bae6fd',
-          300: '#7dd3fc',
-          400: '#38bdf8',
-          500: '#0ea5e9',
-          600: '#0284c7',
-          700: '#0369a1',
-          800: '#075985',
-          900: '#0c4a6e',
+        // Caracal Palette - Matte-Drift Design System
+        caracal: {
+          bg: '#FCF9F5',
+          card: '#FFFFFF',
+          border: '#EAE3DB',
+          text: '#2D2622',
+          btn: '#8B5E3C',
+          icon: '#4A3B33',
+          sand: '#D4A373',
         },
+        primary: {
+          50: '#FCF9F5',
+          100: '#EAE3DB',
+          200: '#D4A373',
+          300: '#C49A6C',
+          400: '#A67C52',
+          500: '#8B5E3C',
+          600: '#7A5235',
+          700: '#69462E',
+          800: '#4A3B33',
+          900: '#2D2622',
+        },
+      },
+      fontFamily: {
+        sans: ['Public Sans', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+        mono: ['JetBrains Mono', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+      },
+      borderRadius: {
+        'matte': '12px',
+      },
+      spacing: {
+        'matte': '24px',
       },
     },
   },
