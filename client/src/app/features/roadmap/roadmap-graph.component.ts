@@ -19,27 +19,29 @@ interface GraphNode {
   standalone: true,
   imports: [CommonModule, RouterModule, NavbarComponent],
   template: `
-    <div class="min-h-screen bg-gray-50">
+    <div class="min-h-screen" style="background-color: #FCF9F5;">
       <!-- Navigation -->
       <app-navbar></app-navbar>
       
-      <div class="container mx-auto px-4 py-8">
+      <div class="container mx-auto px-6 py-8">
         <!-- Header -->
-        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+        <div class="bg-white rounded-[12px] p-6 mb-6" style="border: 1px solid #EAE3DB;">
           <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
             <div>
-              <h1 class="text-3xl font-bold text-gray-800 mb-2">📊 Vista Gráfica</h1>
-              <p class="text-gray-600">Visualiza tu progreso con gráficos interactivos</p>
+              <h1 class="text-2xl font-semibold mb-2" style="color: #2D2622;">📊 Vista Gráfica</h1>
+              <p style="color: #4A3B33;">Visualiza tu progreso con gráficos interactivos</p>
             </div>
             <div class="flex gap-2">
               <button 
                 routerLink="/roadmap"
-                class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-all">
+                class="font-medium py-2 px-4 rounded-[12px] transition-all"
+                style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
                 📝 Vista Lista
               </button>
               <button 
                 routerLink="/roadmap/kanban"
-                class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-all">
+                class="text-white font-medium py-2 px-4 rounded-[12px] transition-all"
+                style="background-color: #8B5E3C;">
                 📋 Vista Kanban
               </button>
             </div>
@@ -49,19 +51,20 @@ interface GraphNode {
         <!-- Loading State -->
         <div *ngIf="loading" class="text-center py-12">
           <div class="text-4xl mb-4">⏳</div>
-          <p class="text-gray-600">Cargando datos...</p>
+          <p style="color: #4A3B33;">Cargando datos...</p>
         </div>
 
         <!-- Error State -->
-        <div *ngIf="error" class="bg-red-50 border-l-4 border-red-500 rounded-lg p-6 mb-6">
+        <div *ngIf="error" class="bg-white rounded-[12px] p-6 mb-6" style="border-left: 4px solid #8B5E3C; border-right: 1px solid #EAE3DB; border-top: 1px solid #EAE3DB; border-bottom: 1px solid #EAE3DB;">
           <div class="flex items-start">
             <span class="text-2xl mr-3">⚠️</span>
             <div>
-              <h3 class="text-red-800 font-semibold">Error</h3>
-              <p class="text-red-700 mt-1">{{ error }}</p>
+              <h3 class="font-semibold" style="color: #2D2622;">Error</h3>
+              <p class="mt-1" style="color: #4A3B33;">{{ error }}</p>
               <button 
                 (click)="loadRoadmap()"
-                class="mt-3 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm">
+                class="mt-3 text-white px-4 py-2 rounded-[12px] text-sm font-medium"
+                style="background-color: #8B5E3C;">
                 Reintentar
               </button>
             </div>
@@ -71,49 +74,47 @@ interface GraphNode {
         <!-- Graph Visualizations -->
         <div *ngIf="!loading && !error && nodes.length > 0" class="space-y-6">
           <!-- Progress Overview Chart -->
-          <div class="bg-white rounded-lg shadow-sm p-6">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">📈 Resumen de Progreso</h3>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          <div class="bg-white rounded-[12px] p-6" style="border: 1px solid #EAE3DB;">
+            <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">📈 Resumen de Progreso</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
               <div class="text-center">
                 <div class="text-3xl mb-2">⏳</div>
-                <div class="text-2xl font-bold text-gray-700">{{ getCountByStatus('todo') }}</div>
-                <div class="text-sm text-gray-600">To Do</div>
+                <div class="text-2xl font-bold font-mono" style="color: #4A3B33;">{{ getCountByStatus('todo') }}</div>
+                <div class="text-sm" style="color: #4A3B33;">To Do</div>
               </div>
               <div class="text-center">
                 <div class="text-3xl mb-2">🔄</div>
-                <div class="text-2xl font-bold text-blue-600">{{ getCountByStatus('in-progress') }}</div>
-                <div class="text-sm text-gray-600">En Progreso</div>
+                <div class="text-2xl font-bold font-mono" style="color: #D4A373;">{{ getCountByStatus('in-progress') }}</div>
+                <div class="text-sm" style="color: #4A3B33;">En Progreso</div>
               </div>
               <div class="text-center">
                 <div class="text-3xl mb-2">✅</div>
-                <div class="text-2xl font-bold text-green-600">{{ getCountByStatus('done') }}</div>
-                <div class="text-sm text-gray-600">Completado</div>
+                <div class="text-2xl font-bold font-mono" style="color: #8B5E3C;">{{ getCountByStatus('done') }}</div>
+                <div class="text-sm" style="color: #4A3B33;">Completado</div>
               </div>
               <div class="text-center">
                 <div class="text-3xl mb-2">📊</div>
-                <div class="text-2xl font-bold text-purple-600">{{ getAverageProgress() }}%</div>
-                <div class="text-sm text-gray-600">Progreso Promedio</div>
+                <div class="text-2xl font-bold font-mono" style="color: #8B5E3C;">{{ getAverageProgress() }}%</div>
+                <div class="text-sm" style="color: #4A3B33;">Progreso Promedio</div>
               </div>
             </div>
 
             <!-- Progress Bar Chart -->
             <div class="space-y-3">
               <div *ngFor="let node of nodes" class="flex items-center gap-3">
-                <div class="w-32 text-sm text-gray-700 font-medium truncate">
+                <div class="w-32 text-sm font-medium truncate" style="color: #2D2622;">
                   {{ node.themeId?.name }}
                 </div>
-                <div class="flex-1 bg-gray-200 rounded-full h-4 overflow-hidden">
+                <div class="flex-1 rounded-[12px] h-4 overflow-hidden" style="background-color: #EAE3DB;">
                   <div 
-                    class="h-4 rounded-full transition-all duration-500"
-                    [ngClass]="{
-                      'bg-gray-400': node.progress === 0,
-                      'bg-blue-500': node.progress > 0 && node.progress < 100,
-                      'bg-green-500': node.progress === 100
+                    class="h-4 rounded-[12px] transition-all duration-500"
+                    [ngStyle]="{
+                      'background-color': node.progress === 0 ? '#EAE3DB' : node.progress < 100 ? '#D4A373' : '#8B5E3C'
                     }"
                     [style.width.%]="node.progress">
                   </div>
                 </div>
-                <div class="w-12 text-right text-sm font-semibold text-gray-700">
+                <div class="w-12 text-right text-sm font-semibold font-mono" style="color: #2D2622;">
                   {{ node.progress }}%
                 </div>
               </div>
@@ -121,61 +122,67 @@ interface GraphNode {
           </div>
 
           <!-- Status Distribution -->
-          <div class="bg-white rounded-lg shadow-sm p-6">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">🎯 Distribución por Estado</h3>
+          <div class="bg-white rounded-[12px] p-6" style="border: 1px solid #EAE3DB;">
+            <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">🎯 Distribución por Estado</h3>
             <div class="flex items-end justify-center gap-8 h-64">
               <div class="flex flex-col items-center gap-2">
-                <div class="bg-gray-300 rounded-t-lg transition-all duration-500" 
+                <div class="rounded-t-[12px] transition-all duration-500" 
+                     style="background-color: #EAE3DB;"
                      [style.height.px]="getBarHeight('todo')"
                      [style.width.px]="80">
                 </div>
                 <div class="text-center">
-                  <div class="text-2xl font-bold text-gray-700">{{ getCountByStatus('todo') }}</div>
-                  <div class="text-xs text-gray-600">To Do</div>
+                  <div class="text-2xl font-bold font-mono" style="color: #4A3B33;">{{ getCountByStatus('todo') }}</div>
+                  <div class="text-xs" style="color: #4A3B33;">To Do</div>
                 </div>
               </div>
               <div class="flex flex-col items-center gap-2">
-                <div class="bg-blue-500 rounded-t-lg transition-all duration-500" 
+                <div class="rounded-t-[12px] transition-all duration-500" 
+                     style="background-color: #D4A373;"
                      [style.height.px]="getBarHeight('in-progress')"
                      [style.width.px]="80">
                 </div>
                 <div class="text-center">
-                  <div class="text-2xl font-bold text-blue-600">{{ getCountByStatus('in-progress') }}</div>
-                  <div class="text-xs text-gray-600">En Progreso</div>
+                  <div class="text-2xl font-bold font-mono" style="color: #D4A373;">{{ getCountByStatus('in-progress') }}</div>
+                  <div class="text-xs" style="color: #4A3B33;">En Progreso</div>
                 </div>
               </div>
               <div class="flex flex-col items-center gap-2">
-                <div class="bg-green-500 rounded-t-lg transition-all duration-500" 
+                <div class="rounded-t-[12px] transition-all duration-500" 
+                     style="background-color: #8B5E3C;"
                      [style.height.px]="getBarHeight('done')"
                      [style.width.px]="80">
                 </div>
                 <div class="text-center">
-                  <div class="text-2xl font-bold text-green-600">{{ getCountByStatus('done') }}</div>
-                  <div class="text-xs text-gray-600">Completado</div>
+                  <div class="text-2xl font-bold font-mono" style="color: #8B5E3C;">{{ getCountByStatus('done') }}</div>
+                  <div class="text-xs" style="color: #4A3B33;">Completado</div>
                 </div>
               </div>
             </div>
           </div>
 
           <!-- Category Breakdown -->
-          <div class="bg-white rounded-lg shadow-sm p-6">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">📚 Distribución por Categoría</h3>
+          <div class="bg-white rounded-[12px] p-6" style="border: 1px solid #EAE3DB;">
+            <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">📚 Distribución por Categoría</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <div *ngFor="let category of getCategoryBreakdown()" 
-                   class="bg-gray-50 rounded-lg p-4 hover:shadow-md transition-all">
+                   class="bg-white rounded-[12px] p-4 transition-all hover:shadow-md"
+                   style="border: 1px solid #EAE3DB;">
                 <div class="flex items-center justify-between mb-2">
-                  <span class="font-semibold text-gray-800">{{ category.name }}</span>
-                  <span class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded-full text-xs font-bold">
+                  <span class="font-semibold" style="color: #2D2622;">{{ category.name }}</span>
+                  <span class="px-2 py-1 rounded-[12px] text-xs font-bold"
+                        style="background-color: #FCF9F5; color: #8B5E3C; border: 1px solid #EAE3DB;">
                     {{ category.count }}
                   </span>
                 </div>
-                <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="w-full rounded-[12px] h-2" style="background-color: #EAE3DB;">
                   <div 
-                    class="bg-indigo-500 h-2 rounded-full transition-all duration-500"
+                    class="h-2 rounded-[12px] transition-all duration-500"
+                    style="background-color: #D4A373;"
                     [style.width.%]="category.percentage">
                   </div>
                 </div>
-                <div class="mt-1 text-xs text-gray-600">
+                <div class="mt-1 text-xs" style="color: #4A3B33;">
                   {{ category.percentage }}% del total
                 </div>
               </div>
@@ -183,9 +190,9 @@ interface GraphNode {
           </div>
 
           <!-- Network Graph Placeholder -->
-          <div class="bg-white rounded-lg shadow-sm p-6">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">🔗 Mapa de Relaciones</h3>
-            <div #graphCanvas class="relative bg-gray-50 rounded-lg p-8 min-h-[400px] overflow-hidden">
+          <div class="bg-white rounded-[12px] p-6" style="border: 1px solid #EAE3DB;">
+            <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">🔗 Mapa de Relaciones</h3>
+            <div #graphCanvas class="relative rounded-[12px] p-8 min-h-[400px] overflow-hidden" style="background-color: #FCF9F5;">
               <div class="absolute inset-0 flex items-center justify-center">
                 <svg class="w-full h-full" [attr.viewBox]="'0 0 ' + canvasWidth + ' ' + canvasHeight">
                   <!-- Lines between nodes -->
@@ -194,7 +201,7 @@ interface GraphNode {
                         [attr.y1]="line.y1"
                         [attr.x2]="line.x2"
                         [attr.y2]="line.y2"
-                        stroke="#cbd5e1"
+                        stroke="#EAE3DB"
                         stroke-width="2"
                         stroke-dasharray="5,5"/>
                   
@@ -212,21 +219,23 @@ interface GraphNode {
                       [attr.x]="node.x"
                       [attr.y]="node.y + 50"
                       text-anchor="middle"
-                      class="text-xs font-medium fill-gray-700">
+                      class="text-xs font-medium"
+                      fill="#2D2622">
                       {{ node.label }}
                     </text>
                     <text 
                       [attr.x]="node.x"
                       [attr.y]="node.y + 5"
                       text-anchor="middle"
-                      class="text-sm font-bold fill-white">
+                      class="text-sm font-bold"
+                      fill="white">
                       {{ node.progress }}%
                     </text>
                   </g>
                 </svg>
               </div>
             </div>
-            <p class="text-sm text-gray-600 mt-4 text-center">
+            <p class="text-sm mt-4 text-center" style="color: #4A3B33;">
               🔍 Vista de red mostrando la relación entre temas según categoría y progreso
             </p>
           </div>
@@ -234,15 +243,16 @@ interface GraphNode {
 
         <!-- Empty State -->
         <div *ngIf="!loading && !error && nodes.length === 0" 
-             class="bg-white rounded-lg shadow-sm p-12 text-center">
+             class="bg-white rounded-[12px] p-12 text-center" style="border: 1px solid #EAE3DB;">
           <div class="text-6xl mb-4">📊</div>
-          <h3 class="text-2xl font-bold text-gray-800 mb-3">No hay datos para visualizar</h3>
-          <p class="text-gray-600 mb-6">
+          <h3 class="text-2xl font-semibold mb-3" style="color: #2D2622;">No hay datos para visualizar</h3>
+          <p class="mb-6" style="color: #4A3B33;">
             Agrega temas a tu roadmap para ver las visualizaciones gráficas.
           </p>
           <button 
             routerLink="/roadmap"
-            class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-lg">
+            class="text-white font-medium py-3 px-8 rounded-[12px]"
+            style="background-color: #8B5E3C;">
             Ir al Roadmap
           </button>
         </div>
@@ -355,15 +365,16 @@ export class RoadmapGraphComponent implements OnInit, AfterViewInit {
   }
 
   getNodeColor(status: string): string {
+    // Matte-Drift color palette
     const colors: { [key: string]: string } = {
-      'todo': '#9ca3af',
-      'in-progress': '#3b82f6',
-      'done': '#10b981',
-      'not-started': '#9ca3af',
-      'completed': '#10b981',
-      'mastered': '#8b5cf6'
+      'todo': '#EAE3DB',        // Border color for inactive
+      'in-progress': '#D4A373', // Sand color for in progress
+      'done': '#8B5E3C',        // Primary button color for done
+      'not-started': '#EAE3DB',
+      'completed': '#8B5E3C',
+      'mastered': '#4A3B33'     // Icon color for mastered
     };
-    return colors[status] || '#9ca3af';
+    return colors[status] || '#EAE3DB';
   }
 
   getCountByStatus(status: string): number {

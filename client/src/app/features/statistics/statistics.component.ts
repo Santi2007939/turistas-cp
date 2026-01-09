@@ -341,37 +341,8 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               </div>
             </div>
 
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Tipo *</label>
-              <div class="flex gap-2">
-                <button 
-                  type="button"
-                  (click)="achievementFormData.scope = 'personal'"
-                  [ngClass]="{'bg-yellow-500 text-white': achievementFormData.scope === 'personal', 'bg-gray-200 text-gray-700': achievementFormData.scope !== 'personal'}"
-                  class="flex-1 px-4 py-2 rounded-lg font-medium">
-                  👤 Personal
-                </button>
-                <button 
-                  type="button"
-                  (click)="achievementFormData.scope = 'team'"
-                  [ngClass]="{'bg-blue-500 text-white': achievementFormData.scope === 'team', 'bg-gray-200 text-gray-700': achievementFormData.scope !== 'team'}"
-                  class="flex-1 px-4 py-2 rounded-lg font-medium">
-                  👥 Equipo
-                </button>
-              </div>
-            </div>
-
-            <div *ngIf="achievementFormData.scope === 'team'">
-              <label class="block text-sm font-medium text-gray-700 mb-1">Seleccionar Equipo *</label>
-              <select 
-                [(ngModel)]="achievementFormData.teamId"
-                class="w-full border rounded-lg px-3 py-2">
-                <option value="">-- Selecciona un equipo --</option>
-                <option *ngFor="let team of userTeams" [value]="team._id">
-                  {{ team.name }}
-                </option>
-              </select>
-            </div>
+            <!-- Hidden scope field - defaults to personal since app manages single group -->
+            <input type="hidden" [(ngModel)]="achievementFormData.scope" value="personal">
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">Fecha del Logro</label>

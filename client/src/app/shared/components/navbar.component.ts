@@ -381,7 +381,7 @@ import { AuthService, User } from '../../core/services/auth.service';
       font-size: 0.875rem;
       font-weight: 500;
       color: #2D2622;
-      transition: background-color 0.2s ease;
+      transition: all 0.2s ease;
     }
 
     .nav-link:hover {
@@ -389,8 +389,14 @@ import { AuthService, User } from '../../core/services/auth.service';
     }
 
     .nav-active {
+      background-color: #FCF9F5 !important;
       color: #8B5E3C !important;
       font-weight: 600;
+      border-bottom: 2px solid #8B5E3C;
+    }
+
+    .nav-active svg {
+      color: #8B5E3C !important;
     }
 
     .mobile-nav-link {
@@ -411,6 +417,7 @@ import { AuthService, User } from '../../core/services/auth.service';
       background-color: #FCF9F5 !important;
       color: #8B5E3C !important;
       font-weight: 600;
+      border-left: 3px solid #8B5E3C;
     }
   `]
 })
