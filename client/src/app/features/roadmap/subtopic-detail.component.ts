@@ -12,28 +12,30 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule, NavbarComponent],
   template: `
-    <div class="min-h-screen bg-gray-50">
+    <div class="min-h-screen" style="background-color: #FCF9F5;">
       <!-- Navigation -->
       <app-navbar></app-navbar>
       
-      <div class="container mx-auto px-4 py-8">
+      <div class="container mx-auto px-6 py-8">
         <!-- Header -->
-        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+        <div class="bg-white rounded-[12px] p-6 mb-6" style="border: 1px solid #EAE3DB;">
           <div class="flex items-center justify-between mb-4">
             <div class="flex items-center gap-4">
               <button 
                 routerLink="/roadmap"
-                class="text-gray-600 hover:text-gray-800">
+                class="font-medium"
+                style="color: #4A3B33;">
                 ← Volver
               </button>
               <div>
-                <h1 class="text-3xl font-bold text-gray-800">{{ node?.themeId?.name }}</h1>
-                <p class="text-gray-600">{{ node?.themeId?.description }}</p>
+                <h1 class="text-2xl font-semibold" style="color: #2D2622;">{{ node?.themeId?.name }}</h1>
+                <p style="color: #4A3B33;">{{ node?.themeId?.description }}</p>
               </div>
             </div>
             <button 
               (click)="showAddSubtopicModal = true"
-              class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg">
+              class="text-white font-medium py-2 px-4 rounded-[12px]"
+              style="background-color: #8B5E3C;">
               ➕ Agregar Subtema
             </button>
           </div>
@@ -42,16 +44,16 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
         <!-- Loading State -->
         <div *ngIf="loading" class="text-center py-12">
           <div class="text-4xl mb-4">⏳</div>
-          <p class="text-gray-600">Cargando...</p>
+          <p style="color: #4A3B33;">Cargando...</p>
         </div>
 
         <!-- Error State -->
-        <div *ngIf="error" class="bg-red-50 border-l-4 border-red-500 rounded-lg p-6 mb-6">
+        <div *ngIf="error" class="bg-white rounded-[12px] p-6 mb-6" style="border-left: 4px solid #8B5E3C; border-right: 1px solid #EAE3DB; border-top: 1px solid #EAE3DB; border-bottom: 1px solid #EAE3DB;">
           <div class="flex items-start">
             <span class="text-2xl mr-3">⚠️</span>
             <div>
-              <h3 class="text-red-800 font-semibold">Error</h3>
-              <p class="text-red-700 mt-1">{{ error }}</p>
+              <h3 class="font-semibold" style="color: #2D2622;">Error</h3>
+              <p class="mt-1" style="color: #4A3B33;">{{ error }}</p>
             </div>
           </div>
         </div>
@@ -59,37 +61,39 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
         <!-- Subtopics List -->
         <div *ngIf="!loading && node" class="space-y-6">
           <div *ngFor="let subtopic of node.subtopics; let i = index" 
-               class="bg-white rounded-lg shadow-sm p-6">
+               class="bg-white rounded-[12px] p-6" style="border: 1px solid #EAE3DB;">
             <!-- Subtopic Header -->
-            <div class="flex items-start justify-between mb-4 pb-4 border-b">
+            <div class="flex items-start justify-between mb-4 pb-4" style="border-bottom: 1px solid #EAE3DB;">
               <div class="flex-1">
-                <h3 class="text-xl font-bold text-gray-800 mb-2">{{ subtopic.name }}</h3>
-                <p class="text-gray-600">{{ subtopic.description }}</p>
+                <h3 class="text-xl font-semibold mb-2" style="color: #2D2622;">{{ subtopic.name }}</h3>
+                <p style="color: #4A3B33;">{{ subtopic.description }}</p>
               </div>
               <div class="flex gap-2">
                 <button 
                   (click)="editSubtopic(subtopic)"
-                  class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-1 rounded text-sm">
+                  class="text-white px-3 py-1 rounded-[12px] text-sm font-medium"
+                  style="background-color: #D4A373;">
                   ✏️
                 </button>
                 <button 
                   (click)="deleteSubtopic(subtopic._id || '')"
-                  class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">
+                  class="px-3 py-1 rounded-[12px] text-sm font-medium"
+                  style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #4A3B33;">
                   🗑️
                 </button>
               </div>
             </div>
 
             <!-- Tabs -->
-            <div class="border-b mb-4">
+            <div class="mb-4" style="border-bottom: 1px solid #EAE3DB;">
               <div class="flex gap-2 overflow-x-auto">
                 <button 
                   *ngFor="let tab of tabs"
                   (click)="activeTab[subtopic._id || i] = tab.id"
                   class="px-4 py-2 text-sm font-medium border-b-2 transition-colors whitespace-nowrap"
-                  [ngClass]="{
-                    'border-blue-500 text-blue-600': activeTab[subtopic._id || i] === tab.id,
-                    'border-transparent text-gray-600 hover:text-gray-800': activeTab[subtopic._id || i] !== tab.id
+                  [ngStyle]="{
+                    'border-bottom-color': activeTab[subtopic._id || i] === tab.id ? '#8B5E3C' : 'transparent',
+                    'color': activeTab[subtopic._id || i] === tab.id ? '#8B5E3C' : '#4A3B33'
                   }">
                   {{ tab.icon }} {{ tab.label }}
                 </button>
@@ -100,8 +104,8 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             <div class="mt-4">
               <!-- Personal Notes -->
               <div *ngIf="activeTab[subtopic._id || i] === 'personal'">
-                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
-                  <p class="text-sm text-yellow-800">
+                <div class="rounded-[12px] p-4 mb-4" style="background-color: #FCF9F5; border-left: 4px solid #D4A373;">
+                  <p class="text-sm" style="color: #4A3B33;">
                     🔒 Estas notas son privadas y solo tú puedes verlas
                   </p>
                 </div>
@@ -110,14 +114,15 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   (blur)="saveSubtopic(subtopic)"
                   rows="8"
                   placeholder="Agrega tus notas personales aquí..."
-                  class="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all resize-none">
+                  class="w-full rounded-[12px] px-4 py-3 transition-all resize-none"
+                  style="border: 1px solid #EAE3DB; color: #2D2622;">
                 </textarea>
               </div>
 
               <!-- Shared Theory -->
               <div *ngIf="activeTab[subtopic._id || i] === 'theory'">
-                <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-4">
-                  <p class="text-sm text-blue-800">
+                <div class="rounded-[12px] p-4 mb-4" style="background-color: #FCF9F5; border-left: 4px solid #8B5E3C;">
+                  <p class="text-sm" style="color: #4A3B33;">
                     🌐 Esta sección es editable por todos los miembros del equipo
                   </p>
                 </div>
@@ -126,7 +131,8 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   (blur)="saveSubtopic(subtopic)"
                   rows="10"
                   placeholder="Agrega teoría y conceptos compartidos..."
-                  class="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all resize-none">
+                  class="w-full rounded-[12px] px-4 py-3 transition-all resize-none"
+                  style="border: 1px solid #EAE3DB; color: #2D2622;">
                 </textarea>
               </div>
 
@@ -134,18 +140,20 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               <div *ngIf="activeTab[subtopic._id || i] === 'code'">
                 <div class="space-y-4">
                   <div *ngFor="let snippet of subtopic.codeSnippets; let j = index" 
-                       class="border-2 border-gray-300 rounded-lg p-4">
+                       class="rounded-[12px] p-4" style="border: 1px solid #EAE3DB;">
                     <div class="flex items-center justify-between mb-3">
                       <select 
                         [(ngModel)]="snippet.language"
                         (change)="saveSubtopic(subtopic)"
-                        class="border border-gray-300 rounded px-3 py-1 text-sm">
+                        class="rounded-[12px] px-3 py-1 text-sm"
+                        style="border: 1px solid #EAE3DB; color: #2D2622;">
                         <option value="python">🐍 Python</option>
                         <option value="cpp">⚡ C++</option>
                       </select>
                       <button 
                         (click)="removeCodeSnippet(subtopic, j)"
-                        class="text-red-600 hover:text-red-800 text-sm">
+                        class="text-sm"
+                        style="color: #8B5E3C;">
                         🗑️ Eliminar
                       </button>
                     </div>
@@ -154,18 +162,21 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                       [(ngModel)]="snippet.description"
                       (blur)="saveSubtopic(subtopic)"
                       placeholder="Descripción del código..."
-                      class="w-full border border-gray-300 rounded px-3 py-2 mb-2 text-sm">
-                    <pre class="bg-gray-900 text-green-400 rounded-lg p-4 overflow-x-auto"><code><textarea 
+                      class="w-full rounded-[12px] px-3 py-2 mb-2 text-sm"
+                      style="border: 1px solid #EAE3DB; color: #2D2622;">
+                    <pre class="rounded-[12px] p-4 overflow-x-auto" style="background-color: #2D2622;"><code><textarea 
                       [(ngModel)]="snippet.code"
                       (blur)="saveSubtopic(subtopic)"
                       rows="12"
                       placeholder="// Escribe tu código aquí..."
-                      class="w-full bg-transparent text-green-400 font-mono text-sm border-0 focus:outline-none resize-none">
+                      class="w-full bg-transparent font-mono text-sm border-0 focus:outline-none resize-none"
+                      style="color: #D4A373;">
 </textarea></code></pre>
                   </div>
                   <button 
                     (click)="addCodeSnippet(subtopic)"
-                    class="w-full border-2 border-dashed border-gray-300 rounded-lg py-3 text-gray-600 hover:border-blue-500 hover:text-blue-600 transition-colors">
+                    class="w-full border-2 border-dashed rounded-[12px] py-3 transition-colors"
+                    style="border-color: #EAE3DB; color: #4A3B33;">
                     ➕ Agregar fragmento de código
                   </button>
                 </div>
@@ -173,37 +184,39 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
               <!-- Problems -->
               <div *ngIf="activeTab[subtopic._id || i] === 'problems'">
-                <div class="bg-green-50 border-l-4 border-green-400 p-4 mb-4 flex items-center justify-between">
-                  <p class="text-sm text-green-800">
+                <div class="rounded-[12px] p-4 mb-4 flex items-center justify-between" style="background-color: #FCF9F5; border-left: 4px solid #8B5E3C;">
+                  <p class="text-sm" style="color: #4A3B33;">
                     💻 Problemas vinculados a este subtema
                   </p>
                   <button 
                     (click)="navigateToFilteredProblems(subtopic)"
-                    class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-xs flex items-center gap-1">
+                    class="text-white px-3 py-1 rounded-[12px] text-xs flex items-center gap-1 font-medium"
+                    style="background-color: #8B5E3C;">
                     Ver todos →
                   </button>
                 </div>
                 <div class="space-y-3">
                   <!-- Problem Cards -->
                   <div *ngFor="let problem of subtopic.linkedProblems" 
-                       class="border-2 rounded-lg p-4 bg-white hover:shadow-md transition-shadow"
-                       [ngClass]="{
-                         'border-green-200': problem.difficulty === 'easy',
-                         'border-yellow-200': problem.difficulty === 'medium',
-                         'border-orange-200': problem.difficulty === 'hard',
-                         'border-red-200': problem.difficulty === 'very-hard'
+                       class="border-l-4 rounded-[12px] p-4 bg-white transition-shadow hover:shadow-md"
+                       [ngStyle]="{
+                         'border-left-color': problem.difficulty === 'easy' ? '#D4A373' : problem.difficulty === 'medium' ? '#8B5E3C' : problem.difficulty === 'hard' ? '#4A3B33' : '#2D2622',
+                         'border-right': '1px solid #EAE3DB',
+                         'border-top': '1px solid #EAE3DB',
+                         'border-bottom': '1px solid #EAE3DB'
                        }">
                     <!-- Problem Header -->
                     <div class="flex items-start justify-between mb-2">
                       <div class="flex-1">
-                        <h4 class="font-semibold text-gray-800 mb-1">{{ problem.title }}</h4>
-                        <p *ngIf="problem.description" class="text-sm text-gray-600 mb-2">
+                        <h4 class="font-semibold mb-1" style="color: #2D2622;">{{ problem.title }}</h4>
+                        <p *ngIf="problem.description" class="text-sm mb-2" style="color: #4A3B33;">
                           {{ problem.description }}
                         </p>
                       </div>
                       <button 
                         (click)="removeProblemFromSubtopic(subtopic, problem)"
-                        class="text-red-600 hover:text-red-800 text-sm ml-2">
+                        class="text-sm ml-2"
+                        style="color: #8B5E3C;">
                         🗑️
                       </button>
                     </div>
@@ -211,13 +224,8 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                     <!-- Problem Footer -->
                     <div class="flex items-center justify-between">
                       <span 
-                        class="text-xs px-2 py-1 rounded font-medium"
-                        [ngClass]="{
-                          'bg-green-100 text-green-800': problem.difficulty === 'easy',
-                          'bg-yellow-100 text-yellow-800': problem.difficulty === 'medium',
-                          'bg-orange-100 text-orange-800': problem.difficulty === 'hard',
-                          'bg-red-100 text-red-800': problem.difficulty === 'very-hard'
-                        }">
+                        class="text-xs px-2 py-1 rounded-[12px] font-medium"
+                        style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #8B5E3C;">
                         {{ getDifficultyLabel(problem.difficulty) }}
                       </span>
                       
@@ -226,12 +234,14 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                           *ngIf="problem.link"
                           [href]="problem.link" 
                           target="_blank"
-                          class="text-blue-600 hover:text-blue-800 text-xs">
+                          class="text-xs"
+                          style="color: #8B5E3C;">
                           🔗 Abrir
                         </a>
                         <a 
                           [routerLink]="['/problems', problem.problemId]"
-                          class="text-indigo-600 hover:text-indigo-800 text-xs">
+                          class="text-xs"
+                          style="color: #8B5E3C;">
                           Ver detalles
                         </a>
                       </div>
@@ -241,13 +251,14 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   <!-- Add Problem Button -->
                   <button 
                     (click)="openProblemPicker(subtopic)"
-                    class="w-full border-2 border-dashed border-gray-300 rounded-lg py-3 text-gray-600 hover:border-green-500 hover:text-green-600 transition-colors">
+                    class="w-full border-2 border-dashed rounded-[12px] py-3 transition-colors"
+                    style="border-color: #EAE3DB; color: #4A3B33;">
                     ➕ Vincular problema
                   </button>
                   
                   <!-- Empty State -->
                   <div *ngIf="!subtopic.linkedProblems || subtopic.linkedProblems.length === 0"
-                       class="text-center py-8 text-gray-500">
+                       class="text-center py-8" style="color: #4A3B33;">
                     <div class="text-4xl mb-2">📝</div>
                     <p class="text-sm">No hay problemas vinculados</p>
                     <p class="text-xs mt-1">Haz clic en "Vincular problema" para agregar</p>
@@ -257,14 +268,14 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
               <!-- Resources -->
               <div *ngIf="activeTab[subtopic._id || i] === 'resources'">
-                <div class="bg-purple-50 border-l-4 border-purple-400 p-4 mb-4">
-                  <p class="text-sm text-purple-800">
+                <div class="rounded-[12px] p-4 mb-4" style="background-color: #FCF9F5; border-left: 4px solid #D4A373;">
+                  <p class="text-sm" style="color: #4A3B33;">
                     📚 Recursos de aprendizaje editables por todos
                   </p>
                 </div>
                 <div class="space-y-3">
                   <div *ngFor="let resource of subtopic.resources; let k = index" 
-                       class="border-2 border-gray-300 rounded-lg p-4">
+                       class="rounded-[12px] p-4" style="border: 1px solid #EAE3DB;">
                     <div class="flex items-start gap-3">
                       <div class="flex-1 space-y-2">
                         <input 
@@ -272,30 +283,35 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                           [(ngModel)]="resource.name"
                           (blur)="saveSubtopic(subtopic)"
                           placeholder="Nombre del recurso"
-                          class="w-full border border-gray-300 rounded px-3 py-2 text-sm">
+                          class="w-full rounded-[12px] px-3 py-2 text-sm"
+                          style="border: 1px solid #EAE3DB; color: #2D2622;">
                         <input 
                           type="url"
                           [(ngModel)]="resource.link"
                           (blur)="saveSubtopic(subtopic)"
                           placeholder="https://..."
-                          class="w-full border border-gray-300 rounded px-3 py-2 text-sm">
+                          class="w-full rounded-[12px] px-3 py-2 text-sm"
+                          style="border: 1px solid #EAE3DB; color: #2D2622;">
                       </div>
                       <button 
                         (click)="removeResource(subtopic, k)"
-                        class="text-red-600 hover:text-red-800 text-sm mt-2">
+                        class="text-sm mt-2"
+                        style="color: #8B5E3C;">
                         🗑️
                       </button>
                     </div>
                     <a *ngIf="resource.link" 
                        [href]="resource.link" 
                        target="_blank"
-                       class="text-blue-600 hover:text-blue-800 text-xs mt-2 inline-block">
+                       class="text-xs mt-2 inline-block"
+                       style="color: #8B5E3C;">
                       🔗 Abrir enlace →
                     </a>
                   </div>
                   <button 
                     (click)="addResource(subtopic)"
-                    class="w-full border-2 border-dashed border-gray-300 rounded-lg py-3 text-gray-600 hover:border-purple-500 hover:text-purple-600 transition-colors">
+                    class="w-full border-2 border-dashed rounded-[12px] py-3 transition-colors"
+                    style="border-color: #EAE3DB; color: #4A3B33;">
                     ➕ Agregar recurso
                   </button>
                 </div>
@@ -305,15 +321,16 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
           <!-- Empty State -->
           <div *ngIf="!node.subtopics || node.subtopics.length === 0" 
-               class="bg-white rounded-lg shadow-sm p-12 text-center">
+               class="bg-white rounded-[12px] p-12 text-center" style="border: 1px solid #EAE3DB;">
             <div class="text-6xl mb-4">📝</div>
-            <h3 class="text-2xl font-bold text-gray-800 mb-3">No hay subtemas</h3>
-            <p class="text-gray-600 mb-6">
+            <h3 class="text-2xl font-semibold mb-3" style="color: #2D2622;">No hay subtemas</h3>
+            <p class="mb-6" style="color: #4A3B33;">
               Agrega subtemas para organizar tu contenido de aprendizaje
             </p>
             <button 
               (click)="showAddSubtopicModal = true"
-              class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-lg">
+              class="text-white font-medium py-3 px-8 rounded-[12px]"
+              style="background-color: #8B5E3C;">
               ➕ Agregar primer subtema
             </button>
           </div>
@@ -323,27 +340,29 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
       <!-- Add Subtopic Modal -->
       <div 
         *ngIf="showAddSubtopicModal" 
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+        class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4"
         (click)="showAddSubtopicModal = false">
-        <div class="bg-white rounded-xl shadow-2xl p-8 w-full max-w-lg" (click)="$event.stopPropagation()">
-          <h3 class="text-2xl font-bold text-gray-800 mb-6">➕ Nuevo Subtema</h3>
+        <div class="bg-white rounded-[12px] p-6 w-full max-w-lg" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
+          <h3 class="text-xl font-semibold mb-6" style="color: #2D2622;">➕ Nuevo Subtema</h3>
           
           <div class="space-y-4">
             <div>
-              <label class="block text-gray-700 text-sm font-bold mb-2">Nombre</label>
+              <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Nombre</label>
               <input 
                 type="text"
                 [(ngModel)]="newSubtopic.name"
                 placeholder="Nombre del subtema"
-                class="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all">
+                class="w-full rounded-[12px] px-4 py-3 transition-all"
+                style="border: 1px solid #EAE3DB; color: #2D2622;">
             </div>
             <div>
-              <label class="block text-gray-700 text-sm font-bold mb-2">Descripción</label>
+              <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Descripción</label>
               <textarea 
                 [(ngModel)]="newSubtopic.description"
                 rows="3"
                 placeholder="Descripción breve"
-                class="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all resize-none">
+                class="w-full rounded-[12px] px-4 py-3 transition-all resize-none"
+                style="border: 1px solid #EAE3DB; color: #2D2622;">
               </textarea>
             </div>
           </div>
@@ -351,13 +370,15 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           <div class="flex gap-3 justify-end mt-6">
             <button 
               (click)="showAddSubtopicModal = false"
-              class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-3 rounded-lg transition-all">
+              class="font-medium px-6 py-3 rounded-[12px] transition-all"
+              style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
               Cancelar
             </button>
             <button 
               (click)="createSubtopic()"
               [disabled]="!newSubtopic.name"
-              class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg disabled:bg-gray-300 disabled:cursor-not-allowed transition-all">
+              class="text-white font-medium px-6 py-3 rounded-[12px] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              style="background-color: #8B5E3C;">
               Crear subtema
             </button>
           </div>
@@ -367,10 +388,10 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
       <!-- Problem Picker Modal -->
       <div 
         *ngIf="showProblemPickerModal" 
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+        class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4"
         (click)="closeProblemPicker()">
-        <div class="bg-white rounded-xl shadow-2xl p-8 w-full max-w-4xl max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
-          <h3 class="text-2xl font-bold text-gray-800 mb-6">🔗 Vincular Problema</h3>
+        <div class="bg-white rounded-[12px] p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
+          <h3 class="text-xl font-semibold mb-6" style="color: #2D2622;">🔗 Vincular Problema</h3>
           
           <!-- Search and Filter -->
           <div class="mb-6 space-y-3">
@@ -379,13 +400,15 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               [(ngModel)]="problemSearchQuery"
               (ngModelChange)="filterProblems()"
               placeholder="Buscar problemas..."
-              class="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+              class="w-full rounded-[12px] px-4 py-3"
+              style="border: 1px solid #EAE3DB; color: #2D2622;">
             
             <div class="flex gap-3">
               <select 
                 [(ngModel)]="problemFilterDifficulty"
                 (change)="filterProblems()"
-                class="border-2 border-gray-300 rounded-lg px-4 py-2">
+                class="rounded-[12px] px-4 py-2"
+                style="border: 1px solid #EAE3DB; color: #2D2622;">
                 <option value="">Todas las dificultades</option>
                 <option value="easy">Fácil</option>
                 <option value="medium">Media</option>
@@ -396,7 +419,8 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               <select 
                 [(ngModel)]="problemFilterView"
                 (change)="loadAvailableProblems()"
-                class="border-2 border-gray-300 rounded-lg px-4 py-2">
+                class="rounded-[12px] px-4 py-2"
+                style="border: 1px solid #EAE3DB; color: #2D2622;">
                 <option value="personal">Mis problemas</option>
                 <option value="team">Problemas del equipo</option>
               </select>
@@ -406,12 +430,12 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           <!-- Loading State -->
           <div *ngIf="loadingProblems" class="text-center py-8">
             <div class="text-4xl mb-4">⏳</div>
-            <p class="text-gray-600">Cargando problemas...</p>
+            <p style="color: #4A3B33;">Cargando problemas...</p>
           </div>
 
           <!-- Error State -->
-          <div *ngIf="problemPickerError" class="bg-red-50 border-l-4 border-red-500 rounded-lg p-4 mb-4">
-            <p class="text-red-700">{{ problemPickerError }}</p>
+          <div *ngIf="problemPickerError" class="rounded-[12px] p-4 mb-4" style="background-color: #FCF9F5; border-left: 4px solid #8B5E3C;">
+            <p style="color: #8B5E3C;">{{ problemPickerError }}</p>
           </div>
 
           <!-- Available Problems List -->
@@ -419,76 +443,83 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             <div 
               *ngFor="let problem of filteredProblems" 
               (click)="selectProblemForLinking(problem)"
-              class="border-2 rounded-lg p-4 cursor-pointer transition-all"
-              [ngClass]="{
-                'border-blue-500 bg-blue-50': selectedProblemForLink?._id === problem._id,
-                'border-gray-200 hover:border-blue-300 hover:bg-gray-50': selectedProblemForLink?._id !== problem._id
+              class="rounded-[12px] p-4 cursor-pointer transition-all"
+              [ngStyle]="{
+                'border': selectedProblemForLink?._id === problem._id ? '2px solid #8B5E3C' : '1px solid #EAE3DB',
+                'background-color': selectedProblemForLink?._id === problem._id ? '#FCF9F5' : '#FFFFFF'
               }">
               <div class="flex items-start justify-between">
                 <div class="flex-1">
-                  <h4 class="font-semibold text-gray-800 mb-1">{{ problem.title }}</h4>
+                  <h4 class="font-semibold mb-1" style="color: #2D2622;">{{ problem.title }}</h4>
                   <div class="flex gap-2 items-center">
                     <span 
                       *ngIf="problem.rating"
-                      class="text-xs px-2 py-1 rounded bg-gray-100 text-gray-700">
+                      class="text-xs px-2 py-1 rounded-[12px] font-mono"
+                      style="background-color: #FCF9F5; color: #8B5E3C; border: 1px solid #EAE3DB;">
                       ★ {{ problem.rating }}
                     </span>
-                    <span class="text-xs px-2 py-1 rounded bg-blue-100 text-blue-700">
+                    <span class="text-xs px-2 py-1 rounded-[12px]"
+                          style="background-color: #FCF9F5; color: #4A3B33; border: 1px solid #EAE3DB;">
                       {{ problem.platform }}
                     </span>
                   </div>
                 </div>
                 <div 
                   *ngIf="selectedProblemForLink?._id === problem._id"
-                  class="text-blue-600 text-2xl">
+                  class="text-2xl"
+                  style="color: #8B5E3C;">
                   ✓
                 </div>
               </div>
             </div>
 
             <!-- Empty State -->
-            <div *ngIf="filteredProblems.length === 0" class="text-center py-8 text-gray-500">
+            <div *ngIf="filteredProblems.length === 0" class="text-center py-8" style="color: #4A3B33;">
               <div class="text-4xl mb-2">🔍</div>
               <p class="text-sm">No se encontraron problemas</p>
             </div>
           </div>
 
           <!-- Problem Metadata Form (shown when problem selected) -->
-          <div *ngIf="selectedProblemForLink" class="border-2 border-blue-200 rounded-lg p-6 mb-6 bg-blue-50">
-            <h4 class="font-semibold text-gray-800 mb-4">Detalles del problema a vincular</h4>
+          <div *ngIf="selectedProblemForLink" class="rounded-[12px] p-6 mb-6" style="background-color: #FCF9F5; border: 1px solid #EAE3DB;">
+            <h4 class="font-semibold mb-4" style="color: #2D2622;">Detalles del problema a vincular</h4>
             
             <div class="space-y-4">
               <div>
-                <label class="block text-gray-700 text-sm font-bold mb-2">Título *</label>
+                <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Título *</label>
                 <input 
                   type="text"
                   [(ngModel)]="problemLinkMetadata.title"
-                  class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+                  class="w-full rounded-[12px] px-4 py-2"
+                  style="border: 1px solid #EAE3DB; color: #2D2622;">
               </div>
 
               <div>
-                <label class="block text-gray-700 text-sm font-bold mb-2">Descripción breve</label>
+                <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Descripción breve</label>
                 <textarea 
                   [(ngModel)]="problemLinkMetadata.description"
                   rows="2"
                   placeholder="Descripción opcional del problema..."
-                  class="w-full border-2 border-gray-300 rounded-lg px-4 py-2 resize-none">
+                  class="w-full rounded-[12px] px-4 py-2 resize-none"
+                  style="border: 1px solid #EAE3DB; color: #2D2622;">
                 </textarea>
               </div>
 
               <div>
-                <label class="block text-gray-700 text-sm font-bold mb-2">Link</label>
+                <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Link</label>
                 <input 
                   type="url"
                   [(ngModel)]="problemLinkMetadata.link"
-                  class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+                  class="w-full rounded-[12px] px-4 py-2"
+                  style="border: 1px solid #EAE3DB; color: #2D2622;">
               </div>
 
               <div>
-                <label class="block text-gray-700 text-sm font-bold mb-2">Dificultad *</label>
+                <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Dificultad *</label>
                 <select 
                   [(ngModel)]="problemLinkMetadata.difficulty"
-                  class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+                  class="w-full rounded-[12px] px-4 py-2"
+                  style="border: 1px solid #EAE3DB; color: #2D2622;">
                   <option value="easy">Fácil</option>
                   <option value="medium">Media</option>
                   <option value="hard">Difícil</option>
@@ -502,13 +533,15 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           <div class="flex gap-3 justify-end">
             <button 
               (click)="closeProblemPicker()"
-              class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-3 rounded-lg">
+              class="font-medium px-6 py-3 rounded-[12px]"
+              style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
               Cancelar
             </button>
             <button 
               (click)="confirmProblemLink()"
               [disabled]="!selectedProblemForLink || !problemLinkMetadata.title || !problemLinkMetadata.difficulty"
-              class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg disabled:bg-gray-300 disabled:cursor-not-allowed">
+              class="text-white font-medium px-6 py-3 rounded-[12px] disabled:opacity-50 disabled:cursor-not-allowed"
+              style="background-color: #8B5E3C;">
               Vincular problema
             </button>
           </div>

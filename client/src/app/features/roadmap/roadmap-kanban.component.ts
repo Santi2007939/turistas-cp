@@ -21,27 +21,29 @@ interface KanbanColumn {
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule, DragDropModule, NavbarComponent],
   template: `
-    <div class="min-h-screen bg-gray-50">
+    <div class="min-h-screen" style="background-color: #FCF9F5;">
       <!-- Navigation -->
       <app-navbar></app-navbar>
       
-      <div class="container mx-auto px-4 py-8">
+      <div class="container mx-auto px-6 py-8">
         <!-- Header -->
-        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+        <div class="bg-white rounded-[12px] p-6 mb-6" style="border: 1px solid #EAE3DB;">
           <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
             <div>
-              <h1 class="text-3xl font-bold text-gray-800 mb-2">📋 Kanban Board</h1>
-              <p class="text-gray-600">Visualiza y organiza tu roadmap con vista Kanban</p>
+              <h1 class="text-2xl font-semibold mb-2" style="color: #2D2622;">📋 Kanban Board</h1>
+              <p style="color: #4A3B33;">Visualiza y organiza tu roadmap con vista Kanban</p>
             </div>
             <div class="flex gap-2">
               <button 
                 routerLink="/roadmap"
-                class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-all">
+                class="font-medium py-2 px-4 rounded-[12px] transition-all"
+                style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
                 📝 Vista Lista
               </button>
               <button 
                 routerLink="/roadmap/graph"
-                class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-lg transition-all">
+                class="text-white font-medium py-2 px-4 rounded-[12px] transition-all"
+                style="background-color: #8B5E3C;">
                 📊 Vista Gráfica
               </button>
             </div>
@@ -51,19 +53,20 @@ interface KanbanColumn {
         <!-- Loading State -->
         <div *ngIf="loading" class="text-center py-12">
           <div class="text-4xl mb-4">⏳</div>
-          <p class="text-gray-600">Cargando roadmap...</p>
+          <p style="color: #4A3B33;">Cargando roadmap...</p>
         </div>
 
         <!-- Error State -->
-        <div *ngIf="error" class="bg-red-50 border-l-4 border-red-500 rounded-lg p-6 mb-6">
+        <div *ngIf="error" class="bg-white rounded-[12px] p-6 mb-6" style="border-left: 4px solid #8B5E3C; border-right: 1px solid #EAE3DB; border-top: 1px solid #EAE3DB; border-bottom: 1px solid #EAE3DB;">
           <div class="flex items-start">
             <span class="text-2xl mr-3">⚠️</span>
             <div>
-              <h3 class="text-red-800 font-semibold">Error</h3>
-              <p class="text-red-700 mt-1">{{ error }}</p>
+              <h3 class="font-semibold" style="color: #2D2622;">Error</h3>
+              <p class="mt-1" style="color: #4A3B33;">{{ error }}</p>
               <button 
                 (click)="loadRoadmap()"
-                class="mt-3 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm">
+                class="mt-3 text-white px-4 py-2 rounded-[12px] text-sm font-medium"
+                style="background-color: #8B5E3C;">
                 Reintentar
               </button>
             </div>
@@ -75,12 +78,14 @@ interface KanbanColumn {
              class="grid grid-cols-1 md:grid-cols-3 gap-6"
              cdkDropListGroup>
           <div *ngFor="let column of columns" 
-               class="bg-white rounded-lg shadow-sm p-4">
+               class="bg-white rounded-[12px] p-4"
+               style="border: 1px solid #EAE3DB;">
             <div class="flex items-center justify-between mb-4">
               <div class="flex items-center gap-2">
                 <span class="text-2xl">{{ column.icon }}</span>
-                <h3 class="text-lg font-bold text-gray-800">{{ column.title }}</h3>
-                <span class="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-sm font-semibold">
+                <h3 class="text-lg font-semibold" style="color: #2D2622;">{{ column.title }}</h3>
+                <span class="px-2 py-1 rounded-[12px] text-sm font-semibold"
+                      style="background-color: #FCF9F5; color: #4A3B33; border: 1px solid #EAE3DB;">
                   {{ column.nodes.length }}
                 </span>
               </div>
@@ -95,40 +100,40 @@ interface KanbanColumn {
               <div 
                 *ngFor="let node of column.nodes"
                 cdkDrag
-                class="bg-white border-2 rounded-lg p-4 shadow-sm hover:shadow-md transition-all cursor-move"
-                [ngClass]="{
-                  'border-gray-300': column.status === 'todo',
-                  'border-blue-500': column.status === 'in-progress',
-                  'border-green-500': column.status === 'done'
+                class="bg-white border-l-4 rounded-[12px] p-4 transition-all cursor-move hover:shadow-md"
+                [ngStyle]="{
+                  'border-left-color': column.status === 'todo' ? '#EAE3DB' : column.status === 'in-progress' ? '#D4A373' : '#8B5E3C',
+                  'border-right': '1px solid #EAE3DB',
+                  'border-top': '1px solid #EAE3DB',
+                  'border-bottom': '1px solid #EAE3DB'
                 }">
                 <div class="flex items-start justify-between mb-2">
-                  <h4 class="font-bold text-gray-800 flex-1">
+                  <h4 class="font-semibold flex-1" style="color: #2D2622;">
                     {{ node.themeId?.name || 'Theme' }}
                   </h4>
                   <button 
                     (click)="openNodeDetails(node)"
-                    class="text-blue-600 hover:text-blue-800 text-sm">
+                    class="text-sm"
+                    style="color: #8B5E3C;">
                     ℹ️
                   </button>
                 </div>
 
-                <p class="text-sm text-gray-600 mb-3">
+                <p class="text-sm mb-3" style="color: #4A3B33;">
                   {{ node.themeId?.description || '' }}
                 </p>
 
                 <!-- Progress Bar -->
                 <div class="mb-3">
                   <div class="flex justify-between text-xs mb-1">
-                    <span class="text-gray-600">Progreso</span>
-                    <span class="font-semibold text-blue-600">{{ node.progress }}%</span>
+                    <span style="color: #4A3B33;">Progreso</span>
+                    <span class="font-semibold font-mono" style="color: #8B5E3C;">{{ node.progress }}%</span>
                   </div>
-                  <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div class="w-full rounded-[12px] h-2" style="background-color: #EAE3DB;">
                     <div 
-                      class="h-2 rounded-full transition-all"
-                      [ngClass]="{
-                        'bg-gray-400': node.progress === 0,
-                        'bg-blue-500': node.progress > 0 && node.progress < 100,
-                        'bg-green-500': node.progress === 100
+                      class="h-2 rounded-[12px] transition-all"
+                      [ngStyle]="{
+                        'background-color': node.progress === 0 ? '#EAE3DB' : node.progress < 100 ? '#D4A373' : '#8B5E3C'
                       }"
                       [style.width.%]="node.progress">
                     </div>
@@ -137,10 +142,8 @@ interface KanbanColumn {
 
                 <!-- Due Date -->
                 <div *ngIf="node.dueDate" class="flex items-center gap-1 text-xs mb-2"
-                     [ngClass]="{
-                       'text-red-600': isOverdue(node.dueDate),
-                       'text-orange-600': isDueSoon(node.dueDate),
-                       'text-gray-600': !isOverdue(node.dueDate) && !isDueSoon(node.dueDate)
+                     [ngStyle]="{
+                       'color': isOverdue(node.dueDate) ? '#8B5E3C' : isDueSoon(node.dueDate) ? '#D4A373' : '#4A3B33'
                      }">
                   <span>📅</span>
                   <span>{{ formatDate(node.dueDate) }}</span>
@@ -149,16 +152,16 @@ interface KanbanColumn {
 
                 <!-- Tags -->
                 <div class="flex flex-wrap gap-1">
-                  <span class="bg-indigo-100 text-indigo-700 text-xs px-2 py-1 rounded-full">
+                  <span class="text-xs px-2 py-1 rounded-[12px]"
+                        style="background-color: #FCF9F5; color: #8B5E3C; border: 1px solid #EAE3DB;">
                     {{ node.themeId?.category }}
                   </span>
                   <span 
-                    class="text-xs px-2 py-1 rounded-full"
-                    [ngClass]="{
-                      'bg-green-100 text-green-700': node.themeId?.difficulty === 'beginner',
-                      'bg-yellow-100 text-yellow-700': node.themeId?.difficulty === 'intermediate',
-                      'bg-orange-100 text-orange-700': node.themeId?.difficulty === 'advanced',
-                      'bg-red-100 text-red-700': node.themeId?.difficulty === 'expert'
+                    class="text-xs px-2 py-1 rounded-[12px]"
+                    [ngStyle]="{
+                      'background-color': '#FCF9F5',
+                      'color': node.themeId?.difficulty === 'beginner' ? '#8B5E3C' : node.themeId?.difficulty === 'intermediate' ? '#D4A373' : node.themeId?.difficulty === 'advanced' ? '#4A3B33' : '#2D2622',
+                      'border': '1px solid #EAE3DB'
                     }">
                     {{ node.themeId?.difficulty }}
                   </span>
@@ -167,7 +170,7 @@ interface KanbanColumn {
 
               <!-- Empty Column State -->
               <div *ngIf="column.nodes.length === 0" 
-                   class="text-center py-8 text-gray-400">
+                   class="text-center py-8" style="color: #4A3B33;">
                 <div class="text-4xl mb-2">{{ column.icon }}</div>
                 <p class="text-sm">No hay temas en esta columna</p>
               </div>
@@ -177,15 +180,16 @@ interface KanbanColumn {
 
         <!-- Empty State -->
         <div *ngIf="!loading && !error && allNodes.length === 0" 
-             class="bg-white rounded-lg shadow-sm p-12 text-center">
+             class="bg-white rounded-[12px] p-12 text-center" style="border: 1px solid #EAE3DB;">
           <div class="text-6xl mb-4">📋</div>
-          <h3 class="text-2xl font-bold text-gray-800 mb-3">No hay temas en tu roadmap</h3>
-          <p class="text-gray-600 mb-6">
+          <h3 class="text-2xl font-semibold mb-3" style="color: #2D2622;">No hay temas en tu roadmap</h3>
+          <p class="mb-6" style="color: #4A3B33;">
             Agrega temas para empezar a organizar tu aprendizaje en el tablero Kanban.
           </p>
           <button 
             routerLink="/roadmap"
-            class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-lg">
+            class="text-white font-medium py-3 px-8 rounded-[12px]"
+            style="background-color: #8B5E3C;">
             Ir al Roadmap
           </button>
         </div>
