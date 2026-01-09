@@ -23,9 +23,13 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             <div class="flex items-center gap-4">
               <button 
                 routerLink="/roadmap"
-                class="font-medium"
+                class="font-medium flex items-center gap-1"
                 style="color: #4A3B33;">
-                ← Volver
+                <!-- Lucide ArrowLeft icon -->
+                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Volver
               </button>
               <div>
                 <h1 class="text-2xl font-semibold" style="color: #2D2622;">{{ node?.themeId?.name }}</h1>
@@ -34,23 +38,33 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             </div>
             <button 
               (click)="showAddSubtopicModal = true"
-              class="text-white font-medium py-2 px-4 rounded-[12px]"
+              class="text-white font-medium py-2 px-4 rounded-[12px] flex items-center gap-2"
               style="background-color: #8B5E3C;">
-              ➕ Agregar Subtema
+              <!-- Lucide Plus icon -->
+              <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+              </svg>
+              Agregar Subtema
             </button>
           </div>
         </div>
 
         <!-- Loading State -->
         <div *ngIf="loading" class="text-center py-12">
-          <div class="text-4xl mb-4">⏳</div>
+          <!-- Lucide Loader icon -->
+          <svg class="w-12 h-12 mx-auto mb-4 animate-spin" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
           <p style="color: #4A3B33;">Cargando...</p>
         </div>
 
         <!-- Error State -->
         <div *ngIf="error" class="bg-white rounded-[12px] p-6 mb-6" style="border-left: 4px solid #8B5E3C; border-right: 1px solid #EAE3DB; border-top: 1px solid #EAE3DB; border-bottom: 1px solid #EAE3DB;">
           <div class="flex items-start">
-            <span class="text-2xl mr-3">⚠️</span>
+            <!-- Lucide AlertTriangle icon -->
+            <svg class="w-6 h-6 mr-3" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
             <div>
               <h3 class="font-semibold" style="color: #2D2622;">Error</h3>
               <p class="mt-1" style="color: #4A3B33;">{{ error }}</p>
@@ -71,15 +85,21 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               <div class="flex gap-2">
                 <button 
                   (click)="editSubtopic(subtopic)"
-                  class="text-white px-3 py-1 rounded-[12px] text-sm font-medium"
+                  class="text-white px-3 py-1 rounded-[12px] text-sm font-medium flex items-center gap-1"
                   style="background-color: #D4A373;">
-                  ✏️
+                  <!-- Lucide Edit icon -->
+                  <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
                 </button>
                 <button 
                   (click)="deleteSubtopic(subtopic._id || '')"
-                  class="px-3 py-1 rounded-[12px] text-sm font-medium"
+                  class="px-3 py-1 rounded-[12px] text-sm font-medium flex items-center gap-1"
                   style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #4A3B33;">
-                  🗑️
+                  <!-- Lucide Trash2 icon -->
+                  <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
                 </button>
               </div>
             </div>
@@ -147,14 +167,18 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                         (change)="saveSubtopic(subtopic)"
                         class="rounded-[12px] px-3 py-1 text-sm"
                         style="border: 1px solid #EAE3DB; color: #2D2622;">
-                        <option value="python">🐍 Python</option>
-                        <option value="cpp">⚡ C++</option>
+                        <option value="python">Python</option>
+                        <option value="cpp">C++</option>
                       </select>
                       <button 
                         (click)="removeCodeSnippet(subtopic, j)"
-                        class="text-sm"
-                        style="color: #8B5E3C;">
-                        🗑️ Eliminar
+                        class="text-sm flex items-center gap-1"
+                        style="color: #4A3B33;">
+                        <!-- Lucide Trash2 icon -->
+                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        Eliminar
                       </button>
                     </div>
                     <input 
@@ -175,9 +199,13 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   </div>
                   <button 
                     (click)="addCodeSnippet(subtopic)"
-                    class="w-full border-2 border-dashed rounded-[12px] py-3 transition-colors"
+                    class="w-full border-2 border-dashed rounded-[12px] py-3 transition-colors flex items-center justify-center gap-2"
                     style="border-color: #EAE3DB; color: #4A3B33;">
-                    ➕ Agregar fragmento de código
+                    <!-- Lucide Plus icon -->
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Agregar fragmento de código
                   </button>
                 </div>
               </div>
@@ -216,8 +244,11 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                       <button 
                         (click)="removeProblemFromSubtopic(subtopic, problem)"
                         class="text-sm ml-2"
-                        style="color: #8B5E3C;">
-                        🗑️
+                        style="color: #4A3B33;">
+                        <!-- Lucide X icon -->
+                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
                       </button>
                     </div>
                     
@@ -234,9 +265,13 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                           *ngIf="problem.link"
                           [href]="problem.link" 
                           target="_blank"
-                          class="text-xs"
+                          class="text-xs flex items-center gap-1"
                           style="color: #8B5E3C;">
-                          🔗 Abrir
+                          <!-- Lucide ExternalLink icon -->
+                          <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                          Abrir
                         </a>
                         <a 
                           [routerLink]="['/problems', problem.problemId]"
@@ -296,23 +331,34 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                       <button 
                         (click)="removeResource(subtopic, k)"
                         class="text-sm mt-2"
-                        style="color: #8B5E3C;">
-                        🗑️
+                        style="color: #4A3B33;">
+                        <!-- Lucide X icon -->
+                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
                       </button>
                     </div>
                     <a *ngIf="resource.link" 
                        [href]="resource.link" 
                        target="_blank"
-                       class="text-xs mt-2 inline-block"
+                       class="text-xs mt-2 inline-flex items-center gap-1"
                        style="color: #8B5E3C;">
-                      🔗 Abrir enlace →
+                      <!-- Lucide ExternalLink icon -->
+                      <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                      Abrir enlace
                     </a>
                   </div>
                   <button 
                     (click)="addResource(subtopic)"
-                    class="w-full border-2 border-dashed rounded-[12px] py-3 transition-colors"
+                    class="w-full border-2 border-dashed rounded-[12px] py-3 transition-colors flex items-center justify-center gap-2"
                     style="border-color: #EAE3DB; color: #4A3B33;">
-                    ➕ Agregar recurso
+                    <!-- Lucide Plus icon -->
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Agregar recurso
                   </button>
                 </div>
               </div>
@@ -322,16 +368,23 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           <!-- Empty State -->
           <div *ngIf="!node.subtopics || node.subtopics.length === 0" 
                class="bg-white rounded-[12px] p-12 text-center" style="border: 1px solid #EAE3DB;">
-            <div class="text-6xl mb-4">📝</div>
+            <!-- Lucide FileText icon -->
+            <svg class="w-16 h-16 mx-auto mb-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
             <h3 class="text-2xl font-semibold mb-3" style="color: #2D2622;">No hay subtemas</h3>
             <p class="mb-6" style="color: #4A3B33;">
               Agrega subtemas para organizar tu contenido de aprendizaje
             </p>
             <button 
               (click)="showAddSubtopicModal = true"
-              class="text-white font-medium py-3 px-8 rounded-[12px]"
+              class="text-white font-medium py-3 px-8 rounded-[12px] flex items-center justify-center gap-2 mx-auto"
               style="background-color: #8B5E3C;">
-              ➕ Agregar primer subtema
+              <!-- Lucide Plus icon -->
+              <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+              </svg>
+              Agregar primer subtema
             </button>
           </div>
         </div>
@@ -343,7 +396,13 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
         class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4"
         (click)="showAddSubtopicModal = false">
         <div class="bg-white rounded-[12px] p-6 w-full max-w-lg" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
-          <h3 class="text-xl font-semibold mb-6" style="color: #2D2622;">➕ Nuevo Subtema</h3>
+          <h3 class="text-xl font-semibold mb-6 flex items-center gap-2" style="color: #2D2622;">
+            <!-- Lucide Plus icon -->
+            <svg class="w-5 h-5" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+            Nuevo Subtema
+          </h3>
           
           <div class="space-y-4">
             <div>
@@ -377,8 +436,12 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             <button 
               (click)="createSubtopic()"
               [disabled]="!newSubtopic.name"
-              class="text-white font-medium px-6 py-3 rounded-[12px] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              class="text-white font-medium px-6 py-3 rounded-[12px] disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2"
               style="background-color: #8B5E3C;">
+              <!-- Lucide Save icon -->
+              <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+              </svg>
               Crear subtema
             </button>
           </div>
@@ -391,17 +454,29 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
         class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4"
         (click)="closeProblemPicker()">
         <div class="bg-white rounded-[12px] p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
-          <h3 class="text-xl font-semibold mb-6" style="color: #2D2622;">🔗 Vincular Problema</h3>
+          <h3 class="text-xl font-semibold mb-6 flex items-center gap-2" style="color: #2D2622;">
+            <!-- Lucide Link icon -->
+            <svg class="w-5 h-5" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+            </svg>
+            Vincular Problema
+          </h3>
           
           <!-- Search and Filter -->
           <div class="mb-6 space-y-3">
-            <input 
-              type="text"
-              [(ngModel)]="problemSearchQuery"
-              (ngModelChange)="filterProblems()"
-              placeholder="Buscar problemas..."
-              class="w-full rounded-[12px] px-4 py-3"
-              style="border: 1px solid #EAE3DB; color: #2D2622;">
+            <div class="relative">
+              <!-- Lucide Search icon -->
+              <svg class="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input 
+                type="text"
+                [(ngModel)]="problemSearchQuery"
+                (ngModelChange)="filterProblems()"
+                placeholder="Buscar problemas..."
+                class="w-full rounded-[12px] pl-10 pr-4 py-3"
+                style="border: 1px solid #EAE3DB; color: #2D2622;">
+            </div>
             
             <div class="flex gap-3">
               <select 
@@ -429,7 +504,10 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
           <!-- Loading State -->
           <div *ngIf="loadingProblems" class="text-center py-8">
-            <div class="text-4xl mb-4">⏳</div>
+            <!-- Lucide Loader icon -->
+            <svg class="w-12 h-12 mx-auto mb-4 animate-spin" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
             <p style="color: #4A3B33;">Cargando problemas...</p>
           </div>
 

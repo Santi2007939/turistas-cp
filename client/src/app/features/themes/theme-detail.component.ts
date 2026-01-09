@@ -51,6 +51,26 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           <p style="color: #4A3B33;">{{ theme.description || 'No description available' }}</p>
         </div>
 
+        <!-- Subthemes Section (Global visibility) -->
+        <div class="mb-6" *ngIf="theme.subthemes && theme.subthemes.length > 0">
+          <h2 class="text-xl font-semibold mb-3 flex items-center gap-2" style="color: #2D2622;">
+            <!-- Lucide Layers icon -->
+            <svg class="w-5 h-5" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+            </svg>
+            Subtemas
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div 
+              *ngFor="let subtheme of theme.subthemes" 
+              class="rounded-[12px] p-4"
+              style="border: 1px solid #EAE3DB; background-color: #FCF9F5;">
+              <h3 class="font-semibold mb-1" style="color: #2D2622;">{{ subtheme.name }}</h3>
+              <p *ngIf="subtheme.description" class="text-sm" style="color: #4A3B33;">{{ subtheme.description }}</p>
+            </div>
+          </div>
+        </div>
+
         <div class="mb-6" *ngIf="theme.tags && theme.tags.length > 0">
           <h2 class="text-xl font-semibold mb-2" style="color: #2D2622;">Tags</h2>
           <div class="flex flex-wrap gap-2">

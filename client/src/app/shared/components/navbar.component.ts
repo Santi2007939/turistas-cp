@@ -166,7 +166,7 @@ import { AuthService, User } from '../../core/services/auth.service';
                 <div class="px-6 py-3" style="border-bottom: 1px solid #EAE3DB;">
                   <button 
                     *ngIf="!editingProfile"
-                    (click)="startEditProfile()"
+                    (click)="startEditProfile(); $event.stopPropagation()"
                     class="w-full text-left text-sm font-medium py-1 flex items-center gap-2"
                     style="color: #8B5E3C;">
                     <!-- Lucide Edit icon -->
