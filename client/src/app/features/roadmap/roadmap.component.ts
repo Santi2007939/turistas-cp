@@ -21,21 +21,35 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
         <div class="bg-white rounded-[12px] p-6 mb-6" style="border: 1px solid #EAE3DB;">
           <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
             <div>
-              <h1 class="text-3xl font-semibold mb-2" style="color: #2D2622;">🗺️ Mi Roadmap</h1>
+              <h1 class="text-3xl font-semibold mb-2 flex items-center gap-2" style="color: #2D2622;">
+                <!-- Lucide Map icon -->
+                <svg class="w-7 h-7" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                </svg>
+                Mi Roadmap
+              </h1>
               <p style="color: #4A3B33;">Gestiona tu ruta de aprendizaje personalizada</p>
             </div>
             <div class="flex gap-3">
               <button 
                 routerLink="/roadmap/kanban"
-                class="text-white font-medium py-2 px-4 rounded-[12px] transition-all"
+                class="text-white font-medium py-2 px-4 rounded-[12px] transition-all flex items-center gap-2"
                 style="background-color: #D4A373;">
-                📋 Kanban
+                <!-- Lucide LayoutList icon -->
+                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                </svg>
+                Kanban
               </button>
               <button 
                 routerLink="/roadmap/graph"
-                class="text-white font-medium py-2 px-4 rounded-[12px] transition-all"
+                class="text-white font-medium py-2 px-4 rounded-[12px] transition-all flex items-center gap-2"
                 style="background-color: #D4A373;">
-                📊 Gráfica
+                <!-- Lucide BarChart2 icon -->
+                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M18 20V10m-6 10V4M6 20v-6" />
+                </svg>
+                Gráfica
               </button>
               <button 
                 *ngIf="selectedView === 'personal'"
@@ -144,7 +158,11 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6" *ngIf="!loading && filteredNodes.length > 0">
           <div class="bg-white rounded-[12px] p-4 transition-colors" style="border: 1px solid #EAE3DB;">
             <div class="flex items-center gap-3">
-              <div class="text-3xl">⏳</div>
+              <!-- Lucide Clock icon -->
+              <svg class="w-8 h-8" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2" />
+              </svg>
               <div class="flex-1">
                 <p class="text-sm font-medium" style="color: #4A3B33;">No iniciado</p>
                 <p class="text-2xl font-bold font-mono" style="color: #2D2622;">{{ getCountByStatus('not-started') }}</p>
@@ -153,7 +171,10 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           </div>
           <div class="bg-white rounded-[12px] p-4 transition-colors" style="border: 1px solid #EAE3DB;">
             <div class="flex items-center gap-3">
-              <div class="text-3xl">🔄</div>
+              <!-- Lucide RefreshCw icon -->
+              <svg class="w-8 h-8" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" />
+              </svg>
               <div class="flex-1">
                 <p class="text-sm font-medium" style="color: #4A3B33;">En progreso</p>
                 <p class="text-2xl font-bold font-mono" style="color: #D4A373;">{{ getCountByStatus('in-progress') }}</p>
@@ -162,7 +183,10 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           </div>
           <div class="bg-white rounded-[12px] p-4 transition-colors" style="border: 1px solid #EAE3DB;">
             <div class="flex items-center gap-3">
-              <div class="text-3xl">✅</div>
+              <!-- Lucide CheckCircle icon -->
+              <svg class="w-8 h-8" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
               <div class="flex-1">
                 <p class="text-sm font-medium" style="color: #4A3B33;">Completado</p>
                 <p class="text-2xl font-bold font-mono" style="color: #8B5E3C;">{{ getCountByStatus('completed') }}</p>
@@ -171,7 +195,10 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           </div>
           <div class="bg-white rounded-[12px] p-4 transition-colors" style="border: 1px solid #EAE3DB;">
             <div class="flex items-center gap-3">
-              <div class="text-3xl">🏆</div>
+              <!-- Lucide Trophy icon -->
+              <svg class="w-8 h-8" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 9H4a2 2 0 01-2-2V5a2 2 0 012-2h2M18 9h2a2 2 0 002-2V5a2 2 0 00-2-2h-2M6 3v6a6 6 0 006 6v0a6 6 0 006-6V3M9 21h6M12 15v6" />
+              </svg>
               <div class="flex-1">
                 <p class="text-sm font-medium" style="color: #4A3B33;">Dominado</p>
                 <p class="text-2xl font-bold font-mono" style="color: #8B5E3C;">{{ getCountByStatus('mastered') }}</p>
@@ -199,9 +226,25 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-4">
             <div class="flex-1">
               <div class="flex items-start gap-3 mb-3">
-                <div class="text-3xl">
-                  {{ node.status === 'not-started' ? '⏳' : node.status === 'in-progress' ? '🔄' : node.status === 'completed' ? '✅' : '🏆' }}
-                </div>
+                <ng-container [ngSwitch]="node.status">
+                  <!-- Clock icon for not-started -->
+                  <svg *ngSwitchCase="'not-started'" class="w-8 h-8" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="12" cy="12" r="10" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2" />
+                  </svg>
+                  <!-- RefreshCw icon for in-progress -->
+                  <svg *ngSwitchCase="'in-progress'" class="w-8 h-8" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" />
+                  </svg>
+                  <!-- CheckCircle icon for completed -->
+                  <svg *ngSwitchCase="'completed'" class="w-8 h-8" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <!-- Trophy icon for mastered -->
+                  <svg *ngSwitchDefault class="w-8 h-8" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 9H4a2 2 0 01-2-2V5a2 2 0 012-2h2M18 9h2a2 2 0 002-2V5a2 2 0 00-2-2h-2M6 3v6a6 6 0 006 6v0a6 6 0 006-6V3M9 21h6M12 15v6" />
+                  </svg>
+                </ng-container>
                 <div class="flex-1">
                   <h2 class="text-xl font-semibold mb-1" style="color: #2D2622;">
                     {{ node.themeId?.name || 'Theme' }}
@@ -216,8 +259,12 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   style="background-color: #FCF9F5; color: #8B5E3C; border: 1px solid #EAE3DB;">
                   {{ getStatusLabel(node.status) }}
                 </span>
-                <span class="rounded-[12px] px-3 py-1 text-xs font-medium" style="background-color: #FCF9F5; color: #2D2622; border: 1px solid #EAE3DB;">
-                  📚 {{ node.themeId?.category }}
+                <span class="rounded-[12px] px-3 py-1 text-xs font-medium flex items-center gap-1" style="background-color: #FCF9F5; color: #2D2622; border: 1px solid #EAE3DB;">
+                  <!-- Lucide BookOpen icon -->
+                  <svg class="w-3 h-3" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                  {{ node.themeId?.category }}
                 </span>
                 <span 
                   class="px-3 py-1 text-xs font-medium rounded-[12px]"

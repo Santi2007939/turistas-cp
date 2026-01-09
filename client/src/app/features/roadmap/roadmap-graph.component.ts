@@ -28,21 +28,35 @@ interface GraphNode {
         <div class="bg-white rounded-[12px] p-6 mb-6" style="border: 1px solid #EAE3DB;">
           <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
             <div>
-              <h1 class="text-2xl font-semibold mb-2" style="color: #2D2622;">📊 Vista Gráfica</h1>
+              <h1 class="text-2xl font-semibold mb-2 flex items-center gap-2" style="color: #2D2622;">
+                <!-- Lucide BarChart2 icon -->
+                <svg class="w-6 h-6" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M18 20V10m-6 10V4M6 20v-6" />
+                </svg>
+                Vista Gráfica
+              </h1>
               <p style="color: #4A3B33;">Visualiza tu progreso con gráficos interactivos</p>
             </div>
             <div class="flex gap-2">
               <button 
                 routerLink="/roadmap"
-                class="font-medium py-2 px-4 rounded-[12px] transition-all"
+                class="font-medium py-2 px-4 rounded-[12px] transition-all flex items-center gap-2"
                 style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
-                📝 Vista Lista
+                <!-- Lucide List icon -->
+                <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
+                </svg>
+                Vista Lista
               </button>
               <button 
                 routerLink="/roadmap/kanban"
-                class="text-white font-medium py-2 px-4 rounded-[12px] transition-all"
+                class="text-white font-medium py-2 px-4 rounded-[12px] transition-all flex items-center gap-2"
                 style="background-color: #8B5E3C;">
-                📋 Vista Kanban
+                <!-- Lucide LayoutList icon -->
+                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                </svg>
+                Vista Kanban
               </button>
             </div>
           </div>
@@ -50,14 +64,20 @@ interface GraphNode {
 
         <!-- Loading State -->
         <div *ngIf="loading" class="text-center py-12">
-          <div class="text-4xl mb-4">⏳</div>
+          <!-- Lucide Loader icon -->
+          <svg class="w-12 h-12 mx-auto mb-4 animate-spin" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
           <p style="color: #4A3B33;">Cargando datos...</p>
         </div>
 
         <!-- Error State -->
         <div *ngIf="error" class="bg-white rounded-[12px] p-6 mb-6" style="border-left: 4px solid #8B5E3C; border-right: 1px solid #EAE3DB; border-top: 1px solid #EAE3DB; border-bottom: 1px solid #EAE3DB;">
           <div class="flex items-start">
-            <span class="text-2xl mr-3">⚠️</span>
+            <!-- Lucide AlertTriangle icon -->
+            <svg class="w-6 h-6 mr-3" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
             <div>
               <h3 class="font-semibold" style="color: #2D2622;">Error</h3>
               <p class="mt-1" style="color: #4A3B33;">{{ error }}</p>
@@ -75,25 +95,44 @@ interface GraphNode {
         <div *ngIf="!loading && !error && nodes.length > 0" class="space-y-6">
           <!-- Progress Overview Chart -->
           <div class="bg-white rounded-[12px] p-6" style="border: 1px solid #EAE3DB;">
-            <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">📈 Resumen de Progreso</h3>
+            <h3 class="text-xl font-semibold mb-4 flex items-center gap-2" style="color: #2D2622;">
+              <!-- Lucide TrendingUp icon -->
+              <svg class="w-5 h-5" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+              </svg>
+              Resumen de Progreso
+            </h3>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
               <div class="text-center">
-                <div class="text-3xl mb-2">⏳</div>
+                <!-- Lucide Clock icon -->
+                <svg class="w-8 h-8 mx-auto mb-2" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <circle cx="12" cy="12" r="10" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2" />
+                </svg>
                 <div class="text-2xl font-bold font-mono" style="color: #4A3B33;">{{ getCountByStatus('todo') }}</div>
                 <div class="text-sm" style="color: #4A3B33;">To Do</div>
               </div>
               <div class="text-center">
-                <div class="text-3xl mb-2">🔄</div>
+                <!-- Lucide RefreshCw icon -->
+                <svg class="w-8 h-8 mx-auto mb-2" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" />
+                </svg>
                 <div class="text-2xl font-bold font-mono" style="color: #D4A373;">{{ getCountByStatus('in-progress') }}</div>
                 <div class="text-sm" style="color: #4A3B33;">En Progreso</div>
               </div>
               <div class="text-center">
-                <div class="text-3xl mb-2">✅</div>
+                <!-- Lucide CheckCircle icon -->
+                <svg class="w-8 h-8 mx-auto mb-2" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
                 <div class="text-2xl font-bold font-mono" style="color: #8B5E3C;">{{ getCountByStatus('done') }}</div>
                 <div class="text-sm" style="color: #4A3B33;">Completado</div>
               </div>
               <div class="text-center">
-                <div class="text-3xl mb-2">📊</div>
+                <!-- Lucide BarChart2 icon -->
+                <svg class="w-8 h-8 mx-auto mb-2" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M18 20V10m-6 10V4M6 20v-6" />
+                </svg>
                 <div class="text-2xl font-bold font-mono" style="color: #8B5E3C;">{{ getAverageProgress() }}%</div>
                 <div class="text-sm" style="color: #4A3B33;">Progreso Promedio</div>
               </div>
@@ -123,7 +162,15 @@ interface GraphNode {
 
           <!-- Status Distribution -->
           <div class="bg-white rounded-[12px] p-6" style="border: 1px solid #EAE3DB;">
-            <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">🎯 Distribución por Estado</h3>
+            <h3 class="text-xl font-semibold mb-4 flex items-center gap-2" style="color: #2D2622;">
+              <!-- Lucide Target icon -->
+              <svg class="w-5 h-5" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10" />
+                <circle cx="12" cy="12" r="6" />
+                <circle cx="12" cy="12" r="2" />
+              </svg>
+              Distribución por Estado
+            </h3>
             <div class="flex items-end justify-center gap-8 h-64">
               <div class="flex flex-col items-center gap-2">
                 <div class="rounded-t-[12px] transition-all duration-500" 

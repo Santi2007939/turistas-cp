@@ -16,7 +16,13 @@ import { AuthService, User } from '../../core/services/auth.service';
         <div class="flex justify-between h-16">
           <!-- Logo and Brand -->
           <div class="flex items-center">
-            <h1 class="text-2xl font-semibold" style="color: #8B5E3C;">🏔️ Turistas CP</h1>
+            <h1 class="text-2xl font-semibold flex items-center gap-2" style="color: #8B5E3C;">
+              <!-- Lucide Mountain icon -->
+              <svg class="w-6 h-6" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 20l4-12 4 6 4-8 4 14H4z" />
+              </svg>
+              Turistas CP
+            </h1>
           </div>
 
           <!-- Desktop Navigation -->

@@ -24,7 +24,13 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
       <div class="max-w-7xl mx-auto py-6 px-6">
         <div class="py-6">
           <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-semibold" style="color: #2D2622;">📊 Estadísticas y Logros</h2>
+            <h2 class="text-2xl font-semibold flex items-center gap-2" style="color: #2D2622;">
+              <!-- Lucide BarChart2 icon -->
+              <svg class="w-6 h-6" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M18 20V10m-6 10V4M6 20v-6" />
+              </svg>
+              Estadísticas y Logros
+            </h2>
             <a routerLink="/dashboard" class="px-4 py-2 rounded-[12px] font-medium" style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
               Volver al Dashboard
             </a>
@@ -40,7 +46,13 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
           <!-- Roadmap Statistics - Matte-Drift Card -->
           <div *ngIf="roadmapStats" class="bg-white rounded-[12px] p-6 mb-6" style="border: 1px solid #EAE3DB;">
-            <h3 class="text-xl font-semibold mb-6" style="color: #2D2622;">📈 Tu Progreso en el Roadmap</h3>
+            <h3 class="text-xl font-semibold mb-6 flex items-center gap-2" style="color: #2D2622;">
+              <!-- Lucide TrendingUp icon -->
+              <svg class="w-5 h-5" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+              </svg>
+              Tu Progreso en el Roadmap
+            </h3>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
               <div class="text-center">
                 <div class="text-3xl font-bold font-mono" style="color: #8B5E3C;">{{ roadmapStats.total }}</div>
@@ -71,7 +83,10 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             <!-- Codeforces Card - Codeforces themed -->
             <div class="bg-white rounded-[12px] p-6" style="border: 2px solid #4A90A4; background: linear-gradient(135deg, #FFFFFF 0%, #E8F4F8 100%);">
               <div class="flex items-center gap-2 mb-2">
-                <span class="text-2xl">📈</span>
+                <!-- Lucide LineChart icon -->
+                <svg class="w-6 h-6" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M7 17l4-4 3 3 4-4" />
+                </svg>
                 <h4 class="font-semibold" style="color: #2D2622;">Codeforces</h4>
                 <span class="px-2 py-0.5 text-xs font-medium rounded-[12px]" style="background-color: #E8F4F8; color: #4A90A4; border: 1px solid #4A90A4;">CF</span>
               </div>
@@ -81,7 +96,10 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
             <div class="bg-white rounded-[12px] p-6" style="border: 1px solid #EAE3DB;">
               <div class="flex items-center gap-2 mb-2">
-                <span class="text-2xl">✅</span>
+                <!-- Lucide CheckCircle icon -->
+                <svg class="w-6 h-6" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
                 <h4 class="font-semibold" style="color: #2D2622;">Ejercicios Resueltos</h4>
               </div>
               <p class="text-2xl font-bold font-mono" style="color: #D4A373;">{{ problemStats.solved }}</p>
@@ -90,7 +108,10 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
             <div class="bg-white rounded-[12px] p-6" style="border: 1px solid #EAE3DB;">
               <div class="flex items-center gap-2 mb-2">
-                <span class="text-2xl">🔥</span>
+                <!-- Lucide Flame icon -->
+                <svg class="w-6 h-6" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 2c0 5.523 4 8 4 12a6 6 0 11-8 0c0-4 4-6.477 4-12z" />
+                </svg>
                 <h4 class="font-semibold" style="color: #2D2622;">Actividad</h4>
               </div>
               <p class="text-2xl font-bold font-mono" style="color: #8B5E3C;">{{ activityStreak }}</p>
@@ -100,7 +121,14 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
           <!-- System Achievements Section -->
           <div class="bg-white rounded-[12px] p-6 mb-6" style="border: 1px solid #EAE3DB;">
-            <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">🎖️ Logros del Sistema</h3>
+            <h3 class="text-xl font-semibold mb-4 flex items-center gap-2" style="color: #2D2622;">
+              <!-- Lucide Award icon -->
+              <svg class="w-5 h-5" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="8" r="6" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 14l-2 7 5-3 5 3-2-7" />
+              </svg>
+              Logros del Sistema
+            </h3>
             <p class="text-sm mb-4" style="color: #4A3B33;">
               Los logros del sistema son reconocimientos automáticos que se desbloquean al alcanzar ciertos hitos, 
               como resolver un número específico de problemas, participar en contests, o mantener una racha de actividad.
@@ -132,12 +160,21 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           <!-- Custom Achievements (Logros) Section -->
           <div class="bg-white rounded-[12px] p-6 mb-6" style="border: 1px solid #EAE3DB;">
             <div class="flex justify-between items-center mb-4">
-              <h3 class="text-xl font-semibold" style="color: #2D2622;">🏆 Mis Logros Personalizados</h3>
+              <h3 class="text-xl font-semibold flex items-center gap-2" style="color: #2D2622;">
+                <!-- Lucide Trophy icon -->
+                <svg class="w-5 h-5" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 9H4a2 2 0 01-2-2V5a2 2 0 012-2h2M18 9h2a2 2 0 002-2V5a2 2 0 00-2-2h-2M6 3v6a6 6 0 006 6v0a6 6 0 006-6V3M9 21h6M12 15v6" />
+                </svg>
+                Mis Logros Personalizados
+              </h3>
               <button 
                 (click)="openCreateAchievementModal()"
                 class="text-white px-4 py-2 rounded-[12px] font-medium flex items-center gap-2"
                 style="background-color: #8B5E3C;">
-                <span>➕</span>
+                <!-- Lucide Plus icon -->
+                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
                 Nuevo Logro
               </button>
             </div>
@@ -190,23 +227,31 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               </button>
               <button 
                 (click)="filterCategory = 'rating'"
-                class="px-3 py-1 rounded-[12px] text-xs font-medium"
+                class="px-3 py-1 rounded-[12px] text-xs font-medium flex items-center gap-1"
                 [ngStyle]="{
                   'background-color': filterCategory === 'rating' ? '#D4A373' : '#FCF9F5',
                   'color': filterCategory === 'rating' ? '#FFFFFF' : '#2D2622',
                   'border': '1px solid ' + (filterCategory === 'rating' ? '#D4A373' : '#EAE3DB')
                 }">
-                ⭐ Rating
+                <!-- Lucide Star icon -->
+                <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                </svg>
+                Rating
               </button>
               <button 
                 (click)="filterCategory = 'contest'"
-                class="px-3 py-1 rounded-[12px] text-xs font-medium"
+                class="px-3 py-1 rounded-[12px] text-xs font-medium flex items-center gap-1"
                 [ngStyle]="{
                   'background-color': filterCategory === 'contest' ? '#D4A373' : '#FCF9F5',
                   'color': filterCategory === 'contest' ? '#FFFFFF' : '#2D2622',
                   'border': '1px solid ' + (filterCategory === 'contest' ? '#D4A373' : '#EAE3DB')
                 }">
-                🏆 Contest
+                <!-- Lucide Trophy icon -->
+                <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 9H4a2 2 0 01-2-2V5a2 2 0 012-2h2M18 9h2a2 2 0 002-2V5a2 2 0 00-2-2h-2M6 3v6a6 6 0 006 6v0a6 6 0 006-6V3M9 21h6M12 15v6" />
+                </svg>
+                Contest
               </button>
             </div>
 
@@ -228,9 +273,22 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <!-- Scope badge -->
                 <div class="absolute top-4 right-4">
                   <span 
-                    class="text-xs px-2 py-1 rounded-[12px]"
+                    class="text-xs px-2 py-1 rounded-[12px] flex items-center gap-1"
                     style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #8B5E3C;">
-                    {{ achievement.scope === 'team' ? '👥 Equipo' : '👤 Personal' }}
+                    <ng-container *ngIf="achievement.scope === 'team'">
+                      <!-- Lucide Users icon -->
+                      <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                      </svg>
+                      Equipo
+                    </ng-container>
+                    <ng-container *ngIf="achievement.scope !== 'team'">
+                      <!-- Lucide User icon -->
+                      <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                      Personal
+                    </ng-container>
                   </span>
                 </div>
 
@@ -243,20 +301,39 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 </div>
 
                 <!-- Category icon -->
-                <div class="text-3xl mb-2">
-                  {{ achievement.category === 'rating' ? '⭐' : '🏆' }}
+                <div class="mb-2">
+                  <ng-container *ngIf="achievement.category === 'rating'">
+                    <!-- Lucide Star icon -->
+                    <svg class="w-8 h-8" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                    </svg>
+                  </ng-container>
+                  <ng-container *ngIf="achievement.category !== 'rating'">
+                    <!-- Lucide Trophy icon -->
+                    <svg class="w-8 h-8" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 9H4a2 2 0 01-2-2V5a2 2 0 012-2h2M18 9h2a2 2 0 002-2V5a2 2 0 00-2-2h-2M6 3v6a6 6 0 006 6v0a6 6 0 006-6V3M9 21h6M12 15v6" />
+                    </svg>
+                  </ng-container>
                 </div>
 
                 <h4 class="font-semibold mb-1" style="color: #2D2622;">{{ achievement.name }}</h4>
                 <p class="text-sm mb-2 truncate" style="color: #4A3B33;" [title]="achievement.description">{{ achievement.description }}</p>
 
-                <div class="text-xs mb-2" style="color: #4A3B33;">
-                  <span>📅 {{ achievement.achievedAt | date:'mediumDate' }}</span>
+                <div class="text-xs mb-2 flex items-center gap-1" style="color: #4A3B33;">
+                  <!-- Lucide Calendar icon -->
+                  <svg class="w-3 h-3" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <span>{{ achievement.achievedAt | date:'mediumDate' }}</span>
                   <span class="ml-2">por {{ achievement.createdBy?.username }}</span>
                 </div>
 
-                <div *ngIf="achievement.scope === 'team' && achievement.teamId" class="text-xs mb-2" style="color: #8B5E3C;">
-                  🏢 {{ achievement.teamId.name }}
+                <div *ngIf="achievement.scope === 'team' && achievement.teamId" class="text-xs mb-2 flex items-center gap-1" style="color: #8B5E3C;">
+                  <!-- Lucide Building icon -->
+                  <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                  {{ achievement.teamId.name }}
                 </div>
 
                 <!-- Actions (only show for editable achievements) -->
@@ -269,9 +346,12 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   </button>
                   <button 
                     (click)="deleteAchievement(achievement)"
-                    class="px-3 py-1 rounded-[12px] text-sm font-medium"
+                    class="px-3 py-1 rounded-[12px] text-sm font-medium flex items-center justify-center"
                     style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
-                    🗑️
+                    <!-- Lucide Trash2 icon -->
+                    <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
                   </button>
                 </div>
               </div>
@@ -330,24 +410,32 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <button 
                   type="button"
                   (click)="achievementFormData.category = 'rating'"
-                  class="flex-1 px-4 py-2 rounded-[12px] font-medium"
+                  class="flex-1 px-4 py-2 rounded-[12px] font-medium flex items-center justify-center gap-1"
                   [ngStyle]="{
                     'background-color': achievementFormData.category === 'rating' ? '#8B5E3C' : '#FCF9F5',
                     'color': achievementFormData.category === 'rating' ? '#FFFFFF' : '#2D2622',
                     'border': '1px solid ' + (achievementFormData.category === 'rating' ? '#8B5E3C' : '#EAE3DB')
                   }">
-                  ⭐ Rating
+                  <!-- Lucide Star icon -->
+                  <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                  </svg>
+                  Rating
                 </button>
                 <button 
                   type="button"
                   (click)="achievementFormData.category = 'contest'"
-                  class="flex-1 px-4 py-2 rounded-[12px] font-medium"
+                  class="flex-1 px-4 py-2 rounded-[12px] font-medium flex items-center justify-center gap-1"
                   [ngStyle]="{
                     'background-color': achievementFormData.category === 'contest' ? '#8B5E3C' : '#FCF9F5',
                     'color': achievementFormData.category === 'contest' ? '#FFFFFF' : '#2D2622',
                     'border': '1px solid ' + (achievementFormData.category === 'contest' ? '#8B5E3C' : '#EAE3DB')
                   }">
-                  🏆 Contest
+                  <!-- Lucide Trophy icon -->
+                  <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 9H4a2 2 0 01-2-2V5a2 2 0 012-2h2M18 9h2a2 2 0 002-2V5a2 2 0 00-2-2h-2M6 3v6a6 6 0 006 6v0a6 6 0 006-6V3M9 21h6M12 15v6" />
+                  </svg>
+                  Contest
                 </button>
               </div>
             </div>
@@ -392,18 +480,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               </p>
             </div>
 
-            <!-- Team selection (shown only when scope is team) -->
-            <div *ngIf="achievementFormData.scope === 'team' && userTeams.length > 0">
-              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Equipo *</label>
-              <select 
-                [(ngModel)]="achievementFormData.teamId"
-                class="w-full rounded-[12px] px-4 py-3"
-                style="border: 1px solid #EAE3DB; color: #2D2622;">
-                <option value="">Selecciona un equipo...</option>
-                <option *ngFor="let team of userTeams" [value]="team._id || ''">{{ team.name }}</option>
-              </select>
-            </div>
-
+            <!-- Team info message (shown only when scope is team) -->
             <div *ngIf="achievementFormData.scope === 'team' && userTeams.length === 0" class="rounded-[12px] p-3" style="background-color: #FCF9F5; border: 1px solid #EAE3DB;">
               <p class="text-sm" style="color: #4A3B33;">No perteneces a ningún equipo activo. Los logros de equipo requieren membresía en un equipo.</p>
             </div>
@@ -676,9 +753,10 @@ export class StatisticsComponent implements OnInit {
   }
 
   isAchievementFormValid(): boolean {
-    const { name, description, category, scope, teamId } = this.achievementFormData;
+    const { name, description, category, scope } = this.achievementFormData;
     if (!name || !description || !category || !scope) return false;
-    if (scope === 'team' && !teamId) return false;
+    // For team scope, we auto-select the first team, so just check if user has teams
+    if (scope === 'team' && this.userTeams.length === 0) return false;
     return true;
   }
 
@@ -686,13 +764,19 @@ export class StatisticsComponent implements OnInit {
     if (!this.isAchievementFormValid()) return;
 
     this.savingAchievement = true;
+    // For new achievements, auto-select first team (defaults to turistas team)
+    // For editing, preserve the original team
+    const teamIdToUse = this.editingAchievement 
+      ? this.achievementFormData.teamId 
+      : (this.userTeams.length > 0 ? this.userTeams[0]._id : undefined);
+    
     const data: CreateCustomAchievementData = {
       name: this.achievementFormData.name,
       description: this.achievementFormData.description,
       photo: this.achievementFormData.photo || undefined,
       category: this.achievementFormData.category,
       scope: this.achievementFormData.scope,
-      teamId: this.achievementFormData.scope === 'team' ? this.achievementFormData.teamId : undefined,
+      teamId: this.achievementFormData.scope === 'team' ? teamIdToUse : undefined,
       achievedAt: this.achievementFormData.achievedAt ? new Date(this.achievementFormData.achievedAt) : undefined
     };
 

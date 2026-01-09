@@ -37,27 +37,41 @@ interface FilterData {
       <div class="max-w-7xl mx-auto py-6 px-6">
         <div class="py-6">
           <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-semibold" style="color: #2D2622;">📅 Calendar</h2>
+            <h2 class="text-2xl font-semibold flex items-center gap-2" style="color: #2D2622;">
+              <!-- Lucide Calendar icon -->
+              <svg class="w-6 h-6" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              Calendar
+            </h2>
             <div class="flex gap-2">
               <!-- View Toggle -->
               <div class="flex bg-white rounded-[12px] overflow-hidden" style="border: 1px solid #EAE3DB;">
                 <button 
                   (click)="viewMode = 'list'"
-                  class="px-4 py-2 text-sm font-medium transition-colors"
+                  class="px-4 py-2 text-sm font-medium transition-colors flex items-center gap-1"
                   [ngStyle]="{
                     'background-color': viewMode === 'list' ? '#8B5E3C' : '#FFFFFF',
                     'color': viewMode === 'list' ? '#FFFFFF' : '#2D2622'
                   }">
-                  📋 List
+                  <!-- Lucide List icon -->
+                  <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
+                  </svg>
+                  List
                 </button>
                 <button 
                   (click)="viewMode = 'calendar'"
-                  class="px-4 py-2 text-sm font-medium transition-colors"
+                  class="px-4 py-2 text-sm font-medium transition-colors flex items-center gap-1"
                   [ngStyle]="{
                     'background-color': viewMode === 'calendar' ? '#8B5E3C' : '#FFFFFF',
                     'color': viewMode === 'calendar' ? '#FFFFFF' : '#2D2622'
                   }">
-                  📅 Calendar
+                  <!-- Lucide CalendarDays icon -->
+                  <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  Calendar
                 </button>
               </div>
               <button 
