@@ -10,60 +10,65 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule, NavbarComponent],
   template: `
-    <div class="min-h-screen bg-gray-100">
+    <!-- Matte-Drift Theme Create -->
+    <div class="min-h-screen" style="background-color: #FCF9F5;">
       <!-- Navigation -->
       <app-navbar></app-navbar>
 
-      <div class="container mx-auto px-4 py-8">
+      <div class="container mx-auto px-6 py-8">
         <div class="max-w-3xl mx-auto">
           <div class="mb-6">
             <button 
               (click)="goBack()"
-              class="text-gray-600 hover:text-gray-900 flex items-center">
+              class="flex items-center hover:underline"
+              style="color: #4A3B33;">
               <span class="mr-2">←</span> Back to Themes
             </button>
           </div>
 
-          <div class="bg-white rounded-lg shadow-md p-8">
-            <h1 class="text-3xl font-bold text-gray-800 mb-6">Create New Theme</h1>
+          <div class="bg-white rounded-[12px] p-8" style="border: 1px solid #EAE3DB;">
+            <h1 class="text-3xl font-semibold mb-6" style="color: #2D2622;">Create New Theme</h1>
 
-            <div *ngIf="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            <div *ngIf="error" class="bg-white rounded-[12px] px-4 py-3 mb-4" style="border: 1px solid #EAE3DB; color: #2D2622;">
               {{ error }}
             </div>
 
             <form (ngSubmit)="saveTheme()" class="space-y-6">
               <!-- Name -->
               <div>
-                <label class="block text-gray-700 text-sm font-bold mb-2">Name *</label>
+                <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Name *</label>
                 <input 
                   type="text"
                   [(ngModel)]="theme.name"
                   name="name"
                   required
-                  class="w-full border rounded px-3 py-2"
+                  class="w-full rounded-[12px] px-4 py-3"
+                  style="border: 1px solid #EAE3DB; color: #2D2622;"
                   placeholder="e.g., Dynamic Programming">
               </div>
 
               <!-- Description -->
               <div>
-                <label class="block text-gray-700 text-sm font-bold mb-2">Description *</label>
+                <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Description *</label>
                 <textarea 
                   [(ngModel)]="theme.description"
                   name="description"
                   required
                   rows="4"
-                  class="w-full border rounded px-3 py-2"
+                  class="w-full rounded-[12px] px-4 py-3"
+                  style="border: 1px solid #EAE3DB; color: #2D2622;"
                   placeholder="Describe the theme..."></textarea>
               </div>
 
               <!-- Category -->
               <div>
-                <label class="block text-gray-700 text-sm font-bold mb-2">Category *</label>
+                <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Category *</label>
                 <select 
                   [(ngModel)]="theme.category"
                   name="category"
                   required
-                  class="w-full border rounded px-3 py-2">
+                  class="w-full rounded-[12px] px-4 py-3"
+                  style="border: 1px solid #EAE3DB; color: #2D2622;">
                   <option value="">Select a category...</option>
                   <option value="algorithms">Algorithms</option>
                   <option value="data-structures">Data Structures</option>
@@ -79,12 +84,13 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
               <!-- Difficulty -->
               <div>
-                <label class="block text-gray-700 text-sm font-bold mb-2">Difficulty *</label>
+                <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Difficulty *</label>
                 <select 
                   [(ngModel)]="theme.difficulty"
                   name="difficulty"
                   required
-                  class="w-full border rounded px-3 py-2">
+                  class="w-full rounded-[12px] px-4 py-3"
+                  style="border: 1px solid #EAE3DB; color: #2D2622;">
                   <option value="">Select difficulty...</option>
                   <option value="beginner">Beginner</option>
                   <option value="intermediate">Intermediate</option>
@@ -95,28 +101,30 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
               <!-- Tags -->
               <div>
-                <label class="block text-gray-700 text-sm font-bold mb-2">Tags (comma-separated)</label>
+                <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Tags (comma-separated)</label>
                 <input 
                   type="text"
                   [(ngModel)]="tagsInput"
                   name="tags"
-                  class="w-full border rounded px-3 py-2"
+                  class="w-full rounded-[12px] px-4 py-3"
+                  style="border: 1px solid #EAE3DB; color: #2D2622;"
                   placeholder="e.g., optimization, recursion, memoization">
-                <p class="text-xs text-gray-600 mt-1">Separate tags with commas</p>
+                <p class="text-xs mt-1" style="color: #4A3B33;">Separate tags with commas</p>
               </div>
 
               <!-- Subthemes -->
-              <div class="border rounded p-4 bg-gray-50">
-                <label class="block text-gray-700 text-sm font-bold mb-3">Subthemes</label>
+              <div class="rounded-[12px] p-4" style="background-color: #FCF9F5; border: 1px solid #EAE3DB;">
+                <label class="block text-sm font-medium mb-3" style="color: #2D2622;">Subthemes</label>
                 
                 <div class="space-y-3 mb-3">
-                  <div *ngFor="let subtheme of theme.subthemes; let i = index" class="border rounded p-3 bg-white">
+                  <div *ngFor="let subtheme of theme.subthemes; let i = index" class="rounded-[12px] p-3 bg-white" style="border: 1px solid #EAE3DB;">
                     <div class="flex gap-2 mb-2">
                       <input 
                         type="text"
                         [(ngModel)]="subtheme.name"
                         [name]="'subtheme-name-' + i"
-                        class="flex-1 border rounded px-3 py-2"
+                        class="flex-1 rounded-[12px] px-3 py-2"
+                        style="border: 1px solid #EAE3DB; color: #2D2622;"
                         placeholder="Subtheme name">
                       <button 
                         type="button"
@@ -129,7 +137,8 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                       [(ngModel)]="subtheme.description"
                       [name]="'subtheme-desc-' + i"
                       rows="2"
-                      class="w-full border rounded px-3 py-2"
+                      class="w-full rounded-[12px] px-3 py-2"
+                      style="border: 1px solid #EAE3DB; color: #2D2622;"
                       placeholder="Subtheme description (optional)"></textarea>
                   </div>
                 </div>
@@ -137,28 +146,31 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <button 
                   type="button"
                   (click)="addSubtheme()"
-                  class="w-full border-2 border-dashed border-gray-300 rounded py-2 text-gray-600 hover:border-blue-500 hover:text-blue-500 transition-colors">
+                  class="w-full border-2 border-dashed rounded-[12px] py-2 transition-colors"
+                  style="border-color: #EAE3DB; color: #4A3B33;">
                   + Add Subtheme
                 </button>
               </div>
 
               <!-- Resources -->
-              <div class="border rounded p-4 bg-gray-50">
-                <label class="block text-gray-700 text-sm font-bold mb-3">Learning Resources</label>
+              <div class="rounded-[12px] p-4" style="background-color: #FCF9F5; border: 1px solid #EAE3DB;">
+                <label class="block text-sm font-medium mb-3" style="color: #2D2622;">Learning Resources</label>
                 
                 <div class="space-y-3 mb-3">
-                  <div *ngFor="let resource of theme.resources; let i = index" class="border rounded p-3 bg-white">
+                  <div *ngFor="let resource of theme.resources; let i = index" class="rounded-[12px] p-3 bg-white" style="border: 1px solid #EAE3DB;">
                     <div class="flex gap-2 mb-2">
                       <input 
                         type="text"
                         [(ngModel)]="resource.title"
                         [name]="'resource-title-' + i"
-                        class="flex-1 border rounded px-3 py-2"
+                        class="flex-1 rounded-[12px] px-3 py-2"
+                        style="border: 1px solid #EAE3DB; color: #2D2622;"
                         placeholder="Resource title">
                       <select 
                         [(ngModel)]="resource.type"
                         [name]="'resource-type-' + i"
-                        class="border rounded px-3 py-2">
+                        class="rounded-[12px] px-3 py-2"
+                        style="border: 1px solid #EAE3DB; color: #2D2622;">
                         <option value="article">Article</option>
                         <option value="video">Video</option>
                         <option value="book">Book</option>
@@ -176,7 +188,8 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                       type="url"
                       [(ngModel)]="resource.url"
                       [name]="'resource-url-' + i"
-                      class="w-full border rounded px-3 py-2"
+                      class="w-full rounded-[12px] px-3 py-2"
+                      style="border: 1px solid #EAE3DB; color: #2D2622;"
                       placeholder="https://...">
                   </div>
                 </div>
@@ -184,7 +197,8 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <button 
                   type="button"
                   (click)="addResource()"
-                  class="w-full border-2 border-dashed border-gray-300 rounded py-2 text-gray-600 hover:border-blue-500 hover:text-blue-500 transition-colors">
+                  class="w-full border-2 border-dashed rounded-[12px] py-2 transition-colors"
+                  style="border-color: #EAE3DB; color: #4A3B33;">
                   + Add Resource
                 </button>
               </div>
@@ -194,13 +208,15 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <button 
                   type="button"
                   (click)="goBack()"
-                  class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded">
+                  class="px-6 py-2 rounded-[12px]"
+                  style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
                   Cancel
                 </button>
                 <button 
                   type="submit"
                   [disabled]="!isFormValid() || saving"
-                  class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded disabled:bg-gray-300">
+                  class="text-white px-6 py-2 rounded-[12px] disabled:opacity-50"
+                  style="background-color: #8B5E3C;">
                   {{ saving ? 'Creating...' : 'Create Theme' }}
                 </button>
               </div>

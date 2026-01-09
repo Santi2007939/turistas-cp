@@ -16,87 +16,93 @@ interface UserManagement extends User {
   selector: 'app-admin-dashboard',
   imports: [CommonModule, RouterModule, NavbarComponent],
   template: `
-    <div class="min-h-screen bg-gray-100">
+    <!-- Matte-Drift Admin Dashboard -->
+    <div class="min-h-screen" style="background-color: #FCF9F5;">
       <!-- Navigation -->
       <app-navbar></app-navbar>
 
       <!-- Main Content -->
-      <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div class="px-4 py-6 sm:px-0">
-          <h2 class="text-2xl font-bold text-gray-800 mb-6">User Management</h2>
+      <div class="max-w-7xl mx-auto py-6 px-6">
+        <div class="py-6">
+          <h2 class="text-2xl font-semibold mb-6" style="color: #2D2622;">User Management</h2>
 
           <!-- Error Message -->
-          <div *ngIf="error" class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+          <div *ngIf="error" class="mb-4 bg-white rounded-[12px] px-4 py-3" style="border: 1px solid #EAE3DB; color: #2D2622;">
             {{ error }}
           </div>
 
           <!-- Success Message -->
-          <div *ngIf="successMessage" class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
+          <div *ngIf="successMessage" class="mb-4 bg-white rounded-[12px] px-4 py-3" style="border: 1px solid #D4A373; color: #8B5E3C;">
             {{ successMessage }}
           </div>
 
           <!-- Loading State -->
           <div *ngIf="loading" class="text-center py-8">
-            <p class="text-gray-600">Loading users...</p>
+            <p style="color: #4A3B33;">Loading users...</p>
           </div>
 
           <!-- Users Table -->
-          <div *ngIf="!loading" class="bg-white shadow overflow-hidden sm:rounded-lg">
-            <table class="min-w-full divide-y divide-gray-200">
-              <thead class="bg-gray-50">
+          <div *ngIf="!loading" class="bg-white rounded-[12px] overflow-hidden" style="border: 1px solid #EAE3DB;">
+            <table class="min-w-full">
+              <thead style="background-color: #FCF9F5; border-bottom: 1px solid #EAE3DB;">
                 <tr>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: #4A3B33;">
                     Username
                   </th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: #4A3B33;">
                     Email
                   </th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: #4A3B33;">
                     Role
                   </th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: #4A3B33;">
                     Status
                   </th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: #4A3B33;">
                     Current Member
                   </th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: #4A3B33;">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody class="bg-white divide-y divide-gray-200">
-                <tr *ngFor="let user of users" [class.bg-gray-50]="!user.isActive">
-                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+              <tbody>
+                <tr *ngFor="let user of users" 
+                    style="border-bottom: 1px solid #EAE3DB;"
+                    [ngStyle]="{'background-color': !user.isActive ? '#FCF9F5' : '#FFFFFF'}">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium" style="color: #2D2622;">
                     {{ user.username }}
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm" style="color: #4A3B33;">
                     {{ user.email }}
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
-                          [class.bg-purple-100]="user.role === 'admin'"
-                          [class.text-purple-800]="user.role === 'admin'"
-                          [class.bg-blue-100]="user.role === 'student'"
-                          [class.text-blue-800]="user.role === 'student'">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">
+                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-[12px]"
+                          [ngStyle]="{
+                            'background-color': user.role === 'admin' ? '#FCF9F5' : '#FCF9F5',
+                            'color': user.role === 'admin' ? '#8B5E3C' : '#4A3B33',
+                            'border': '1px solid #EAE3DB'
+                          }">
                       {{ user.role }}
                     </span>
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
-                          [class.bg-green-100]="user.isActive"
-                          [class.text-green-800]="user.isActive"
-                          [class.bg-red-100]="!user.isActive"
-                          [class.text-red-800]="!user.isActive">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">
+                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-[12px]"
+                          [ngStyle]="{
+                            'background-color': '#FCF9F5',
+                            'color': user.isActive ? '#8B5E3C' : '#4A3B33',
+                            'border': '1px solid ' + (user.isActive ? '#D4A373' : '#EAE3DB')
+                          }">
                       {{ user.isActive ? 'Activo' : 'En espera' }}
                     </span>
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
-                          [class.bg-green-100]="user.isCurrentMember"
-                          [class.text-green-800]="user.isCurrentMember"
-                          [class.bg-gray-100]="!user.isCurrentMember"
-                          [class.text-gray-800]="!user.isCurrentMember">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">
+                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-[12px]"
+                          [ngStyle]="{
+                            'background-color': '#FCF9F5',
+                            'color': user.isCurrentMember ? '#8B5E3C' : '#4A3B33',
+                            'border': '1px solid ' + (user.isCurrentMember ? '#D4A373' : '#EAE3DB')
+                          }">
                       {{ user.isCurrentMember ? 'Sí' : 'No' }}
                     </span>
                   </td>
@@ -104,7 +110,8 @@ interface UserManagement extends User {
                     <button
                       *ngIf="!user.isActive"
                       (click)="approveUser(user._id)"
-                      class="text-green-600 hover:text-green-900"
+                      class="hover:underline"
+                      style="color: #8B5E3C;"
                       title="Approve user"
                     >
                       ✓ Approve
@@ -120,10 +127,8 @@ interface UserManagement extends User {
                     <button
                       *ngIf="user.role !== 'admin'"
                       (click)="toggleCurrentMember(user._id, !user.isCurrentMember)"
-                      [class.text-blue-600]="!user.isCurrentMember"
-                      [class.hover:text-blue-900]="!user.isCurrentMember"
-                      [class.text-gray-600]="user.isCurrentMember"
-                      [class.hover:text-gray-900]="user.isCurrentMember"
+                      [ngStyle]="{'color': !user.isCurrentMember ? '#8B5E3C' : '#4A3B33'}"
+                      class="hover:underline"
                       title="{{ user.isCurrentMember ? 'Remove from current members' : 'Mark as current member' }}"
                     >
                       {{ user.isCurrentMember ? '★ Remove Member' : '☆ Mark Member' }}
@@ -136,7 +141,7 @@ interface UserManagement extends User {
 
           <!-- Empty State -->
           <div *ngIf="!loading && users.length === 0" class="text-center py-8">
-            <p class="text-gray-600">No users found</p>
+            <p style="color: #4A3B33;">No users found</p>
           </div>
         </div>
       </div>

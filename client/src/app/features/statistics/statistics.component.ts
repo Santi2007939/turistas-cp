@@ -68,12 +68,14 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
           <!-- Problem Statistics -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <div class="bg-white rounded-[12px] p-6" style="border: 1px solid #EAE3DB;">
+            <!-- Codeforces Card - Codeforces themed -->
+            <div class="bg-white rounded-[12px] p-6" style="border: 2px solid #4A90A4; background: linear-gradient(135deg, #FFFFFF 0%, #E8F4F8 100%);">
               <div class="flex items-center gap-2 mb-2">
                 <span class="text-2xl">📈</span>
                 <h4 class="font-semibold" style="color: #2D2622;">Codeforces</h4>
+                <span class="px-2 py-0.5 text-xs font-medium rounded-[12px]" style="background-color: #E8F4F8; color: #4A90A4; border: 1px solid #4A90A4;">CF</span>
               </div>
-              <p class="text-2xl font-bold font-mono" style="color: #8B5E3C;">{{ currentUser?.codeforcesHandle || 'Sin handle' }}</p>
+              <p class="text-2xl font-bold font-mono" style="color: #4A90A4;">{{ currentUser?.codeforcesHandle || 'Sin handle' }}</p>
               <p class="text-sm" style="color: #4A3B33;">Handle vinculado</p>
             </div>
 

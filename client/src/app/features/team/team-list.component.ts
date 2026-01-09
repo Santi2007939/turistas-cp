@@ -13,19 +13,21 @@ import { environment } from '../../../environments/environment';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="min-h-screen bg-gray-100 flex items-center justify-center">
+    <!-- Matte-Drift Team List -->
+    <div class="min-h-screen flex items-center justify-center" style="background-color: #FCF9F5;">
       <div class="text-center">
         <div *ngIf="loading">
-          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p class="text-gray-600">Loading {{ teamName }}...</p>
+          <div class="animate-spin rounded-full h-12 w-12 mx-auto mb-4" style="border: 3px solid #EAE3DB; border-top-color: #8B5E3C;"></div>
+          <p style="color: #4A3B33;">Loading {{ teamName }}...</p>
         </div>
         
-        <div *ngIf="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-          <p class="font-semibold mb-2">Error</p>
-          <p>{{ error }}</p>
+        <div *ngIf="error" class="bg-white rounded-[12px] px-6 py-4" style="border: 1px solid #EAE3DB;">
+          <p class="font-semibold mb-2" style="color: #2D2622;">Error</p>
+          <p style="color: #4A3B33;">{{ error }}</p>
           <button 
             (click)="retry()"
-            class="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+            class="mt-4 text-white px-4 py-2 rounded-[12px] font-medium"
+            style="background-color: #8B5E3C;">
             Retry
           </button>
         </div>

@@ -10,29 +10,31 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule, NavbarComponent],
   template: `
-    <div class="min-h-screen bg-gray-100">
+    <!-- Matte-Drift Team Create -->
+    <div class="min-h-screen" style="background-color: #FCF9F5;">
       <!-- Navigation -->
       <app-navbar></app-navbar>
       
-      <div class="container mx-auto px-4 py-8">
-        <div class="bg-white rounded-lg shadow-md p-8 max-w-2xl mx-auto">
+      <div class="container mx-auto px-6 py-8">
+        <div class="bg-white rounded-[12px] p-8 max-w-2xl mx-auto" style="border: 1px solid #EAE3DB;">
           <div class="flex justify-between items-center mb-6">
-            <h1 class="text-3xl font-bold text-gray-800">Create New Team</h1>
+            <h1 class="text-3xl font-semibold" style="color: #2D2622;">Create New Team</h1>
             <button 
               (click)="goBack()"
-              class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+              class="px-4 py-2 rounded-[12px] font-medium"
+              style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
               Back
             </button>
           </div>
 
-          <div *ngIf="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          <div *ngIf="error" class="bg-white rounded-[12px] px-4 py-3 mb-4" style="border: 1px solid #EAE3DB; color: #2D2622;">
             {{ error }}
           </div>
 
           <form (ngSubmit)="createTeam()" #teamForm="ngForm">
             <!-- Team Name -->
             <div class="mb-4">
-              <label for="name" class="block text-gray-700 font-semibold mb-2">
+              <label for="name" class="block font-medium mb-2" style="color: #2D2622;">
                 Team Name *
               </label>
               <input 
@@ -41,13 +43,14 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 name="name"
                 [(ngModel)]="teamData.name"
                 required
-                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                class="w-full rounded-[12px] px-4 py-3 focus:outline-none"
+                style="border: 1px solid #EAE3DB; color: #2D2622;"
                 placeholder="Enter team name">
             </div>
 
             <!-- Description -->
             <div class="mb-4">
-              <label for="description" class="block text-gray-700 font-semibold mb-2">
+              <label for="description" class="block font-medium mb-2" style="color: #2D2622;">
                 Description
               </label>
               <textarea 
@@ -55,14 +58,15 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 name="description"
                 [(ngModel)]="teamData.description"
                 rows="3"
-                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                class="w-full rounded-[12px] px-4 py-3 focus:outline-none"
+                style="border: 1px solid #EAE3DB; color: #2D2622;"
                 placeholder="Describe your team...">
               </textarea>
             </div>
 
             <!-- Max Members -->
             <div class="mb-4">
-              <label for="maxMembers" class="block text-gray-700 font-semibold mb-2">
+              <label for="maxMembers" class="block font-medium mb-2" style="color: #2D2622;">
                 Maximum Members *
               </label>
               <input 
@@ -73,13 +77,14 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 required
                 min="2"
                 max="50"
-                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                class="w-full rounded-[12px] px-4 py-3 focus:outline-none font-mono"
+                style="border: 1px solid #EAE3DB; color: #2D2622;"
                 placeholder="e.g., 10">
             </div>
 
             <!-- Settings -->
             <div class="mb-6">
-              <h2 class="text-xl font-semibold text-gray-800 mb-3">Team Settings</h2>
+              <h2 class="text-xl font-semibold mb-3" style="color: #2D2622;">Team Settings</h2>
               
               <div class="space-y-3">
                 <div class="flex items-center">
@@ -88,8 +93,8 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                     id="isPublic"
                     name="isPublic"
                     [(ngModel)]="teamData.settings.isPublic"
-                    class="mr-2">
-                  <label for="isPublic" class="text-gray-700">
+                    class="mr-2 rounded">
+                  <label for="isPublic" style="color: #4A3B33;">
                     Public Team (visible to all users)
                   </label>
                 </div>
@@ -100,8 +105,8 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                     id="allowJoinRequests"
                     name="allowJoinRequests"
                     [(ngModel)]="teamData.settings.allowJoinRequests"
-                    class="mr-2">
-                  <label for="allowJoinRequests" class="text-gray-700">
+                    class="mr-2 rounded">
+                  <label for="allowJoinRequests" style="color: #4A3B33;">
                     Allow Join Requests
                   </label>
                 </div>
@@ -112,8 +117,8 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                     id="sharedRoadmap"
                     name="sharedRoadmap"
                     [(ngModel)]="teamData.settings.sharedRoadmap"
-                    class="mr-2">
-                  <label for="sharedRoadmap" class="text-gray-700">
+                    class="mr-2 rounded">
+                  <label for="sharedRoadmap" style="color: #4A3B33;">
                     Shared Roadmap (team members can view each other's progress)
                   </label>
                 </div>
@@ -124,8 +129,8 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                     id="sharedCalendar"
                     name="sharedCalendar"
                     [(ngModel)]="teamData.settings.sharedCalendar"
-                    class="mr-2">
-                  <label for="sharedCalendar" class="text-gray-700">
+                    class="mr-2 rounded">
+                  <label for="sharedCalendar" style="color: #4A3B33;">
                     Shared Calendar (team events and contests)
                   </label>
                 </div>
@@ -137,13 +142,15 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               <button 
                 type="button"
                 (click)="goBack()"
-                class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+                class="flex-1 px-4 py-3 rounded-[12px] font-medium"
+                style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
                 Cancel
               </button>
               <button 
                 type="submit"
                 [disabled]="!teamForm.valid || creating"
-                class="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded disabled:bg-gray-300 disabled:cursor-not-allowed">
+                class="flex-1 text-white px-4 py-3 rounded-[12px] font-medium disabled:opacity-50"
+                style="background-color: #8B5E3C;">
                 {{ creating ? 'Creating...' : 'Create Team' }}
               </button>
             </div>

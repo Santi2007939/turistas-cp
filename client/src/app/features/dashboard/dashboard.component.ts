@@ -49,9 +49,13 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             </div>
           </div>
 
-          <!-- Codeforces Stats Section -->
-          <div *ngIf="currentUser?.codeforcesHandle" class="bg-white rounded-[12px] p-6 mb-6" style="border: 1px solid #EAE3DB;">
-            <h3 class="text-xl font-semibold mb-6" style="color: #2D2622;">📊 Estadísticas de Codeforces</h3>
+          <!-- Codeforces Stats Section - Codeforces themed with adjusted tones -->
+          <div *ngIf="currentUser?.codeforcesHandle" class="bg-white rounded-[12px] p-6 mb-6" style="border: 2px solid #4A90A4;">
+            <div class="flex items-center gap-3 mb-6">
+              <span class="text-2xl">📊</span>
+              <h3 class="text-xl font-semibold" style="color: #2D2622;">Estadísticas de Codeforces</h3>
+              <span class="px-2 py-1 text-xs font-medium rounded-[12px]" style="background-color: #E8F4F8; color: #4A90A4; border: 1px solid #4A90A4;">Codeforces</span>
+            </div>
             
             <div *ngIf="loadingCodeforcesStats" class="text-center py-4">
               <p style="color: #4A3B33;">Cargando estadísticas de Codeforces...</p>
@@ -59,46 +63,46 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
             <div *ngIf="!loadingCodeforcesStats && codeforcesStats" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <!-- Rating -->
-              <div class="bg-white rounded-[12px] p-4" style="border: 1px solid #EAE3DB;">
+              <div class="bg-white rounded-[12px] p-4" style="border: 1px solid #4A90A4; background: linear-gradient(135deg, #FFFFFF 0%, #E8F4F8 100%);">
                 <div class="flex items-center gap-2 mb-2">
                   <span class="text-2xl">⭐</span>
                   <h4 class="font-semibold" style="color: #2D2622;">Rating</h4>
                 </div>
-                <p class="text-2xl font-bold font-mono" style="color: #8B5E3C;">
+                <p class="text-2xl font-bold font-mono" style="color: #4A90A4;">
                   {{ codeforcesStats.rating || 'Sin rating' }}
                 </p>
                 <p class="text-sm" style="color: #4A3B33;">{{ codeforcesStats.rank || 'Unranked' }}</p>
               </div>
 
               <!-- Max Rating -->
-              <div class="bg-white rounded-[12px] p-4" style="border: 1px solid #EAE3DB;">
+              <div class="bg-white rounded-[12px] p-4" style="border: 1px solid #4A90A4; background: linear-gradient(135deg, #FFFFFF 0%, #E8F4F8 100%);">
                 <div class="flex items-center gap-2 mb-2">
                   <span class="text-2xl">🏆</span>
                   <h4 class="font-semibold" style="color: #2D2622;">Max Rating</h4>
                 </div>
-                <p class="text-2xl font-bold font-mono" style="color: #D4A373;">
+                <p class="text-2xl font-bold font-mono" style="color: #3A7A8A;">
                   {{ codeforcesStats.maxRating || 'N/A' }}
                 </p>
                 <p class="text-sm" style="color: #4A3B33;">{{ codeforcesStats.maxRank || '' }}</p>
               </div>
 
               <!-- Contribution -->
-              <div class="bg-white rounded-[12px] p-4" style="border: 1px solid #EAE3DB;">
+              <div class="bg-white rounded-[12px] p-4" style="border: 1px solid #4A90A4; background: linear-gradient(135deg, #FFFFFF 0%, #E8F4F8 100%);">
                 <div class="flex items-center gap-2 mb-2">
                   <span class="text-2xl">🤝</span>
                   <h4 class="font-semibold" style="color: #2D2622;">Contribución</h4>
                 </div>
-                <p class="text-2xl font-bold font-mono" style="color: #8B5E3C;">{{ codeforcesStats.contribution || 0 }}</p>
+                <p class="text-2xl font-bold font-mono" style="color: #4A90A4;">{{ codeforcesStats.contribution || 0 }}</p>
                 <p class="text-sm" style="color: #4A3B33;">Puntos</p>
               </div>
 
               <!-- Friend Count -->
-              <div class="bg-white rounded-[12px] p-4" style="border: 1px solid #EAE3DB;">
+              <div class="bg-white rounded-[12px] p-4" style="border: 1px solid #4A90A4; background: linear-gradient(135deg, #FFFFFF 0%, #E8F4F8 100%);">
                 <div class="flex items-center gap-2 mb-2">
                   <span class="text-2xl">👥</span>
                   <h4 class="font-semibold" style="color: #2D2622;">Amigos</h4>
                 </div>
-                <p class="text-2xl font-bold font-mono" style="color: #D4A373;">{{ codeforcesStats.friendOfCount || 0 }}</p>
+                <p class="text-2xl font-bold font-mono" style="color: #3A7A8A;">{{ codeforcesStats.friendOfCount || 0 }}</p>
                 <p class="text-sm" style="color: #4A3B33;">Personas te siguen</p>
               </div>
             </div>
@@ -108,7 +112,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               <button 
                 (click)="loadCodeforcesStats()"
                 class="mt-2 text-white px-4 py-2 rounded-[12px] text-sm font-medium"
-                style="background-color: #8B5E3C;">
+                style="background-color: #4A90A4;">
                 Reintentar
               </button>
             </div>
@@ -118,15 +122,19 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 [href]="'https://codeforces.com/profile/' + currentUser?.codeforcesHandle"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="text-sm hover:underline"
-                style="color: #8B5E3C;">
+                class="text-sm hover:underline font-medium"
+                style="color: #4A90A4;">
                 Ver perfil completo en Codeforces →
               </a>
             </div>
           </div>
 
-          <div *ngIf="!currentUser?.codeforcesHandle" class="bg-white rounded-[12px] p-6 mb-6" style="border: 1px solid #EAE3DB;">
-            <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">📊 Estadísticas de Codeforces</h3>
+          <div *ngIf="!currentUser?.codeforcesHandle" class="bg-white rounded-[12px] p-6 mb-6" style="border: 2px solid #4A90A4;">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="text-2xl">📊</span>
+              <h3 class="text-xl font-semibold" style="color: #2D2622;">Estadísticas de Codeforces</h3>
+              <span class="px-2 py-1 text-xs font-medium rounded-[12px]" style="background-color: #E8F4F8; color: #4A90A4; border: 1px solid #4A90A4;">Codeforces</span>
+            </div>
             <p class="text-center py-4" style="color: #4A3B33;">
               Vincula tu handle de Codeforces en tu perfil para ver tus estadísticas aquí.
             </p>
