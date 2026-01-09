@@ -11,94 +11,99 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
     selector: 'app-dashboard',
     imports: [CommonModule, RouterModule, NavbarComponent],
     template: `
-    <div class="min-h-screen bg-gray-100">
+    <!-- Matte-Drift Dashboard -->
+    <div class="min-h-screen" style="background-color: #FCF9F5;">
       <!-- Navigation -->
       <app-navbar></app-navbar>
 
       <!-- Main Content -->
-      <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div class="px-4 py-6 sm:px-0">
-          <h2 class="text-2xl font-bold text-gray-800 mb-6">Welcome, {{ currentUser?.username }}!</h2>
+      <div class="max-w-7xl mx-auto py-6 px-6">
+        <div class="py-6">
+          <h2 class="text-2xl font-semibold mb-6" style="color: #2D2622;">Welcome, {{ currentUser?.username }}!</h2>
           
-          <!-- Roadmap Statistics -->
-          <div *ngIf="roadmapStats" class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg shadow-lg p-6 mb-6 text-white">
-            <h3 class="text-xl font-bold mb-4">📊 Tu Progreso en el Roadmap</h3>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <!-- Roadmap Statistics Card -->
+          <div *ngIf="roadmapStats" class="bg-white rounded-[12px] p-6 mb-6" style="border: 1px solid #EAE3DB;">
+            <h3 class="text-xl font-semibold mb-6" style="color: #2D2622;">📊 Tu Progreso en el Roadmap</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
               <div class="text-center">
-                <div class="text-3xl font-bold">{{ roadmapStats.total }}</div>
-                <div class="text-sm opacity-90">Temas Totales</div>
+                <div class="text-3xl font-bold font-mono" style="color: #8B5E3C;">{{ roadmapStats.total }}</div>
+                <div class="text-sm" style="color: #4A3B33;">Temas Totales</div>
               </div>
               <div class="text-center">
-                <div class="text-3xl font-bold">{{ roadmapStats.inProgress }}</div>
-                <div class="text-sm opacity-90">En Progreso</div>
+                <div class="text-3xl font-bold font-mono" style="color: #D4A373;">{{ roadmapStats.inProgress }}</div>
+                <div class="text-sm" style="color: #4A3B33;">En Progreso</div>
               </div>
               <div class="text-center">
-                <div class="text-3xl font-bold">{{ roadmapStats.completed }}</div>
-                <div class="text-sm opacity-90">Completados</div>
+                <div class="text-3xl font-bold font-mono" style="color: #8B5E3C;">{{ roadmapStats.completed }}</div>
+                <div class="text-sm" style="color: #4A3B33;">Completados</div>
               </div>
               <div class="text-center">
-                <div class="text-3xl font-bold">{{ roadmapStats.averageProgress }}%</div>
-                <div class="text-sm opacity-90">Progreso Promedio</div>
+                <div class="text-3xl font-bold font-mono" style="color: #8B5E3C;">{{ roadmapStats.averageProgress }}%</div>
+                <div class="text-sm" style="color: #4A3B33;">Progreso Promedio</div>
               </div>
             </div>
-            <div class="mt-4">
-              <div class="bg-white bg-opacity-20 rounded-full h-2 overflow-hidden">
-                <div class="bg-white h-2 rounded-full transition-all duration-500" [style.width.%]="roadmapStats.averageProgress"></div>
+            <div class="mt-6">
+              <div class="rounded-[12px] h-2 overflow-hidden" style="background-color: #EAE3DB;">
+                <div class="h-2 rounded-[12px] transition-all duration-500" style="background-color: #D4A373;" [style.width.%]="roadmapStats.averageProgress"></div>
               </div>
             </div>
           </div>
 
-          <!-- Codeforces Stats Section -->
-          <div *ngIf="currentUser?.codeforcesHandle" class="bg-white rounded-lg shadow-lg p-6 mb-6">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">📊 Estadísticas de Codeforces</h3>
+          <!-- Codeforces Stats Section - Codeforces themed with adjusted tones -->
+          <div *ngIf="currentUser?.codeforcesHandle" class="bg-white rounded-[12px] p-6 mb-6" style="border: 2px solid #4A90A4;">
+            <div class="flex items-center gap-3 mb-6">
+              <span class="text-2xl">📊</span>
+              <h3 class="text-xl font-semibold" style="color: #2D2622;">Estadísticas de Codeforces</h3>
+              <span class="px-2 py-1 text-xs font-medium rounded-[12px]" style="background-color: #E8F4F8; color: #4A90A4; border: 1px solid #4A90A4;">Codeforces</span>
+            </div>
             
             <div *ngIf="loadingCodeforcesStats" class="text-center py-4">
-              <p class="text-gray-500">Cargando estadísticas de Codeforces...</p>
+              <p style="color: #4A3B33;">Cargando estadísticas de Codeforces...</p>
             </div>
 
-            <div *ngIf="!loadingCodeforcesStats && codeforcesStats" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div *ngIf="!loadingCodeforcesStats && codeforcesStats" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <!-- Rating -->
-              <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
+              <div class="bg-white rounded-[12px] p-4" style="border: 1px solid #4A90A4; background: linear-gradient(135deg, #FFFFFF 0%, #E8F4F8 100%);">
                 <div class="flex items-center gap-2 mb-2">
                   <span class="text-2xl">⭐</span>
-                  <h4 class="font-semibold text-gray-800">Rating</h4>
+                  <h4 class="font-semibold" style="color: #2D2622;">Rating</h4>
                 </div>
-                <p class="text-2xl font-bold" [ngClass]="getRatingColorClass(codeforcesStats.rating)">
+                <p class="text-2xl font-bold font-mono" style="color: #4A90A4;">
                   {{ codeforcesStats.rating || 'Sin rating' }}
                 </p>
-                <p class="text-sm text-gray-600">{{ codeforcesStats.rank || 'Unranked' }}</p>
+                <p class="text-sm" style="color: #4A3B33;">{{ codeforcesStats.rank || 'Unranked' }}</p>
               </div>
 
               <!-- Max Rating -->
-              <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 border border-green-200">
+              <div class="bg-white rounded-[12px] p-4" style="border: 1px solid #4A90A4; background: linear-gradient(135deg, #FFFFFF 0%, #E8F4F8 100%);">
                 <div class="flex items-center gap-2 mb-2">
                   <span class="text-2xl">🏆</span>
-                  <h4 class="font-semibold text-gray-800">Max Rating</h4>
+                  <h4 class="font-semibold" style="color: #2D2622;">Max Rating</h4>
                 </div>
-                <p class="text-2xl font-bold" [ngClass]="getRatingColorClass(codeforcesStats.maxRating)">
+                <p class="text-2xl font-bold font-mono" style="color: #3A7A8A;">
                   {{ codeforcesStats.maxRating || 'N/A' }}
                 </p>
-                <p class="text-sm text-gray-600">{{ codeforcesStats.maxRank || '' }}</p>
+                <p class="text-sm" style="color: #4A3B33;">{{ codeforcesStats.maxRank || '' }}</p>
               </div>
 
               <!-- Contribution -->
-              <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 border border-purple-200">
+              <div class="bg-white rounded-[12px] p-4" style="border: 1px solid #4A90A4; background: linear-gradient(135deg, #FFFFFF 0%, #E8F4F8 100%);">
                 <div class="flex items-center gap-2 mb-2">
                   <span class="text-2xl">🤝</span>
-                  <h4 class="font-semibold text-gray-800">Contribución</h4>
+                  <h4 class="font-semibold" style="color: #2D2622;">Contribución</h4>
                 </div>
-                <p class="text-2xl font-bold text-purple-600">{{ codeforcesStats.contribution || 0 }}</p>
-                <p class="text-sm text-gray-600">Puntos</p>
+                <p class="text-2xl font-bold font-mono" style="color: #4A90A4;">{{ codeforcesStats.contribution || 0 }}</p>
+                <p class="text-sm" style="color: #4A3B33;">Puntos</p>
               </div>
 
               <!-- Friend Count -->
-              <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg p-4 border border-orange-200">
+              <div class="bg-white rounded-[12px] p-4" style="border: 1px solid #4A90A4; background: linear-gradient(135deg, #FFFFFF 0%, #E8F4F8 100%);">
                 <div class="flex items-center gap-2 mb-2">
                   <span class="text-2xl">👥</span>
-                  <h4 class="font-semibold text-gray-800">Amigos</h4>
+                  <h4 class="font-semibold" style="color: #2D2622;">Amigos</h4>
                 </div>
-                <p class="text-2xl font-bold text-orange-600">{{ codeforcesStats.friendOfCount || 0 }}</p>
-                <p class="text-sm text-gray-600">Personas te siguen</p>
+                <p class="text-2xl font-bold font-mono" style="color: #3A7A8A;">{{ codeforcesStats.friendOfCount || 0 }}</p>
+                <p class="text-sm" style="color: #4A3B33;">Personas te siguen</p>
               </div>
             </div>
 
@@ -106,61 +111,66 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               <p class="text-red-500">{{ codeforcesError }}</p>
               <button 
                 (click)="loadCodeforcesStats()"
-                class="mt-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm">
+                class="mt-2 text-white px-4 py-2 rounded-[12px] text-sm font-medium"
+                style="background-color: #4A90A4;">
                 Reintentar
               </button>
             </div>
 
-            <div *ngIf="!loadingCodeforcesStats && codeforcesStats" class="mt-4 text-center">
+            <div *ngIf="!loadingCodeforcesStats && codeforcesStats" class="mt-6 text-center">
               <a 
                 [href]="'https://codeforces.com/profile/' + currentUser?.codeforcesHandle"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="text-blue-600 hover:text-blue-800 text-sm">
+                class="text-sm hover:underline font-medium"
+                style="color: #4A90A4;">
                 Ver perfil completo en Codeforces →
               </a>
             </div>
           </div>
 
-          <div *ngIf="!currentUser?.codeforcesHandle" class="bg-white rounded-lg shadow-lg p-6 mb-6">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">📊 Estadísticas de Codeforces</h3>
-            <p class="text-gray-500 text-center py-4">
+          <div *ngIf="!currentUser?.codeforcesHandle" class="bg-white rounded-[12px] p-6 mb-6" style="border: 2px solid #4A90A4;">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="text-2xl">📊</span>
+              <h3 class="text-xl font-semibold" style="color: #2D2622;">Estadísticas de Codeforces</h3>
+              <span class="px-2 py-1 text-xs font-medium rounded-[12px]" style="background-color: #E8F4F8; color: #4A90A4; border: 1px solid #4A90A4;">Codeforces</span>
+            </div>
+            <p class="text-center py-4" style="color: #4A3B33;">
               Vincula tu handle de Codeforces en tu perfil para ver tus estadísticas aquí.
             </p>
           </div>
 
-          <!-- Quick Actions -->
+          <!-- Quick Actions - Matte-Drift Cards -->
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Feature cards -->
-            <a routerLink="/themes" class="bg-white overflow-hidden shadow rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer">
-              <h3 class="text-lg font-semibold">📚 Learning Themes</h3>
-              <p class="mt-2 text-gray-600">Browse and explore learning topics</p>
+            <a routerLink="/themes" class="bg-white overflow-hidden rounded-[12px] p-6 transition-colors cursor-pointer" style="border: 1px solid #EAE3DB;">
+              <h3 class="text-lg font-semibold" style="color: #2D2622;">📚 Learning Themes</h3>
+              <p class="mt-2" style="color: #4A3B33;">Browse and explore learning topics</p>
             </a>
-            <a routerLink="/roadmap" class="bg-white overflow-hidden shadow rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer">
-              <h3 class="text-lg font-semibold">🗺️ My Roadmap</h3>
-              <p class="mt-2 text-gray-600">Track your learning journey</p>
+            <a routerLink="/roadmap" class="bg-white overflow-hidden rounded-[12px] p-6 transition-colors cursor-pointer" style="border: 1px solid #EAE3DB;">
+              <h3 class="text-lg font-semibold" style="color: #2D2622;">🗺️ My Roadmap</h3>
+              <p class="mt-2" style="color: #4A3B33;">Track your learning journey</p>
               <div class="mt-3 flex gap-2">
-                <span class="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded">📋 Kanban</span>
-                <span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded">📊 Gráfica</span>
+                <span class="text-xs px-2 py-1 rounded-[12px]" style="background-color: #FCF9F5; color: #8B5E3C; border: 1px solid #EAE3DB;">📋 Kanban</span>
+                <span class="text-xs px-2 py-1 rounded-[12px]" style="background-color: #FCF9F5; color: #8B5E3C; border: 1px solid #EAE3DB;">📊 Gráfica</span>
               </div>
             </a>
-            <a routerLink="/problems" class="bg-white overflow-hidden shadow rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer">
-              <h3 class="text-lg font-semibold">💻 Problems</h3>
-              <p class="mt-2 text-gray-600">Practice and exercises</p>
+            <a routerLink="/problems" class="bg-white overflow-hidden rounded-[12px] p-6 transition-colors cursor-pointer" style="border: 1px solid #EAE3DB;">
+              <h3 class="text-lg font-semibold" style="color: #2D2622;">💻 Problems</h3>
+              <p class="mt-2" style="color: #4A3B33;">Practice and exercises</p>
             </a>
-            <a routerLink="/team" class="bg-white overflow-hidden shadow rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer">
-              <h3 class="text-lg font-semibold">👥 Team Turistas</h3>
-              <p class="mt-2 text-gray-600">Collaborative workspace</p>
+            <a routerLink="/team" class="bg-white overflow-hidden rounded-[12px] p-6 transition-colors cursor-pointer" style="border: 1px solid #EAE3DB;">
+              <h3 class="text-lg font-semibold" style="color: #2D2622;">👥 Team Turistas</h3>
+              <p class="mt-2" style="color: #4A3B33;">Collaborative workspace</p>
             </a>
-            <a routerLink="/calendar" class="bg-white overflow-hidden shadow rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer">
-              <h3 class="text-lg font-semibold">📅 Calendar</h3>
-              <p class="mt-2 text-gray-600">Contests and events</p>
+            <a routerLink="/calendar" class="bg-white overflow-hidden rounded-[12px] p-6 transition-colors cursor-pointer" style="border: 1px solid #EAE3DB;">
+              <h3 class="text-lg font-semibold" style="color: #2D2622;">📅 Calendar</h3>
+              <p class="mt-2" style="color: #4A3B33;">Contests and events</p>
             </a>
             <a 
               routerLink="/statistics"
-              class="bg-white overflow-hidden shadow rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer">
-              <h3 class="text-lg font-semibold">📊 Statistics</h3>
-              <p class="mt-2 text-gray-600">View your progress and achievements</p>
+              class="bg-white overflow-hidden rounded-[12px] p-6 transition-colors cursor-pointer" style="border: 1px solid #EAE3DB;">
+              <h3 class="text-lg font-semibold" style="color: #2D2622;">📊 Statistics</h3>
+              <p class="mt-2" style="color: #4A3B33;">View your progress and achievements</p>
             </a>
           </div>
         </div>

@@ -12,33 +12,35 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule, NavbarComponent],
   template: `
-    <div class="min-h-screen bg-gray-100">
+    <!-- Matte-Drift Team Detail -->
+    <div class="min-h-screen" style="background-color: #FCF9F5;">
       <!-- Navigation -->
       <app-navbar></app-navbar>
       
-      <div class="container mx-auto px-4 py-8">
+      <div class="container mx-auto px-6 py-8">
       <div *ngIf="loading" class="text-center py-8">
-        <p class="text-gray-600">Loading team...</p>
+        <p style="color: #4A3B33;">Loading team...</p>
       </div>
 
-      <div *ngIf="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+      <div *ngIf="error" class="bg-white rounded-[12px] px-4 py-3 mb-4" style="border: 1px solid #EAE3DB; color: #2D2622;">
         {{ error }}
       </div>
 
-      <div *ngIf="successMessage" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+      <div *ngIf="successMessage" class="bg-white rounded-[12px] px-4 py-3 mb-4" style="border: 1px solid #D4A373; color: #8B5E3C;">
         {{ successMessage }}
       </div>
 
       <div *ngIf="team && !loading">
-        <div class="bg-white rounded-lg shadow-md p-8 mb-6">
+        <div class="bg-white rounded-[12px] p-8 mb-6" style="border: 1px solid #EAE3DB;">
           <div class="flex justify-between items-start mb-6">
             <div>
-              <h1 class="text-3xl font-bold text-gray-800 mb-2">{{ team.name }}</h1>
-              <p class="text-gray-600">{{ team.description || 'No description' }}</p>
+              <h1 class="text-3xl font-semibold mb-2" style="color: #2D2622;">{{ team.name }}</h1>
+              <p style="color: #4A3B33;">{{ team.description || 'No description' }}</p>
             </div>
             <button 
               (click)="goBack()"
-              class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+              class="px-4 py-2 rounded-[12px] font-medium"
+              style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
               Back to Dashboard
             </button>
           </div>
@@ -46,99 +48,106 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           <div class="flex gap-2 mb-6">
             <span 
               *ngIf="team.settings.isPublic"
-              class="bg-green-100 text-green-800 px-3 py-1 rounded">
+              class="px-3 py-1 rounded-[12px]"
+              style="background-color: #FCF9F5; color: #8B5E3C; border: 1px solid #EAE3DB;">
               Public Team
             </span>
             <span 
               *ngIf="!team.settings.isPublic"
-              class="bg-gray-100 text-gray-800 px-3 py-1 rounded">
+              class="px-3 py-1 rounded-[12px]"
+              style="background-color: #FCF9F5; color: #4A3B33; border: 1px solid #EAE3DB;">
               Private Team
             </span>
             <span 
               *ngIf="team.settings.allowJoinRequests"
-              class="bg-blue-100 text-blue-800 px-3 py-1 rounded">
+              class="px-3 py-1 rounded-[12px]"
+              style="background-color: #FCF9F5; color: #8B5E3C; border: 1px solid #EAE3DB;">
               Open to Join Requests
             </span>
           </div>
 
           <!-- Team Statistics -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <div class="bg-gray-50 rounded p-4">
-              <p class="text-gray-600 text-sm mb-1">Total Problems Solved</p>
-              <p class="text-2xl font-bold text-gray-800">{{ team.statistics.totalProblemsSolved }}</p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div class="bg-white rounded-[12px] p-4" style="border: 1px solid #EAE3DB;">
+              <p class="text-sm mb-1" style="color: #4A3B33;">Total Problems Solved</p>
+              <p class="text-2xl font-bold font-mono" style="color: #8B5E3C;">{{ team.statistics.totalProblemsSolved }}</p>
             </div>
-            <div class="bg-gray-50 rounded p-4">
-              <p class="text-gray-600 text-sm mb-1">Total Contests</p>
-              <p class="text-2xl font-bold text-gray-800">{{ team.statistics.totalContests }}</p>
+            <div class="bg-white rounded-[12px] p-4" style="border: 1px solid #EAE3DB;">
+              <p class="text-sm mb-1" style="color: #4A3B33;">Total Contests</p>
+              <p class="text-2xl font-bold font-mono" style="color: #D4A373;">{{ team.statistics.totalContests }}</p>
             </div>
-            <div class="bg-gray-50 rounded p-4">
-              <p class="text-gray-600 text-sm mb-1">Average Rating</p>
-              <p class="text-2xl font-bold text-gray-800">{{ team.statistics.averageRating || 'N/A' }}</p>
+            <div class="bg-white rounded-[12px] p-4" style="border: 1px solid #EAE3DB;">
+              <p class="text-sm mb-1" style="color: #4A3B33;">Average Rating</p>
+              <p class="text-2xl font-bold font-mono" style="color: #8B5E3C;">{{ team.statistics.averageRating || 'N/A' }}</p>
             </div>
           </div>
 
           <!-- Team Members -->
           <div class="mb-6">
-            <h2 class="text-xl font-semibold text-gray-800 mb-3">
+            <h2 class="text-xl font-semibold mb-3" style="color: #2D2622;">
               Active Members ({{ getActiveMembers().length }} / 3)
             </h2>
             <div class="space-y-2 mb-4">
               <div 
                 *ngFor="let member of getActiveMembers()" 
-                class="flex justify-between items-center bg-green-50 border border-green-200 rounded p-3">
+                class="flex justify-between items-center bg-white rounded-[12px] p-3"
+                style="border: 1px solid #D4A373;">
                 <div>
-                  <p class="font-semibold text-gray-800">
+                  <p class="font-semibold" style="color: #2D2622;">
                     {{ member.userId?.username || 'Member' }}
                   </p>
-                  <p class="text-sm text-gray-600">
+                  <p class="text-sm" style="color: #4A3B33;">
                     Joined {{ member.joinedAt | date:'mediumDate' }}
                   </p>
                 </div>
                 <div class="flex items-center gap-2">
-                  <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded text-sm">
+                  <span class="px-3 py-1 rounded-[12px] text-sm" style="background-color: #FCF9F5; color: #8B5E3C; border: 1px solid #EAE3DB;">
                     Member
                   </span>
                   <button
                     *ngIf="isTeamMemberOrCoach()"
                     (click)="toggleMemberActive(member, false)"
-                    class="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1 rounded text-sm">
+                    class="text-white px-3 py-1 rounded-[12px] text-sm"
+                    style="background-color: #D4A373;">
                     Set Inactive
                   </button>
                 </div>
               </div>
-              <div *ngIf="getActiveMembers().length === 0" class="text-center py-4 text-gray-500">
+              <div *ngIf="getActiveMembers().length === 0" class="text-center py-4" style="color: #4A3B33;">
                 No active members yet
               </div>
             </div>
 
-            <h2 class="text-xl font-semibold text-gray-800 mb-3 mt-6">
+            <h2 class="text-xl font-semibold mb-3 mt-6" style="color: #2D2622;">
               Inactive Members ({{ getInactiveMembers().length }})
             </h2>
             <div class="space-y-2">
               <div 
                 *ngFor="let member of getInactiveMembers()" 
-                class="flex justify-between items-center bg-gray-100 border border-gray-300 rounded p-3">
+                class="flex justify-between items-center bg-white rounded-[12px] p-3"
+                style="border: 1px solid #EAE3DB;">
                 <div>
-                  <p class="font-semibold text-gray-800">
+                  <p class="font-semibold" style="color: #2D2622;">
                     {{ member.userId?.username || 'Member' }}
                   </p>
-                  <p class="text-sm text-gray-600">
+                  <p class="text-sm" style="color: #4A3B33;">
                     Joined {{ member.joinedAt | date:'mediumDate' }}
                   </p>
                 </div>
                 <div class="flex items-center gap-2">
-                  <span class="bg-gray-200 text-gray-700 px-3 py-1 rounded text-sm">
+                  <span class="px-3 py-1 rounded-[12px] text-sm" style="background-color: #FCF9F5; color: #4A3B33; border: 1px solid #EAE3DB;">
                     Inactive
                   </span>
                   <button
                     *ngIf="isTeamMemberOrCoach() && getActiveMembers().length < 3"
                     (click)="toggleMemberActive(member, true)"
-                    class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">
+                    class="text-white px-3 py-1 rounded-[12px] text-sm"
+                    style="background-color: #8B5E3C;">
                     Set Active
                   </button>
                 </div>
               </div>
-              <div *ngIf="getInactiveMembers().length === 0" class="text-center py-4 text-gray-500">
+              <div *ngIf="getInactiveMembers().length === 0" class="text-center py-4" style="color: #4A3B33;">
                 No inactive members
               </div>
             </div>
@@ -146,8 +155,8 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
           <!-- Team Links Section -->
           <div class="mb-6">
-            <h2 class="text-xl font-semibold text-gray-800 mb-3">Team Links</h2>
-            <div class="bg-gray-50 rounded p-4 space-y-3">
+            <h2 class="text-xl font-semibold mb-3" style="color: #2D2622;">Team Links</h2>
+            <div class="bg-white rounded-[12px] p-4 space-y-3" style="border: 1px solid #EAE3DB;">
               <!-- WhatsApp Group -->
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
@@ -156,14 +165,15 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                     <path d="M24 0C10.745 0 0 10.745 0 24c0 4.197 1.083 8.14 2.978 11.566L0 48l12.722-3.338A23.852 23.852 0 0024 48c13.255 0 24-10.745 24-24S37.255 0 24 0z" fill="#25D366"/>
                     <path d="M35.372 33.243c-.556 1.563-2.746 2.868-4.507 3.243-1.199.251-2.769.453-8.05-1.729-6.778-2.801-11.143-9.685-11.488-10.129-.333-.444-2.769-3.685-2.769-7.028 0-3.343 1.755-4.989 2.378-5.667.622-.677 1.356-.846 1.81-.846.453 0 .906.004 1.302.024.418.02.979-.159 1.531 1.167.555 1.333 1.898 4.63 2.064 4.967.166.337.277.73.055 1.174-.221.444-.332.722-.666 1.112-.333.389-.7.87-1 1.167-.333.332-.678.69-.29 1.356.389.666 1.731 2.858 3.718 4.632 2.555 2.28 4.707 2.986 5.373 3.323.666.337 1.055.277 1.444-.166.388-.444 1.676-1.952 2.122-2.619.444-.666.89-.555 1.499-.332.611.222 3.883 1.833 4.55 2.167.666.333 1.11.5 1.276.777.166.277.166 1.611-.388 3.174z" fill="#fff"/>
                   </svg>
-                  <span class="text-gray-700 font-medium">WhatsApp Group</span>
+                  <span class="font-medium" style="color: #2D2622;">WhatsApp Group</span>
                 </div>
                 <div class="flex gap-2">
                   <a 
                     *ngIf="team.links?.whatsappGroup"
                     [href]="team.links?.whatsappGroup || ''" 
                     target="_blank"
-                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded text-sm font-medium flex items-center gap-2">
+                    class="text-white px-4 py-2 rounded-[12px] text-sm font-medium flex items-center gap-2"
+                    style="background-color: #25D366;">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
                     </svg>
@@ -172,7 +182,8 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   <button 
                     *ngIf="isCoachOrAdmin()"
                     (click)="openEditWhatsAppModal()"
-                    class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded text-sm">
+                    class="px-4 py-2 rounded-[12px] text-sm"
+                    style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
                     {{ team.links?.whatsappGroup ? 'Edit Link' : 'Add Link' }}
                   </button>
                 </div>
@@ -192,14 +203,15 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                       </clipPath>
                     </defs>
                   </svg>
-                  <span class="text-gray-700 font-medium">Discord Server</span>
+                  <span class="font-medium" style="color: #2D2622;">Discord Server</span>
                 </div>
                 <div class="flex gap-2">
                   <a 
                     *ngIf="team.links?.discordServer"
                     [href]="team.links?.discordServer || ''" 
                     target="_blank"
-                    class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded text-sm font-medium flex items-center gap-2">
+                    class="text-white px-4 py-2 rounded-[12px] text-sm font-medium flex items-center gap-2"
+                    style="background-color: #5865F2;">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
                     </svg>
@@ -208,7 +220,8 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   <button 
                     *ngIf="isCoachOrAdmin()"
                     (click)="openEditDiscordModal()"
-                    class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded text-sm">
+                    class="px-4 py-2 rounded-[12px] text-sm"
+                    style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
                     {{ team.links?.discordServer ? 'Edit Link' : 'Add Link' }}
                   </button>
                 </div>
@@ -218,53 +231,57 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
           <!-- Service Integrations Section -->
           <div class="mb-6">
-            <h2 class="text-xl font-semibold text-gray-800 mb-3">Service Integrations</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <h2 class="text-xl font-semibold mb-3" style="color: #2D2622;">Service Integrations</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <!-- USACO IDE Sessions -->
-              <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div class="bg-white rounded-[12px] p-4" style="border: 1px solid #EAE3DB;">
                 <div class="flex items-center gap-2 mb-2">
                   <span class="text-2xl">💻</span>
-                  <h3 class="font-semibold text-gray-800">USACO IDE Sessions</h3>
+                  <h3 class="font-semibold" style="color: #2D2622;">USACO IDE Sessions</h3>
                 </div>
-                <p class="text-sm text-gray-600 mb-3">Manage shareable IDE links with code templates</p>
+                <p class="text-sm mb-3" style="color: #4A3B33;">Manage shareable IDE links with code templates</p>
                 <div class="flex gap-2">
                   <button 
                     (click)="openAddSessionModal()"
-                    class="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm">
+                    class="flex-1 text-white px-4 py-2 rounded-[12px] text-sm"
+                    style="background-color: #8B5E3C;">
                     Add Session
                   </button>
                   <button 
                     (click)="openViewTemplatesModal()"
-                    class="flex-1 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded text-sm">
+                    class="flex-1 px-4 py-2 rounded-[12px] text-sm"
+                    style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
                     View Templates
                   </button>
                 </div>
               </div>
 
               <!-- Excalidraw Sessions -->
-              <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+              <div class="bg-white rounded-[12px] p-4" style="border: 1px solid #EAE3DB;">
                 <div class="flex items-center gap-2 mb-2">
                   <span class="text-2xl">✏️</span>
-                  <h3 class="font-semibold text-gray-800">Excalidraw Sessions</h3>
+                  <h3 class="font-semibold" style="color: #2D2622;">Excalidraw Sessions</h3>
                 </div>
-                <p class="text-sm text-gray-600 mb-3">Managed sessions for diagrams and visualizations</p>
+                <p class="text-sm mb-3" style="color: #4A3B33;">Managed sessions for diagrams and visualizations</p>
                 <button 
                   (click)="openAddExcalidrawSessionModal()"
-                  class="w-full bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded text-sm">
+                  class="w-full text-white px-4 py-2 rounded-[12px] text-sm"
+                  style="background-color: #8B5E3C;">
                   Add Session
                 </button>
               </div>
 
               <!-- RPC Contests -->
-              <div class="bg-amber-50 border border-amber-200 rounded-lg p-4">
+              <div class="bg-white rounded-[12px] p-4" style="border: 1px solid #EAE3DB;">
                 <div class="flex items-center gap-2 mb-2">
                   <span class="text-2xl">🏆</span>
-                  <h3 class="font-semibold text-gray-800">RPC Contests</h3>
+                  <h3 class="font-semibold" style="color: #2D2622;">RPC Contests</h3>
                 </div>
-                <p class="text-sm text-gray-600 mb-3">View schedule and register for contests</p>
+                <p class="text-sm mb-3" style="color: #4A3B33;">View schedule and register for contests</p>
                 <button 
                   (click)="openRPCContestsModal()"
-                  class="w-full bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded text-sm">
+                  class="w-full text-white px-4 py-2 rounded-[12px] text-sm"
+                  style="background-color: #D4A373;">
                   View Contests
                 </button>
               </div>
@@ -273,44 +290,48 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
           <!-- Code Sessions List -->
           <div *ngIf="team.codeSessions && team.codeSessions.length > 0" class="mb-6">
-            <h2 class="text-xl font-semibold text-gray-800 mb-3">USACO IDE Sessions</h2>
+            <h2 class="text-xl font-semibold mb-3" style="color: #2D2622;">USACO IDE Sessions</h2>
             <div class="space-y-3">
               <div 
                 *ngFor="let session of team.codeSessions" 
-                class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                class="bg-white rounded-[12px] p-4"
+                style="border: 1px solid #EAE3DB;">
                 <div class="flex justify-between items-start mb-2">
                   <div class="flex-1">
-                    <p class="font-semibold text-gray-800">{{ session.name }}</p>
-                    <p class="text-sm text-gray-600">Created {{ session.createdAt | date:'mediumDate' }}</p>
+                    <p class="font-semibold" style="color: #2D2622;">{{ session.name }}</p>
+                    <p class="text-sm" style="color: #4A3B33;">Created {{ session.createdAt | date:'mediumDate' }}</p>
                   </div>
                   <div class="flex gap-2">
                     <a 
                       [href]="session.link" 
                       target="_blank"
-                      class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm">
+                      class="text-white px-4 py-2 rounded-[12px] text-sm"
+                      style="background-color: #8B5E3C;">
                       Open IDE
                     </a>
                     <button
                       *ngIf="isUserInTeam()"
                       (click)="openRenameSessionModal(session)"
-                      class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-2 rounded text-sm">
+                      class="px-3 py-2 rounded-[12px] text-sm"
+                      style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
                       Rename
                     </button>
                     <button
                       *ngIf="isUserInTeam() && session._id"
                       (click)="deleteSession(session._id!)"
-                      class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded text-sm">
+                      class="px-3 py-2 rounded-[12px] text-sm text-red-600"
+                      style="background-color: #FCF9F5; border: 1px solid #EAE3DB;">
                       Delete
                     </button>
                   </div>
                 </div>
                 <!-- Linked Excalidraw Sessions -->
-                <div *ngIf="getLinkedExcalidrawSessions(session).length > 0" class="mt-3 pl-4 border-l-2 border-purple-300">
-                  <p class="text-sm font-medium text-gray-700 mb-2">Linked Excalidraw Sessions:</p>
+                <div *ngIf="getLinkedExcalidrawSessions(session).length > 0" class="mt-3 pl-4" style="border-left: 2px solid #D4A373;">
+                  <p class="text-sm font-medium mb-2" style="color: #4A3B33;">Linked Excalidraw Sessions:</p>
                   <div class="space-y-1">
                     <div *ngFor="let excSession of getLinkedExcalidrawSessions(session)" class="flex items-center gap-2">
-                      <span class="text-purple-600 text-sm">✏️</span>
-                      <a [href]="excSession.url" target="_blank" class="text-sm text-purple-600 hover:underline">
+                      <span class="text-sm" style="color: #8B5E3C;">✏️</span>
+                      <a [href]="excSession.url" target="_blank" class="text-sm hover:underline" style="color: #8B5E3C;">
                         {{ excSession.name }}
                       </a>
                     </div>
@@ -322,15 +343,16 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
           <!-- Excalidraw Sessions -->
           <div *ngIf="team.excalidrawSessions && team.excalidrawSessions.length > 0" class="mb-6">
-            <h2 class="text-xl font-semibold text-gray-800 mb-3">Excalidraw Sessions</h2>
+            <h2 class="text-xl font-semibold mb-3" style="color: #2D2622;">Excalidraw Sessions</h2>
             <div class="space-y-2">
               <div 
                 *ngFor="let excSession of team.excalidrawSessions" 
-                class="flex justify-between items-center bg-purple-50 border border-purple-200 rounded p-3">
+                class="flex justify-between items-center bg-white rounded-[12px] p-3"
+                style="border: 1px solid #EAE3DB;">
                 <div class="flex-1">
-                  <p class="font-semibold text-gray-800">{{ excSession.name }}</p>
-                  <p class="text-sm text-gray-600">Created {{ excSession.createdAt | date:'mediumDate' }}</p>
-                  <p *ngIf="excSession.linkedToCodeSessionId" class="text-sm text-purple-600 mt-1">
+                  <p class="font-semibold" style="color: #2D2622;">{{ excSession.name }}</p>
+                  <p class="text-sm" style="color: #4A3B33;">Created {{ excSession.createdAt | date:'mediumDate' }}</p>
+                  <p *ngIf="excSession.linkedToCodeSessionId" class="text-sm mt-1" style="color: #8B5E3C;">
                     🔗 Linked to: {{ getCodeSessionName(excSession.linkedToCodeSessionId) }}
                   </p>
                 </div>
@@ -338,19 +360,22 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   <a 
                     [href]="excSession.url" 
                     target="_blank"
-                    class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded text-sm">
+                    class="text-white px-4 py-2 rounded-[12px] text-sm"
+                    style="background-color: #8B5E3C;">
                     Open Board
                   </a>
                   <button
                     *ngIf="isUserInTeam()"
                     (click)="openEditExcalidrawSessionModal(excSession)"
-                    class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-2 rounded text-sm">
+                    class="px-3 py-2 rounded-[12px] text-sm"
+                    style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
                     Edit
                   </button>
                   <button
                     *ngIf="isUserInTeam() && excSession._id"
                     (click)="deleteExcalidrawSession(excSession._id!)"
-                    class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded text-sm">
+                    class="px-3 py-2 rounded-[12px] text-sm text-red-600"
+                    style="background-color: #FCF9F5; border: 1px solid #EAE3DB;">
                     Delete
                   </button>
                 </div>
@@ -360,19 +385,21 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
           <!-- Excalidraw Rooms -->
           <div *ngIf="team.excalidrawRooms && team.excalidrawRooms.length > 0" class="mb-6">
-            <h2 class="text-xl font-semibold text-gray-800 mb-3">Collaboration Rooms</h2>
+            <h2 class="text-xl font-semibold mb-3" style="color: #2D2622;">Collaboration Rooms</h2>
             <div class="space-y-2">
               <div 
                 *ngFor="let room of team.excalidrawRooms" 
-                class="flex justify-between items-center bg-gray-50 rounded p-3">
+                class="flex justify-between items-center bg-white rounded-[12px] p-3"
+                style="border: 1px solid #EAE3DB;">
                 <div>
-                  <p class="font-semibold text-gray-800">{{ room.name }}</p>
-                  <p class="text-sm text-gray-600">Created {{ room.createdAt | date:'mediumDate' }}</p>
+                  <p class="font-semibold" style="color: #2D2622;">{{ room.name }}</p>
+                  <p class="text-sm" style="color: #4A3B33;">Created {{ room.createdAt | date:'mediumDate' }}</p>
                 </div>
                 <a 
                   [href]="room.url" 
                   target="_blank"
-                  class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded text-sm">
+                  class="text-white px-4 py-2 rounded-[12px] text-sm"
+                  style="background-color: #8B5E3C;">
                   Open Room
                 </a>
               </div>
@@ -381,19 +408,19 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
           <!-- Team Settings -->
           <div class="mb-6">
-            <h2 class="text-xl font-semibold text-gray-800 mb-3">Team Settings</h2>
-            <div class="bg-gray-50 rounded p-4 space-y-2">
+            <h2 class="text-xl font-semibold mb-3" style="color: #2D2622;">Team Settings</h2>
+            <div class="bg-white rounded-[12px] p-4 space-y-2" style="border: 1px solid #EAE3DB;">
               <div class="flex justify-between">
-                <span class="text-gray-700">Shared Roadmap:</span>
-                <span class="font-semibold">{{ team.settings.sharedRoadmap ? 'Yes' : 'No' }}</span>
+                <span style="color: #4A3B33;">Shared Roadmap:</span>
+                <span class="font-semibold" style="color: #2D2622;">{{ team.settings.sharedRoadmap ? 'Yes' : 'No' }}</span>
               </div>
               <div class="flex justify-between">
-                <span class="text-gray-700">Shared Calendar:</span>
-                <span class="font-semibold">{{ team.settings.sharedCalendar ? 'Yes' : 'No' }}</span>
+                <span style="color: #4A3B33;">Shared Calendar:</span>
+                <span class="font-semibold" style="color: #2D2622;">{{ team.settings.sharedCalendar ? 'Yes' : 'No' }}</span>
               </div>
               <div class="flex justify-between">
-                <span class="text-gray-700">Max Members:</span>
-                <span class="font-semibold">{{ team.maxMembers }}</span>
+                <span style="color: #4A3B33;">Max Members:</span>
+                <span class="font-semibold font-mono" style="color: #2D2622;">{{ team.maxMembers }}</span>
               </div>
             </div>
           </div>
@@ -403,7 +430,8 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             <button 
               *ngIf="!isUserInTeam()"
               (click)="joinTeam()"
-              class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded">
+              class="text-white font-medium py-2 px-6 rounded-[12px]"
+              style="background-color: #8B5E3C;">
               Join Team
             </button>
           </div>
@@ -413,24 +441,27 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
       <!-- WhatsApp Edit Modal -->
       <div 
         *ngIf="showEditWhatsAppModal" 
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50"
         (click)="showEditWhatsAppModal = false">
-        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md" (click)="$event.stopPropagation()">
-          <h3 class="text-xl font-bold mb-4">Edit WhatsApp Group Link</h3>
+        <div class="bg-white rounded-[12px] p-6 w-full max-w-md" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
+          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">Edit WhatsApp Group Link</h3>
           <input 
             type="url"
             [(ngModel)]="editedWhatsAppLink"
             placeholder="https://chat.whatsapp.com/..."
-            class="w-full border rounded px-3 py-2 mb-4">
+            class="w-full rounded-[12px] px-4 py-3 mb-4"
+            style="border: 1px solid #EAE3DB; color: #2D2622;">
           <div class="flex gap-2 justify-end">
             <button 
               (click)="showEditWhatsAppModal = false"
-              class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+              class="px-4 py-2 rounded-[12px]"
+              style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
               Cancel
             </button>
             <button 
               (click)="saveWhatsAppLink()"
-              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+              class="text-white px-4 py-2 rounded-[12px]"
+              style="background-color: #8B5E3C;">
               Save
             </button>
           </div>
@@ -440,24 +471,27 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
       <!-- Discord Edit Modal -->
       <div 
         *ngIf="showEditDiscordModal" 
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50"
         (click)="showEditDiscordModal = false">
-        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md" (click)="$event.stopPropagation()">
-          <h3 class="text-xl font-bold mb-4">Edit Discord Server Link</h3>
+        <div class="bg-white rounded-[12px] p-6 w-full max-w-md" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
+          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">Edit Discord Server Link</h3>
           <input 
             type="url"
             [(ngModel)]="editedDiscordLink"
             placeholder="https://discord.gg/..."
-            class="w-full border rounded px-3 py-2 mb-4">
+            class="w-full rounded-[12px] px-4 py-3 mb-4"
+            style="border: 1px solid #EAE3DB; color: #2D2622;">
           <div class="flex gap-2 justify-end">
             <button 
               (click)="showEditDiscordModal = false"
-              class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+              class="px-4 py-2 rounded-[12px]"
+              style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
               Cancel
             </button>
             <button 
               (click)="saveDiscordLink()"
-              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+              class="text-white px-4 py-2 rounded-[12px]"
+              style="background-color: #8B5E3C;">
               Save
             </button>
           </div>
@@ -467,28 +501,31 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
       <!-- Code Template Edit Modal -->
       <div 
         *ngIf="showEditTemplateModal" 
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+        class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4"
         (click)="showEditTemplateModal = false">
-        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
-          <h3 class="text-xl font-bold mb-4">Edit Code Template</h3>
-          <p class="text-sm text-gray-600 mb-4">
+        <div class="bg-white rounded-[12px] p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
+          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">Edit Code Template</h3>
+          <p class="text-sm mb-4" style="color: #4A3B33;">
             This template will be used when creating USACO IDE links for your team.
           </p>
           <textarea 
             [(ngModel)]="editedTemplate"
             rows="20"
             placeholder="// Your code template here..."
-            class="w-full border rounded px-3 py-2 mb-4 font-mono text-sm">
+            class="w-full rounded-[12px] px-4 py-3 mb-4 font-mono text-sm"
+            style="border: 1px solid #EAE3DB; color: #2D2622;">
           </textarea>
           <div class="flex gap-2 justify-end">
             <button 
               (click)="showEditTemplateModal = false"
-              class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+              class="px-4 py-2 rounded-[12px]"
+              style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
               Cancel
             </button>
             <button 
               (click)="saveTemplate()"
-              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+              class="text-white px-4 py-2 rounded-[12px]"
+              style="background-color: #8B5E3C;">
               Save Template
             </button>
           </div>
@@ -498,25 +535,28 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
       <!-- Create Excalidraw Room Modal -->
       <div 
         *ngIf="showCreateExcalidrawModal" 
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50"
         (click)="showCreateExcalidrawModal = false">
-        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md" (click)="$event.stopPropagation()">
-          <h3 class="text-xl font-bold mb-4">Create Excalidraw Room</h3>
+        <div class="bg-white rounded-[12px] p-6 w-full max-w-md" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
+          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">Create Excalidraw Room</h3>
           <input 
             type="text"
             [(ngModel)]="newRoomName"
             placeholder="Room name..."
-            class="w-full border rounded px-3 py-2 mb-4">
+            class="w-full rounded-[12px] px-4 py-3 mb-4"
+            style="border: 1px solid #EAE3DB; color: #2D2622;">
           <div class="flex gap-2 justify-end">
             <button 
               (click)="showCreateExcalidrawModal = false"
-              class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+              class="px-4 py-2 rounded-[12px]"
+              style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
               Cancel
             </button>
             <button 
               (click)="createExcalidrawRoom()"
               [disabled]="!newRoomName || creatingRoom"
-              class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded disabled:bg-gray-300">
+              class="text-white px-4 py-2 rounded-[12px] disabled:opacity-50"
+              style="background-color: #8B5E3C;">
               {{ creatingRoom ? 'Creating...' : 'Create' }}
             </button>
           </div>
@@ -526,34 +566,35 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
       <!-- RPC Contests Modal -->
       <div 
         *ngIf="showRPCContestsModal" 
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+        class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4"
         (click)="showRPCContestsModal = false">
-        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-3xl max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
-          <h3 class="text-xl font-bold mb-4">RPC Contest Schedule</h3>
+        <div class="bg-white rounded-[12px] p-6 w-full max-w-3xl max-h-[90vh] overflow-y-auto" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
+          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">RPC Contest Schedule</h3>
           
           <div *ngIf="loadingRPCContests" class="text-center py-8">
-            <p class="text-gray-600">Loading contests...</p>
+            <p style="color: #4A3B33;">Loading contests...</p>
           </div>
 
-          <div *ngIf="rpcContestsError" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          <div *ngIf="rpcContestsError" class="bg-white rounded-[12px] px-4 py-3 mb-4" style="border: 1px solid #EAE3DB; color: #2D2622;">
             {{ rpcContestsError }}
           </div>
 
-          <div *ngIf="!loadingRPCContests && rpcContests.length === 0" class="text-center py-8 text-gray-600">
+          <div *ngIf="!loadingRPCContests && rpcContests.length === 0" class="text-center py-8" style="color: #4A3B33;">
             No upcoming contests found.
           </div>
 
           <div *ngIf="!loadingRPCContests && rpcContests.length > 0" class="space-y-3 mb-4">
-            <div *ngFor="let contest of rpcContests" class="border rounded-lg p-4 hover:bg-gray-50">
-              <h4 class="font-semibold text-gray-800 mb-2">{{ contest.name || 'Contest' }}</h4>
-              <div class="text-sm text-gray-600 space-y-1">
+            <div *ngFor="let contest of rpcContests" class="rounded-[12px] p-4" style="border: 1px solid #EAE3DB;">
+              <h4 class="font-semibold mb-2" style="color: #2D2622;">{{ contest.name || 'Contest' }}</h4>
+              <div class="text-sm space-y-1" style="color: #4A3B33;">
                 <p><strong>Start:</strong> {{ contest.startTime }}</p>
                 <p><strong>Duration:</strong> {{ contest.duration }}</p>
               </div>
               <a 
                 [href]="contest.registrationUrl" 
                 target="_blank"
-                class="mt-3 inline-block bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded text-sm">
+                class="mt-3 inline-block text-white px-4 py-2 rounded-[12px] text-sm"
+                style="background-color: #D4A373;">
                 Register
               </a>
             </div>
@@ -562,7 +603,8 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           <div class="flex justify-end">
             <button 
               (click)="showRPCContestsModal = false"
-              class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+              class="px-4 py-2 rounded-[12px]"
+              style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
               Close
             </button>
           </div>
@@ -572,27 +614,29 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
       <!-- USACO Link Result Modal -->
       <div 
         *ngIf="showUsacoLinkModal" 
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50"
         (click)="showUsacoLinkModal = false">
-        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md" (click)="$event.stopPropagation()">
-          <h3 class="text-xl font-bold mb-4">USACO IDE Link Created</h3>
-          <p class="text-sm text-gray-600 mb-4">
+        <div class="bg-white rounded-[12px] p-6 w-full max-w-md" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
+          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">USACO IDE Link Created</h3>
+          <p class="text-sm mb-4" style="color: #4A3B33;">
             Share this link with your team. The code template is already loaded.
           </p>
-          <div class="bg-gray-50 border rounded p-3 mb-4 break-all">
-            <a [href]="usacoLinkUrl" target="_blank" class="text-blue-600 hover:underline">
+          <div class="rounded-[12px] p-3 mb-4 break-all" style="background-color: #FCF9F5; border: 1px solid #EAE3DB;">
+            <a [href]="usacoLinkUrl" target="_blank" class="hover:underline" style="color: #8B5E3C;">
               {{ usacoLinkUrl }}
             </a>
           </div>
           <div class="flex gap-2 justify-end">
             <button 
               (click)="copyUsacoLink()"
-              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+              class="text-white px-4 py-2 rounded-[12px]"
+              style="background-color: #8B5E3C;">
               Copy Link
             </button>
             <button 
               (click)="showUsacoLinkModal = false"
-              class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+              class="px-4 py-2 rounded-[12px]"
+              style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
               Close
             </button>
           </div>
@@ -602,33 +646,35 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
       <!-- Add Session Modal -->
       <div 
         *ngIf="showAddSessionModal" 
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50"
         (click)="showAddSessionModal = false">
-        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md" (click)="$event.stopPropagation()">
-          <h3 class="text-xl font-bold mb-4">Add Code Session</h3>
+        <div class="bg-white rounded-[12px] p-6 w-full max-w-md" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
+          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">Add Code Session</h3>
           <input 
             type="text"
             [(ngModel)]="newSessionName"
             placeholder="Session name (e.g., Practice Session 1)"
-            class="w-full border rounded px-3 py-2 mb-3">
+            class="w-full rounded-[12px] px-4 py-3 mb-3"
+            style="border: 1px solid #EAE3DB; color: #2D2622;">
           <div class="mb-3">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Choose an option:</label>
+            <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Choose an option:</label>
             <div class="space-y-2">
               <label class="flex items-center">
                 <input type="radio" [(ngModel)]="sessionLinkOption" value="auto" class="mr-2">
-                <span class="text-sm">Auto-generate link with template</span>
+                <span class="text-sm" style="color: #4A3B33;">Auto-generate link with template</span>
               </label>
               <label class="flex items-center">
                 <input type="radio" [(ngModel)]="sessionLinkOption" value="manual" class="mr-2">
-                <span class="text-sm">Provide custom link</span>
+                <span class="text-sm" style="color: #4A3B33;">Provide custom link</span>
               </label>
             </div>
           </div>
           <div *ngIf="sessionLinkOption === 'auto'" class="mb-3">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Language:</label>
+            <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Language:</label>
             <select 
               [(ngModel)]="selectedLanguage"
-              class="w-full border rounded px-3 py-2 text-sm">
+              class="w-full rounded-[12px] px-4 py-3 text-sm"
+              style="border: 1px solid #EAE3DB; color: #2D2622;">
               <option value="cpp">C++</option>
               <option value="java">Java</option>
               <option value="python">Python</option>
@@ -639,18 +685,21 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               type="url"
               [(ngModel)]="customSessionLink"
               placeholder="https://ide.usaco.guide/..."
-              class="w-full border rounded px-3 py-2">
+              class="w-full rounded-[12px] px-4 py-3"
+              style="border: 1px solid #EAE3DB; color: #2D2622;">
           </div>
           <div class="flex gap-2 justify-end">
             <button 
               (click)="showAddSessionModal = false"
-              class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+              class="px-4 py-2 rounded-[12px]"
+              style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
               Cancel
             </button>
             <button 
               (click)="addSession()"
               [disabled]="!newSessionName || addingSession || (sessionLinkOption === 'manual' && !customSessionLink)"
-              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded disabled:bg-gray-300">
+              class="text-white px-4 py-2 rounded-[12px] disabled:opacity-50"
+              style="background-color: #8B5E3C;">
               {{ addingSession ? 'Adding...' : 'Add Session' }}
             </button>
           </div>
@@ -660,25 +709,28 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
       <!-- Rename Session Modal -->
       <div 
         *ngIf="showRenameSessionModal" 
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50"
         (click)="showRenameSessionModal = false">
-        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md" (click)="$event.stopPropagation()">
-          <h3 class="text-xl font-bold mb-4">Rename Session</h3>
+        <div class="bg-white rounded-[12px] p-6 w-full max-w-md" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
+          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">Rename Session</h3>
           <input 
             type="text"
             [(ngModel)]="renameSessionName"
             placeholder="New session name"
-            class="w-full border rounded px-3 py-2 mb-4">
+            class="w-full rounded-[12px] px-4 py-3 mb-4"
+            style="border: 1px solid #EAE3DB; color: #2D2622;">
           <div class="flex gap-2 justify-end">
             <button 
               (click)="showRenameSessionModal = false"
-              class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+              class="px-4 py-2 rounded-[12px]"
+              style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
               Cancel
             </button>
             <button 
               (click)="renameSession()"
               [disabled]="!renameSessionName"
-              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded disabled:bg-gray-300">
+              class="text-white px-4 py-2 rounded-[12px] disabled:opacity-50"
+              style="background-color: #8B5E3C;">
               Save
             </button>
           </div>
@@ -688,41 +740,45 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
       <!-- View Templates Modal -->
       <div 
         *ngIf="showViewTemplatesModal" 
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+        class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4"
         (click)="showViewTemplatesModal = false">
-        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
-          <h3 class="text-xl font-bold mb-4">Code Templates</h3>
+        <div class="bg-white rounded-[12px] p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
+          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">Code Templates</h3>
           <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Select Language:</label>
+            <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Select Language:</label>
             <select 
               [(ngModel)]="viewTemplateLanguage"
               (ngModelChange)="loadTemplateForLanguage($event)"
-              class="w-full border rounded px-3 py-2">
+              class="w-full rounded-[12px] px-4 py-3"
+              style="border: 1px solid #EAE3DB; color: #2D2622;">
               <option value="cpp">C++</option>
               <option value="java">Java</option>
               <option value="python">Python</option>
             </select>
           </div>
           <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Template Code:</label>
+            <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Template Code:</label>
             <textarea 
               [(ngModel)]="viewTemplateCode"
               rows="20"
               readonly
-              class="w-full border rounded px-3 py-2 font-mono text-sm bg-gray-50">
+              class="w-full rounded-[12px] px-4 py-3 font-mono text-sm"
+              style="border: 1px solid #EAE3DB; color: #2D2622; background-color: #FCF9F5;">
             </textarea>
           </div>
           <div *ngIf="isCoachOrAdmin()" class="mb-4">
             <button 
               (click)="openEditTemplateModal()"
-              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+              class="text-white px-4 py-2 rounded-[12px]"
+              style="background-color: #8B5E3C;">
               Edit Template
             </button>
           </div>
           <div class="flex justify-end">
             <button 
               (click)="showViewTemplatesModal = false"
-              class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+              class="px-4 py-2 rounded-[12px]"
+              style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
               Close
             </button>
           </div>
@@ -732,20 +788,22 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
       <!-- Add Excalidraw Session Modal -->
       <div 
         *ngIf="showAddExcalidrawSessionModal" 
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50"
         (click)="showAddExcalidrawSessionModal = false">
-        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md" (click)="$event.stopPropagation()">
-          <h3 class="text-xl font-bold mb-4">Add Excalidraw Session</h3>
+        <div class="bg-white rounded-[12px] p-6 w-full max-w-md" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
+          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">Add Excalidraw Session</h3>
           <input 
             type="text"
             [(ngModel)]="newExcalidrawSessionName"
             placeholder="Session name (e.g., Algorithm Design Board)"
-            class="w-full border rounded px-3 py-2 mb-3">
+            class="w-full rounded-[12px] px-4 py-3 mb-3"
+            style="border: 1px solid #EAE3DB; color: #2D2622;">
           <div class="mb-3">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Link to Code Session (Optional):</label>
+            <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Link to Code Session (Optional):</label>
             <select 
               [(ngModel)]="linkedCodeSessionId"
-              class="w-full border rounded px-3 py-2 text-sm">
+              class="w-full rounded-[12px] px-4 py-3 text-sm"
+              style="border: 1px solid #EAE3DB; color: #2D2622;">
               <option [ngValue]="null">-- No Link --</option>
               <option *ngFor="let session of team?.codeSessions" [ngValue]="session._id">
                 {{ session.name }}
@@ -755,13 +813,15 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           <div class="flex gap-2 justify-end">
             <button 
               (click)="showAddExcalidrawSessionModal = false"
-              class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+              class="px-4 py-2 rounded-[12px]"
+              style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
               Cancel
             </button>
             <button 
               (click)="addExcalidrawSession()"
               [disabled]="!newExcalidrawSessionName || addingExcalidrawSession"
-              class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded disabled:bg-gray-300">
+              class="text-white px-4 py-2 rounded-[12px] disabled:opacity-50"
+              style="background-color: #8B5E3C;">
               {{ addingExcalidrawSession ? 'Adding...' : 'Add Session' }}
             </button>
           </div>
@@ -771,20 +831,22 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
       <!-- Edit Excalidraw Session Modal -->
       <div 
         *ngIf="showEditExcalidrawSessionModal" 
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50"
         (click)="showEditExcalidrawSessionModal = false">
-        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md" (click)="$event.stopPropagation()">
-          <h3 class="text-xl font-bold mb-4">Edit Excalidraw Session</h3>
+        <div class="bg-white rounded-[12px] p-6 w-full max-w-md" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
+          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">Edit Excalidraw Session</h3>
           <input 
             type="text"
             [(ngModel)]="editExcalidrawSessionName"
             placeholder="Session name"
-            class="w-full border rounded px-3 py-2 mb-3">
+            class="w-full rounded-[12px] px-4 py-3 mb-3"
+            style="border: 1px solid #EAE3DB; color: #2D2622;">
           <div class="mb-3">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Link to Code Session (Optional):</label>
+            <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Link to Code Session (Optional):</label>
             <select 
               [(ngModel)]="editLinkedCodeSessionId"
-              class="w-full border rounded px-3 py-2 text-sm">
+              class="w-full rounded-[12px] px-4 py-3 text-sm"
+              style="border: 1px solid #EAE3DB; color: #2D2622;">
               <option [ngValue]="null">-- No Link --</option>
               <option *ngFor="let session of team?.codeSessions" [ngValue]="session._id">
                 {{ session.name }}
@@ -794,13 +856,15 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           <div class="flex gap-2 justify-end">
             <button 
               (click)="showEditExcalidrawSessionModal = false"
-              class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+              class="px-4 py-2 rounded-[12px]"
+              style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
               Cancel
             </button>
             <button 
               (click)="saveExcalidrawSession()"
               [disabled]="!editExcalidrawSessionName"
-              class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded disabled:bg-gray-300">
+              class="text-white px-4 py-2 rounded-[12px] disabled:opacity-50"
+              style="background-color: #8B5E3C;">
               Save
             </button>
           </div>
