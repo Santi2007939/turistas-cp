@@ -30,7 +30,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             <div class="flex gap-2 items-center">
               <span 
                 class="px-3 py-1 text-sm font-semibold rounded-[12px]"
-                style="background-color: #FCF9F5; color: #8B5E3C; border: 1px solid #EAE3DB;">
+                [ngStyle]="getDifficultyStyle(theme.difficulty)">
                 {{ theme.difficulty }}
               </span>
               <span class="rounded-[12px] px-3 py-1 text-sm font-semibold" style="background-color: #FCF9F5; color: #4A3B33; border: 1px solid #EAE3DB;">
@@ -140,5 +140,16 @@ export class ThemeDetailComponent implements OnInit {
 
   goBack(): void {
     this.router.navigate(['/themes']);
+  }
+
+  getDifficultyStyle(difficulty: string): { [key: string]: string } {
+    // Matte-Drift palette with subtle variations for difficulty levels
+    const difficultyStyles: { [key: string]: { [key: string]: string } } = {
+      'beginner': { 'background-color': '#FCF9F5', 'color': '#4A3B33', 'border': '1px solid #EAE3DB' },
+      'intermediate': { 'background-color': '#FCF9F5', 'color': '#D4A373', 'border': '1px solid #D4A373' },
+      'advanced': { 'background-color': '#FCF9F5', 'color': '#8B5E3C', 'border': '1px solid #8B5E3C' },
+      'expert': { 'background-color': '#FCF9F5', 'color': '#A05E4A', 'border': '1px solid #A05E4A' }
+    };
+    return difficultyStyles[difficulty] || difficultyStyles['beginner'];
   }
 }

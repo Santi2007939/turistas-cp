@@ -706,21 +706,32 @@ export class CalendarComponent implements OnInit {
     return classes[scope] || 'bg-gray-100 text-gray-800';
   }
 
-  // Matte-Drift style object methods
+  // Matte-Drift style object methods - with subtle type variations
   getEventTypeStyleObject(type: string): { [key: string]: string } {
-    return {
-      'background-color': '#FCF9F5',
-      'color': '#8B5E3C',
-      'border': '1px solid #EAE3DB'
+    // Use subtle variations within the Matte-Drift palette for different event types
+    const typeStyles: { [key: string]: { [key: string]: string } } = {
+      'contest': { 'background-color': '#FCF9F5', 'color': '#8B5E3C', 'border': '1px solid #D4A373' },
+      'practice': { 'background-color': '#FCF9F5', 'color': '#4A90A4', 'border': '1px solid #4A90A4' },
+      'training': { 'background-color': '#FCF9F5', 'color': '#8B5E3C', 'border': '1px solid #EAE3DB' },
+      'meeting': { 'background-color': '#FCF9F5', 'color': '#4A3B33', 'border': '1px solid #EAE3DB' },
+      'deadline': { 'background-color': '#FCF9F5', 'color': '#A05E4A', 'border': '1px solid #A05E4A' },
+      'clase_gpc': { 'background-color': '#FCF9F5', 'color': '#8B5E3C', 'border': '1px solid #D4A373' },
+      'rpc': { 'background-color': '#E8F4F8', 'color': '#4A90A4', 'border': '1px solid #4A90A4' },
+      'roadmap': { 'background-color': '#FCF9F5', 'color': '#4A3B33', 'border': '1px solid #EAE3DB' },
+      'problem': { 'background-color': '#FCF9F5', 'color': '#8B5E3C', 'border': '1px solid #EAE3DB' },
+      'other': { 'background-color': '#FCF9F5', 'color': '#4A3B33', 'border': '1px solid #EAE3DB' }
     };
+    return typeStyles[type] || typeStyles['other'];
   }
 
   getEventScopeStyleObject(scope: string): { [key: string]: string } {
-    return {
-      'background-color': '#FCF9F5',
-      'color': '#4A3B33',
-      'border': '1px solid #EAE3DB'
+    // Use subtle variations for different scopes
+    const scopeStyles: { [key: string]: { [key: string]: string } } = {
+      'personal': { 'background-color': '#FCF9F5', 'color': '#8B5E3C', 'border': '1px solid #D4A373' },
+      'team': { 'background-color': '#E8F4F8', 'color': '#4A90A4', 'border': '1px solid #4A90A4' },
+      'public': { 'background-color': '#FCF9F5', 'color': '#4A3B33', 'border': '1px solid #EAE3DB' }
     };
+    return scopeStyles[scope] || scopeStyles['public'];
   }
 
   private formatDateForInput(date: Date): string {
