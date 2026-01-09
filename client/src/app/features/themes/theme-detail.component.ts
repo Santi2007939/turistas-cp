@@ -9,79 +9,79 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
   standalone: true,
   imports: [CommonModule, RouterModule, NavbarComponent],
   template: `
-    <div class="min-h-screen bg-gray-100">
+    <!-- Matte-Drift Theme Detail -->
+    <div class="min-h-screen" style="background-color: #FCF9F5;">
       <!-- Navigation -->
       <app-navbar></app-navbar>
       
-      <div class="container mx-auto px-4 py-8">
+      <div class="container mx-auto px-6 py-8">
       <div *ngIf="loading" class="text-center py-8">
-        <p class="text-gray-600">Loading theme...</p>
+        <p style="color: #4A3B33;">Loading theme...</p>
       </div>
 
-      <div *ngIf="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+      <div *ngIf="error" class="bg-white rounded-[12px] px-4 py-3 mb-4" style="border: 1px solid #EAE3DB; color: #2D2622;">
         {{ error }}
       </div>
 
-      <div *ngIf="theme && !loading" class="bg-white rounded-lg shadow-md p-8">
+      <div *ngIf="theme && !loading" class="bg-white rounded-[12px] p-8" style="border: 1px solid #EAE3DB;">
         <div class="flex justify-between items-start mb-6">
           <div>
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">{{ theme.name }}</h1>
+            <h1 class="text-3xl font-semibold mb-2" style="color: #2D2622;">{{ theme.name }}</h1>
             <div class="flex gap-2 items-center">
               <span 
-                class="px-3 py-1 text-sm font-semibold rounded-full"
-                [ngClass]="{
-                  'bg-green-100 text-green-800': theme.difficulty === 'beginner',
-                  'bg-yellow-100 text-yellow-800': theme.difficulty === 'intermediate',
-                  'bg-orange-100 text-orange-800': theme.difficulty === 'advanced',
-                  'bg-red-100 text-red-800': theme.difficulty === 'expert'
-                }">
+                class="px-3 py-1 text-sm font-semibold rounded-[12px]"
+                [ngStyle]="getDifficultyStyle(theme.difficulty)">
                 {{ theme.difficulty }}
               </span>
-              <span class="bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">
+              <span class="rounded-[12px] px-3 py-1 text-sm font-semibold" style="background-color: #FCF9F5; color: #4A3B33; border: 1px solid #EAE3DB;">
                 {{ theme.category }}
               </span>
             </div>
           </div>
           <button 
             (click)="goBack()"
-            class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+            class="font-medium py-2 px-4 rounded-[12px]"
+            style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
             Back to Themes
           </button>
         </div>
 
         <div class="mb-6">
-          <h2 class="text-xl font-semibold text-gray-800 mb-2">Description</h2>
-          <p class="text-gray-600">{{ theme.description || 'No description available' }}</p>
+          <h2 class="text-xl font-semibold mb-2" style="color: #2D2622;">Description</h2>
+          <p style="color: #4A3B33;">{{ theme.description || 'No description available' }}</p>
         </div>
 
         <div class="mb-6" *ngIf="theme.tags && theme.tags.length > 0">
-          <h2 class="text-xl font-semibold text-gray-800 mb-2">Tags</h2>
+          <h2 class="text-xl font-semibold mb-2" style="color: #2D2622;">Tags</h2>
           <div class="flex flex-wrap gap-2">
             <span 
               *ngFor="let tag of theme.tags" 
-              class="inline-block bg-blue-100 rounded-full px-3 py-1 text-sm text-blue-800">
+              class="inline-block rounded-[12px] px-3 py-1 text-sm"
+              style="background-color: #FCF9F5; color: #8B5E3C; border: 1px solid #EAE3DB;">
               #{{ tag }}
             </span>
           </div>
         </div>
 
         <div class="mb-6" *ngIf="theme.resources && theme.resources.length > 0">
-          <h2 class="text-xl font-semibold text-gray-800 mb-3">Learning Resources</h2>
+          <h2 class="text-xl font-semibold mb-3" style="color: #2D2622;">Learning Resources</h2>
           <div class="space-y-3">
             <div 
               *ngFor="let resource of theme.resources" 
-              class="border border-gray-200 rounded p-4 hover:bg-gray-50">
+              class="rounded-[12px] p-4"
+              style="border: 1px solid #EAE3DB;">
               <div class="flex justify-between items-start">
                 <div>
-                  <h3 class="font-semibold text-gray-800">{{ resource.title }}</h3>
+                  <h3 class="font-semibold" style="color: #2D2622;">{{ resource.title }}</h3>
                   <a 
                     [href]="resource.url" 
                     target="_blank"
-                    class="text-blue-600 hover:text-blue-800 text-sm break-all">
+                    class="text-sm break-all hover:underline"
+                    style="color: #8B5E3C;">
                     {{ resource.url }}
                   </a>
                 </div>
-                <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded">
+                <span class="text-xs px-2 py-1 rounded-[12px]" style="background-color: #FCF9F5; color: #8B5E3C; border: 1px solid #EAE3DB;">
                   {{ resource.type }}
                 </span>
               </div>
@@ -89,10 +89,11 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           </div>
         </div>
 
-        <div class="mt-8 pt-6 border-t border-gray-200">
+        <div class="mt-8 pt-6" style="border-top: 1px solid #EAE3DB;">
           <button 
             routerLink="/roadmap"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded">
+            class="text-white font-medium py-2 px-6 rounded-[12px]"
+            style="background-color: #8B5E3C;">
             Add to My Roadmap
           </button>
         </div>
@@ -139,5 +140,16 @@ export class ThemeDetailComponent implements OnInit {
 
   goBack(): void {
     this.router.navigate(['/themes']);
+  }
+
+  getDifficultyStyle(difficulty: string): { [key: string]: string } {
+    // Matte-Drift palette with subtle variations for difficulty levels
+    const difficultyStyles: { [key: string]: { [key: string]: string } } = {
+      'beginner': { 'background-color': '#FCF9F5', 'color': '#4A3B33', 'border': '1px solid #EAE3DB' },
+      'intermediate': { 'background-color': '#FCF9F5', 'color': '#D4A373', 'border': '1px solid #D4A373' },
+      'advanced': { 'background-color': '#FCF9F5', 'color': '#8B5E3C', 'border': '1px solid #8B5E3C' },
+      'expert': { 'background-color': '#FCF9F5', 'color': '#A05E4A', 'border': '1px solid #A05E4A' }
+    };
+    return difficultyStyles[difficulty] || difficultyStyles['beginner'];
   }
 }

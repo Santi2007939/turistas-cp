@@ -28,48 +28,57 @@ interface FilterData {
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule, NavbarComponent],
   template: `
-    <div class="min-h-screen bg-gray-100">
+    <!-- Matte-Drift Calendar -->
+    <div class="min-h-screen" style="background-color: #FCF9F5;">
       <!-- Navigation -->
       <app-navbar></app-navbar>
 
       <!-- Main Content -->
-      <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div class="px-4 py-6 sm:px-0">
+      <div class="max-w-7xl mx-auto py-6 px-6">
+        <div class="py-6">
           <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-gray-800">📅 Calendar</h2>
+            <h2 class="text-2xl font-semibold" style="color: #2D2622;">📅 Calendar</h2>
             <div class="flex gap-2">
               <!-- View Toggle -->
-              <div class="flex bg-white rounded-lg shadow overflow-hidden">
+              <div class="flex bg-white rounded-[12px] overflow-hidden" style="border: 1px solid #EAE3DB;">
                 <button 
                   (click)="viewMode = 'list'"
-                  [ngClass]="viewMode === 'list' ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'"
-                  class="px-4 py-2 text-sm font-medium transition-colors">
+                  class="px-4 py-2 text-sm font-medium transition-colors"
+                  [ngStyle]="{
+                    'background-color': viewMode === 'list' ? '#8B5E3C' : '#FFFFFF',
+                    'color': viewMode === 'list' ? '#FFFFFF' : '#2D2622'
+                  }">
                   📋 List
                 </button>
                 <button 
                   (click)="viewMode = 'calendar'"
-                  [ngClass]="viewMode === 'calendar' ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'"
-                  class="px-4 py-2 text-sm font-medium transition-colors">
+                  class="px-4 py-2 text-sm font-medium transition-colors"
+                  [ngStyle]="{
+                    'background-color': viewMode === 'calendar' ? '#8B5E3C' : '#FFFFFF',
+                    'color': viewMode === 'calendar' ? '#FFFFFF' : '#2D2622'
+                  }">
                   📅 Calendar
                 </button>
               </div>
               <button 
                 (click)="showCreateModal = true"
-                class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+                class="text-white px-4 py-2 rounded-[12px] font-medium"
+                style="background-color: #8B5E3C;">
                 Add Event
               </button>
             </div>
           </div>
 
           <!-- Filters Section -->
-          <div class="bg-white rounded-lg shadow p-4 mb-6">
+          <div class="bg-white rounded-[12px] p-4 mb-6" style="border: 1px solid #EAE3DB;">
             <div class="flex flex-wrap gap-4 items-end">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Type</label>
                 <select 
                   [(ngModel)]="filters.type"
                   (ngModelChange)="applyFilters()"
-                  class="border rounded px-3 py-2 text-sm">
+                  class="rounded-[12px] px-3 py-2 text-sm"
+                  style="border: 1px solid #EAE3DB; color: #2D2622;">
                   <option value="">All Types</option>
                   <option value="contest">🏆 Contest</option>
                   <option value="practice">💻 Practice</option>
@@ -84,11 +93,12 @@ interface FilterData {
                 </select>
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Scope</label>
+                <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Scope</label>
                 <select 
                   [(ngModel)]="filters.scope"
                   (ngModelChange)="applyFilters()"
-                  class="border rounded px-3 py-2 text-sm">
+                  class="rounded-[12px] px-3 py-2 text-sm"
+                  style="border: 1px solid #EAE3DB; color: #2D2622;">
                   <option value="">All Scopes</option>
                   <option value="personal">Personal</option>
                   <option value="team">Team</option>
@@ -96,68 +106,72 @@ interface FilterData {
                 </select>
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+                <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Start Date</label>
                 <input 
                   type="date"
                   [(ngModel)]="filters.startDate"
                   (ngModelChange)="applyFilters()"
-                  class="border rounded px-3 py-2 text-sm">
+                  class="rounded-[12px] px-3 py-2 text-sm"
+                  style="border: 1px solid #EAE3DB; color: #2D2622;">
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">End Date</label>
+                <label class="block text-sm font-medium mb-1" style="color: #2D2622;">End Date</label>
                 <input 
                   type="date"
                   [(ngModel)]="filters.endDate"
                   (ngModelChange)="applyFilters()"
-                  class="border rounded px-3 py-2 text-sm">
+                  class="rounded-[12px] px-3 py-2 text-sm"
+                  style="border: 1px solid #EAE3DB; color: #2D2622;">
               </div>
               <button 
                 (click)="clearFilters()"
-                class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded text-sm">
+                class="px-4 py-2 rounded-[12px] text-sm"
+                style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
                 Clear Filters
               </button>
             </div>
           </div>
 
           <!-- Error Message -->
-          <div *ngIf="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          <div *ngIf="error" class="bg-white rounded-[12px] px-4 py-3 mb-4" style="border: 1px solid #EAE3DB; color: #2D2622;">
             {{ error }}
           </div>
 
           <!-- Success Message -->
-          <div *ngIf="successMessage" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+          <div *ngIf="successMessage" class="bg-white rounded-[12px] px-4 py-3 mb-4" style="border: 1px solid #D4A373; color: #8B5E3C;">
             {{ successMessage }}
           </div>
 
           <!-- Loading State -->
           <div *ngIf="loading" class="text-center py-8">
-            <p class="text-gray-600">Loading events...</p>
+            <p style="color: #4A3B33;">Loading events...</p>
           </div>
 
           <!-- List View -->
           <div *ngIf="!loading && viewMode === 'list'" class="space-y-4">
-            <div *ngIf="filteredEvents.length === 0" class="bg-white rounded-lg shadow p-8 text-center">
-              <p class="text-gray-600">No events found. Create your first event!</p>
+            <div *ngIf="filteredEvents.length === 0" class="bg-white rounded-[12px] p-8 text-center" style="border: 1px solid #EAE3DB;">
+              <p style="color: #4A3B33;">No events found. Create your first event!</p>
             </div>
 
             <div 
               *ngFor="let event of filteredEvents" 
-              class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow">
+              class="bg-white rounded-[12px] p-6 transition-colors"
+              style="border: 1px solid #EAE3DB;">
               <div class="flex justify-between items-start">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 mb-2">
-                    <h3 class="text-xl font-semibold text-gray-800">{{ event.title }}</h3>
+                    <h3 class="text-xl font-semibold" style="color: #2D2622;">{{ event.title }}</h3>
                     <span class="text-2xl">{{ getEventIcon(event.type) }}</span>
                   </div>
-                  <p *ngIf="event.description" class="text-gray-600 mb-3">{{ event.description }}</p>
-                  <div class="text-sm text-gray-500 space-y-1">
+                  <p *ngIf="event.description" class="mb-3" style="color: #4A3B33;">{{ event.description }}</p>
+                  <div class="text-sm space-y-1" style="color: #4A3B33;">
                     <p><strong>Start:</strong> {{ event.startTime | date:'medium' }}</p>
                     <p><strong>End:</strong> {{ event.endTime | date:'medium' }}</p>
                     <div class="flex gap-2 mt-2">
-                      <span class="px-2 py-1 rounded text-xs" [ngClass]="getEventTypeClass(event.type)">
+                      <span class="px-2 py-1 rounded-[12px] text-xs" [ngStyle]="getEventTypeStyleObject(event.type)">
                         {{ getEventTypeName(event.type) }}
                       </span>
-                      <span class="px-2 py-1 rounded text-xs" [ngClass]="getEventScopeClass(event.eventScope)">
+                      <span class="px-2 py-1 rounded-[12px] text-xs" [ngStyle]="getEventScopeStyleObject(event.eventScope)">
                         {{ event.eventScope }}
                       </span>
                     </div>
@@ -167,13 +181,15 @@ interface FilterData {
                   <button 
                     *ngIf="canEditEvent(event)"
                     (click)="editEvent(event)"
-                    class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm">
+                    class="text-white px-3 py-1 rounded-[12px] text-sm"
+                    style="background-color: #D4A373;">
                     Edit
                   </button>
                   <button 
                     *ngIf="canDeleteEvent(event)"
                     (click)="deleteEvent(event._id!)"
-                    class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">
+                    class="px-3 py-1 rounded-[12px] text-sm text-red-600"
+                    style="background-color: #FCF9F5; border: 1px solid #EAE3DB;">
                     Delete
                   </button>
                 </div>
@@ -182,26 +198,28 @@ interface FilterData {
           </div>
 
           <!-- Calendar View -->
-          <div *ngIf="!loading && viewMode === 'calendar'" class="bg-white rounded-lg shadow">
+          <div *ngIf="!loading && viewMode === 'calendar'" class="bg-white rounded-[12px]" style="border: 1px solid #EAE3DB;">
             <!-- Calendar Header -->
-            <div class="flex justify-between items-center p-4 border-b">
+            <div class="flex justify-between items-center p-4" style="border-bottom: 1px solid #EAE3DB;">
               <button 
                 (click)="previousMonth()"
-                class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded">
+                class="px-3 py-1 rounded-[12px]"
+                style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
                 ← Previous
               </button>
-              <h3 class="text-lg font-semibold">{{ currentMonth | date:'MMMM yyyy' }}</h3>
+              <h3 class="text-lg font-semibold" style="color: #2D2622;">{{ currentMonth | date:'MMMM yyyy' }}</h3>
               <button 
                 (click)="nextMonth()"
-                class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded">
+                class="px-3 py-1 rounded-[12px]"
+                style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
                 Next →
               </button>
             </div>
             
             <!-- Calendar Grid -->
-            <div class="grid grid-cols-7 gap-px bg-gray-200">
+            <div class="grid grid-cols-7 gap-px" style="background-color: #EAE3DB;">
               <!-- Day Headers -->
-              <div *ngFor="let day of weekDays" class="bg-gray-100 p-2 text-center text-sm font-medium text-gray-700">
+              <div *ngFor="let day of weekDays" class="p-2 text-center text-sm font-medium" style="background-color: #FCF9F5; color: #4A3B33;">
                 {{ day }}
               </div>
               
@@ -209,23 +227,28 @@ interface FilterData {
               <div 
                 *ngFor="let day of calendarDays" 
                 (click)="openCreateEventForDay(day.date)"
-                class="bg-white min-h-24 p-1 border-t cursor-pointer hover:bg-blue-50 transition-colors"
-                [ngClass]="{'bg-gray-50 hover:bg-gray-100': !day.isCurrentMonth}">
-                <div class="text-sm text-gray-500 mb-1" [ngClass]="{'text-gray-400': !day.isCurrentMonth, 'font-bold text-blue-600': day.isToday}">
+                class="bg-white min-h-24 p-1 cursor-pointer transition-colors"
+                style="border-top: 1px solid #EAE3DB;"
+                [ngStyle]="{'background-color': !day.isCurrentMonth ? '#FCF9F5' : '#FFFFFF'}">
+                <div class="text-sm mb-1" [ngStyle]="{
+                  'color': !day.isCurrentMonth ? '#EAE3DB' : (day.isToday ? '#8B5E3C' : '#4A3B33'),
+                  'font-weight': day.isToday ? '700' : '400'
+                }">
                   {{ day.date.getDate() }}
                 </div>
                 <div class="space-y-1">
                   <div 
                     *ngFor="let event of day.events.slice(0, 3)" 
                     (click)="editEvent(event); $event.stopPropagation()"
-                    class="text-xs p-1 rounded cursor-pointer truncate"
-                    [ngClass]="getEventTypeClass(event.type)"
+                    class="text-xs p-1 rounded-[12px] cursor-pointer truncate"
+                    [ngStyle]="getEventTypeStyleObject(event.type)"
                     [title]="event.title">
                     {{ getEventIcon(event.type) }} {{ event.title }}
                   </div>
                   <div 
                     *ngIf="day.events.length > 3" 
-                    class="text-xs text-gray-500 pl-1">
+                    class="text-xs pl-1"
+                    style="color: #4A3B33;">
                     +{{ day.events.length - 3 }} more
                   </div>
                 </div>
@@ -238,36 +261,39 @@ interface FilterData {
       <!-- Create/Edit Event Modal -->
       <div 
         *ngIf="showCreateModal" 
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+        class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4"
         (click)="showCreateModal = false">
-        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md max-h-screen overflow-y-auto" (click)="$event.stopPropagation()">
-          <h3 class="text-xl font-bold mb-4">{{ editingEvent ? 'Edit Event' : 'Create New Event' }}</h3>
+        <div class="bg-white rounded-[12px] p-6 w-full max-w-md max-h-screen overflow-y-auto" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
+          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">{{ editingEvent ? 'Edit Event' : 'Create New Event' }}</h3>
           
           <div class="space-y-4">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Title *</label>
+              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Title *</label>
               <input 
                 type="text"
                 [(ngModel)]="formEvent.title"
                 placeholder="Event title"
-                class="w-full border rounded px-3 py-2">
+                class="w-full rounded-[12px] px-4 py-3"
+                style="border: 1px solid #EAE3DB; color: #2D2622;">
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Description</label>
               <textarea 
                 [(ngModel)]="formEvent.description"
                 placeholder="Event description"
                 rows="3"
-                class="w-full border rounded px-3 py-2">
+                class="w-full rounded-[12px] px-4 py-3"
+                style="border: 1px solid #EAE3DB; color: #2D2622;">
               </textarea>
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Type *</label>
+              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Type *</label>
               <select 
                 [(ngModel)]="formEvent.type"
-                class="w-full border rounded px-3 py-2">
+                class="w-full rounded-[12px] px-4 py-3"
+                style="border: 1px solid #EAE3DB; color: #2D2622;">
                 <option value="contest">🏆 Contest</option>
                 <option value="practice">💻 Practice</option>
                 <option value="training">📚 Training</option>
@@ -282,10 +308,11 @@ interface FilterData {
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Scope *</label>
+              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Scope *</label>
               <select 
                 [(ngModel)]="formEvent.eventScope"
-                class="w-full border rounded px-3 py-2">
+                class="w-full rounded-[12px] px-4 py-3"
+                style="border: 1px solid #EAE3DB; color: #2D2622;">
                 <option value="personal">Personal</option>
                 <option value="team">Team</option>
                 <option value="public">Public</option>
@@ -293,19 +320,21 @@ interface FilterData {
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Start Time *</label>
+              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Start Time *</label>
               <input 
                 type="datetime-local"
                 [(ngModel)]="formEvent.startTime"
-                class="w-full border rounded px-3 py-2">
+                class="w-full rounded-[12px] px-4 py-3"
+                style="border: 1px solid #EAE3DB; color: #2D2622;">
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">End Time *</label>
+              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">End Time *</label>
               <input 
                 type="datetime-local"
                 [(ngModel)]="formEvent.endTime"
-                class="w-full border rounded px-3 py-2">
+                class="w-full rounded-[12px] px-4 py-3"
+                style="border: 1px solid #EAE3DB; color: #2D2622;">
             </div>
 
             <div class="flex items-center">
@@ -313,21 +342,23 @@ interface FilterData {
                 type="checkbox"
                 [(ngModel)]="formEvent.isPublic"
                 id="isPublic"
-                class="mr-2">
-              <label for="isPublic" class="text-sm text-gray-700">Make this event public</label>
+                class="mr-2 rounded">
+              <label for="isPublic" class="text-sm" style="color: #4A3B33;">Make this event public</label>
             </div>
           </div>
 
           <div class="flex gap-2 justify-end mt-6">
             <button 
               (click)="closeModal()"
-              class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+              class="px-4 py-2 rounded-[12px]"
+              style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
               Cancel
             </button>
             <button 
               (click)="saveEvent()"
               [disabled]="saving || !isFormValid()"
-              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded disabled:bg-gray-300">
+              class="text-white px-4 py-2 rounded-[12px] disabled:opacity-50"
+              style="background-color: #8B5E3C;">
               {{ saving ? 'Saving...' : (editingEvent ? 'Update' : 'Create') }}
             </button>
           </div>
@@ -673,6 +704,34 @@ export class CalendarComponent implements OnInit {
       'public': 'bg-green-100 text-green-800'
     };
     return classes[scope] || 'bg-gray-100 text-gray-800';
+  }
+
+  // Matte-Drift style object methods - with subtle type variations
+  getEventTypeStyleObject(type: string): { [key: string]: string } {
+    // Use subtle variations within the Matte-Drift palette for different event types
+    const typeStyles: { [key: string]: { [key: string]: string } } = {
+      'contest': { 'background-color': '#FCF9F5', 'color': '#8B5E3C', 'border': '1px solid #D4A373' },
+      'practice': { 'background-color': '#FCF9F5', 'color': '#4A90A4', 'border': '1px solid #4A90A4' },
+      'training': { 'background-color': '#FCF9F5', 'color': '#8B5E3C', 'border': '1px solid #EAE3DB' },
+      'meeting': { 'background-color': '#FCF9F5', 'color': '#4A3B33', 'border': '1px solid #EAE3DB' },
+      'deadline': { 'background-color': '#FCF9F5', 'color': '#A05E4A', 'border': '1px solid #A05E4A' },
+      'clase_gpc': { 'background-color': '#FCF9F5', 'color': '#8B5E3C', 'border': '1px solid #D4A373' },
+      'rpc': { 'background-color': '#E8F4F8', 'color': '#4A90A4', 'border': '1px solid #4A90A4' },
+      'roadmap': { 'background-color': '#FCF9F5', 'color': '#4A3B33', 'border': '1px solid #EAE3DB' },
+      'problem': { 'background-color': '#FCF9F5', 'color': '#8B5E3C', 'border': '1px solid #EAE3DB' },
+      'other': { 'background-color': '#FCF9F5', 'color': '#4A3B33', 'border': '1px solid #EAE3DB' }
+    };
+    return typeStyles[type] || typeStyles['other'];
+  }
+
+  getEventScopeStyleObject(scope: string): { [key: string]: string } {
+    // Use subtle variations for different scopes
+    const scopeStyles: { [key: string]: { [key: string]: string } } = {
+      'personal': { 'background-color': '#FCF9F5', 'color': '#8B5E3C', 'border': '1px solid #D4A373' },
+      'team': { 'background-color': '#E8F4F8', 'color': '#4A90A4', 'border': '1px solid #4A90A4' },
+      'public': { 'background-color': '#FCF9F5', 'color': '#4A3B33', 'border': '1px solid #EAE3DB' }
+    };
+    return scopeStyles[scope] || scopeStyles['public'];
   }
 
   private formatDateForInput(date: Date): string {
