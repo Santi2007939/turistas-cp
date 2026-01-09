@@ -56,9 +56,20 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           
           <p class="mb-4" style="color: #4A3B33;">{{ theme.description || 'No description available' }}</p>
           
-          <div class="mb-4">
+          <div class="mb-4 flex flex-wrap gap-2">
             <span class="inline-block rounded-[12px] px-3 py-1 text-sm font-semibold" style="background-color: #FCF9F5; color: #2D2622; border: 1px solid #EAE3DB;">
               {{ theme.category }}
+            </span>
+            <!-- Subthemes count badge -->
+            <span 
+              *ngIf="theme.subthemes && theme.subthemes.length > 0"
+              class="inline-flex items-center gap-1 rounded-[12px] px-3 py-1 text-sm font-semibold" 
+              style="background-color: #FCF9F5; color: #4A3B33; border: 1px solid #EAE3DB;">
+              <!-- Lucide Layers icon -->
+              <svg class="w-3 h-3" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+              </svg>
+              {{ theme.subthemes.length }} subtema{{ theme.subthemes.length !== 1 ? 's' : '' }}
             </span>
           </div>
           
