@@ -110,12 +110,36 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <button 
                   *ngFor="let tab of tabs"
                   (click)="activeTab[subtopic._id || i] = tab.id"
-                  class="px-4 py-2 text-sm font-medium border-b-2 transition-colors whitespace-nowrap"
+                  class="px-4 py-2 text-sm font-medium border-b-2 transition-colors whitespace-nowrap flex items-center gap-1"
                   [ngStyle]="{
                     'border-bottom-color': activeTab[subtopic._id || i] === tab.id ? '#8B5E3C' : 'transparent',
                     'color': activeTab[subtopic._id || i] === tab.id ? '#8B5E3C' : '#4A3B33'
                   }">
-                  {{ tab.icon }} {{ tab.label }}
+                  <ng-container [ngSwitch]="tab.id">
+                    <!-- Lock icon for personal -->
+                    <svg *ngSwitchCase="'personal'" class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    <!-- BookOpen icon for theory -->
+                    <svg *ngSwitchCase="'theory'" class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    <!-- Code icon for code -->
+                    <svg *ngSwitchCase="'code'" class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                    </svg>
+                    <!-- Target icon for problems -->
+                    <svg *ngSwitchCase="'problems'" class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <circle cx="12" cy="12" r="10" />
+                      <circle cx="12" cy="12" r="6" />
+                      <circle cx="12" cy="12" r="2" />
+                    </svg>
+                    <!-- FileText icon for resources -->
+                    <svg *ngSwitchCase="'resources'" class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </ng-container>
+                  {{ tab.label }}
                 </button>
               </div>
             </div>
@@ -630,11 +654,11 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 })
 export class SubtopicDetailComponent implements OnInit {
   tabs = [
-    { id: 'personal', label: 'Notas Personales', icon: '🔒' },
-    { id: 'theory', label: 'Teoría Compartida', icon: '📖' },
-    { id: 'code', label: 'Código', icon: '💻' },
-    { id: 'problems', label: 'Problemas', icon: '🎯' },
-    { id: 'resources', label: 'Recursos', icon: '📚' }
+    { id: 'personal', label: 'Notas Personales' },
+    { id: 'theory', label: 'Teoría Compartida' },
+    { id: 'code', label: 'Código' },
+    { id: 'problems', label: 'Problemas' },
+    { id: 'resources', label: 'Recursos' }
   ];
 
   node: PersonalNode | null = null;

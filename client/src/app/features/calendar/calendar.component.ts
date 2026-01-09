@@ -94,16 +94,16 @@ interface FilterData {
                   class="rounded-[12px] px-3 py-2 text-sm"
                   style="border: 1px solid #EAE3DB; color: #2D2622;">
                   <option value="">All Types</option>
-                  <option value="contest">🏆 Contest</option>
-                  <option value="practice">💻 Practice</option>
-                  <option value="training">📚 Training</option>
-                  <option value="meeting">👥 Meeting</option>
-                  <option value="deadline">⏰ Deadline</option>
-                  <option value="clase_gpc">🎓 Clase GPC</option>
-                  <option value="rpc">🌐 RPC</option>
-                  <option value="roadmap">🗺️ Roadmap</option>
-                  <option value="problem">🧩 Problem</option>
-                  <option value="other">📌 Other</option>
+                  <option value="contest">Contest</option>
+                  <option value="practice">Practice</option>
+                  <option value="training">Training</option>
+                  <option value="meeting">Meeting</option>
+                  <option value="deadline">Deadline</option>
+                  <option value="clase_gpc">Clase GPC</option>
+                  <option value="rpc">RPC</option>
+                  <option value="roadmap">Roadmap</option>
+                  <option value="problem">Problem</option>
+                  <option value="other">Other</option>
                 </select>
               </div>
               <div>
@@ -175,7 +175,52 @@ interface FilterData {
                 <div class="flex-1">
                   <div class="flex items-center gap-2 mb-2">
                     <h3 class="text-xl font-semibold" style="color: #2D2622;">{{ event.title }}</h3>
-                    <span class="text-2xl">{{ getEventIcon(event.type) }}</span>
+                    <ng-container [ngSwitch]="event.type">
+                      <!-- Trophy for contest -->
+                      <svg *ngSwitchCase="'contest'" class="w-5 h-5" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 9H4a2 2 0 01-2-2V5a2 2 0 012-2h2M18 9h2a2 2 0 002-2V5a2 2 0 00-2-2h-2M6 3v6a6 6 0 006 6v0a6 6 0 006-6V3M9 21h6M12 15v6" />
+                      </svg>
+                      <!-- Code for practice -->
+                      <svg *ngSwitchCase="'practice'" class="w-5 h-5" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                      </svg>
+                      <!-- BookOpen for training -->
+                      <svg *ngSwitchCase="'training'" class="w-5 h-5" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                      </svg>
+                      <!-- Users for meeting -->
+                      <svg *ngSwitchCase="'meeting'" class="w-5 h-5" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                      </svg>
+                      <!-- Clock for deadline -->
+                      <svg *ngSwitchCase="'deadline'" class="w-5 h-5" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2" />
+                      </svg>
+                      <!-- GraduationCap for clase_gpc -->
+                      <svg *ngSwitchCase="'clase_gpc'" class="w-5 h-5" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
+                      </svg>
+                      <!-- Globe for rpc -->
+                      <svg *ngSwitchCase="'rpc'" class="w-5 h-5" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" />
+                      </svg>
+                      <!-- Map for roadmap -->
+                      <svg *ngSwitchCase="'roadmap'" class="w-5 h-5" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                      </svg>
+                      <!-- Puzzle for problem -->
+                      <svg *ngSwitchCase="'problem'" class="w-5 h-5" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
+                      </svg>
+                      <!-- Pin for other -->
+                      <svg *ngSwitchDefault class="w-5 h-5" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                      </svg>
+                    </ng-container>
                   </div>
                   <p *ngIf="event.description" class="mb-3" style="color: #4A3B33;">{{ event.description }}</p>
                   <div class="text-sm space-y-1" style="color: #4A3B33;">
@@ -257,7 +302,7 @@ interface FilterData {
                     class="text-xs p-1 rounded-[12px] cursor-pointer truncate"
                     [ngStyle]="getEventTypeStyleObject(event.type)"
                     [title]="event.title">
-                    {{ getEventIcon(event.type) }} {{ event.title }}
+                    {{ event.title }}
                   </div>
                   <div 
                     *ngIf="day.events.length > 3" 
@@ -308,16 +353,16 @@ interface FilterData {
                 [(ngModel)]="formEvent.type"
                 class="w-full rounded-[12px] px-4 py-3"
                 style="border: 1px solid #EAE3DB; color: #2D2622;">
-                <option value="contest">🏆 Contest</option>
-                <option value="practice">💻 Practice</option>
-                <option value="training">📚 Training</option>
-                <option value="meeting">👥 Meeting</option>
-                <option value="deadline">⏰ Deadline</option>
-                <option value="clase_gpc">🎓 Clase GPC</option>
-                <option value="rpc">🌐 RPC</option>
-                <option value="roadmap">🗺️ Roadmap</option>
-                <option value="problem">🧩 Problem</option>
-                <option value="other">📌 Other</option>
+                <option value="contest">Contest</option>
+                <option value="practice">Practice</option>
+                <option value="training">Training</option>
+                <option value="meeting">Meeting</option>
+                <option value="deadline">Deadline</option>
+                <option value="clase_gpc">Clase GPC</option>
+                <option value="rpc">RPC</option>
+                <option value="roadmap">Roadmap</option>
+                <option value="problem">Problem</option>
+                <option value="other">Other</option>
               </select>
             </div>
 
@@ -664,19 +709,9 @@ export class CalendarComponent implements OnInit {
   }
 
   getEventIcon(type: string): string {
-    const icons: { [key: string]: string } = {
-      'contest': '🏆',
-      'practice': '💻',
-      'training': '📚',
-      'meeting': '👥',
-      'deadline': '⏰',
-      'clase_gpc': '🎓',
-      'rpc': '🌐',
-      'roadmap': '🗺️',
-      'problem': '🧩',
-      'other': '📌'
-    };
-    return icons[type] || '📌';
+    // Icons are now rendered as SVG elements in the template
+    // This function is kept for compatibility but returns empty string
+    return '';
   }
 
   getEventTypeName(type: string): string {
