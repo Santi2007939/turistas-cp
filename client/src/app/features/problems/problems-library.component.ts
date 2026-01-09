@@ -688,6 +688,7 @@ export class ProblemsLibraryComponent implements OnInit {
     this.problemsService.checkDuplicate({
       url: problemData.url,
       platform: problemData.platform,
+      platformId: problemData.platformId,
       owner: problemData.owner
     }).subscribe({
       next: (response) => {

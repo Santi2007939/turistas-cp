@@ -151,11 +151,11 @@ router.post('/check-duplicate', asyncHandler(async (req, res) => {
   const queryConditions = [];
   
   if (url) {
-    queryConditions.push({ url: url });
+    queryConditions.push({ url });
   }
   
   if (platform && platformId) {
-    queryConditions.push({ platform: platform, platformId: platformId });
+    queryConditions.push({ platform, platformId });
   }
 
   if (queryConditions.length === 0) {
@@ -200,13 +200,11 @@ router.post('/', asyncHandler(async (req, res) => {
     createdBy: req.user._id
   };
 
-  // For personal problems, clear platformId to avoid unique constraint issues
+  // For personal problems, modify platformId to avoid unique constraint issues
   // when user wants to track a problem that exists as team or another personal problem
-  if (problemData.owner === 'personal' && forceCreate) {
+  if (problemData.owner === 'personal' && forceCreate && problemData.platformId) {
     // Generate a unique platformId suffix for personal copies
-    problemData.platformId = problemData.platformId 
-      ? `${problemData.platformId}-personal-${req.user._id}` 
-      : undefined;
+    problemData.platformId = `${problemData.platformId}-personal-${req.user._id}`;
   }
 
   const problem = await Problem.create(problemData);
