@@ -113,8 +113,12 @@ interface KanbanColumn {
                     <path stroke-linecap="round" stroke-linejoin="round" d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" />
                   </svg>
                   <!-- CheckCircle icon for done -->
-                  <svg *ngSwitchDefault class="w-6 h-6" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <svg *ngSwitchCase="'done'" class="w-6 h-6" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <!-- Fallback icon for unexpected values -->
+                  <svg *ngSwitchDefault class="w-6 h-6" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="12" cy="12" r="10" />
                   </svg>
                 </ng-container>
                 <h3 class="text-lg font-semibold" style="color: #2D2622;">{{ column.title }}</h3>
