@@ -124,8 +124,8 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             <h3 class="text-xl font-semibold mb-4 flex items-center gap-2" style="color: #2D2622;">
               <!-- Lucide Award icon -->
               <svg class="w-5 h-5" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 15l-2 5 2-1 2 1-2-5zm-4-7a4 4 0 118 0 4 4 0 01-8 0z" />
-                <circle cx="12" cy="8" r="6" stroke="currentColor" stroke-width="1.5" fill="none" />
+                <circle cx="12" cy="8" r="6" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 14l-2 7 5-3 5 3-2-7" />
               </svg>
               Logros del Sistema
             </h3>
@@ -764,15 +764,19 @@ export class StatisticsComponent implements OnInit {
     if (!this.isAchievementFormValid()) return;
 
     this.savingAchievement = true;
-    // Auto-select first team for team achievements (defaults to turistas team)
-    const autoTeamId = this.userTeams.length > 0 ? this.userTeams[0]._id : undefined;
+    // For new achievements, auto-select first team (defaults to turistas team)
+    // For editing, preserve the original team
+    const teamIdToUse = this.editingAchievement 
+      ? this.achievementFormData.teamId 
+      : (this.userTeams.length > 0 ? this.userTeams[0]._id : undefined);
+    
     const data: CreateCustomAchievementData = {
       name: this.achievementFormData.name,
       description: this.achievementFormData.description,
       photo: this.achievementFormData.photo || undefined,
       category: this.achievementFormData.category,
       scope: this.achievementFormData.scope,
-      teamId: this.achievementFormData.scope === 'team' ? autoTeamId : undefined,
+      teamId: this.achievementFormData.scope === 'team' ? teamIdToUse : undefined,
       achievedAt: this.achievementFormData.achievedAt ? new Date(this.achievementFormData.achievedAt) : undefined
     };
 
