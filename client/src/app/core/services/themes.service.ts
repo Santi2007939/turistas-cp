@@ -42,6 +42,41 @@ export interface ThemeResponse {
   };
 }
 
+export interface SubtopicContent {
+  name: string;
+  description: string;
+  sharedTheory: string;
+  codeSnippets: Array<{
+    language: 'python' | 'cpp';
+    code: string;
+    description?: string;
+  }>;
+  linkedProblems: Array<{
+    problemId: string;
+    title: string;
+    description?: string;
+    link?: string;
+    difficulty: 'easy' | 'medium' | 'hard' | 'very-hard';
+  }>;
+  resources: Array<{
+    name: string;
+    link: string;
+  }>;
+  userHasThemeInRoadmap: boolean;
+  personalNotes: string;
+}
+
+export interface SubtopicContentResponse {
+  success: boolean;
+  data: {
+    subtopic: SubtopicContent;
+    theme: {
+      _id: string;
+      name: string;
+    };
+  };
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -81,5 +116,21 @@ export class ThemesService {
    */
   deleteTheme(id: string): Observable<any> {
     return this.api.delete(`/api/themes/${id}`);
+  }
+
+  /**
+   * Get aggregated subtopic content for a theme
+   */
+  getSubtopicContent(themeId: string, subtopicName: string): Observable<SubtopicContentResponse> {
+    const encodedName = encodeURIComponent(subtopicName);
+    return this.api.get<SubtopicContentResponse>(`/api/themes/${themeId}/subtopics/${encodedName}`);
+  }
+
+  /**
+   * Delete subtopic globally (admin only)
+   */
+  deleteSubtopicGlobally(themeId: string, subtopicName: string): Observable<any> {
+    const encodedName = encodeURIComponent(subtopicName);
+    return this.api.delete(`/api/themes/${themeId}/subtopics/${encodedName}`);
   }
 }
