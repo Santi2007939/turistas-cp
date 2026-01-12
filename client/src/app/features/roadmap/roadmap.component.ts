@@ -273,8 +273,12 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   {{ node.themeId?.category }}
                 </span>
                 <span 
-                  class="px-3 py-1 text-xs font-medium rounded-[12px]"
+                  class="px-3 py-1 text-xs font-medium rounded-[12px] flex items-center gap-1"
                   style="background-color: #FCF9F5; color: #8B5E3C; border: 1px solid #EAE3DB;">
+                  <!-- Lucide Signal icon for difficulty level -->
+                  <svg class="w-3 h-3" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2 20h.01M7 20v-4M12 20v-8M17 20V8M22 20V4" />
+                  </svg>
                   {{ getDifficultyLabel(node.themeId?.difficulty) }}
                 </span>
               </div>
@@ -594,10 +598,10 @@ export class RoadmapComponent implements OnInit {
   };
 
   private readonly DIFFICULTY_LABELS: { [key: string]: string } = {
-    'beginner': '⭐ Principiante',
-    'intermediate': '⭐⭐ Intermedio',
-    'advanced': '⭐⭐⭐ Avanzado',
-    'expert': '⭐⭐⭐⭐ Experto'
+    'beginner': 'Principiante',
+    'intermediate': 'Intermedio',
+    'advanced': 'Avanzado',
+    'expert': 'Experto'
   };
 
   private readonly DIFFICULTY_ORDER: { [key: string]: number } = {

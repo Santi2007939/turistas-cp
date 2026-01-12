@@ -532,9 +532,13 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   <div class="flex gap-2 items-center">
                     <span 
                       *ngIf="problem.rating"
-                      class="text-xs px-2 py-1 rounded-[12px] font-mono"
+                      class="text-xs px-2 py-1 rounded-[12px] font-mono flex items-center gap-1"
                       style="background-color: #FCF9F5; color: #8B5E3C; border: 1px solid #EAE3DB;">
-                      ★ {{ problem.rating }}
+                      <!-- Lucide Activity icon for rating -->
+                      <svg class="w-3 h-3" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                      </svg>
+                      {{ problem.rating }}
                     </span>
                     <span class="text-xs px-2 py-1 rounded-[12px]"
                           style="background-color: #FCF9F5; color: #4A3B33; border: 1px solid #EAE3DB;">
