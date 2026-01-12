@@ -26,9 +26,9 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <svg class="w-7 h-7" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                 </svg>
-                Mi Roadmap
+                My Roadmap
               </h1>
-              <p style="color: #4A3B33;">Gestiona tu ruta de aprendizaje personalizada</p>
+              <p style="color: #4A3B33;">Manage your personalized learning path</p>
             </div>
             <div class="flex gap-3">
               <button 
@@ -49,7 +49,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M18 20V10m-6 10V4M6 20v-6" />
                 </svg>
-                Gráfica
+                Graph
               </button>
               <button 
                 *ngIf="selectedView === 'personal'"
@@ -60,7 +60,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                 </svg>
-                <span>Agregar Tema</span>
+                <span>Add Theme</span>
               </button>
             </div>
           </div>
@@ -69,14 +69,14 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           <div class="mt-6 flex flex-col md:flex-row gap-4">
             <!-- View Selector -->
             <div class="flex gap-2 items-center">
-              <label class="font-medium text-sm" style="color: #2D2622;">Vista:</label>
+              <label class="font-medium text-sm" style="color: #2D2622;">View:</label>
               <select 
                 [(ngModel)]="selectedView"
                 (change)="onViewChange()"
                 class="rounded-[12px] px-4 py-2 bg-white transition-all"
                 style="border: 1px solid #EAE3DB; color: #2D2622;">
-                <option value="personal">Mi roadmap</option>
-                <option value="members">Miembros</option>
+                <option value="personal">My roadmap</option>
+                <option value="members">Members</option>
               </select>
             </div>
 
@@ -89,39 +89,39 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 type="text" 
                 [(ngModel)]="searchQuery"
                 (input)="applyFilters()"
-                placeholder="Buscar tema..."
+                placeholder="Search theme..."
                 class="w-full rounded-[12px] pl-10 pr-4 py-2 transition-all"
                 style="border: 1px solid #EAE3DB; color: #2D2622;">
             </div>
 
             <!-- Filter by Status -->
             <div class="flex gap-2 items-center">
-              <label class="font-medium text-sm" style="color: #2D2622;">Estado:</label>
+              <label class="font-medium text-sm" style="color: #2D2622;">Status:</label>
               <select 
                 [(ngModel)]="filterStatus"
                 (change)="applyFilters()"
                 class="rounded-[12px] px-4 py-2 bg-white transition-all"
                 style="border: 1px solid #EAE3DB; color: #2D2622;">
-                <option value="">Todos</option>
-                <option value="not-started">No iniciado</option>
-                <option value="in-progress">En progreso</option>
-                <option value="completed">Completado</option>
-                <option value="mastered">Dominado</option>
+                <option value="">All</option>
+                <option value="not-started">Not Started</option>
+                <option value="in-progress">In Progress</option>
+                <option value="completed">Completed</option>
+                <option value="mastered">Mastered</option>
               </select>
             </div>
 
             <!-- Sort Options -->
             <div class="flex gap-2 items-center">
-              <label class="font-medium text-sm" style="color: #2D2622;">Ordenar:</label>
+              <label class="font-medium text-sm" style="color: #2D2622;">Sort:</label>
               <select 
                 [(ngModel)]="sortBy"
                 (change)="applyFilters()"
                 class="rounded-[12px] px-4 py-2 bg-white transition-all"
                 style="border: 1px solid #EAE3DB; color: #2D2622;">
-                <option value="name">Nombre</option>
-                <option value="progress">Progreso</option>
-                <option value="lastPracticed">Última práctica</option>
-                <option value="difficulty">Dificultad</option>
+                <option value="name">Name</option>
+                <option value="progress">Progress</option>
+                <option value="lastPracticed">Last Practiced</option>
+                <option value="difficulty">Difficulty</option>
               </select>
             </div>
           </div>
@@ -148,13 +148,13 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               <span class="text-2xl">⚠️</span>
             </div>
             <div class="ml-3">
-              <h3 class="font-semibold" style="color: #8B5E3C;">Error al cargar roadmap</h3>
+              <h3 class="font-semibold" style="color: #8B5E3C;">Error loading roadmap</h3>
               <p class="mt-1" style="color: #2D2622;">{{ error }}</p>
               <button 
                 (click)="loadRoadmap()"
                 class="mt-3 text-white px-4 py-2 rounded-[12px] text-sm font-medium transition-all"
                 style="background-color: #8B5E3C;">
-                Reintentar
+                Retry
               </button>
             </div>
           </div>
@@ -170,7 +170,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2" />
               </svg>
               <div class="flex-1">
-                <p class="text-sm font-medium" style="color: #4A3B33;">No iniciado</p>
+                <p class="text-sm font-medium" style="color: #4A3B33;">Not Started</p>
                 <p class="text-2xl font-bold font-mono" style="color: #2D2622;">{{ getCountByStatus('not-started') }}</p>
               </div>
             </div>
@@ -182,7 +182,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <path stroke-linecap="round" stroke-linejoin="round" d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" />
               </svg>
               <div class="flex-1">
-                <p class="text-sm font-medium" style="color: #4A3B33;">En progreso</p>
+                <p class="text-sm font-medium" style="color: #4A3B33;">In Progress</p>
                 <p class="text-2xl font-bold font-mono" style="color: #D4A373;">{{ getCountByStatus('in-progress') }}</p>
               </div>
             </div>
@@ -194,7 +194,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <div class="flex-1">
-                <p class="text-sm font-medium" style="color: #4A3B33;">Completado</p>
+                <p class="text-sm font-medium" style="color: #4A3B33;">Completed</p>
                 <p class="text-2xl font-bold font-mono" style="color: #8B5E3C;">{{ getCountByStatus('completed') }}</p>
               </div>
             </div>
@@ -206,7 +206,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 9H4a2 2 0 01-2-2V5a2 2 0 012-2h2M18 9h2a2 2 0 002-2V5a2 2 0 00-2-2h-2M6 3v6a6 6 0 006 6v0a6 6 0 006-6V3M9 21h6M12 15v6" />
               </svg>
               <div class="flex-1">
-                <p class="text-sm font-medium" style="color: #4A3B33;">Dominado</p>
+                <p class="text-sm font-medium" style="color: #4A3B33;">Mastered</p>
                 <p class="text-2xl font-bold font-mono" style="color: #8B5E3C;">{{ getCountByStatus('mastered') }}</p>
               </div>
             </div>
@@ -216,7 +216,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
         <!-- Results Count -->
         <div class="mb-4" *ngIf="!loading && nodes.length > 0">
           <p class="text-sm" style="color: #4A3B33;">
-            Mostrando <span class="font-semibold">{{ filteredNodes.length }}</span> de <span class="font-semibold">{{ nodes.length }}</span> temas
+            Showing <span class="font-semibold">{{ filteredNodes.length }}</span> of <span class="font-semibold">{{ nodes.length }}</span> themes
           </p>
         </div>
 
@@ -286,7 +286,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               <!-- Progress Bar - Matte-Drift Style -->
               <div class="mb-3">
                 <div class="flex justify-between text-sm font-medium mb-2">
-                  <span style="color: #2D2622;">Progreso</span>
+                  <span style="color: #2D2622;">Progress</span>
                   <span class="font-mono" style="color: #8B5E3C;">{{ node.progress }}%</span>
                 </div>
                 <div class="w-full rounded-[12px] h-2 overflow-hidden" style="background-color: #EAE3DB;">
@@ -299,14 +299,14 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               </div>
 
               <div *ngIf="node.notes" class="rounded-[12px] p-3 mb-3" style="background-color: #FCF9F5; border: 1px solid #EAE3DB;">
-                <p class="text-xs font-medium mb-1" style="color: #4A3B33;">Notas:</p>
+                <p class="text-xs font-medium mb-1" style="color: #4A3B33;">Notes:</p>
                 <p class="text-sm" style="color: #2D2622;">{{ node.notes }}</p>
               </div>
 
               <div class="flex items-center gap-4 text-xs">
                 <div *ngIf="node.lastPracticed" class="flex items-center gap-2" style="color: #4A3B33;">
                   <span>🕐</span>
-                  <span>Última práctica: {{ node.lastPracticed | date:'short' }}</span>
+                  <span>Last practiced: {{ node.lastPracticed | date:'short' }}</span>
                 </div>
                 <div *ngIf="node.dueDate" class="flex items-center gap-2"
                      [ngStyle]="{
@@ -314,7 +314,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                        'font-weight': isOverdue(node.dueDate) ? 'bold' : 'normal'
                      }">
                   <span>📅</span>
-                  <span>Vence: {{ node.dueDate | date:'short' }}</span>
+                  <span>Due: {{ node.dueDate | date:'short' }}</span>
                   <span *ngIf="isOverdue(node.dueDate)">⚠️</span>
                 </div>
               </div>
@@ -330,7 +330,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                Subtemas
+                Subtopics
               </a>
               <button 
                 *ngIf="selectedView === 'personal'"
@@ -341,24 +341,24 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                 </svg>
-                Actualizar
+                Update
               </button>
               <button 
                 *ngIf="selectedView === 'personal'"
-                (click)="confirmDelete(node._id, node.themeId?.name || 'este tema')"
+                (click)="confirmDelete(node._id, node.themeId?.name || 'this theme')"
                 class="px-4 py-2 rounded-[12px] text-sm font-medium transition-all flex items-center justify-center gap-2"
                 style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
                 <!-- Lucide Trash2 icon -->
                 <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                 </svg>
-                Eliminar
+                Delete
               </button>
               <div 
                 *ngIf="selectedView === 'members'"
                 class="rounded-[12px] px-4 py-2 text-center"
                 style="background-color: #FCF9F5; border: 1px solid #EAE3DB;">
-                <p class="text-xs font-medium mb-1" style="color: #4A3B33;">Miembro</p>
+                <p class="text-xs font-medium mb-1" style="color: #4A3B33;">Member</p>
                 <p class="text-sm font-semibold" style="color: #8B5E3C;">{{ getUserName(node) }}</p>
               </div>
             </div>
@@ -372,9 +372,9 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
         <svg class="w-16 h-16 mx-auto mb-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
           <path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
         </svg>
-        <h3 class="text-2xl font-semibold mb-3" style="color: #2D2622;">Tu roadmap está vacío</h3>
+        <h3 class="text-2xl font-semibold mb-3" style="color: #2D2622;">Your roadmap is empty</h3>
         <p class="mb-6 max-w-md mx-auto" style="color: #4A3B33;">
-          Comienza a agregar temas a tu roadmap para hacer seguimiento de tu progreso de aprendizaje.
+          Start adding themes to your roadmap to track your learning progress.
         </p>
         <button 
           *ngIf="selectedView === 'personal'"
@@ -385,7 +385,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
           </svg>
-          Agregar mi primer tema
+          Add my first theme
         </button>
       </div>
 
@@ -395,15 +395,15 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
         <svg class="w-16 h-16 mx-auto mb-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
           <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
-        <h3 class="text-2xl font-semibold mb-3" style="color: #2D2622;">No se encontraron resultados</h3>
+        <h3 class="text-2xl font-semibold mb-3" style="color: #2D2622;">No results found</h3>
         <p class="mb-6" style="color: #4A3B33;">
-          Intenta ajustar los filtros o la búsqueda para encontrar lo que buscas.
+          Try adjusting the filters or search to find what you're looking for.
         </p>
         <button 
           (click)="clearFilters()"
           class="font-medium py-3 px-8 rounded-[12px] transition-all"
           style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
-          Limpiar filtros
+          Clear filters
         </button>
       </div>
     </div>
@@ -419,22 +419,22 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             <svg class="w-8 h-8" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
             </svg>
-            <h3 class="text-2xl font-semibold" style="color: #2D2622;">Agregar Tema al Roadmap</h3>
+            <h3 class="text-2xl font-semibold" style="color: #2D2622;">Add Theme to Roadmap</h3>
           </div>
           
           <div class="mb-6">
-            <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Selecciona un tema</label>
+            <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Select a theme</label>
             <select 
               [(ngModel)]="selectedThemeId"
               class="w-full rounded-[12px] px-4 py-3 transition-all"
               style="border: 1px solid #EAE3DB; color: #2D2622;">
-              <option value="">Elige un tema...</option>
+              <option value="">Choose a theme...</option>
               <option *ngFor="let theme of availableThemes" [value]="theme._id">
                 {{ theme.name }} ({{ theme.category }} - {{ theme.difficulty }})
               </option>
             </select>
             <p class="text-xs mt-2" style="color: #4A3B33;">
-              El tema se agregará con estado "No iniciado" y progreso 0%
+              The theme will be added with "Not Started" status and 0% progress
             </p>
           </div>
 
@@ -443,14 +443,14 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               (click)="showAddThemeModal = false"
               class="font-medium px-6 py-3 rounded-[12px] transition-all"
               style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
-              Cancelar
+              Cancel
             </button>
             <button 
               (click)="addThemeToRoadmap()"
               [disabled]="!selectedThemeId"
               class="text-white font-medium px-6 py-3 rounded-[12px] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               style="background-color: #8B5E3C;">
-              Agregar tema
+              Add theme
             </button>
           </div>
         </div>
@@ -467,24 +467,24 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             <svg class="w-8 h-8" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
             </svg>
-            <h3 class="text-2xl font-semibold" style="color: #2D2622;">Actualizar Progreso</h3>
+            <h3 class="text-2xl font-semibold" style="color: #2D2622;">Update Progress</h3>
           </div>
           
           <div class="mb-5">
-            <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Estado</label>
+            <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Status</label>
             <select 
               [(ngModel)]="editingNode.status"
               class="w-full rounded-[12px] px-4 py-3 transition-all"
               style="border: 1px solid #EAE3DB; color: #2D2622;">
-              <option value="not-started">No iniciado</option>
-              <option value="in-progress">En progreso</option>
-              <option value="completed">Completado</option>
-              <option value="mastered">Dominado</option>
+              <option value="not-started">Not Started</option>
+              <option value="in-progress">In Progress</option>
+              <option value="completed">Completed</option>
+              <option value="mastered">Mastered</option>
             </select>
           </div>
 
           <div class="mb-5">
-            <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Progreso (%)</label>
+            <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Progress (%)</label>
             <div class="flex items-center gap-4">
               <input 
                 type="range" 
@@ -511,7 +511,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           </div>
 
           <div class="mb-5">
-            <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Fecha límite (opcional)</label>
+            <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Due Date (optional)</label>
             <input 
               type="date"
               [(ngModel)]="editingNode.dueDate"
@@ -520,11 +520,11 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           </div>
 
           <div class="mb-6">
-            <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Notas</label>
+            <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Notes</label>
             <textarea 
               [(ngModel)]="editingNode.notes"
               rows="4"
-              placeholder="Agrega notas sobre tu progreso, recursos útiles, etc."
+              placeholder="Add notes about your progress, useful resources, etc."
               class="w-full rounded-[12px] px-4 py-3 transition-all resize-none"
               style="border: 1px solid #EAE3DB; color: #2D2622;"></textarea>
           </div>
@@ -534,7 +534,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               (click)="showUpdateModal = false"
               class="font-medium px-6 py-3 rounded-[12px] transition-all"
               style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
-              Cancelar
+              Cancel
             </button>
             <button 
               (click)="saveNodeUpdate()"
@@ -544,7 +544,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
               </svg>
-              Guardar cambios
+              Save changes
             </button>
           </div>
         </div>
@@ -561,12 +561,12 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             <svg class="w-10 h-10" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
-            <h3 class="text-2xl font-semibold" style="color: #2D2622;">Confirmar eliminación</h3>
+            <h3 class="text-2xl font-semibold" style="color: #2D2622;">Confirm Deletion</h3>
           </div>
           
           <p class="mb-6" style="color: #4A3B33;">
-            ¿Estás seguro de que quieres eliminar <span class="font-semibold" style="color: #2D2622;">"{{ nodeToDeleteName }}"</span> de tu roadmap?
-            Esta acción no se puede deshacer.
+            Are you sure you want to delete <span class="font-semibold" style="color: #2D2622;">"{{ nodeToDeleteName }}"</span> from your roadmap?
+            This action cannot be undone.
           </p>
 
           <div class="flex gap-3 justify-end">
@@ -574,13 +574,13 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               (click)="showDeleteConfirmation = false"
               class="font-medium px-6 py-3 rounded-[12px] transition-all"
               style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
-              Cancelar
+              Cancel
             </button>
             <button 
               (click)="deleteNode(nodeToDelete)"
               class="font-medium px-6 py-3 rounded-[12px] transition-all"
               style="background-color: #8B5E3C; color: white;">
-              Eliminar
+              Delete
             </button>
           </div>
         </div>
@@ -591,17 +591,17 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 export class RoadmapComponent implements OnInit {
   // Constants
   private readonly STATUS_LABELS: { [key: string]: string } = {
-    'not-started': 'No iniciado',
-    'in-progress': 'En progreso',
-    'completed': 'Completado',
-    'mastered': 'Dominado'
+    'not-started': 'Not Started',
+    'in-progress': 'In Progress',
+    'completed': 'Completed',
+    'mastered': 'Mastered'
   };
 
   private readonly DIFFICULTY_LABELS: { [key: string]: string } = {
-    'beginner': 'Principiante',
-    'intermediate': 'Intermedio',
-    'advanced': 'Avanzado',
-    'expert': 'Experto'
+    'beginner': 'Beginner',
+    'intermediate': 'Intermediate',
+    'advanced': 'Advanced',
+    'expert': 'Expert'
   };
 
   private readonly DIFFICULTY_ORDER: { [key: string]: number } = {
@@ -612,10 +612,10 @@ export class RoadmapComponent implements OnInit {
   };
 
   private readonly ERROR_MESSAGES = {
-    LOAD_ROADMAP: 'No se pudo cargar el roadmap. Por favor intenta nuevamente.',
-    ADD_THEME: 'No se pudo agregar el tema al roadmap.',
-    UPDATE_NODE: 'No se pudo actualizar el progreso.',
-    DELETE_NODE: 'No se pudo eliminar el tema.'
+    LOAD_ROADMAP: 'Could not load roadmap. Please try again.',
+    ADD_THEME: 'Could not add theme to roadmap.',
+    UPDATE_NODE: 'Could not update progress.',
+    DELETE_NODE: 'Could not delete theme.'
   };
 
   nodes: PersonalNode[] = [];
