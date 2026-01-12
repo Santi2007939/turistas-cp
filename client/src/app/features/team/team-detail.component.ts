@@ -236,7 +236,10 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               <!-- USACO IDE Sessions -->
               <div class="bg-white rounded-[12px] p-4" style="border: 1px solid #EAE3DB;">
                 <div class="flex items-center gap-2 mb-2">
-                  <span class="text-2xl">💻</span>
+                  <!-- Lucide Code icon -->
+                  <svg class="w-6 h-6" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                  </svg>
                   <h3 class="font-semibold" style="color: #2D2622;">USACO IDE Sessions</h3>
                 </div>
                 <p class="text-sm mb-3" style="color: #4A3B33;">Manage shareable IDE links with code templates</p>
@@ -259,7 +262,10 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               <!-- Excalidraw Sessions -->
               <div class="bg-white rounded-[12px] p-4" style="border: 1px solid #EAE3DB;">
                 <div class="flex items-center gap-2 mb-2">
-                  <span class="text-2xl">✏️</span>
+                  <!-- Lucide Pencil icon -->
+                  <svg class="w-6 h-6" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                  </svg>
                   <h3 class="font-semibold" style="color: #2D2622;">Excalidraw Sessions</h3>
                 </div>
                 <p class="text-sm mb-3" style="color: #4A3B33;">Managed sessions for diagrams and visualizations</p>
@@ -274,7 +280,10 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               <!-- RPC Contests -->
               <div class="bg-white rounded-[12px] p-4" style="border: 1px solid #EAE3DB;">
                 <div class="flex items-center gap-2 mb-2">
-                  <span class="text-2xl">🏆</span>
+                  <!-- Lucide Trophy icon -->
+                  <svg class="w-6 h-6" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 9H4a2 2 0 01-2-2V5a2 2 0 012-2h2M18 9h2a2 2 0 002-2V5a2 2 0 00-2-2h-2M6 3v6a6 6 0 006 6v0a6 6 0 006-6V3M9 21h6M12 15v6" />
+                  </svg>
                   <h3 class="font-semibold" style="color: #2D2622;">RPC Contests</h3>
                 </div>
                 <p class="text-sm mb-3" style="color: #4A3B33;">View schedule and register for contests</p>
@@ -330,7 +339,10 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   <p class="text-sm font-medium mb-2" style="color: #4A3B33;">Linked Excalidraw Sessions:</p>
                   <div class="space-y-1">
                     <div *ngFor="let excSession of getLinkedExcalidrawSessions(session)" class="flex items-center gap-2">
-                      <span class="text-sm" style="color: #8B5E3C;">✏️</span>
+                      <!-- Lucide Pencil icon -->
+                      <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                      </svg>
                       <a [href]="excSession.url" target="_blank" class="text-sm hover:underline" style="color: #8B5E3C;">
                         {{ excSession.name }}
                       </a>
