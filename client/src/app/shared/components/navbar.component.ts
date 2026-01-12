@@ -143,8 +143,8 @@ import { AuthService, User } from '../../core/services/auth.service';
                   <!-- Profile Details -->
                   <div class="space-y-2 text-sm">
                     <div class="flex justify-between">
-                      <span style="color: #4A3B33;">Nombre completo:</span>
-                      <span class="font-medium" style="color: #2D2622;">{{ currentUser?.fullName || 'No especificado' }}</span>
+                      <span style="color: #4A3B33;">Full Name:</span>
+                      <span class="font-medium" style="color: #2D2622;">{{ currentUser?.fullName || 'Not specified' }}</span>
                     </div>
                     <div class="flex justify-between">
                       <span style="color: #4A3B33;">Codeforces Handle:</span>
@@ -153,10 +153,10 @@ import { AuthService, User } from '../../core/services/auth.service';
                           {{ currentUser?.codeforcesHandle }}
                         </a>
                       </span>
-                      <span *ngIf="!currentUser?.codeforcesHandle" style="color: #EAE3DB;">No vinculado</span>
+                      <span *ngIf="!currentUser?.codeforcesHandle" style="color: #EAE3DB;">Not linked</span>
                     </div>
                     <div class="flex justify-between">
-                      <span style="color: #4A3B33;">Rol:</span>
+                      <span style="color: #4A3B33;">Role:</span>
                       <span class="font-medium capitalize" style="color: #2D2622;">{{ currentUser?.role }}</span>
                     </div>
                   </div>
@@ -173,22 +173,22 @@ import { AuthService, User } from '../../core/services/auth.service';
                     <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                     </svg>
-                    Editar Perfil
+                    Edit Profile
                   </button>
                   
                   <!-- Edit Form -->
                   <div *ngIf="editingProfile" class="space-y-3">
                     <div>
-                      <label class="block text-xs font-medium mb-1" style="color: #4A3B33;">Nombre Completo</label>
+                      <label class="block text-xs font-medium mb-1" style="color: #4A3B33;">Full Name</label>
                       <input 
                         type="text"
                         [(ngModel)]="editProfileData.fullName"
                         class="w-full px-3 py-2 text-sm rounded-[12px]"
                         style="border: 1px solid #EAE3DB; color: #2D2622;"
-                        placeholder="Tu nombre completo">
+                        placeholder="Your full name">
                     </div>
                     <div>
-                      <label class="block text-xs font-medium mb-1" style="color: #4A3B33;">Handle de Codeforces</label>
+                      <label class="block text-xs font-medium mb-1" style="color: #4A3B33;">Codeforces Handle</label>
                       <input 
                         type="text"
                         [(ngModel)]="editProfileData.codeforcesHandle"
@@ -202,13 +202,13 @@ import { AuthService, User } from '../../core/services/auth.service';
                         [disabled]="savingProfile"
                         class="flex-1 text-white px-3 py-2 rounded-[12px] text-sm font-medium disabled:opacity-50"
                         style="background-color: #8B5E3C;">
-                        {{ savingProfile ? 'Guardando...' : 'Guardar' }}
+                        {{ savingProfile ? 'Saving...' : 'Save' }}
                       </button>
                       <button 
                         (click)="cancelEditProfile()"
                         class="px-3 py-2 rounded-[12px] text-sm font-medium"
                         style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
-                        Cancelar
+                        Cancel
                       </button>
                     </div>
                     <p *ngIf="profileError" class="text-red-500 text-xs">{{ profileError }}</p>
@@ -227,7 +227,7 @@ import { AuthService, User } from '../../core/services/auth.service';
                     <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                     </svg>
-                    Ver Estadísticas y Logros
+                    View Statistics and Achievements
                   </a>
                 </div>
 
@@ -240,7 +240,7 @@ import { AuthService, User } from '../../core/services/auth.service';
                     <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                     </svg>
-                    Cerrar Sesión
+                    Log Out
                   </button>
                 </div>
               </div>
@@ -364,12 +364,12 @@ import { AuthService, User } from '../../core/services/auth.service';
             
             <div class="space-y-2 text-sm mb-4">
               <div class="flex justify-between">
-                <span style="color: #4A3B33;">Nombre:</span>
-                <span style="color: #2D2622;">{{ currentUser?.fullName || 'No especificado' }}</span>
+                <span style="color: #4A3B33;">Name:</span>
+                <span style="color: #2D2622;">{{ currentUser?.fullName || 'Not specified' }}</span>
               </div>
               <div class="flex justify-between">
                 <span style="color: #4A3B33;">Codeforces:</span>
-                <span style="color: #8B5E3C;">{{ currentUser?.codeforcesHandle || 'No vinculado' }}</span>
+                <span style="color: #8B5E3C;">{{ currentUser?.codeforcesHandle || 'Not linked' }}</span>
               </div>
             </div>
 
@@ -379,13 +379,13 @@ import { AuthService, User } from '../../core/services/auth.service';
                 (click)="closeMobileMenu()"
                 class="block w-full text-center text-white px-4 py-3 rounded-[12px] text-base font-medium"
                 style="background-color: #8B5E3C;">
-                Estadísticas y Logros
+                Statistics and Achievements
               </a>
               <button
                 (click)="logout()"
                 class="block w-full text-center px-4 py-3 rounded-[12px] text-base font-medium"
                 style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
-                Cerrar Sesión
+                Log Out
               </button>
             </div>
           </div>
@@ -544,7 +544,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.authService.updateProfile(this.editProfileData).subscribe({
       next: () => {
         this.savingProfile = false;
-        this.profileSuccess = 'Perfil actualizado correctamente';
+        this.profileSuccess = 'Profile updated successfully';
         this.profileSuccessTimeout = setTimeout(() => {
           this.editingProfile = false;
           this.profileSuccess = null;
