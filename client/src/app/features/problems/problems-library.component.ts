@@ -92,10 +92,9 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 *ngIf="problem.rating"
                 class="px-3 py-1 text-sm font-semibold font-mono rounded-[12px] flex items-center gap-1"
                 style="background-color: #FCF9F5; color: #8B5E3C; border: 1px solid #EAE3DB;">
-                <!-- Lucide Gauge icon for rating -->
+                <!-- Lucide Activity icon for rating -->
                 <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 2a10 10 0 100 20 10 10 0 000-20z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M22 12h-4l-3 9L9 3l-3 9H2" />
                 </svg>
                 {{ problem.rating }}
               </span>
