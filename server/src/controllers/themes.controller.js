@@ -2,6 +2,9 @@ import Theme from '../models/Theme.js';
 import PersonalNode from '../models/PersonalNode.js';
 import { asyncHandler } from '../middlewares/error.js';
 
+// Helper function to normalize strings for comparison (case-insensitive, handle accented characters)
+const normalizeStr = (str) => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+
 // Helper function to aggregate subtopics from roadmap nodes for a single theme
 const aggregateSubtopicsFromRoadmap = async (themeId) => {
   const roadmapNodes = await PersonalNode.find({ themeId });
@@ -39,7 +42,7 @@ const extractSubtopicsFromNodes = (nodes) => {
     if (node.subtopics && node.subtopics.length > 0) {
       for (const subtopic of node.subtopics) {
         // Use normalized name as unique key (case-insensitive, handle accented characters)
-        const key = subtopic.name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+        const key = normalizeStr(subtopic.name);
         if (!subtopicMap.has(key)) {
           subtopicMap.set(key, {
             name: subtopic.name,
@@ -227,7 +230,6 @@ export const getSubtopicContent = asyncHandler(async (req, res) => {
   const allNodes = await PersonalNode.find({ themeId: id });
   
   // Normalize subtopic name for matching
-  const normalizeStr = (str) => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
   const normalizedSearchName = normalizeStr(decodedSubtopicName);
   
   // Aggregate shared content from all users' subtopics with matching name
@@ -338,7 +340,6 @@ export const deleteSubtopicGlobally = asyncHandler(async (req, res) => {
   }
 
   // Normalize subtopic name for matching
-  const normalizeStr = (str) => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
   const normalizedSearchName = normalizeStr(decodedSubtopicName);
 
   // Also remove from theme's subthemes if present
