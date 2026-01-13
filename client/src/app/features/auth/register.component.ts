@@ -22,13 +22,13 @@ import { environment } from '../../../environments/environment';
             Turistas CP
           </h2>
           <p class="mt-2 text-center text-sm" style="color: #4A3B33;">
-            {{ usersExist ? 'Crea tu cuenta' : 'Crea la cuenta de administrador' }}
+            {{ usersExist ? 'Create your account' : 'Create the admin account' }}
           </p>
         </div>
         <form class="mt-8 space-y-6" (ngSubmit)="onSubmit()">
           <div class="space-y-4">
             <div>
-              <label for="username" class="block text-sm font-medium mb-1" style="color: #2D2622;">Usuario</label>
+              <label for="username" class="block text-sm font-medium mb-1" style="color: #2D2622;">Username</label>
               <input
                 id="username"
                 name="username"
@@ -37,7 +37,7 @@ import { environment } from '../../../environments/environment';
                 required
                 class="appearance-none relative block w-full px-4 py-3 rounded-[12px] focus:outline-none sm:text-sm"
                 style="border: 1px solid #EAE3DB; color: #2D2622;"
-                placeholder="Nombre de usuario"
+                placeholder="Username"
               />
             </div>
             <div>
@@ -50,11 +50,11 @@ import { environment } from '../../../environments/environment';
                 required
                 class="appearance-none relative block w-full px-4 py-3 rounded-[12px] focus:outline-none sm:text-sm"
                 style="border: 1px solid #EAE3DB; color: #2D2622;"
-                placeholder="tu@email.com"
+                placeholder="you@email.com"
               />
             </div>
             <div>
-              <label for="password" class="block text-sm font-medium mb-1" style="color: #2D2622;">Contraseña</label>
+              <label for="password" class="block text-sm font-medium mb-1" style="color: #2D2622;">Password</label>
               <input
                 id="password"
                 name="password"
@@ -63,11 +63,11 @@ import { environment } from '../../../environments/environment';
                 required
                 class="appearance-none relative block w-full px-4 py-3 rounded-[12px] focus:outline-none sm:text-sm"
                 style="border: 1px solid #EAE3DB; color: #2D2622;"
-                placeholder="Mínimo 6 caracteres"
+                placeholder="Minimum 6 characters"
               />
             </div>
             <div>
-              <label for="fullName" class="block text-sm font-medium mb-1" style="color: #2D2622;">Nombre completo (opcional)</label>
+              <label for="fullName" class="block text-sm font-medium mb-1" style="color: #2D2622;">Full name (optional)</label>
               <input
                 id="fullName"
                 name="fullName"
@@ -75,11 +75,11 @@ import { environment } from '../../../environments/environment';
                 [(ngModel)]="formData.fullName"
                 class="appearance-none relative block w-full px-4 py-3 rounded-[12px] focus:outline-none sm:text-sm"
                 style="border: 1px solid #EAE3DB; color: #2D2622;"
-                placeholder="Tu nombre completo"
+                placeholder="Your full name"
               />
             </div>
             <div *ngIf="usersExist">
-              <label for="codeforcesHandle" class="block text-sm font-medium mb-1" style="color: #2D2622;">Handle de Codeforces (opcional)</label>
+              <label for="codeforcesHandle" class="block text-sm font-medium mb-1" style="color: #2D2622;">Codeforces handle (optional)</label>
               <input
                 id="codeforcesHandle"
                 name="codeforcesHandle"
@@ -87,7 +87,7 @@ import { environment } from '../../../environments/environment';
                 [(ngModel)]="formData.codeforcesHandle"
                 class="appearance-none relative block w-full px-4 py-3 rounded-[12px] focus:outline-none sm:text-sm"
                 style="border: 1px solid #EAE3DB; color: #2D2622;"
-                placeholder="tu_handle"
+                placeholder="your_handle"
               />
             </div>
           </div>
@@ -103,14 +103,14 @@ import { environment } from '../../../environments/environment';
               class="group relative w-full flex justify-center py-3 px-4 text-sm font-medium rounded-[12px] text-white focus:outline-none disabled:opacity-50"
               style="background-color: #8B5E3C;"
             >
-              {{ loading ? 'Registrando...' : 'Registrarse' }}
+              {{ loading ? 'Registering...' : 'Sign up' }}
             </button>
           </div>
 
           <div class="text-center text-sm">
-            <span style="color: #4A3B33;">¿Ya tienes cuenta? </span>
+            <span style="color: #4A3B33;">Already have an account? </span>
             <a routerLink="/auth/login" class="font-medium hover:underline" style="color: #8B5E3C;">
-              Inicia sesión
+              Sign in
             </a>
           </div>
         </form>
@@ -172,7 +172,7 @@ export class RegisterComponent implements OnInit {
         }
       },
       error: (err) => {
-        this.error = err.error?.message || 'Error al registrarse';
+        this.error = err.error?.message || 'Error registering';
         this.loading = false;
       }
     });
