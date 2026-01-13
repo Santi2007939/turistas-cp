@@ -11,6 +11,7 @@ import { SubtopicContentComponent } from './features/themes/subtopic-content.com
 import { RoadmapComponent } from './features/roadmap/roadmap.component';
 import { RoadmapKanbanComponent } from './features/roadmap/roadmap-kanban.component';
 import { RoadmapGraphComponent } from './features/roadmap/roadmap-graph.component';
+import { RoadmapNodesComponent } from './features/roadmap/roadmap-nodes.component';
 import { SubtopicDetailComponent } from './features/roadmap/subtopic-detail.component';
 import { ProblemsLibraryComponent } from './features/problems/problems-library.component';
 import { ProblemDetailComponent } from './features/problems/problem-detail.component';
@@ -33,6 +34,7 @@ export const routes: Routes = [
   { path: 'roadmap', component: RoadmapComponent, canActivate: [AuthGuard] },
   { path: 'roadmap/kanban', component: RoadmapKanbanComponent, canActivate: [AuthGuard] },
   { path: 'roadmap/graph', component: RoadmapGraphComponent, canActivate: [AuthGuard] },
+  { path: 'roadmap/nodes', component: RoadmapNodesComponent, canActivate: [AuthGuard] },
   { path: 'roadmap/:id/subtopics', component: SubtopicDetailComponent, canActivate: [AuthGuard] },
   { path: 'problems', component: ProblemsLibraryComponent, canActivate: [AuthGuard] },
   { path: 'problems/:id', component: ProblemDetailComponent, canActivate: [AuthGuard] },

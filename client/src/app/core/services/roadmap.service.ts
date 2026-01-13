@@ -9,6 +9,12 @@ export interface PopulatedUser {
   fullName?: string;
 }
 
+export interface TeamMember {
+  _id: string;
+  username: string;
+  fullName?: string;
+}
+
 export interface CodeSnippet {
   language: 'python' | 'cpp';
   code: string;
@@ -52,6 +58,7 @@ export interface PersonalNode {
   dueDate?: Date;
   subtopics?: Subtopic[];
   problemsSolved: any[];
+  order?: number;
   startedAt?: Date;
   completedAt?: Date;
   lastPracticed?: Date;
@@ -64,6 +71,7 @@ export interface RoadmapResponse {
   count: number;
   data: {
     roadmap: PersonalNode[];
+    isOwner?: boolean;
   };
 }
 
@@ -72,6 +80,14 @@ export interface NodeResponse {
   message: string;
   data: {
     node: PersonalNode;
+  };
+}
+
+export interface TeamMembersResponse {
+  success: boolean;
+  count: number;
+  data: {
+    members: TeamMember[];
   };
 }
 
@@ -142,5 +158,26 @@ export class RoadmapService {
    */
   deleteSubtopic(nodeId: string, subtopicId: string): Observable<any> {
     return this.api.delete(`/api/roadmap/${nodeId}/subtopics/${subtopicId}`);
+  }
+
+  /**
+   * Get list of team members who have roadmaps
+   */
+  getTeamMembers(): Observable<TeamMembersResponse> {
+    return this.api.get<TeamMembersResponse>('/api/roadmap/team-members');
+  }
+
+  /**
+   * Get a specific member's roadmap (read-only)
+   */
+  getMemberRoadmap(memberId: string): Observable<RoadmapResponse> {
+    return this.api.get<RoadmapResponse>(`/api/roadmap/member/${memberId}`);
+  }
+
+  /**
+   * Update node order (for drag-and-drop)
+   */
+  updateNodeOrder(nodeOrders: { nodeId: string; order: number }[]): Observable<any> {
+    return this.api.put('/api/roadmap/reorder', { nodeOrders });
   }
 }

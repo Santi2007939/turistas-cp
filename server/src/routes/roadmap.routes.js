@@ -1,5 +1,6 @@
 import express from 'express';
 import PersonalNode from '../models/PersonalNode.js';
+import User from '../models/User.js';
 import { protect } from '../middlewares/auth.js';
 import { asyncHandler } from '../middlewares/error.js';
 
@@ -56,6 +57,90 @@ router.get('/members/:userId', asyncHandler(async (req, res) => {
     success: true,
     count: memberRoadmaps.length,
     data: { roadmap: memberRoadmaps }
+  });
+}));
+
+// @desc    Get list of team members with roadmaps
+// @route   GET /api/roadmap/team-members
+// @access  Private
+router.get('/team-members', asyncHandler(async (req, res) => {
+  // Get all users who have roadmap entries (excluding current user)
+  const membersWithRoadmaps = await PersonalNode.distinct('userId', {
+    userId: { $ne: req.user._id }
+  });
+  
+  // Get user details for those members
+  const members = await User.find({
+    _id: { $in: membersWithRoadmaps }
+  }).select('_id username fullName');
+  
+  res.json({
+    success: true,
+    count: members.length,
+    data: { members }
+  });
+}));
+
+// @desc    Get a specific member's roadmap (read-only view)
+// @route   GET /api/roadmap/member/:memberId
+// @access  Private
+router.get('/member/:memberId', asyncHandler(async (req, res) => {
+  const { memberId } = req.params;
+  
+  // Get the member's roadmap
+  const memberRoadmap = await PersonalNode.find({ userId: memberId })
+    .populate('themeId')
+    .populate('problemsSolved')
+    .populate('userId', 'username fullName');
+  
+  if (memberRoadmap.length === 0) {
+    return res.json({
+      success: true,
+      count: 0,
+      data: { roadmap: [], isOwner: false }
+    });
+  }
+  
+  // Check if current user is the owner
+  const isOwner = memberId === req.user._id.toString();
+  
+  res.json({
+    success: true,
+    count: memberRoadmap.length,
+    data: { 
+      roadmap: memberRoadmap,
+      isOwner
+    }
+  });
+}));
+
+// @desc    Update node order (for drag-and-drop)
+// @route   PUT /api/roadmap/reorder
+// @access  Private
+router.put('/reorder', asyncHandler(async (req, res) => {
+  const { nodeOrders } = req.body;
+  
+  if (!Array.isArray(nodeOrders)) {
+    return res.status(400).json({
+      success: false,
+      message: 'nodeOrders must be an array'
+    });
+  }
+  
+  // Update order for each node (only for user's own nodes)
+  const updatePromises = nodeOrders.map((item, index) => 
+    PersonalNode.findOneAndUpdate(
+      { _id: item.nodeId, userId: req.user._id },
+      { order: item.order !== undefined ? item.order : index },
+      { new: true }
+    )
+  );
+  
+  await Promise.all(updatePromises);
+  
+  res.json({
+    success: true,
+    message: 'Node order updated successfully'
   });
 }));
 
