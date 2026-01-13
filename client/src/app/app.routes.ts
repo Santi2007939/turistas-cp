@@ -7,6 +7,7 @@ import { AdminDashboardComponent } from './features/admin/admin-dashboard.compon
 import { ThemesListComponent } from './features/themes/themes-list.component';
 import { ThemeDetailComponent } from './features/themes/theme-detail.component';
 import { ThemeCreateComponent } from './features/themes/theme-create.component';
+import { SubtopicContentComponent } from './features/themes/subtopic-content.component';
 import { RoadmapComponent } from './features/roadmap/roadmap.component';
 import { RoadmapKanbanComponent } from './features/roadmap/roadmap-kanban.component';
 import { RoadmapGraphComponent } from './features/roadmap/roadmap-graph.component';
@@ -28,6 +29,7 @@ export const routes: Routes = [
   { path: 'themes', component: ThemesListComponent, canActivate: [AuthGuard] },
   { path: 'themes/create', component: ThemeCreateComponent, canActivate: [AuthGuard] },
   { path: 'themes/:id', component: ThemeDetailComponent, canActivate: [AuthGuard] },
+  { path: 'themes/:id/subtopics/:subtopicName', component: SubtopicContentComponent, canActivate: [AuthGuard] },
   { path: 'roadmap', component: RoadmapComponent, canActivate: [AuthGuard] },
   { path: 'roadmap/kanban', component: RoadmapKanbanComponent, canActivate: [AuthGuard] },
   { path: 'roadmap/graph', component: RoadmapGraphComponent, canActivate: [AuthGuard] },

@@ -2,6 +2,9 @@ import Theme from '../models/Theme.js';
 import PersonalNode from '../models/PersonalNode.js';
 import { asyncHandler } from '../middlewares/error.js';
 
+// Helper function to normalize strings for comparison (case-insensitive, handle accented characters)
+const normalizeStr = (str) => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+
 // Helper function to aggregate subtopics from roadmap nodes for a single theme
 const aggregateSubtopicsFromRoadmap = async (themeId) => {
   const roadmapNodes = await PersonalNode.find({ themeId });
@@ -39,7 +42,7 @@ const extractSubtopicsFromNodes = (nodes) => {
     if (node.subtopics && node.subtopics.length > 0) {
       for (const subtopic of node.subtopics) {
         // Use normalized name as unique key (case-insensitive, handle accented characters)
-        const key = subtopic.name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+        const key = normalizeStr(subtopic.name);
         if (!subtopicMap.has(key)) {
           subtopicMap.set(key, {
             name: subtopic.name,
@@ -198,5 +201,175 @@ export const deleteTheme = asyncHandler(async (req, res) => {
   res.json({
     success: true,
     message: 'Theme deleted successfully'
+  });
+});
+
+// @desc    Get aggregated subtopic content for a theme (shared content from all users)
+// @route   GET /api/themes/:id/subtopics/:subtopicName
+// @access  Private
+export const getSubtopicContent = asyncHandler(async (req, res) => {
+  const { id, subtopicName } = req.params;
+  const decodedSubtopicName = decodeURIComponent(subtopicName);
+  
+  // Verify theme exists
+  const theme = await Theme.findById(id);
+  if (!theme) {
+    return res.status(404).json({
+      success: false,
+      message: 'Theme not found'
+    });
+  }
+
+  // Find if user has this theme in their roadmap
+  const userNode = await PersonalNode.findOne({ 
+    userId: req.user._id, 
+    themeId: id 
+  });
+
+  // Get all nodes for this theme to aggregate shared content
+  const allNodes = await PersonalNode.find({ themeId: id });
+  
+  // Normalize subtopic name for matching
+  const normalizedSearchName = normalizeStr(decodedSubtopicName);
+  
+  // Aggregate shared content from all users' subtopics with matching name
+  let aggregatedContent = {
+    name: decodedSubtopicName,
+    description: '',
+    sharedTheory: '',
+    codeSnippets: [],
+    linkedProblems: [],
+    resources: [],
+    userHasThemeInRoadmap: !!userNode,
+    personalNotes: '' // Only filled if user has theme in roadmap
+  };
+
+  // Set to track unique code snippets and resources
+  const seenCodeSnippets = new Set();
+  const seenResources = new Set();
+  const seenProblems = new Set();
+
+  for (const node of allNodes) {
+    if (!node.subtopics) continue;
+    
+    for (const subtopic of node.subtopics) {
+      if (normalizeStr(subtopic.name) === normalizedSearchName) {
+        // Use description from first match if not already set
+        if (!aggregatedContent.description && subtopic.description) {
+          aggregatedContent.description = subtopic.description;
+        }
+        
+        // Aggregate shared theory (use most recent or longest)
+        if (subtopic.sharedTheory && subtopic.sharedTheory.length > aggregatedContent.sharedTheory.length) {
+          aggregatedContent.sharedTheory = subtopic.sharedTheory;
+        }
+        
+        // Aggregate code snippets (deduplicate by code content)
+        if (subtopic.codeSnippets) {
+          for (const snippet of subtopic.codeSnippets) {
+            const key = `${snippet.language}:${snippet.code}`;
+            if (!seenCodeSnippets.has(key)) {
+              seenCodeSnippets.add(key);
+              aggregatedContent.codeSnippets.push(snippet);
+            }
+          }
+        }
+        
+        // Aggregate linked problems (deduplicate by problemId)
+        if (subtopic.linkedProblems) {
+          for (const problem of subtopic.linkedProblems) {
+            if (!seenProblems.has(problem.problemId.toString())) {
+              seenProblems.add(problem.problemId.toString());
+              aggregatedContent.linkedProblems.push(problem);
+            }
+          }
+        }
+        
+        // Aggregate resources (deduplicate by link)
+        if (subtopic.resources) {
+          for (const resource of subtopic.resources) {
+            if (!seenResources.has(resource.link)) {
+              seenResources.add(resource.link);
+              aggregatedContent.resources.push(resource);
+            }
+          }
+        }
+        
+        // If this is the user's own node, include personal notes
+        if (userNode && node._id.toString() === userNode._id.toString()) {
+          aggregatedContent.personalNotes = subtopic.personalNotes || '';
+        }
+      }
+    }
+  }
+
+  res.json({
+    success: true,
+    data: { 
+      subtopic: aggregatedContent,
+      theme: {
+        _id: theme._id,
+        name: theme.name
+      }
+    }
+  });
+});
+
+// @desc    Delete subtopic globally (admin only) - removes from all users and shared content
+// @route   DELETE /api/themes/:id/subtopics/:subtopicName
+// @access  Private (Admin only)
+export const deleteSubtopicGlobally = asyncHandler(async (req, res) => {
+  // Only admins can delete subtopics globally
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({
+      success: false,
+      message: 'Only administrators can delete subtopics globally'
+    });
+  }
+
+  const { id, subtopicName } = req.params;
+  const decodedSubtopicName = decodeURIComponent(subtopicName);
+  
+  // Verify theme exists
+  const theme = await Theme.findById(id);
+  if (!theme) {
+    return res.status(404).json({
+      success: false,
+      message: 'Theme not found'
+    });
+  }
+
+  // Normalize subtopic name for matching
+  const normalizedSearchName = normalizeStr(decodedSubtopicName);
+
+  // Also remove from theme's subthemes if present
+  if (theme.subthemes && theme.subthemes.length > 0) {
+    theme.subthemes = theme.subthemes.filter(
+      s => normalizeStr(s.name) !== normalizedSearchName
+    );
+    await theme.save();
+  }
+
+  // Find all nodes for this theme and remove the subtopic from each
+  const allNodes = await PersonalNode.find({ themeId: id });
+  let deletedCount = 0;
+
+  for (const node of allNodes) {
+    if (!node.subtopics || node.subtopics.length === 0) continue;
+    
+    const originalLength = node.subtopics.length;
+    node.subtopics = node.subtopics.filter(
+      s => normalizeStr(s.name) !== normalizedSearchName
+    );
+    
+    if (node.subtopics.length < originalLength) {
+      deletedCount++;
+      await node.save();
+    }
+  }
+
+  res.json({
+    success: true,
+    message: `Subtopic "${decodedSubtopicName}" deleted successfully from ${deletedCount} user roadmap(s)`
   });
 });
