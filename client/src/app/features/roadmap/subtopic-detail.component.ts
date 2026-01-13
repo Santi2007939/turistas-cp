@@ -136,9 +136,9 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                       <circle cx="12" cy="12" r="6" />
                       <circle cx="12" cy="12" r="2" />
                     </svg>
-                    <!-- BookOpen icon for resources -->
+                    <!-- Folder icon for resources -->
                     <svg *ngSwitchCase="'resources'" class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
                     </svg>
                   </ng-container>
                   {{ tab.label }}
@@ -681,11 +681,11 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 })
 export class SubtopicDetailComponent implements OnInit {
   tabs = [
-    { id: 'personal', label: 'Personal Notes', icon: '🔒' },
-    { id: 'theory', label: 'Shared Theory', icon: '📖' },
-    { id: 'code', label: 'Code', icon: '💻' },
-    { id: 'problems', label: 'Problems', icon: '🎯' },
-    { id: 'resources', label: 'Resources', icon: '📚' }
+    { id: 'personal', label: 'Personal Notes' },
+    { id: 'theory', label: 'Shared Theory' },
+    { id: 'code', label: 'Code' },
+    { id: 'problems', label: 'Problems' },
+    { id: 'resources', label: 'Resources' }
   ];
 
   node: PersonalNode | null = null;
