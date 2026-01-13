@@ -36,7 +36,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
       <!-- Main Content -->
       <div class="max-w-5xl mx-auto px-6 py-8">
         <div *ngIf="loading" class="text-center py-12">
-          <p style="color: #4A3B33;">Cargando problema...</p>
+          <p style="color: #4A3B33;">Loading problem...</p>
         </div>
 
         <div *ngIf="error" class="bg-white rounded-[12px] px-4 py-3 mb-4" style="border: 1px solid #EAE3DB; color: #8B5E3C;">
@@ -508,7 +508,7 @@ export class ProblemDetailComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'Error al cargar el problema. Inténtelo de nuevo.';
+        this.error = 'Error loading problem. Please try again.';
         this.loading = false;
         console.error('Error loading problem:', err);
       }
@@ -633,7 +633,7 @@ export class ProblemDetailComponent implements OnInit {
         this.editingThemes = [];
       },
       error: (err) => {
-        this.error = 'Error al actualizar temas.';
+        this.error = 'Error updating themes.';
         console.error('Error updating themes:', err);
       }
     });
@@ -666,7 +666,7 @@ export class ProblemDetailComponent implements OnInit {
         this.newMetacognition = { time: 0, description: '' };
       },
       error: (err) => {
-        this.error = 'Error al agregar entrada de metacognición.';
+        this.error = 'Error adding metacognition entry.';
         console.error('Error adding metacognition entry:', err);
       }
     });
@@ -683,7 +683,7 @@ export class ProblemDetailComponent implements OnInit {
         this.problem = response.data.problem;
       },
       error: (err) => {
-        this.error = 'Error al eliminar entrada.';
+        this.error = 'Error deleting entry.';
         console.error('Error deleting metacognition entry:', err);
       }
     });
@@ -716,7 +716,7 @@ export class ProblemDetailComponent implements OnInit {
         this.newTakeaway = '';
       },
       error: (err) => {
-        this.error = 'Error al agregar aprendizaje.';
+        this.error = 'Error adding learning.';
         console.error('Error adding takeaway:', err);
       }
     });
@@ -733,7 +733,7 @@ export class ProblemDetailComponent implements OnInit {
         this.problem = response.data.problem;
       },
       error: (err) => {
-        this.error = 'Error al eliminar aprendizaje.';
+        this.error = 'Error deleting learning.';
         console.error('Error deleting takeaway:', err);
       }
     });
@@ -748,7 +748,7 @@ export class ProblemDetailComponent implements OnInit {
         // Status updated successfully
       },
       error: (err) => {
-        this.error = 'Error al actualizar estado.';
+        this.error = 'Error updating status.';
         console.error('Error updating status:', err);
       }
     });
@@ -762,7 +762,7 @@ export class ProblemDetailComponent implements OnInit {
         // Analysis updated successfully
       },
       error: (err) => {
-        this.error = 'Error al actualizar análisis.';
+        this.error = 'Error updating analysis.';
         console.error('Error updating analysis:', err);
       }
     });

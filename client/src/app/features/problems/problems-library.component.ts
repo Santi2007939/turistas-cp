@@ -20,12 +20,12 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
       <div class="container mx-auto px-6 py-8">
         <div class="flex justify-between items-center mb-6">
-          <h1 class="text-3xl font-semibold" style="color: #2D2622;">Biblioteca de Problemas</h1>
+          <h1 class="text-3xl font-semibold" style="color: #2D2622;">Problems Library</h1>
           <button 
             (click)="openAddProblemModal()"
             class="text-white font-medium py-3 px-6 rounded-[12px]"
             style="background-color: #8B5E3C;">
-            Agregar Problema
+            Add Problem
           </button>
         </div>
 
@@ -33,37 +33,42 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
       <div *ngIf="subtopicFilter" class="mb-6 bg-white rounded-[12px] p-6" style="border: 1px solid #EAE3DB;">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-3">
-            <span class="text-2xl">🎯</span>
+            <!-- Lucide Target icon -->
+            <svg class="w-6 h-6" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10" />
+              <circle cx="12" cy="12" r="6" />
+              <circle cx="12" cy="12" r="2" />
+            </svg>
             <div>
-              <h3 class="font-semibold" style="color: #2D2622;">Filtrando por subtema</h3>
-              <p class="text-sm" style="color: #4A3B33;">{{ subtopicName || 'Cargando...' }}</p>
+              <h3 class="font-semibold" style="color: #2D2622;">Filtering by subtopic</h3>
+              <p class="text-sm" style="color: #4A3B33;">{{ subtopicName || 'Loading...' }}</p>
             </div>
           </div>
           <button 
             (click)="clearSubtopicFilter()"
             class="text-white px-4 py-2 rounded-[12px] text-sm font-medium"
             style="background-color: #8B5E3C;">
-            ✕ Limpiar filtro
+            Clear filter
           </button>
         </div>
       </div>
 
       <!-- Selector for problem view -->
       <div class="mb-6 flex gap-4 items-center">
-        <label class="font-medium" style="color: #2D2622;">Ver:</label>
+        <label class="font-medium" style="color: #2D2622;">View:</label>
         <select 
           [(ngModel)]="selectedView"
           (change)="onViewChange()"
           class="rounded-[12px] px-4 py-2 bg-white"
           style="border: 1px solid #EAE3DB; color: #2D2622;">
-          <option value="personal">Mi cuenta</option>
-          <option value="team">Equipo</option>
-          <option value="members">Miembros</option>
+          <option value="personal">My account</option>
+          <option value="team">Team</option>
+          <option value="members">Members</option>
         </select>
       </div>
 
       <div *ngIf="loading" class="text-center py-8">
-        <p style="color: #4A3B33;">Cargando problemas...</p>
+        <p style="color: #4A3B33;">Loading problems...</p>
       </div>
 
       <div *ngIf="error" class="bg-white rounded-[12px] px-4 py-3 mb-4" style="border: 1px solid #EAE3DB; color: #2D2622;">
@@ -105,7 +110,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 (change)="updateProblemStatus(problem)"
                 class="px-3 py-1 text-sm rounded-[12px]"
                 style="border: 1px solid #EAE3DB; background-color: #FCF9F5; color: #2D2622;">
-                <option value="pending">Pendiente</option>
+                <option value="pending">Pending</option>
                 <option value="ac">AC</option>
                 <option value="wa">WA</option>
               </select>
@@ -114,7 +119,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 *ngIf="!canEdit(problem)"
                 class="px-3 py-1 text-sm rounded-[12px]"
                 style="background-color: #FCF9F5; color: #2D2622; border: 1px solid #EAE3DB;">
-                {{ problem.status === 'pending' ? 'Pendiente' : problem.status === 'ac' ? 'AC' : 'WA' }}
+                {{ problem.status === 'pending' ? 'Pending' : problem.status === 'ac' ? 'AC' : 'WA' }}
               </span>
             </div>
 
@@ -133,7 +138,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 *ngIf="problem.owner === 'team'"
                 class="text-xs px-2 py-1 rounded-[12px] ml-2"
                 style="background-color: #FCF9F5; color: #2D2622; border: 1px solid #EAE3DB;">
-                Equipo
+                Team
               </span>
             </div>
 
@@ -146,39 +151,45 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               [routerLink]="['/problems', problem._id]"
               class="flex-1 text-white px-4 py-2 rounded-[12px] text-sm text-center font-medium"
               style="background-color: #8B5E3C;">
-              Ver Detalles
+              View Details
             </a>
             <a 
               *ngIf="problem.url"
               [href]="problem.url" 
               target="_blank"
-              class="px-3 py-2 rounded-[12px] text-sm font-medium"
+              class="px-3 py-2 rounded-[12px] text-sm font-medium flex items-center justify-center"
               style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #4A3B33;">
-              🔗
+              <!-- Lucide ExternalLink icon -->
+              <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
             </a>
             <button 
               *ngIf="canEdit(problem)"
               (click)="openEditProblemModal(problem)"
-              class="px-3 py-2 rounded-[12px] text-sm font-medium"
+              class="px-3 py-2 rounded-[12px] text-sm font-medium flex items-center justify-center"
               style="background-color: #D4A373; color: white;">
-              ✎
+              <!-- Lucide Edit icon -->
+              <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
             </button>
           </div>
 
           <div *ngIf="problem.createdBy" class="mt-3 text-xs" style="color: #4A3B33;">
-            Creado por: {{ getCreatorName(problem) }}
+            Created by: {{ getCreatorName(problem) }}
           </div>
         </div>
       </div>
 
       <div *ngIf="!loading && problems.length === 0" class="text-center py-12">
-        <p class="text-lg mb-4" style="color: #4A3B33;">No hay problemas en esta vista.</p>
+        <p class="text-lg mb-4" style="color: #4A3B33;">No problems in this view.</p>
         <button 
           *ngIf="selectedView === 'personal'"
           (click)="openAddProblemModal()"
           class="text-white font-medium py-3 px-6 rounded-[12px]"
           style="background-color: #8B5E3C;">
-          Agregar Primer Problema
+          Add First Problem
         </button>
       </div>
 
@@ -188,24 +199,24 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
         class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
         <div class="bg-white rounded-[12px] p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto" style="border: 1px solid #EAE3DB;">
           <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">
-            {{ editingProblem ? 'Editar Problema' : 'Agregar Problema' }}
+            {{ editingProblem ? 'Edit Problem' : 'Add Problem' }}
           </h3>
           
           <div class="space-y-4">
             <div>
-              <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Título *</label>
+              <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Title *</label>
               <input 
                 type="text"
                 [(ngModel)]="newProblem.title"
                 class="w-full rounded-[12px] px-4 py-3"
                 style="border: 1px solid #EAE3DB; color: #2D2622;"
-                placeholder="Nombre del problema">
+                placeholder="Problem name">
             </div>
 
             <!-- URL Field (optional for all platforms) -->
             <div>
               <label class="block text-sm font-medium mb-2" style="color: #2D2622;">
-                URL del Problema (Opcional)
+                Problem URL (Optional)
               </label>
               <input 
                 type="url"
@@ -220,12 +231,12 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 {{ urlValidationError }}
               </p>
               <p class="text-xs mt-1" style="color: #4A3B33;">
-                La plataforma se detectará automáticamente desde la URL.
+                Platform will be automatically detected from the URL.
               </p>
             </div>
 
             <div>
-              <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Plataforma</label>
+              <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Platform</label>
               <select 
                 [(ngModel)]="newProblem.platform"
                 class="w-full rounded-[12px] px-4 py-3"
@@ -247,17 +258,21 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             <div *ngIf="!editingProblem && newProblem.platform === 'codeforces' && newProblem.url" 
                  class="bg-white rounded-[12px] p-4" style="border: 1px solid #EAE3DB;">
               <p class="text-sm mb-2" style="color: #2D2622;">
-                ¿Quieres obtener automáticamente los datos de este problema de Codeforces?
+                Do you want to automatically fetch data for this Codeforces problem?
               </p>
               <button 
                 (click)="fetchCodeforcesData()"
                 [disabled]="fetchingCodeforces || !!urlValidationError"
-                class="text-white px-4 py-2 rounded-[12px] disabled:opacity-50 w-full font-medium"
+                class="text-white px-4 py-2 rounded-[12px] disabled:opacity-50 w-full font-medium flex items-center justify-center gap-2"
                 style="background-color: #8B5E3C;">
-                {{ fetchingCodeforces ? 'Obteniendo datos...' : '🔄 Obtener Datos de Codeforces' }}
+                <!-- Lucide RefreshCw icon -->
+                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" />
+                </svg>
+                {{ fetchingCodeforces ? 'Fetching data...' : 'Fetch Codeforces Data' }}
               </button>
               <p class="text-xs mt-2" style="color: #4A3B33;">
-                Esto llenará automáticamente el título, rating y otros detalles.
+                This will automatically fill in the title, rating and other details.
               </p>
             </div>
 
@@ -273,12 +288,12 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               </div>
 
               <div>
-                <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Estado</label>
+                <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Status</label>
                 <select 
                   [(ngModel)]="newProblem.status"
                   class="w-full rounded-[12px] px-4 py-3"
                   style="border: 1px solid #EAE3DB; color: #2D2622;">
-                  <option value="pending">Pendiente</option>
+                  <option value="pending">Pending</option>
                   <option value="ac">AC</option>
                   <option value="wa">WA</option>
                 </select>
@@ -292,13 +307,13 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 class="w-full rounded-[12px] px-4 py-3"
                 style="border: 1px solid #EAE3DB; color: #2D2622;">
                 <option value="personal">Personal</option>
-                <option value="team">Equipo</option>
+                <option value="team">Team</option>
               </select>
             </div>
 
             <!-- Themes Section -->
             <div class="rounded-[12px] p-4" style="background-color: #FCF9F5; border: 1px solid #EAE3DB;">
-              <label class="block text-sm font-medium mb-3" style="color: #2D2622;">Temas y Subtemas</label>
+              <label class="block text-sm font-medium mb-3" style="color: #2D2622;">Themes and Subtopics</label>
               
               <div class="space-y-3">
                 <div *ngFor="let themeAssoc of newProblem.themes; let i = index" class="rounded-[12px] p-3 bg-white" style="border: 1px solid #EAE3DB;">
@@ -309,7 +324,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                         (change)="onModalThemeChange(i)"
                         class="w-full rounded-[12px] px-3 py-2"
                         style="border: 1px solid #EAE3DB; color: #2D2622;">
-                        <option value="">Seleccionar tema...</option>
+                        <option value="">Select theme...</option>
                         <option *ngFor="let theme of availableThemes" [value]="theme._id">
                           {{ theme.name }}
                         </option>
@@ -317,13 +332,17 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                     </div>
                     <button 
                       (click)="removeModalTheme(i)"
-                      class="ml-2 text-red-600 hover:text-red-800">
-                      ✕
+                      class="ml-2 flex items-center justify-center"
+                      style="color: #4A3B33;">
+                      <!-- Lucide X icon -->
+                      <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
                     </button>
                   </div>
 
                   <div *ngIf="themeAssoc.themeId && getModalThemeSubthemes(themeAssoc.themeId).length > 0" class="mt-2">
-                    <label class="block text-xs mb-2" style="color: #4A3B33;">Subtemas:</label>
+                    <label class="block text-xs mb-2" style="color: #4A3B33;">Subtopics:</label>
                     <div class="space-y-1">
                       <label 
                         *ngFor="let subtheme of getModalThemeSubthemes(themeAssoc.themeId)"
@@ -343,7 +362,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   (click)="addModalThemeAssociation()"
                   class="w-full border-2 border-dashed rounded-[12px] py-2 text-sm transition-colors"
                   style="border-color: #EAE3DB; color: #4A3B33;">
-                  + Agregar Tema
+                  + Add Theme
                 </button>
               </div>
             </div>
@@ -356,14 +375,14 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               (click)="cancelAddProblem()"
               class="px-4 py-2 rounded-[12px] font-medium"
               style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
-              Cancelar
+              Cancel
             </button>
             <button 
               (click)="saveProblem()"
               [disabled]="!newProblem.title"
               class="text-white px-4 py-2 rounded-[12px] font-medium disabled:opacity-50"
               style="background-color: #8B5E3C;">
-              {{ editingProblem ? 'Actualizar' : 'Guardar' }}
+              {{ editingProblem ? 'Update' : 'Save' }}
             </button>
           </div>
         </div>
@@ -374,17 +393,21 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
         *ngIf="showDuplicateModal" 
         class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
         <div class="bg-white rounded-[12px] p-6 w-full max-w-lg" style="border: 1px solid #EAE3DB;">
-          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">
-            ⚠️ Problema Existente Detectado
+          <h3 class="text-xl font-semibold mb-4 flex items-center gap-2" style="color: #2D2622;">
+            <!-- Lucide AlertTriangle icon -->
+            <svg class="w-6 h-6" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            Existing Problem Detected
           </h3>
           
           <p class="mb-4" style="color: #4A3B33;">
-            Este problema ya ha sido agregado por otro miembro del equipo. 
-            ¿Deseas crear tu propia copia personal para registrar tu propio enfoque y progreso?
+            This problem has already been added by another team member. 
+            Do you want to create your own personal copy to track your own approach and progress?
           </p>
 
           <div class="space-y-3 mb-6">
-            <p class="text-sm font-medium" style="color: #2D2622;">Problemas existentes:</p>
+            <p class="text-sm font-medium" style="color: #2D2622;">Existing problems:</p>
             <div 
               *ngFor="let dup of duplicateProblems" 
               class="p-3 rounded-[12px]"
@@ -393,8 +416,8 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <div>
                   <p class="font-medium" style="color: #2D2622;">{{ dup.title }}</p>
                   <p class="text-xs" style="color: #4A3B33;">
-                    Creado por: {{ dup.createdBy?.username || 'Usuario' }} 
-                    ({{ dup.owner === 'team' ? 'Equipo' : 'Personal' }})
+                    Created by: {{ dup.createdBy?.username || 'User' }} 
+                    ({{ dup.owner === 'team' ? 'Team' : 'Personal' }})
                   </p>
                 </div>
                 <span class="text-xs px-2 py-1 rounded-[12px]" 
@@ -410,13 +433,13 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               (click)="cancelCreateDuplicate()"
               class="px-4 py-2 rounded-[12px] font-medium"
               style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
-              Cancelar
+              Cancel
             </button>
             <button 
               (click)="confirmCreateDuplicate()"
               class="text-white px-4 py-2 rounded-[12px] font-medium"
               style="background-color: #8B5E3C;">
-              Crear mi copia personal
+              Create my personal copy
             </button>
           </div>
         </div>
@@ -550,7 +573,7 @@ export class ProblemsLibraryComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'Error al cargar problemas. Inténtelo de nuevo.';
+        this.error = 'Error loading problems. Please try again.';
         this.loading = false;
         console.error('Error loading problems:', err);
       }
@@ -630,7 +653,7 @@ export class ProblemsLibraryComponent implements OnInit {
         this.fetchingCodeforces = false;
       },
       error: (err) => {
-        this.error = 'Error al obtener datos de Codeforces. Verifica la URL.';
+        this.error = 'Error fetching Codeforces data. Please verify the URL.';
         this.fetchingCodeforces = false;
         console.error('Error fetching Codeforces data:', err);
       }
@@ -672,7 +695,7 @@ export class ProblemsLibraryComponent implements OnInit {
           this.loadProblems();
         },
         error: (err) => {
-          this.error = 'Error al actualizar problema.';
+          this.error = 'Error updating problem.';
           console.error('Error updating problem:', err);
         }
       });
@@ -724,7 +747,7 @@ export class ProblemsLibraryComponent implements OnInit {
         this.loadProblems();
       },
       error: (err) => {
-        this.error = 'Error al crear problema.';
+        this.error = 'Error creating problem.';
         console.error('Error creating problem:', err);
       }
     });
@@ -750,7 +773,7 @@ export class ProblemsLibraryComponent implements OnInit {
         // Status updated successfully
       },
       error: (err) => {
-        this.error = 'Error al actualizar estado.';
+        this.error = 'Error updating status.';
         console.error('Error updating status:', err);
         this.loadProblems(); // Reload to revert changes
       }
@@ -894,7 +917,7 @@ export class ProblemsLibraryComponent implements OnInit {
     if (pattern && !pattern.test(url)) {
       return { 
         valid: false, 
-        message: `URL de ${detectedPlatform} no válida. Verifica el formato.` 
+        message: `Invalid ${detectedPlatform} URL. Please verify the format.` 
       };
     }
 

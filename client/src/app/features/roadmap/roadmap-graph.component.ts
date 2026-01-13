@@ -33,7 +33,7 @@ interface GraphNode {
                 <svg class="w-6 h-6" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M18 20V10m-6 10V4M6 20v-6" />
                 </svg>
-                Vista Gráfica
+                Graph View
               </h1>
               <p style="color: #4A3B33;">Visualiza tu progreso con gráficos interactivos</p>
             </div>
@@ -46,7 +46,7 @@ interface GraphNode {
                 <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
                 </svg>
-                Vista Lista
+                List View
               </button>
               <button 
                 routerLink="/roadmap/kanban"
@@ -56,7 +56,7 @@ interface GraphNode {
                 <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
                 </svg>
-                Vista Kanban
+                Kanban View
               </button>
             </div>
           </div>
@@ -68,7 +68,7 @@ interface GraphNode {
           <svg class="w-12 h-12 mx-auto mb-4 animate-spin" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
-          <p style="color: #4A3B33;">Cargando datos...</p>
+          <p style="color: #4A3B33;">Loading data...</p>
         </div>
 
         <!-- Error State -->
@@ -85,7 +85,7 @@ interface GraphNode {
                 (click)="loadRoadmap()"
                 class="mt-3 text-white px-4 py-2 rounded-[12px] text-sm font-medium"
                 style="background-color: #8B5E3C;">
-                Reintentar
+                Retry
               </button>
             </div>
           </div>
@@ -100,7 +100,7 @@ interface GraphNode {
               <svg class="w-5 h-5" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
               </svg>
-              Resumen de Progreso
+              Progress Summary
             </h3>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
               <div class="text-center">
@@ -118,7 +118,7 @@ interface GraphNode {
                   <path stroke-linecap="round" stroke-linejoin="round" d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" />
                 </svg>
                 <div class="text-2xl font-bold font-mono" style="color: #D4A373;">{{ getCountByStatus('in-progress') }}</div>
-                <div class="text-sm" style="color: #4A3B33;">En Progreso</div>
+                <div class="text-sm" style="color: #4A3B33;">In Progress</div>
               </div>
               <div class="text-center">
                 <!-- Lucide CheckCircle icon -->
@@ -126,7 +126,7 @@ interface GraphNode {
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <div class="text-2xl font-bold font-mono" style="color: #8B5E3C;">{{ getCountByStatus('done') }}</div>
-                <div class="text-sm" style="color: #4A3B33;">Completado</div>
+                <div class="text-sm" style="color: #4A3B33;">Completed</div>
               </div>
               <div class="text-center">
                 <!-- Lucide BarChart2 icon -->
@@ -134,7 +134,7 @@ interface GraphNode {
                   <path stroke-linecap="round" stroke-linejoin="round" d="M18 20V10m-6 10V4M6 20v-6" />
                 </svg>
                 <div class="text-2xl font-bold font-mono" style="color: #8B5E3C;">{{ getAverageProgress() }}%</div>
-                <div class="text-sm" style="color: #4A3B33;">Progreso Promedio</div>
+                <div class="text-sm" style="color: #4A3B33;">Average Progress</div>
               </div>
             </div>
 
@@ -169,7 +169,7 @@ interface GraphNode {
                 <circle cx="12" cy="12" r="6" />
                 <circle cx="12" cy="12" r="2" />
               </svg>
-              Distribución por Estado
+              Status Distribution
             </h3>
             <div class="flex items-end justify-center gap-8 h-64">
               <div class="flex flex-col items-center gap-2">
@@ -191,7 +191,7 @@ interface GraphNode {
                 </div>
                 <div class="text-center">
                   <div class="text-2xl font-bold font-mono" style="color: #D4A373;">{{ getCountByStatus('in-progress') }}</div>
-                  <div class="text-xs" style="color: #4A3B33;">En Progreso</div>
+                  <div class="text-xs" style="color: #4A3B33;">In Progress</div>
                 </div>
               </div>
               <div class="flex flex-col items-center gap-2">
@@ -202,7 +202,7 @@ interface GraphNode {
                 </div>
                 <div class="text-center">
                   <div class="text-2xl font-bold font-mono" style="color: #8B5E3C;">{{ getCountByStatus('done') }}</div>
-                  <div class="text-xs" style="color: #4A3B33;">Completado</div>
+                  <div class="text-xs" style="color: #4A3B33;">Completed</div>
                 </div>
               </div>
             </div>
@@ -210,7 +210,13 @@ interface GraphNode {
 
           <!-- Category Breakdown -->
           <div class="bg-white rounded-[12px] p-6" style="border: 1px solid #EAE3DB;">
-            <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">📚 Distribución por Categoría</h3>
+            <h3 class="text-xl font-semibold mb-4 flex items-center gap-2" style="color: #2D2622;">
+              <!-- Lucide BookOpen icon -->
+              <svg class="w-5 h-5" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+              Distribution by Category
+            </h3>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <div *ngFor="let category of getCategoryBreakdown()" 
                    class="bg-white rounded-[12px] p-4 transition-all hover:shadow-md"
@@ -230,7 +236,7 @@ interface GraphNode {
                   </div>
                 </div>
                 <div class="mt-1 text-xs" style="color: #4A3B33;">
-                  {{ category.percentage }}% del total
+                  {{ category.percentage }}% of total
                 </div>
               </div>
             </div>
@@ -238,7 +244,13 @@ interface GraphNode {
 
           <!-- Network Graph Placeholder -->
           <div class="bg-white rounded-[12px] p-6" style="border: 1px solid #EAE3DB;">
-            <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">🔗 Mapa de Relaciones</h3>
+            <h3 class="text-xl font-semibold mb-4 flex items-center gap-2" style="color: #2D2622;">
+              <!-- Lucide Link icon -->
+              <svg class="w-5 h-5" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+              </svg>
+              Relationship Map
+            </h3>
             <div #graphCanvas class="relative rounded-[12px] p-8 min-h-[400px] overflow-hidden" style="background-color: #FCF9F5;">
               <div class="absolute inset-0 flex items-center justify-center">
                 <svg class="w-full h-full" [attr.viewBox]="'0 0 ' + canvasWidth + ' ' + canvasHeight">
@@ -282,8 +294,12 @@ interface GraphNode {
                 </svg>
               </div>
             </div>
-            <p class="text-sm mt-4 text-center" style="color: #4A3B33;">
-              🔍 Vista de red mostrando la relación entre temas según categoría y progreso
+            <p class="text-sm mt-4 text-center flex items-center justify-center gap-2" style="color: #4A3B33;">
+              <!-- Lucide Search icon -->
+              <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              Network view showing theme relationships by category and progress
             </p>
           </div>
         </div>
@@ -291,16 +307,19 @@ interface GraphNode {
         <!-- Empty State -->
         <div *ngIf="!loading && !error && nodes.length === 0" 
              class="bg-white rounded-[12px] p-12 text-center" style="border: 1px solid #EAE3DB;">
-          <div class="text-6xl mb-4">📊</div>
-          <h3 class="text-2xl font-semibold mb-3" style="color: #2D2622;">No hay datos para visualizar</h3>
+          <!-- Lucide BarChart2 icon -->
+          <svg class="w-16 h-16 mx-auto mb-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M18 20V10m-6 10V4M6 20v-6" />
+          </svg>
+          <h3 class="text-2xl font-semibold mb-3" style="color: #2D2622;">No data to display</h3>
           <p class="mb-6" style="color: #4A3B33;">
-            Agrega temas a tu roadmap para ver las visualizaciones gráficas.
+            Add themes to your roadmap to see graphic visualizations.
           </p>
           <button 
             routerLink="/roadmap"
             class="text-white font-medium py-3 px-8 rounded-[12px]"
             style="background-color: #8B5E3C;">
-            Ir al Roadmap
+            Go to Roadmap
           </button>
         </div>
       </div>
@@ -352,7 +371,7 @@ export class RoadmapGraphComponent implements OnInit, AfterViewInit {
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'No se pudo cargar los datos. Por favor intenta nuevamente.';
+        this.error = 'Could not load data. Please try again.';
         this.loading = false;
         console.error('Error loading roadmap:', err);
       }

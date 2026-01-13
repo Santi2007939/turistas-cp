@@ -37,7 +37,7 @@ interface KanbanColumn {
                 </svg>
                 Kanban Board
               </h1>
-              <p style="color: #4A3B33;">Visualiza y organiza tu roadmap con vista Kanban</p>
+              <p style="color: #4A3B33;">Visualize and organize your roadmap with Kanban view</p>
             </div>
             <div class="flex gap-2">
               <button 
@@ -48,7 +48,7 @@ interface KanbanColumn {
                 <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
                 </svg>
-                Vista Lista
+                List View
               </button>
               <button 
                 routerLink="/roadmap/graph"
@@ -58,7 +58,7 @@ interface KanbanColumn {
                 <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M18 20V10m-6 10V4M6 20v-6" />
                 </svg>
-                Vista Gráfica
+                Graph View
               </button>
             </div>
           </div>
@@ -70,7 +70,7 @@ interface KanbanColumn {
           <svg class="w-12 h-12 mx-auto mb-4 animate-spin" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
-          <p style="color: #4A3B33;">Cargando roadmap...</p>
+          <p style="color: #4A3B33;">Loading roadmap...</p>
         </div>
 
         <!-- Error State -->
@@ -87,7 +87,7 @@ interface KanbanColumn {
                 (click)="loadRoadmap()"
                 class="mt-3 text-white px-4 py-2 rounded-[12px] text-sm font-medium"
                 style="background-color: #8B5E3C;">
-                Reintentar
+                Retry
               </button>
             </div>
           </div>
@@ -153,7 +153,11 @@ interface KanbanColumn {
                     (click)="openNodeDetails(node)"
                     class="text-sm"
                     style="color: #8B5E3C;">
-                    ℹ️
+                    <!-- Lucide Info icon -->
+                    <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <circle cx="12" cy="12" r="10" />
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 16v-4m0-4h.01" />
+                    </svg>
                   </button>
                 </div>
 
@@ -164,7 +168,7 @@ interface KanbanColumn {
                 <!-- Progress Bar -->
                 <div class="mb-3">
                   <div class="flex justify-between text-xs mb-1">
-                    <span style="color: #4A3B33;">Progreso</span>
+                    <span style="color: #4A3B33;">Progress</span>
                     <span class="font-semibold font-mono" style="color: #8B5E3C;">{{ node.progress }}%</span>
                   </div>
                   <div class="w-full rounded-[12px] h-2" style="background-color: #EAE3DB;">
@@ -183,9 +187,21 @@ interface KanbanColumn {
                      [ngStyle]="{
                        'color': isOverdue(node.dueDate) ? '#8B5E3C' : isDueSoon(node.dueDate) ? '#D4A373' : '#4A3B33'
                      }">
-                  <span>📅</span>
+                  <!-- Lucide Calendar icon -->
+                  <svg class="w-3 h-3" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                  </svg>
                   <span>{{ formatDate(node.dueDate) }}</span>
-                  <span *ngIf="isOverdue(node.dueDate)" class="font-semibold">⚠️ Vencido</span>
+                  <span *ngIf="isOverdue(node.dueDate)" class="font-semibold flex items-center gap-1">
+                    <!-- Lucide AlertTriangle icon -->
+                    <svg class="w-3 h-3" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    Overdue
+                  </span>
                 </div>
 
                 <!-- Tags -->
@@ -209,8 +225,22 @@ interface KanbanColumn {
               <!-- Empty Column State -->
               <div *ngIf="column.nodes.length === 0" 
                    class="text-center py-8" style="color: #4A3B33;">
-                <div class="text-4xl mb-2">{{ column.icon }}</div>
-                <p class="text-sm">No hay temas en esta columna</p>
+                <ng-container [ngSwitch]="column.id">
+                  <!-- Lucide Clock icon for todo -->
+                  <svg *ngSwitchCase="'todo'" class="w-10 h-10 mx-auto mb-2" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="12" cy="12" r="10" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2" />
+                  </svg>
+                  <!-- Lucide RefreshCw icon for in-progress -->
+                  <svg *ngSwitchCase="'in-progress'" class="w-10 h-10 mx-auto mb-2" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" />
+                  </svg>
+                  <!-- Lucide CheckCircle icon for done -->
+                  <svg *ngSwitchCase="'done'" class="w-10 h-10 mx-auto mb-2" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </ng-container>
+                <p class="text-sm">No themes in this column</p>
               </div>
             </div>
           </div>
@@ -223,15 +253,15 @@ interface KanbanColumn {
           <svg class="w-16 h-16 mx-auto mb-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
           </svg>
-          <h3 class="text-2xl font-semibold mb-3" style="color: #2D2622;">No hay temas en tu roadmap</h3>
+          <h3 class="text-2xl font-semibold mb-3" style="color: #2D2622;">No themes in your roadmap</h3>
           <p class="mb-6" style="color: #4A3B33;">
-            Agrega temas para empezar a organizar tu aprendizaje en el tablero Kanban.
+            Add themes to start organizing your learning in the Kanban board.
           </p>
           <button 
             routerLink="/roadmap"
             class="text-white font-medium py-3 px-8 rounded-[12px]"
             style="background-color: #8B5E3C;">
-            Ir al Roadmap
+            Go to Roadmap
           </button>
         </div>
       </div>
@@ -278,7 +308,7 @@ export class RoadmapKanbanComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'No se pudo cargar el roadmap. Por favor intenta nuevamente.';
+        this.error = 'Could not load the roadmap. Please try again.';
         this.loading = false;
         console.error('Error loading roadmap:', err);
       }
@@ -349,7 +379,7 @@ export class RoadmapKanbanComponent implements OnInit {
               event.currentIndex,
               event.previousIndex
             );
-            this.error = 'No se pudo actualizar el estado del tema.';
+            this.error = 'Could not update the theme status.';
           }
         });
       }
@@ -374,6 +404,6 @@ export class RoadmapKanbanComponent implements OnInit {
 
   formatDate(date: Date): string {
     const d = new Date(date);
-    return d.toLocaleDateString('es-ES', { month: 'short', day: 'numeric' });
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   }
 }

@@ -106,12 +106,38 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               <button 
                 *ngFor="let tab of getAvailableTabs()"
                 (click)="activeTab = tab.id"
-                class="px-4 py-2 text-sm font-medium border-b-2 transition-colors whitespace-nowrap"
+                class="px-4 py-2 text-sm font-medium border-b-2 transition-colors whitespace-nowrap flex items-center gap-2"
                 [ngStyle]="{
                   'border-bottom-color': activeTab === tab.id ? '#8B5E3C' : 'transparent',
                   'color': activeTab === tab.id ? '#8B5E3C' : '#4A3B33'
                 }">
-                {{ tab.icon }} {{ tab.label }}
+                <ng-container [ngSwitch]="tab.id">
+                  <!-- Lock icon for personal -->
+                  <svg *ngSwitchCase="'personal'" class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 11V7a5 5 0 0110 0v4" />
+                  </svg>
+                  <!-- BookOpen icon for theory -->
+                  <svg *ngSwitchCase="'theory'" class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                  <!-- Code icon for code -->
+                  <svg *ngSwitchCase="'code'" class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <polyline points="16 18 22 12 16 6" />
+                    <polyline points="8 6 2 12 8 18" />
+                  </svg>
+                  <!-- Target icon for problems -->
+                  <svg *ngSwitchCase="'problems'" class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="12" cy="12" r="10" />
+                    <circle cx="12" cy="12" r="6" />
+                    <circle cx="12" cy="12" r="2" />
+                  </svg>
+                  <!-- BookOpen icon for resources -->
+                  <svg *ngSwitchCase="'resources'" class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                </ng-container>
+                {{ tab.label }}
               </button>
             </div>
           </div>
@@ -121,8 +147,13 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             <!-- Personal Notes (only if user has theme in roadmap) -->
             <div *ngIf="activeTab === 'personal' && subtopic.userHasThemeInRoadmap">
               <div class="rounded-[12px] p-4 mb-4" style="background-color: #FCF9F5; border-left: 4px solid #D4A373;">
-                <p class="text-sm" style="color: #4A3B33;">
-                  🔒 These notes are private and only you can see them
+                <p class="text-sm flex items-center gap-2" style="color: #4A3B33;">
+                  <!-- Lucide Lock icon -->
+                  <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 11V7a5 5 0 0110 0v4" />
+                  </svg>
+                  These notes are private and only you can see them
                 </p>
               </div>
               <div 
@@ -163,7 +194,11 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <!-- Empty State -->
                 <div *ngIf="!subtopic.codeSnippets || subtopic.codeSnippets.length === 0" 
                      class="text-center py-8" style="color: #4A3B33;">
-                  <div class="text-4xl mb-2">💻</div>
+                  <!-- Lucide Code icon -->
+                  <svg class="w-10 h-10 mx-auto mb-2" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <polyline points="16 18 22 12 16 6" />
+                    <polyline points="8 6 2 12 8 18" />
+                  </svg>
                   <p class="text-sm">No code snippets yet</p>
                 </div>
               </div>
@@ -172,8 +207,13 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             <!-- Problems -->
             <div *ngIf="activeTab === 'problems'">
               <div class="rounded-[12px] p-4 mb-4" style="background-color: #FCF9F5; border-left: 4px solid #8B5E3C;">
-                <p class="text-sm" style="color: #4A3B33;">
-                  💻 Problems linked to this subtopic
+                <p class="text-sm flex items-center gap-2" style="color: #4A3B33;">
+                  <!-- Lucide Code icon -->
+                  <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <polyline points="16 18 22 12 16 6" />
+                    <polyline points="8 6 2 12 8 18" />
+                  </svg>
+                  Problems linked to this subtopic
                 </p>
               </div>
               <div class="space-y-3">
@@ -227,7 +267,10 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <!-- Empty State -->
                 <div *ngIf="!subtopic.linkedProblems || subtopic.linkedProblems.length === 0"
                      class="text-center py-8" style="color: #4A3B33;">
-                  <div class="text-4xl mb-2">📝</div>
+                  <!-- Lucide FileText icon -->
+                  <svg class="w-10 h-10 mx-auto mb-2" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
                   <p class="text-sm">No linked problems</p>
                 </div>
               </div>
@@ -236,8 +279,12 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             <!-- Resources -->
             <div *ngIf="activeTab === 'resources'">
               <div class="rounded-[12px] p-4 mb-4" style="background-color: #FCF9F5; border-left: 4px solid #D4A373;">
-                <p class="text-sm" style="color: #4A3B33;">
-                  📚 Learning resources shared by team members
+                <p class="text-sm flex items-center gap-2" style="color: #4A3B33;">
+                  <!-- Lucide BookOpen icon -->
+                  <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                  Learning resources shared by team members
                 </p>
               </div>
               <div class="space-y-3">
@@ -263,7 +310,10 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <!-- Empty State -->
                 <div *ngIf="!subtopic.resources || subtopic.resources.length === 0"
                      class="text-center py-8" style="color: #4A3B33;">
-                  <div class="text-4xl mb-2">📚</div>
+                  <!-- Lucide BookOpen icon -->
+                  <svg class="w-10 h-10 mx-auto mb-2" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
                   <p class="text-sm">No resources yet</p>
                 </div>
               </div>

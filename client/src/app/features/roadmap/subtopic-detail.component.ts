@@ -110,12 +110,38 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <button 
                   *ngFor="let tab of tabs"
                   (click)="activeTab[subtopic._id || i] = tab.id"
-                  class="px-4 py-2 text-sm font-medium border-b-2 transition-colors whitespace-nowrap"
+                  class="px-4 py-2 text-sm font-medium border-b-2 transition-colors whitespace-nowrap flex items-center gap-2"
                   [ngStyle]="{
                     'border-bottom-color': activeTab[subtopic._id || i] === tab.id ? '#8B5E3C' : 'transparent',
                     'color': activeTab[subtopic._id || i] === tab.id ? '#8B5E3C' : '#4A3B33'
                   }">
-                  {{ tab.icon }} {{ tab.label }}
+                  <ng-container [ngSwitch]="tab.id">
+                    <!-- Lock icon for personal -->
+                    <svg *ngSwitchCase="'personal'" class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M7 11V7a5 5 0 0110 0v4" />
+                    </svg>
+                    <!-- BookOpen icon for theory -->
+                    <svg *ngSwitchCase="'theory'" class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    <!-- Code icon for code -->
+                    <svg *ngSwitchCase="'code'" class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <polyline points="16 18 22 12 16 6" />
+                      <polyline points="8 6 2 12 8 18" />
+                    </svg>
+                    <!-- Target icon for problems -->
+                    <svg *ngSwitchCase="'problems'" class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <circle cx="12" cy="12" r="10" />
+                      <circle cx="12" cy="12" r="6" />
+                      <circle cx="12" cy="12" r="2" />
+                    </svg>
+                    <!-- BookOpen icon for resources -->
+                    <svg *ngSwitchCase="'resources'" class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                  </ng-container>
+                  {{ tab.label }}
                 </button>
               </div>
             </div>
@@ -125,15 +151,20 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               <!-- Personal Notes -->
               <div *ngIf="activeTab[subtopic._id || i] === 'personal'">
                 <div class="rounded-[12px] p-4 mb-4" style="background-color: #FCF9F5; border-left: 4px solid #D4A373;">
-                  <p class="text-sm" style="color: #4A3B33;">
-                    🔒 Estas notas son privadas y solo tú puedes verlas
+                  <p class="text-sm flex items-center gap-2" style="color: #4A3B33;">
+                    <!-- Lucide Lock icon -->
+                    <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M7 11V7a5 5 0 0110 0v4" />
+                    </svg>
+                    These notes are private and only you can see them
                   </p>
                 </div>
                 <textarea 
                   [(ngModel)]="subtopic.personalNotes"
                   (blur)="saveSubtopic(subtopic)"
                   rows="8"
-                  placeholder="Agrega tus notas personales aquí..."
+                  placeholder="Add your personal notes here..."
                   class="w-full rounded-[12px] px-4 py-3 transition-all resize-none"
                   style="border: 1px solid #EAE3DB; color: #2D2622;">
                 </textarea>
@@ -150,7 +181,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   [(ngModel)]="subtopic.sharedTheory"
                   (blur)="saveSubtopic(subtopic)"
                   rows="10"
-                  placeholder="Agrega teoría y conceptos compartidos..."
+                  placeholder="Add shared theory and concepts..."
                   class="w-full rounded-[12px] px-4 py-3 transition-all resize-none"
                   style="border: 1px solid #EAE3DB; color: #2D2622;">
                 </textarea>
@@ -185,14 +216,14 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                       type="text"
                       [(ngModel)]="snippet.description"
                       (blur)="saveSubtopic(subtopic)"
-                      placeholder="Descripción del código..."
+                      placeholder="Code description..."
                       class="w-full rounded-[12px] px-3 py-2 mb-2 text-sm"
                       style="border: 1px solid #EAE3DB; color: #2D2622;">
                     <pre class="rounded-[12px] p-4 overflow-x-auto" style="background-color: #2D2622;"><code><textarea 
                       [(ngModel)]="snippet.code"
                       (blur)="saveSubtopic(subtopic)"
                       rows="12"
-                      placeholder="// Escribe tu código aquí..."
+                      placeholder="// Write your code here..."
                       class="w-full bg-transparent font-mono text-sm border-0 focus:outline-none resize-none"
                       style="color: #D4A373;">
 </textarea></code></pre>
@@ -213,8 +244,13 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               <!-- Problems -->
               <div *ngIf="activeTab[subtopic._id || i] === 'problems'">
                 <div class="rounded-[12px] p-4 mb-4 flex items-center justify-between" style="background-color: #FCF9F5; border-left: 4px solid #8B5E3C;">
-                  <p class="text-sm" style="color: #4A3B33;">
-                    💻 Problems linked to this subtopic
+                  <p class="text-sm flex items-center gap-2" style="color: #4A3B33;">
+                    <!-- Lucide Code icon -->
+                    <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <polyline points="16 18 22 12 16 6" />
+                      <polyline points="8 6 2 12 8 18" />
+                    </svg>
+                    Problems linked to this subtopic
                   </p>
                   <button 
                     (click)="navigateToFilteredProblems(subtopic)"
@@ -286,15 +322,22 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   <!-- Add Problem Button -->
                   <button 
                     (click)="openProblemPicker(subtopic)"
-                    class="w-full border-2 border-dashed rounded-[12px] py-3 transition-colors"
+                    class="w-full border-2 border-dashed rounded-[12px] py-3 transition-colors flex items-center justify-center gap-2"
                     style="border-color: #EAE3DB; color: #4A3B33;">
-                    ➕ Link problem
+                    <!-- Lucide Plus icon -->
+                    <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Link problem
                   </button>
                   
                   <!-- Empty State -->
                   <div *ngIf="!subtopic.linkedProblems || subtopic.linkedProblems.length === 0"
                        class="text-center py-8" style="color: #4A3B33;">
-                    <div class="text-4xl mb-2">📝</div>
+                    <!-- Lucide FileText icon -->
+                    <svg class="w-10 h-10 mx-auto mb-2" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
                     <p class="text-sm">No linked problems</p>
                     <p class="text-xs mt-1">Click "Link problem" to add</p>
                   </div>
@@ -304,8 +347,12 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               <!-- Resources -->
               <div *ngIf="activeTab[subtopic._id || i] === 'resources'">
                 <div class="rounded-[12px] p-4 mb-4" style="background-color: #FCF9F5; border-left: 4px solid #D4A373;">
-                  <p class="text-sm" style="color: #4A3B33;">
-                    📚 Learning resources editable by all
+                  <p class="text-sm flex items-center gap-2" style="color: #4A3B33;">
+                    <!-- Lucide BookOpen icon -->
+                    <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    Learning resources editable by all
                   </p>
                 </div>
                 <div class="space-y-3">
@@ -317,7 +364,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                           type="text"
                           [(ngModel)]="resource.name"
                           (blur)="saveSubtopic(subtopic)"
-                          placeholder="Nombre del recurso"
+                          placeholder="Resource name"
                           class="w-full rounded-[12px] px-3 py-2 text-sm"
                           style="border: 1px solid #EAE3DB; color: #2D2622;">
                         <input 
@@ -374,7 +421,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             </svg>
             <h3 class="text-2xl font-semibold mb-3" style="color: #2D2622;">No hay subtemas</h3>
             <p class="mb-6" style="color: #4A3B33;">
-              Agrega subtemas para organizar tu contenido de aprendizaje
+              Add subtopics to organize your learning content
             </p>
             <button 
               (click)="showAddSubtopicModal = true"
@@ -406,20 +453,20 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           
           <div class="space-y-4">
             <div>
-              <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Nombre</label>
+              <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Name</label>
               <input 
                 type="text"
                 [(ngModel)]="newSubtopic.name"
-                placeholder="Nombre del subtema"
+                placeholder="Subtopic name"
                 class="w-full rounded-[12px] px-4 py-3 transition-all"
                 style="border: 1px solid #EAE3DB; color: #2D2622;">
             </div>
             <div>
-              <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Descripción</label>
+              <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Description</label>
               <textarea 
                 [(ngModel)]="newSubtopic.description"
                 rows="3"
-                placeholder="Descripción breve"
+                placeholder="Brief description"
                 class="w-full rounded-[12px] px-4 py-3 transition-all resize-none"
                 style="border: 1px solid #EAE3DB; color: #2D2622;">
               </textarea>
@@ -568,7 +615,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             
             <div class="space-y-4">
               <div>
-                <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Título *</label>
+                <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Title *</label>
                 <input 
                   type="text"
                   [(ngModel)]="problemLinkMetadata.title"
@@ -577,11 +624,11 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               </div>
 
               <div>
-                <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Descripción breve</label>
+                <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Brief description</label>
                 <textarea 
                   [(ngModel)]="problemLinkMetadata.description"
                   rows="2"
-                  placeholder="Descripción opcional del problema..."
+                  placeholder="Optional problem description..."
                   class="w-full rounded-[12px] px-4 py-2 resize-none"
                   style="border: 1px solid #EAE3DB; color: #2D2622;">
                 </textarea>
@@ -602,10 +649,10 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   [(ngModel)]="problemLinkMetadata.difficulty"
                   class="w-full rounded-[12px] px-4 py-2"
                   style="border: 1px solid #EAE3DB; color: #2D2622;">
-                  <option value="easy">Fácil</option>
-                  <option value="medium">Media</option>
-                  <option value="hard">Difícil</option>
-                  <option value="very-hard">Muy Difícil</option>
+                  <option value="easy">Easy</option>
+                  <option value="medium">Medium</option>
+                  <option value="hard">Hard</option>
+                  <option value="very-hard">Very Hard</option>
                 </select>
               </div>
             </div>
@@ -728,7 +775,7 @@ export class SubtopicDetailComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'No se pudo cargar el tema.';
+        this.error = 'Could not load theme.';
         this.loading = false;
         console.error('Error loading node:', err);
       }
@@ -778,21 +825,21 @@ export class SubtopicDetailComponent implements OnInit {
 
     this.roadmapService.updateSubtopic(this.nodeId, subtopic._id, subtopic).subscribe({
       error: (err) => {
-        this.error = 'No se pudo guardar los cambios.';
+        this.error = 'Could not save changes.';
         console.error('Error saving subtopic:', err);
       }
     });
   }
 
   deleteSubtopic(subtopicId: string): void {
-    if (!confirm('¿Estás seguro de eliminar este subtema?')) return;
+    if (!confirm('Are you sure you want to delete this subtopic?')) return;
 
     this.roadmapService.deleteSubtopic(this.nodeId, subtopicId).subscribe({
       next: () => {
         this.loadNode();
       },
       error: (err) => {
-        this.error = 'No se pudo eliminar el subtema.';
+        this.error = 'Could not delete subtopic.';
         console.error('Error deleting subtopic:', err);
       }
     });
@@ -874,7 +921,7 @@ export class SubtopicDetailComponent implements OnInit {
         this.loadingProblems = false;
       },
       error: (err) => {
-        this.problemPickerError = 'Error al cargar problemas.';
+        this.problemPickerError = 'Error loading problems.';
         this.loadingProblems = false;
         console.error('Error loading problems:', err);
       }
@@ -956,7 +1003,7 @@ export class SubtopicDetailComponent implements OnInit {
     );
     
     if (alreadyLinked) {
-      this.problemPickerError = 'Este problema ya está vinculado a este subtema.';
+      this.problemPickerError = 'This problem is already linked to this subtopic.';
       return;
     }
 
@@ -983,7 +1030,7 @@ export class SubtopicDetailComponent implements OnInit {
   }
 
   removeProblemFromSubtopic(subtopic: Subtopic, problem: LinkedProblem): void {
-    if (!confirm('¿Estás seguro de desvincular este problema?')) return;
+    if (!confirm('Are you sure you want to unlink this problem?')) return;
 
     if (subtopic.linkedProblems) {
       const index = subtopic.linkedProblems.findIndex(lp => lp.problemId === problem.problemId);
