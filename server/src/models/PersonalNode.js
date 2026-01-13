@@ -117,6 +117,10 @@ const personalNodeSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Problem'
   }],
+  order: {
+    type: Number,
+    default: 0
+  },
   startedAt: {
     type: Date
   },

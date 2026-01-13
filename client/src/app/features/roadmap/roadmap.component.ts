@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { RoadmapService, PersonalNode, PopulatedUser } from '../../core/services/roadmap.service';
+import { RoadmapService, PersonalNode, PopulatedUser, TeamMember } from '../../core/services/roadmap.service';
 import { ThemesService, Theme } from '../../core/services/themes.service';
 import { NavbarComponent } from '../../shared/components/navbar.component';
 
@@ -52,6 +52,19 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 Graph
               </button>
               <button 
+                routerLink="/roadmap/nodes"
+                class="text-white font-medium py-2 px-4 rounded-[12px] transition-all flex items-center gap-2"
+                style="background-color: #D4A373;">
+                <!-- Node icon -->
+                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <circle cx="12" cy="12" r="3" />
+                  <circle cx="4" cy="8" r="2" />
+                  <circle cx="20" cy="8" r="2" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 8h3m6 0h3" />
+                </svg>
+                Nodes
+              </button>
+              <button 
                 *ngIf="selectedView === 'personal'"
                 (click)="showAddThemeModal = true"
                 class="text-white font-medium py-3 px-6 rounded-[12px] transition-all flex items-center gap-2"
@@ -78,6 +91,32 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <option value="personal">My roadmap</option>
                 <option value="members">Members</option>
               </select>
+            </div>
+
+            <!-- Member Selector (only when Members view is selected) -->
+            <div *ngIf="selectedView === 'members'" class="flex gap-2 items-center">
+              <label class="font-medium text-sm" style="color: #2D2622;">Member:</label>
+              <select 
+                [(ngModel)]="selectedMemberId"
+                (change)="onMemberChange()"
+                class="rounded-[12px] px-4 py-2 bg-white transition-all min-w-[180px]"
+                style="border: 1px solid #EAE3DB; color: #2D2622;">
+                <option value="">Select member...</option>
+                <option *ngFor="let member of teamMembers" [value]="member._id">
+                  {{ member.fullName || member.username }}
+                </option>
+              </select>
+            </div>
+
+            <!-- Read-only indicator -->
+            <div *ngIf="selectedView === 'members' && selectedMemberId && !isOwner" 
+                 class="flex items-center gap-2 px-4 py-2 rounded-[12px]"
+                 style="background-color: #FCF9F5; border: 1px solid #EAE3DB;">
+              <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              <span class="text-sm font-medium" style="color: #4A3B33;">View only</span>
             </div>
 
             <!-- Search -->
@@ -320,20 +359,24 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               </div>
             </div>
 
-            <div class="flex flex-col gap-2" [ngClass]="{'md:ml-4': selectedView === 'personal'}">
+            <div class="flex flex-col gap-2" [ngClass]="{'md:ml-4': canEdit}">
               <a 
-                *ngIf="selectedView === 'personal'"
                 [routerLink]="['/roadmap', node._id, 'subtopics']"
-                class="text-white px-4 py-2 rounded-[12px] text-sm font-medium transition-all text-center flex items-center justify-center gap-2"
-                style="background-color: #8B5E3C;">
-                <!-- Lucide FileText icon -->
+                class="px-4 py-2 rounded-[12px] text-sm font-medium transition-all text-center flex items-center justify-center gap-2"
+                [ngStyle]="{
+                  'background-color': canEdit ? '#8B5E3C' : '#FCF9F5',
+                  'color': canEdit ? 'white' : '#4A3B33',
+                  'border': canEdit ? 'none' : '1px solid #EAE3DB'
+                }">
+                <!-- View/FileText icon -->
                 <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                 </svg>
-                Subtopics
+                {{ canEdit ? 'Subtopics' : 'View' }}
               </a>
               <button 
-                *ngIf="selectedView === 'personal'"
+                *ngIf="canEdit"
                 (click)="editNode(node)"
                 class="text-white px-4 py-2 rounded-[12px] text-sm font-medium transition-all flex items-center justify-center gap-2"
                 style="background-color: #D4A373;">
@@ -344,7 +387,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 Update
               </button>
               <button 
-                *ngIf="selectedView === 'personal'"
+                *ngIf="canEdit"
                 (click)="confirmDelete(node._id, node.themeId?.name || 'this theme')"
                 class="px-4 py-2 rounded-[12px] text-sm font-medium transition-all flex items-center justify-center gap-2"
                 style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
@@ -355,7 +398,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 Delete
               </button>
               <div 
-                *ngIf="selectedView === 'members'"
+                *ngIf="selectedView === 'members' && !isOwner"
                 class="rounded-[12px] px-4 py-2 text-center"
                 style="background-color: #FCF9F5; border: 1px solid #EAE3DB;">
                 <p class="text-xs font-medium mb-1" style="color: #4A3B33;">Member</p>
@@ -372,12 +415,14 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
         <svg class="w-16 h-16 mx-auto mb-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
           <path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
         </svg>
-        <h3 class="text-2xl font-semibold mb-3" style="color: #2D2622;">Your roadmap is empty</h3>
+        <h3 class="text-2xl font-semibold mb-3" style="color: #2D2622;">
+          {{ selectedView === 'personal' ? 'Your roadmap is empty' : (selectedMemberId ? 'No themes found' : 'Select a member') }}
+        </h3>
         <p class="mb-6 max-w-md mx-auto" style="color: #4A3B33;">
-          Start adding themes to your roadmap to track your learning progress.
+          {{ selectedView === 'personal' ? 'Start adding themes to your roadmap to track your learning progress.' : (selectedMemberId ? 'This member has not added any themes yet.' : 'Choose a team member from the dropdown above to view their roadmap.') }}
         </p>
         <button 
-          *ngIf="selectedView === 'personal'"
+          *ngIf="canEdit"
           (click)="showAddThemeModal = true"
           class="text-white font-medium py-3 px-8 rounded-[12px] transition-all flex items-center justify-center gap-2 mx-auto"
           style="background-color: #8B5E3C;">
@@ -621,6 +666,7 @@ export class RoadmapComponent implements OnInit {
   nodes: PersonalNode[] = [];
   filteredNodes: PersonalNode[] = [];
   availableThemes: Theme[] = [];
+  teamMembers: TeamMember[] = [];
   loading = false;
   error: string | null = null;
   showAddThemeModal = false;
@@ -628,7 +674,9 @@ export class RoadmapComponent implements OnInit {
   showDeleteConfirmation = false;
   selectedThemeId = '';
   selectedView: 'personal' | 'members' = 'personal';
+  selectedMemberId = '';
   currentUserId: string | null = null;
+  isOwner = true;
   
   // Filter and search properties
   searchQuery = '';
@@ -638,6 +686,11 @@ export class RoadmapComponent implements OnInit {
   // Delete confirmation properties
   nodeToDelete: string | null = null;
   nodeToDeleteName = '';
+  
+  // Computed property for edit permissions
+  get canEdit(): boolean {
+    return this.selectedView === 'personal' || this.isOwner;
+  }
   
   editingNode: {
     _id: string;
@@ -662,10 +715,60 @@ export class RoadmapComponent implements OnInit {
   ngOnInit(): void {
     this.loadRoadmap();
     this.loadThemes();
+    this.loadTeamMembers();
   }
 
   onViewChange(): void {
-    this.loadRoadmap();
+    if (this.selectedView === 'personal') {
+      this.selectedMemberId = '';
+      this.isOwner = true;
+      this.loadRoadmap();
+    } else {
+      this.nodes = [];
+      this.filteredNodes = [];
+      this.loadTeamMembers();
+    }
+  }
+
+  onMemberChange(): void {
+    if (this.selectedMemberId) {
+      this.loadMemberRoadmap();
+    } else {
+      this.nodes = [];
+      this.filteredNodes = [];
+    }
+  }
+
+  loadTeamMembers(): void {
+    this.roadmapService.getTeamMembers().subscribe({
+      next: (response) => {
+        this.teamMembers = response.data.members;
+      },
+      error: (err) => {
+        console.error('Error loading team members:', err);
+      }
+    });
+  }
+
+  loadMemberRoadmap(): void {
+    if (!this.selectedMemberId) return;
+
+    this.loading = true;
+    this.error = null;
+
+    this.roadmapService.getMemberRoadmap(this.selectedMemberId).subscribe({
+      next: (response) => {
+        this.nodes = response.data.roadmap;
+        this.isOwner = response.data.isOwner || false;
+        this.applyFilters();
+        this.loading = false;
+      },
+      error: (err) => {
+        this.error = this.ERROR_MESSAGES.LOAD_ROADMAP;
+        this.loading = false;
+        console.error('Error loading member roadmap:', err);
+      }
+    });
   }
 
   loadRoadmap(): void {
