@@ -3,16 +3,21 @@ import PersonalNode from '../models/PersonalNode.js';
 import User from '../models/User.js';
 import { protect } from '../middlewares/auth.js';
 import { asyncHandler } from '../middlewares/error.js';
+import { createRateLimiter } from '../middlewares/rateLimiter.js';
 
 const router = express.Router();
 
 // All routes require authentication
 router.use(protect);
 
+// Rate limiters for different operations
+const readRateLimiter = createRateLimiter(30, 60000, 'Too many read requests');
+const writeRateLimiter = createRateLimiter(10, 60000, 'Too many write requests');
+
 // @desc    Get personal roadmap
 // @route   GET /api/roadmap/personal/:userId
 // @access  Private
-router.get('/personal/:userId', asyncHandler(async (req, res) => {
+router.get('/personal/:userId', readRateLimiter, asyncHandler(async (req, res) => {
   const { userId } = req.params;
   
   // Users can only view their own personal roadmap
@@ -37,7 +42,7 @@ router.get('/personal/:userId', asyncHandler(async (req, res) => {
 // @desc    Get other members' roadmaps
 // @route   GET /api/roadmap/members/:userId
 // @access  Private
-router.get('/members/:userId', asyncHandler(async (req, res) => {
+router.get('/members/:userId', readRateLimiter, asyncHandler(async (req, res) => {
   const { userId } = req.params;
   
   // Verify the userId matches the authenticated user
@@ -63,7 +68,7 @@ router.get('/members/:userId', asyncHandler(async (req, res) => {
 // @desc    Get list of team members with roadmaps
 // @route   GET /api/roadmap/team-members
 // @access  Private
-router.get('/team-members', asyncHandler(async (req, res) => {
+router.get('/team-members', readRateLimiter, asyncHandler(async (req, res) => {
   // Get all users who have roadmap entries (excluding current user)
   const membersWithRoadmaps = await PersonalNode.distinct('userId', {
     userId: { $ne: req.user._id }
@@ -84,7 +89,7 @@ router.get('/team-members', asyncHandler(async (req, res) => {
 // @desc    Get a specific member's roadmap (read-only view)
 // @route   GET /api/roadmap/member/:memberId
 // @access  Private
-router.get('/member/:memberId', asyncHandler(async (req, res) => {
+router.get('/member/:memberId', readRateLimiter, asyncHandler(async (req, res) => {
   const { memberId } = req.params;
   
   // Get the member's roadmap
@@ -117,7 +122,7 @@ router.get('/member/:memberId', asyncHandler(async (req, res) => {
 // @desc    Update node order (for drag-and-drop)
 // @route   PUT /api/roadmap/reorder
 // @access  Private
-router.put('/reorder', asyncHandler(async (req, res) => {
+router.put('/reorder', writeRateLimiter, asyncHandler(async (req, res) => {
   const { nodeOrders } = req.body;
   
   if (!Array.isArray(nodeOrders)) {

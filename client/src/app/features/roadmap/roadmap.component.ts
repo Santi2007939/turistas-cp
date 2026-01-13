@@ -419,7 +419,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           {{ selectedView === 'personal' ? 'Your roadmap is empty' : (selectedMemberId ? 'No themes found' : 'Select a member') }}
         </h3>
         <p class="mb-6 max-w-md mx-auto" style="color: #4A3B33;">
-          {{ selectedView === 'personal' ? 'Start adding themes to your roadmap to track your learning progress.' : (selectedMemberId ? 'This member hasn\\'t added any themes yet.' : 'Choose a team member from the dropdown above to view their roadmap.') }}
+          {{ selectedView === 'personal' ? 'Start adding themes to your roadmap to track your learning progress.' : (selectedMemberId ? 'This member has not added any themes yet.' : 'Choose a team member from the dropdown above to view their roadmap.') }}
         </p>
         <button 
           *ngIf="canEdit"
