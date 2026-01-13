@@ -127,20 +127,20 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <circle cx="12" cy="8" r="6" />
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 14l-2 7 5-3 5 3-2-7" />
               </svg>
-              Logros del Sistema
+              System Achievements
             </h3>
             <p class="text-sm mb-4" style="color: #4A3B33;">
-              Los logros del sistema son reconocimientos automáticos que se desbloquean al alcanzar ciertos hitos, 
-              como resolver un número específico de problemas, participar en contests, o mantener una racha de actividad.
-              Actualmente, el sistema de logros automáticos está en desarrollo. Por ahora, puedes crear tus propios logros personalizados abajo.
+              System achievements are automatic recognitions that unlock when reaching certain milestones, 
+              such as solving a specific number of problems, participating in contests, or maintaining an activity streak.
+              Currently, the automatic achievements system is under development. For now, you can create your own custom achievements below.
             </p>
             
             <div *ngIf="loadingAchievements" class="text-center py-4">
-              <p style="color: #4A3B33;">Cargando logros...</p>
+              <p style="color: #4A3B33;">Loading achievements...</p>
             </div>
 
             <div *ngIf="!loadingAchievements && systemAchievements.length === 0" class="text-center py-4">
-              <p style="color: #4A3B33;">¡Aún no has desbloqueado logros del sistema! Sigue practicando para ganar medallas automáticas.</p>
+              <p style="color: #4A3B33;">You haven't unlocked any system achievements yet! Keep practicing to earn automatic badges.</p>
             </div>
 
             <div *ngIf="!loadingAchievements && systemAchievements.length > 0" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
@@ -165,7 +165,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <svg class="w-5 h-5" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M6 9H4a2 2 0 01-2-2V5a2 2 0 012-2h2M18 9h2a2 2 0 002-2V5a2 2 0 00-2-2h-2M6 3v6a6 6 0 006 6v0a6 6 0 006-6V3M9 21h6M12 15v6" />
                 </svg>
-                Mis Logros Personalizados
+                My Custom Achievements
               </h3>
               <button 
                 (click)="openCreateAchievementModal()"
@@ -175,7 +175,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                 </svg>
-                Nuevo Logro
+                New Achievement
               </button>
             </div>
 
@@ -189,7 +189,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   'color': filterAchievements === 'all' ? '#FFFFFF' : '#2D2622',
                   'border': '1px solid ' + (filterAchievements === 'all' ? '#8B5E3C' : '#EAE3DB')
                 }">
-                Todos
+                All
               </button>
               <button 
                 (click)="filterAchievements = 'personal'"
@@ -199,7 +199,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   'color': filterAchievements === 'personal' ? '#FFFFFF' : '#2D2622',
                   'border': '1px solid ' + (filterAchievements === 'personal' ? '#8B5E3C' : '#EAE3DB')
                 }">
-                Personales
+                Personal
               </button>
               <button 
                 (click)="filterAchievements = 'team'"
@@ -209,7 +209,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   'color': filterAchievements === 'team' ? '#FFFFFF' : '#2D2622',
                   'border': '1px solid ' + (filterAchievements === 'team' ? '#8B5E3C' : '#EAE3DB')
                 }">
-                Del Equipo
+                Team
               </button>
             </div>
 
@@ -256,12 +256,12 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             </div>
 
             <div *ngIf="loadingCustomAchievements" class="text-center py-4">
-              <p style="color: #4A3B33;">Cargando logros personalizados...</p>
+              <p style="color: #4A3B33;">Loading custom achievements...</p>
             </div>
 
             <div *ngIf="!loadingCustomAchievements && getFilteredAchievements().length === 0" class="text-center py-8">
-              <p class="mb-2" style="color: #4A3B33;">No hay logros en esta categoría.</p>
-              <p class="text-sm" style="color: #4A3B33;">¡Crea tu primer logro para guardar tus recuerdos e inspiración!</p>
+              <p class="mb-2" style="color: #4A3B33;">No achievements in this category.</p>
+              <p class="text-sm" style="color: #4A3B33;">Create your first achievement to save your memories and inspiration!</p>
             </div>
 
             <div *ngIf="!loadingCustomAchievements && getFilteredAchievements().length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -325,7 +325,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
                   <span>{{ achievement.achievedAt | date:'mediumDate' }}</span>
-                  <span class="ml-2">por {{ achievement.createdBy?.username }}</span>
+                  <span class="ml-2">by {{ achievement.createdBy?.username }}</span>
                 </div>
 
                 <div *ngIf="achievement.scope === 'team' && achievement.teamId" class="text-xs mb-2 flex items-center gap-1" style="color: #8B5E3C;">
@@ -342,7 +342,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                     (click)="openEditAchievementModal(achievement)"
                     class="flex-1 text-white px-3 py-1 rounded-[12px] text-sm font-medium"
                     style="background-color: #8B5E3C;">
-                    Editar
+                    Edit
                   </button>
                   <button 
                     (click)="deleteAchievement(achievement)"
@@ -367,29 +367,29 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
         (click)="closeAchievementModal()">
         <div class="bg-white rounded-[12px] p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
           <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">
-            {{ editingAchievement ? 'Editar Logro' : 'Nuevo Logro' }}
+            {{ editingAchievement ? 'Edit Achievement' : 'New Achievement' }}
           </h3>
 
           <div class="space-y-4">
             <div>
-              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Nombre *</label>
+              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Name *</label>
               <input 
                 type="text"
                 [(ngModel)]="achievementFormData.name"
                 class="w-full rounded-[12px] px-4 py-3"
                 style="border: 1px solid #EAE3DB; color: #2D2622;"
-                placeholder="Ej: Primer Top 100 en Codeforces"
+                placeholder="E.g.: First Top 100 on Codeforces"
                 maxlength="100">
             </div>
 
             <div>
-              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Descripción *</label>
+              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Description *</label>
               <textarea 
                 [(ngModel)]="achievementFormData.description"
                 class="w-full rounded-[12px] px-4 py-3"
                 style="border: 1px solid #EAE3DB; color: #2D2622;"
                 rows="3"
-                placeholder="Describe el logro y por qué es especial para ti"
+                placeholder="Describe the achievement and why it is special to you"
                 maxlength="500"></textarea>
             </div>
 
@@ -472,21 +472,21 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   <svg class="w-4 h-4 inline mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                   </svg>
-                  Del Equipo
+                  Team
                 </button>
               </div>
               <p class="text-xs mt-1" style="color: #4A3B33;">
-                {{ achievementFormData.scope === 'personal' ? 'Este logro es tuyo y solo tú lo verás.' : 'Este logro será visible para todos los miembros del equipo.' }}
+                {{ achievementFormData.scope === 'personal' ? 'This achievement is yours and only you will see it.' : 'This achievement will be visible to all team members.' }}
               </p>
             </div>
 
             <!-- Team info message (shown only when scope is team) -->
             <div *ngIf="achievementFormData.scope === 'team' && userTeams.length === 0" class="rounded-[12px] p-3" style="background-color: #FCF9F5; border: 1px solid #EAE3DB;">
-              <p class="text-sm" style="color: #4A3B33;">No perteneces a ningún equipo activo. Los logros de equipo requieren membresía en un equipo.</p>
+              <p class="text-sm" style="color: #4A3B33;">You don't belong to any active team. Team achievements require team membership.</p>
             </div>
 
             <div>
-              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Fecha del Logro</label>
+              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Achievement Date</label>
               <input 
                 type="date"
                 [(ngModel)]="achievementFormData.achievedAt"
@@ -500,14 +500,14 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               (click)="closeAchievementModal()"
               class="px-4 py-2 rounded-[12px] font-medium"
               style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
-              Cancelar
+              Cancel
             </button>
             <button 
               (click)="saveAchievement()"
               [disabled]="savingAchievement || !isAchievementFormValid()"
               class="text-white px-4 py-2 rounded-[12px] font-medium disabled:opacity-50"
               style="background-color: #8B5E3C;">
-              {{ savingAchievement ? 'Guardando...' : (editingAchievement ? 'Actualizar' : 'Crear') }}
+              {{ savingAchievement ? 'Saving...' : (editingAchievement ? 'Update' : 'Create') }}
             </button>
           </div>
         </div>
@@ -786,11 +786,11 @@ export class StatisticsComponent implements OnInit {
           this.savingAchievement = false;
           this.closeAchievementModal();
           this.loadCustomAchievements();
-          this.showSuccess('Logro actualizado correctamente');
+          this.showSuccess('Achievement updated successfully');
         },
         error: (err) => {
           this.savingAchievement = false;
-          this.showError(err.error?.message || 'Error al actualizar el logro');
+          this.showError(err.error?.message || 'Error updating achievement');
         }
       });
     } else {
@@ -799,26 +799,26 @@ export class StatisticsComponent implements OnInit {
           this.savingAchievement = false;
           this.closeAchievementModal();
           this.loadCustomAchievements();
-          this.showSuccess('Logro creado correctamente');
+          this.showSuccess('Achievement created successfully');
         },
         error: (err) => {
           this.savingAchievement = false;
-          this.showError(err.error?.message || 'Error al crear el logro');
+          this.showError(err.error?.message || 'Error creating achievement');
         }
       });
     }
   }
 
   deleteAchievement(achievement: CustomAchievement): void {
-    if (!confirm('¿Estás seguro de eliminar este logro?')) return;
+    if (!confirm('Are you sure you want to delete this achievement?')) return;
 
     this.customAchievementsService.deleteCustomAchievement(achievement._id).subscribe({
       next: () => {
         this.loadCustomAchievements();
-        this.showSuccess('Logro eliminado correctamente');
+        this.showSuccess('Achievement deleted successfully');
       },
       error: (err) => {
-        this.showError(err.error?.message || 'Error al eliminar el logro');
+        this.showError(err.error?.message || 'Error deleting achievement');
       }
     });
   }

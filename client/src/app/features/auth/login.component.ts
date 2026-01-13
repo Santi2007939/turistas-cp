@@ -20,7 +20,7 @@ import { AuthService } from '../../core/services/auth.service';
             Turistas CP
           </h2>
           <p class="mt-2 text-center text-sm" style="color: #4A3B33;">
-            Inicia sesión en tu cuenta
+            Sign in to your account
           </p>
         </div>
 
@@ -41,11 +41,11 @@ import { AuthService } from '../../core/services/auth.service';
                 required
                 class="appearance-none relative block w-full px-4 py-3 rounded-[12px] focus:outline-none sm:text-sm"
                 style="border: 1px solid #EAE3DB; color: #2D2622;"
-                placeholder="tu@email.com"
+                placeholder="you@email.com"
               />
             </div>
             <div>
-              <label for="password" class="block text-sm font-medium mb-1" style="color: #2D2622;">Contraseña</label>
+              <label for="password" class="block text-sm font-medium mb-1" style="color: #2D2622;">Password</label>
               <input
                 id="password"
                 name="password"
@@ -70,14 +70,14 @@ import { AuthService } from '../../core/services/auth.service';
               class="group relative w-full flex justify-center py-3 px-4 text-sm font-medium rounded-[12px] text-white focus:outline-none disabled:opacity-50"
               style="background-color: #8B5E3C;"
             >
-              {{ loading ? 'Iniciando sesión...' : 'Iniciar sesión' }}
+              {{ loading ? 'Signing in...' : 'Sign in' }}
             </button>
           </div>
 
           <div class="text-center text-sm">
-            <span style="color: #4A3B33;">¿No tienes cuenta? </span>
+            <span style="color: #4A3B33;">Don't have an account? </span>
             <a routerLink="/auth/register" class="font-medium hover:underline" style="color: #8B5E3C;">
-              Regístrate
+              Sign up
             </a>
           </div>
         </form>
@@ -122,7 +122,7 @@ export class LoginComponent {
         }
       },
       error: (err) => {
-        this.error = err.error?.message || 'Error al iniciar sesión';
+        this.error = err.error?.message || 'Error signing in';
         this.loading = false;
       }
     });
