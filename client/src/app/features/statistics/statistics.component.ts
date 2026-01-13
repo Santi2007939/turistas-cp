@@ -786,7 +786,7 @@ export class StatisticsComponent implements OnInit {
           this.savingAchievement = false;
           this.closeAchievementModal();
           this.loadCustomAchievements();
-          this.showSuccess('Logro actualizado correctamente');
+          this.showSuccess('Achievement updated successfully');
         },
         error: (err) => {
           this.savingAchievement = false;
@@ -799,7 +799,7 @@ export class StatisticsComponent implements OnInit {
           this.savingAchievement = false;
           this.closeAchievementModal();
           this.loadCustomAchievements();
-          this.showSuccess('Logro creado correctamente');
+          this.showSuccess('Achievement created successfully');
         },
         error: (err) => {
           this.savingAchievement = false;
@@ -815,7 +815,7 @@ export class StatisticsComponent implements OnInit {
     this.customAchievementsService.deleteCustomAchievement(achievement._id).subscribe({
       next: () => {
         this.loadCustomAchievements();
-        this.showSuccess('Logro eliminado correctamente');
+        this.showSuccess('Achievement deleted successfully');
       },
       error: (err) => {
         this.showError(err.error?.message || 'Error deleting achievement');
