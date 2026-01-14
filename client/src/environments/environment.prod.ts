@@ -1,7 +1,8 @@
 export const environment = {
   production: true,
-  // Update this URL with your Render backend URL after deployment
+  // IMPORTANT: Update this URL after deploying your backend to Render
+  // Replace with your actual Render backend URL
   // Example: 'https://turistas-cp-api.onrender.com'
-  apiUrl: 'https://turistas-cp-api.onrender.com',
+  apiUrl: 'REPLACE_WITH_YOUR_BACKEND_URL',
   teamName: 'Team Turistas'
 };
