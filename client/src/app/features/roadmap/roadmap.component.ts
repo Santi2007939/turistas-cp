@@ -26,14 +26,14 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <svg class="w-7 h-7" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                 </svg>
-                My Roadmap
+                Mi Roadmap
               </h1>
-              <p style="color: #4A3B33;">Manage your personalized learning path</p>
+              <p style="color: #4A3B33;">Administra tu ruta de aprendizaje personalizada</p>
             </div>
             <div class="flex gap-3">
               <button 
                 routerLink="/roadmap/kanban"
-                class="text-white font-medium py-2 px-4 rounded-[12px] transition-all flex items-center gap-2"
+                class="text-white font-medium py-2 px-4 rounded-[12px] transition-all flex items-center gap-2 min-w-[100px] justify-center"
                 style="background-color: #D4A373;">
                 <!-- Lucide LayoutList icon -->
                 <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -43,17 +43,17 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               </button>
               <button 
                 routerLink="/roadmap/graph"
-                class="text-white font-medium py-2 px-4 rounded-[12px] transition-all flex items-center gap-2"
+                class="text-white font-medium py-2 px-4 rounded-[12px] transition-all flex items-center gap-2 min-w-[100px] justify-center"
                 style="background-color: #D4A373;">
                 <!-- Lucide BarChart2 icon -->
                 <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M18 20V10m-6 10V4M6 20v-6" />
                 </svg>
-                Graph
+                Gráfico
               </button>
               <button 
                 routerLink="/roadmap/nodes"
-                class="text-white font-medium py-2 px-4 rounded-[12px] transition-all flex items-center gap-2"
+                class="text-white font-medium py-2 px-4 rounded-[12px] transition-all flex items-center gap-2 min-w-[100px] justify-center"
                 style="background-color: #D4A373;">
                 <!-- Node icon -->
                 <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -62,18 +62,18 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   <circle cx="20" cy="8" r="2" />
                   <path stroke-linecap="round" stroke-linejoin="round" d="M6 8h3m6 0h3" />
                 </svg>
-                Nodes
+                Nodos
               </button>
               <button 
                 *ngIf="selectedView === 'personal'"
                 (click)="showAddThemeModal = true"
-                class="text-white font-medium py-3 px-6 rounded-[12px] transition-all flex items-center gap-2"
+                class="text-white font-medium py-2 px-4 rounded-[12px] transition-all flex items-center gap-2 min-w-[100px] justify-center"
                 style="background-color: #8B5E3C;">
                 <!-- Lucide Plus icon -->
-                <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                 </svg>
-                <span>Add Theme</span>
+                <span>Agregar</span>
               </button>
             </div>
           </div>
@@ -82,7 +82,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           <div class="mt-6 flex flex-col md:flex-row gap-4">
             <!-- View Selector -->
             <div class="flex gap-2 items-center">
-              <label class="font-medium text-sm" style="color: #2D2622;">View:</label>
+              <label class="font-medium text-sm" style="color: #2D2622;">Vista:</label>
               <select 
                 [(ngModel)]="selectedView"
                 (change)="onViewChange()"

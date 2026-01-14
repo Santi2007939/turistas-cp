@@ -2,6 +2,13 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 
+export interface ReminderSettings {
+  enabled: boolean;
+  minutesBefore: number;
+  sent?: boolean;
+  sentAt?: Date;
+}
+
 export interface CalendarEvent {
   _id?: string;
   title: string;
@@ -17,6 +24,7 @@ export interface CalendarEvent {
   participants?: Array<{ _id: string; username: string }>;
   createdBy?: { _id: string; username: string } | string;
   ownerId?: { _id: string; username: string } | string;
+  reminder?: ReminderSettings;
 }
 
 export interface CalendarResponse {
