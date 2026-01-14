@@ -1,4 +1,5 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import PersonalNode from '../models/PersonalNode.js';
 import User from '../models/User.js';
 import { protect } from '../middlewares/auth.js';
@@ -114,6 +115,45 @@ router.get('/member/:memberId', readRateLimiter, asyncHandler(async (req, res) =
     count: memberRoadmap.length,
     data: { 
       roadmap: memberRoadmap,
+      isOwner
+    }
+  });
+}));
+
+// @desc    Get a specific roadmap node by ID (for viewing subtopics)
+// @route   GET /api/roadmap/node/:nodeId
+// @access  Private
+router.get('/node/:nodeId', readRateLimiter, asyncHandler(async (req, res) => {
+  const { nodeId } = req.params;
+  
+  // Validate that nodeId is a valid MongoDB ObjectId
+  if (!mongoose.Types.ObjectId.isValid(nodeId)) {
+    return res.status(400).json({
+      success: false,
+      message: 'Invalid node ID format'
+    });
+  }
+  
+  // Get the specific node
+  const node = await PersonalNode.findById(nodeId)
+    .populate('themeId')
+    .populate('problemsSolved')
+    .populate('userId', 'username fullName');
+  
+  if (!node) {
+    return res.status(404).json({
+      success: false,
+      message: 'Roadmap node not found'
+    });
+  }
+  
+  // Check if current user is the owner
+  const isOwner = node.userId._id.toString() === req.user._id.toString();
+  
+  res.json({
+    success: true,
+    data: { 
+      node,
       isOwner
     }
   });
