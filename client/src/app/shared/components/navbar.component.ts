@@ -552,7 +552,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         this.savingProfile = false;
-        this.profileError = 'Error al actualizar el perfil';
+        this.profileError = 'Error updating profile';
         console.error('Error updating profile:', err);
       }
     });

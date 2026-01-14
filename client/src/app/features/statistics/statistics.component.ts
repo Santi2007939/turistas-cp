@@ -29,10 +29,10 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               <svg class="w-6 h-6" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M18 20V10m-6 10V4M6 20v-6" />
               </svg>
-              Estadísticas y Logros
+              Statistics and Achievements
             </h2>
             <a routerLink="/dashboard" class="px-4 py-2 rounded-[12px] font-medium" style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
-              Volver al Dashboard
+              Back to Dashboard
             </a>
           </div>
 
@@ -51,24 +51,24 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               <svg class="w-5 h-5" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
               </svg>
-              Tu Progreso en el Roadmap
+              Your Roadmap Progress
             </h3>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
               <div class="text-center">
                 <div class="text-3xl font-bold font-mono" style="color: #8B5E3C;">{{ roadmapStats.total }}</div>
-                <div class="text-sm" style="color: #4A3B33;">Temas Totales</div>
+                <div class="text-sm" style="color: #4A3B33;">Total Themes</div>
               </div>
               <div class="text-center">
                 <div class="text-3xl font-bold font-mono" style="color: #D4A373;">{{ roadmapStats.inProgress }}</div>
-                <div class="text-sm" style="color: #4A3B33;">En Progreso</div>
+                <div class="text-sm" style="color: #4A3B33;">In Progress</div>
               </div>
               <div class="text-center">
                 <div class="text-3xl font-bold font-mono" style="color: #8B5E3C;">{{ roadmapStats.completed }}</div>
-                <div class="text-sm" style="color: #4A3B33;">Completados</div>
+                <div class="text-sm" style="color: #4A3B33;">Completed</div>
               </div>
               <div class="text-center">
                 <div class="text-3xl font-bold font-mono" style="color: #8B5E3C;">{{ roadmapStats.averageProgress }}%</div>
-                <div class="text-sm" style="color: #4A3B33;">Progreso Promedio</div>
+                <div class="text-sm" style="color: #4A3B33;">Average Progress</div>
               </div>
             </div>
             <div class="mt-6">
@@ -90,8 +90,8 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <h4 class="font-semibold" style="color: #2D2622;">Codeforces</h4>
                 <span class="px-2 py-0.5 text-xs font-medium rounded-[12px]" style="background-color: #E8F4F8; color: #4A90A4; border: 1px solid #4A90A4;">CF</span>
               </div>
-              <p class="text-2xl font-bold font-mono" style="color: #4A90A4;">{{ currentUser?.codeforcesHandle || 'Sin handle' }}</p>
-              <p class="text-sm" style="color: #4A3B33;">Handle vinculado</p>
+              <p class="text-2xl font-bold font-mono" style="color: #4A90A4;">{{ currentUser?.codeforcesHandle || 'No handle' }}</p>
+              <p class="text-sm" style="color: #4A3B33;">Linked handle</p>
             </div>
 
             <div class="bg-white rounded-[12px] p-6" style="border: 1px solid #EAE3DB;">
@@ -100,10 +100,10 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <svg class="w-6 h-6" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <h4 class="font-semibold" style="color: #2D2622;">Ejercicios Resueltos</h4>
+                <h4 class="font-semibold" style="color: #2D2622;">Problems Solved</h4>
               </div>
               <p class="text-2xl font-bold font-mono" style="color: #D4A373;">{{ problemStats.solved }}</p>
-              <p class="text-sm" style="color: #4A3B33;">de {{ problemStats.total }} totales</p>
+              <p class="text-sm" style="color: #4A3B33;">of {{ problemStats.total }} total</p>
             </div>
 
             <div class="bg-white rounded-[12px] p-6" style="border: 1px solid #EAE3DB;">
@@ -112,10 +112,10 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <svg class="w-6 h-6" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 2c0 5.523 4 8 4 12a6 6 0 11-8 0c0-4 4-6.477 4-12z" />
                 </svg>
-                <h4 class="font-semibold" style="color: #2D2622;">Actividad</h4>
+                <h4 class="font-semibold" style="color: #2D2622;">Activity</h4>
               </div>
               <p class="text-2xl font-bold font-mono" style="color: #8B5E3C;">{{ activityStreak }}</p>
-              <p class="text-sm" style="color: #4A3B33;">Días activo este mes</p>
+              <p class="text-sm" style="color: #4A3B33;">Days active this month</p>
             </div>
           </div>
 
@@ -280,7 +280,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                       <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                       </svg>
-                      Equipo
+                      Team
                     </ng-container>
                     <ng-container *ngIf="achievement.scope !== 'team'">
                       <!-- Lucide User icon -->
