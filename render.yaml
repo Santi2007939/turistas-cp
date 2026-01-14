@@ -1,0 +1,68 @@
+services:
+  # Backend API Service
+  # Note: Render assigns PORT dynamically (typically 10000 for web services)
+  # The app.js uses process.env.PORT which Render will set automatically
+  # During development, the app runs on port 3000 (from .env)
+  # Explicitly setting PORT here ensures consistency, but it can be omitted
+  - type: web
+    name: turistas-cp-api
+    runtime: node
+    plan: starter
+    region: oregon
+    buildCommand: cd server && npm install
+    startCommand: cd server && npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: ENCRYPTION_KEY
+        sync: false
+      - key: CLIENT_URL
+        sync: false
+      - key: USACO_IDE_URL
+        value: https://ide.usaco.guide
+      - key: EXCALIDRAW_URL
+        value: https://excalidraw.com
+      - key: RPC_SCHEDULE_URL
+        value: https://redprogramacioncompetitiva.com/contests
+      - key: TEAM_NAME
+        value: Team Turistas
+      - key: TEAM_DESCRIPTION
+        value: Equipo oficial de programación competitiva Team Turistas
+      - key: TEAM_MAX_MEMBERS
+        value: 50
+      - key: TEAM_WHATSAPP_GROUP
+        sync: false
+      - key: TEAM_DISCORD_SERVER
+        sync: false
+
+  # Frontend Static Site
+  # Angular 19 uses the new application builder which outputs to dist/client/browser
+  # This path is relative to the repository root
+  - type: web
+    name: turistas-cp-frontend
+    runtime: static
+    buildCommand: cd client && npm install && npm run build
+    staticPublishPath: client/dist/client/browser
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: X-XSS-Protection
+        value: 1; mode=block
