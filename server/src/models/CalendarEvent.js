@@ -75,6 +75,8 @@ const calendarEventSchema = new mongoose.Schema({
       type: Date
     }
   },
+  // Legacy field - kept for backwards compatibility with existing events
+  // New events should use reminder.sent instead
   reminderSent: {
     type: Boolean,
     default: false

@@ -599,8 +599,8 @@ export class CalendarComponent implements OnInit {
       startTime: this.formatDateForInput(event.startTime),
       endTime: this.formatDateForInput(event.endTime),
       isPublic: event.isPublic,
-      reminderEnabled: (event as any).reminder?.enabled || false,
-      reminderMinutesBefore: (event as any).reminder?.minutesBefore || 30
+      reminderEnabled: event.reminder?.enabled || false,
+      reminderMinutesBefore: event.reminder?.minutesBefore || 30
     };
     this.showCreateModal = true;
   }
@@ -611,30 +611,20 @@ export class CalendarComponent implements OnInit {
     this.saving = true;
     this.error = null;
 
-    const eventData: any = {
+    const eventData: Partial<CalendarEvent> = {
       title: this.formEvent.title,
       description: this.formEvent.description,
       type: this.formEvent.type,
       eventScope: this.formEvent.eventScope,
       startTime: new Date(this.formEvent.startTime),
       endTime: new Date(this.formEvent.endTime),
-      isPublic: this.formEvent.isPublic
-    };
-
-    // Add reminder settings if enabled
-    if (this.formEvent.reminderEnabled) {
-      eventData.reminder = {
-        enabled: true,
+      isPublic: this.formEvent.isPublic,
+      reminder: {
+        enabled: this.formEvent.reminderEnabled,
         minutesBefore: this.formEvent.reminderMinutesBefore,
         sent: false
-      };
-    } else {
-      eventData.reminder = {
-        enabled: false,
-        minutesBefore: 30,
-        sent: false
-      };
-    }
+      }
+    };
 
     const operation = this.editingEvent
       ? this.calendarService.updateEvent(this.editingEvent._id!, eventData)
