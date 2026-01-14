@@ -36,16 +36,30 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <p style="color: #4A3B33;">{{ node?.themeId?.description }}</p>
               </div>
             </div>
-            <button 
-              (click)="showAddSubtopicModal = true"
-              class="text-white font-medium py-2 px-4 rounded-[12px] flex items-center gap-2"
-              style="background-color: #8B5E3C;">
-              <!-- Lucide Plus icon -->
-              <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-              </svg>
-              Add Subtopic
-            </button>
+            <div class="flex items-center gap-3">
+              <!-- Read-only indicator -->
+              <div *ngIf="!isOwner" 
+                   class="flex items-center gap-2 px-4 py-2 rounded-[12px]"
+                   style="background-color: #FCF9F5; border: 1px solid #EAE3DB;">
+                <!-- Lucide Eye icon -->
+                <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                <span class="text-sm font-medium" style="color: #4A3B33;">View only</span>
+              </div>
+              <button 
+                *ngIf="isOwner"
+                (click)="showAddSubtopicModal = true"
+                class="text-white font-medium py-2 px-4 rounded-[12px] flex items-center gap-2"
+                style="background-color: #8B5E3C;">
+                <!-- Lucide Plus icon -->
+                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                Add Subtopic
+              </button>
+            </div>
           </div>
         </div>
 
@@ -82,7 +96,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <h3 class="text-xl font-semibold mb-2" style="color: #2D2622;">{{ subtopic.name }}</h3>
                 <p style="color: #4A3B33;">{{ subtopic.description }}</p>
               </div>
-              <div class="flex gap-2">
+              <div *ngIf="isOwner" class="flex gap-2">
                 <button 
                   (click)="editSubtopic(subtopic)"
                   class="text-white px-3 py-1 rounded-[12px] text-sm font-medium flex items-center gap-1"
@@ -173,17 +187,28 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               <!-- Shared Theory -->
               <div *ngIf="activeTab[subtopic._id || i] === 'theory'">
                 <div class="rounded-[12px] p-4 mb-4" style="background-color: #FCF9F5; border-left: 4px solid #8B5E3C;">
-                  <p class="text-sm" style="color: #4A3B33;">
-                    🌐 Esta sección es editable por todos los miembros del equipo
+                  <p class="text-sm flex items-center gap-2" style="color: #4A3B33;">
+                    <!-- Lucide Globe icon -->
+                    <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="2" y1="12" x2="22" y2="12" />
+                      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                    </svg>
+                    Esta sección es editable por todos los miembros del equipo
                   </p>
                 </div>
                 <textarea 
                   [(ngModel)]="subtopic.sharedTheory"
                   (blur)="saveSubtopic(subtopic)"
+                  [readonly]="!isOwner"
                   rows="10"
                   placeholder="Add shared theory and concepts..."
                   class="w-full rounded-[12px] px-4 py-3 transition-all resize-none"
-                  style="border: 1px solid #EAE3DB; color: #2D2622;">
+                  [ngStyle]="{
+                    'border': '1px solid #EAE3DB',
+                    'color': '#2D2622',
+                    'background-color': isOwner ? 'white' : '#FCF9F5'
+                  }">
                 </textarea>
               </div>
 
@@ -278,6 +303,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                         </p>
                       </div>
                       <button 
+                        *ngIf="isOwner"
                         (click)="removeProblemFromSubtopic(subtopic, problem)"
                         class="text-sm ml-2"
                         style="color: #4A3B33;">
@@ -310,6 +336,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                           Open
                         </a>
                         <a 
+                          *ngIf="problem.problemId"
                           [routerLink]="['/problems', problem.problemId]"
                           class="text-xs"
                           style="color: #8B5E3C;">
@@ -319,17 +346,29 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                     </div>
                   </div>
                   
-                  <!-- Add Problem Button -->
-                  <button 
-                    (click)="openProblemPicker(subtopic)"
-                    class="w-full border-2 border-dashed rounded-[12px] py-3 transition-colors flex items-center justify-center gap-2"
-                    style="border-color: #EAE3DB; color: #4A3B33;">
-                    <!-- Lucide Plus icon -->
-                    <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                    </svg>
-                    Link problem
-                  </button>
+                  <!-- Add Problem Buttons -->
+                  <div *ngIf="isOwner" class="flex gap-3">
+                    <button 
+                      (click)="openProblemPicker(subtopic)"
+                      class="flex-1 border-2 border-dashed rounded-[12px] py-3 transition-colors flex items-center justify-center gap-2"
+                      style="border-color: #EAE3DB; color: #4A3B33;">
+                      <!-- Lucide Link icon -->
+                      <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                      </svg>
+                      Link from library
+                    </button>
+                    <button 
+                      (click)="openCreateProblemModal(subtopic)"
+                      class="flex-1 border-2 border-dashed rounded-[12px] py-3 transition-colors flex items-center justify-center gap-2"
+                      style="border-color: #D4A373; color: #8B5E3C;">
+                      <!-- Lucide Plus icon -->
+                      <svg class="w-4 h-4" style="color: #8B5E3C;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                      </svg>
+                      Create problem
+                    </button>
+                  </div>
                   
                   <!-- Empty State -->
                   <div *ngIf="!subtopic.linkedProblems || subtopic.linkedProblems.length === 0"
@@ -339,7 +378,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                       <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                     <p class="text-sm">No linked problems</p>
-                    <p class="text-xs mt-1">Click "Link problem" to add</p>
+                    <p *ngIf="isOwner" class="text-xs mt-1">Click "Link from library" or "Create problem" to add</p>
                   </div>
                 </div>
               </div>
@@ -604,7 +643,10 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
             <!-- Empty State -->
             <div *ngIf="filteredProblems.length === 0" class="text-center py-8" style="color: #4A3B33;">
-              <div class="text-4xl mb-2">🔍</div>
+              <!-- Lucide Search icon -->
+              <svg class="w-10 h-10 mx-auto mb-2" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
               <p class="text-sm">No se encontraron problemas</p>
             </div>
           </div>
@@ -676,6 +718,97 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           </div>
         </div>
       </div>
+
+      <!-- Create Problem Modal -->
+      <div 
+        *ngIf="showCreateProblemModal" 
+        class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4"
+        (click)="closeCreateProblemModal()">
+        <div class="bg-white rounded-[12px] p-6 w-full max-w-lg" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
+          <h3 class="text-xl font-semibold mb-6 flex items-center gap-2" style="color: #2D2622;">
+            <!-- Lucide Plus icon -->
+            <svg class="w-5 h-5" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+            Create Problem
+          </h3>
+          
+          <div class="rounded-[12px] p-4 mb-4" style="background-color: #FCF9F5; border-left: 4px solid #D4A373;">
+            <p class="text-sm flex items-center gap-2" style="color: #4A3B33;">
+              <!-- Lucide Info icon -->
+              <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="16" x2="12" y2="12" />
+                <line x1="12" y1="8" x2="12.01" y2="8" />
+              </svg>
+              This creates a theoretical problem directly linked to this subtopic without adding it to the problem library.
+            </p>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Title *</label>
+              <input 
+                type="text"
+                [(ngModel)]="newInlineProblem.title"
+                placeholder="Problem title..."
+                class="w-full rounded-[12px] px-4 py-3 transition-all"
+                style="border: 1px solid #EAE3DB; color: #2D2622;">
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Description</label>
+              <textarea 
+                [(ngModel)]="newInlineProblem.description"
+                rows="3"
+                placeholder="Problem description (optional)..."
+                class="w-full rounded-[12px] px-4 py-3 transition-all resize-none"
+                style="border: 1px solid #EAE3DB; color: #2D2622;">
+              </textarea>
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Link (optional)</label>
+              <input 
+                type="url"
+                [(ngModel)]="newInlineProblem.link"
+                placeholder="https://..."
+                class="w-full rounded-[12px] px-4 py-3 transition-all"
+                style="border: 1px solid #EAE3DB; color: #2D2622;">
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Difficulty *</label>
+              <select 
+                [(ngModel)]="newInlineProblem.difficulty"
+                class="w-full rounded-[12px] px-4 py-3 transition-all"
+                style="border: 1px solid #EAE3DB; color: #2D2622;">
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+                <option value="very-hard">Very Hard</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="flex gap-3 justify-end mt-6">
+            <button 
+              (click)="closeCreateProblemModal()"
+              class="font-medium px-6 py-3 rounded-[12px] transition-all"
+              style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
+              Cancel
+            </button>
+            <button 
+              (click)="createInlineProblem()"
+              [disabled]="!newInlineProblem.title || !newInlineProblem.difficulty"
+              class="text-white font-medium px-6 py-3 rounded-[12px] disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2"
+              style="background-color: #8B5E3C;">
+              <!-- Lucide Save icon -->
+              <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+              </svg>
+              Create problem
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   `
 })
@@ -694,6 +827,7 @@ export class SubtopicDetailComponent implements OnInit {
   error: string | null = null;
   activeTab: { [key: string]: string } = {};
   showAddSubtopicModal = false;
+  isOwner = true; // Whether current user owns this roadmap node
   
   newSubtopic: Subtopic = {
     name: '',
@@ -707,6 +841,7 @@ export class SubtopicDetailComponent implements OnInit {
 
   // Problem picker modal state
   showProblemPickerModal = false;
+  showCreateProblemModal = false; // For creating inline problems
   currentSubtopicForProblem: Subtopic | null = null;
   availableProblems: Problem[] = [];
   filteredProblems: Problem[] = [];
@@ -717,6 +852,19 @@ export class SubtopicDetailComponent implements OnInit {
   problemFilterDifficulty = '';
   problemFilterView: 'personal' | 'team' = 'personal';
   currentUser: User | null = null;
+  
+  // Inline problem creation
+  newInlineProblem: {
+    title: string;
+    description: string;
+    link: string;
+    difficulty: 'easy' | 'medium' | 'hard' | 'very-hard';
+  } = {
+    title: '',
+    description: '',
+    link: '',
+    difficulty: 'medium'
+  };
   
   problemLinkMetadata: {
     title: string;
@@ -755,20 +903,18 @@ export class SubtopicDetailComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    const userStr = localStorage.getItem('user');
-    if (!userStr) return;
-
-    const user = JSON.parse(userStr);
-    
-    this.roadmapService.getPersonalRoadmap(user.id).subscribe({
+    // Use the new getNodeById endpoint that works for any user's node
+    this.roadmapService.getNodeById(this.nodeId).subscribe({
       next: (response) => {
-        this.node = response.data.roadmap.find(n => n._id === this.nodeId) || null;
+        this.node = response.data.node;
+        this.isOwner = response.data.isOwner;
         
         // Initialize active tabs
         if (this.node?.subtopics) {
           this.node.subtopics.forEach((subtopic, index) => {
             const key = subtopic._id || index;
-            this.activeTab[key] = 'personal';
+            // Default to 'theory' tab for non-owners (shared content) or 'personal' for owners
+            this.activeTab[key] = this.isOwner ? 'personal' : 'theory';
           });
         }
         
@@ -1059,5 +1205,52 @@ export class SubtopicDetailComponent implements OnInit {
         queryParams: { subtopic: subtopicId }
       });
     }
+  }
+
+  // Inline problem creation methods
+  openCreateProblemModal(subtopic: Subtopic): void {
+    this.currentSubtopicForProblem = subtopic;
+    this.showCreateProblemModal = true;
+    this.resetNewInlineProblem();
+  }
+
+  closeCreateProblemModal(): void {
+    this.showCreateProblemModal = false;
+    this.currentSubtopicForProblem = null;
+    this.resetNewInlineProblem();
+  }
+
+  resetNewInlineProblem(): void {
+    this.newInlineProblem = {
+      title: '',
+      description: '',
+      link: '',
+      difficulty: 'medium'
+    };
+  }
+
+  createInlineProblem(): void {
+    if (!this.currentSubtopicForProblem || !this.newInlineProblem.title || !this.newInlineProblem.difficulty) return;
+
+    // Create linked problem object without problemId (inline/theoretical problem)
+    const linkedProblem: LinkedProblem = {
+      problemId: '',  // Empty string indicates inline problem
+      title: this.newInlineProblem.title,
+      description: this.newInlineProblem.description,
+      link: this.newInlineProblem.link,
+      difficulty: this.newInlineProblem.difficulty
+    };
+
+    // Add to subtopic
+    if (!this.currentSubtopicForProblem.linkedProblems) {
+      this.currentSubtopicForProblem.linkedProblems = [];
+    }
+    this.currentSubtopicForProblem.linkedProblems.push(linkedProblem);
+
+    // Save subtopic
+    this.saveSubtopic(this.currentSubtopicForProblem);
+
+    // Close modal
+    this.closeCreateProblemModal();
   }
 }

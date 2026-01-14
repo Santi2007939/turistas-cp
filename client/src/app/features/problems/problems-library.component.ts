@@ -971,9 +971,11 @@ export class ProblemsLibraryComponent implements OnInit {
             if (subtopic) {
               this.subtopicName = subtopic.name;
               
-              // Store linked problem IDs for filtering
+              // Store linked problem IDs for filtering (filter out undefined problemIds - inline problems)
               if (subtopic.linkedProblems) {
-                this.linkedProblemIds = subtopic.linkedProblems.map(lp => lp.problemId);
+                this.linkedProblemIds = subtopic.linkedProblems
+                  .filter(lp => lp.problemId)
+                  .map(lp => lp.problemId as string);
               }
               break;
             }

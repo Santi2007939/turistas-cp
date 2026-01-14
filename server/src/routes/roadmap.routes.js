@@ -119,6 +119,37 @@ router.get('/member/:memberId', readRateLimiter, asyncHandler(async (req, res) =
   });
 }));
 
+// @desc    Get a specific roadmap node by ID (for viewing subtopics)
+// @route   GET /api/roadmap/node/:nodeId
+// @access  Private
+router.get('/node/:nodeId', readRateLimiter, asyncHandler(async (req, res) => {
+  const { nodeId } = req.params;
+  
+  // Get the specific node
+  const node = await PersonalNode.findById(nodeId)
+    .populate('themeId')
+    .populate('problemsSolved')
+    .populate('userId', 'username fullName');
+  
+  if (!node) {
+    return res.status(404).json({
+      success: false,
+      message: 'Roadmap node not found'
+    });
+  }
+  
+  // Check if current user is the owner
+  const isOwner = node.userId._id.toString() === req.user._id.toString();
+  
+  res.json({
+    success: true,
+    data: { 
+      node,
+      isOwner
+    }
+  });
+}));
+
 // @desc    Update node order (for drag-and-drop)
 // @route   PUT /api/roadmap/reorder
 // @access  Private

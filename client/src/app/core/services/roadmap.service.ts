@@ -28,7 +28,7 @@ export interface Resource {
 
 export interface LinkedProblem {
   _id?: string;
-  problemId: string;
+  problemId?: string;  // Optional - allows inline theoretical problems
   title: string;
   description?: string;
   link?: string;
@@ -72,6 +72,14 @@ export interface RoadmapResponse {
   data: {
     roadmap: PersonalNode[];
     isOwner?: boolean;
+  };
+}
+
+export interface SingleNodeResponse {
+  success: boolean;
+  data: {
+    node: PersonalNode;
+    isOwner: boolean;
   };
 }
 
@@ -172,6 +180,13 @@ export class RoadmapService {
    */
   getMemberRoadmap(memberId: string): Observable<RoadmapResponse> {
     return this.api.get<RoadmapResponse>(`/api/roadmap/member/${memberId}`);
+  }
+
+  /**
+   * Get a specific roadmap node by ID (for viewing subtopics)
+   */
+  getNodeById(nodeId: string): Observable<SingleNodeResponse> {
+    return this.api.get<SingleNodeResponse>(`/api/roadmap/node/${nodeId}`);
   }
 
   /**
