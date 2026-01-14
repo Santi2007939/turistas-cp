@@ -584,7 +584,9 @@ export class CalendarComponent implements OnInit {
       eventScope: 'personal',
       startTime: this.formatDateForInput(startTime),
       endTime: this.formatDateForInput(endTime),
-      isPublic: false
+      isPublic: false,
+      reminderEnabled: false,
+      reminderMinutesBefore: 30
     };
     this.showCreateModal = true;
   }
