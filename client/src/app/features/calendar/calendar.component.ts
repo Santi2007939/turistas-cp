@@ -44,7 +44,7 @@ interface FilterData {
               <svg class="w-6 h-6" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              Calendario
+              Calendar
             </h2>
             <div class="flex gap-2">
               <!-- View Toggle -->
@@ -60,7 +60,7 @@ interface FilterData {
                   <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
                   </svg>
-                  Lista
+                  List
                 </button>
                 <button 
                   (click)="viewMode = 'calendar'"
@@ -73,14 +73,14 @@ interface FilterData {
                   <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
-                  Calendario
+                  Calendar
                 </button>
               </div>
               <button 
                 (click)="showCreateModal = true"
                 class="text-white px-4 py-2 rounded-[12px] font-medium"
                 style="background-color: #8B5E3C;">
-                Agregar evento
+                Add event
               </button>
             </div>
           </div>
@@ -89,40 +89,40 @@ interface FilterData {
           <div class="bg-white rounded-[12px] p-4 mb-6" style="border: 1px solid #EAE3DB;">
             <div class="flex flex-wrap gap-4 items-end">
               <div>
-                <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Tipo</label>
+                <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Type</label>
                 <select 
                   [(ngModel)]="filters.type"
                   (ngModelChange)="applyFilters()"
                   class="rounded-[12px] px-3 py-2 text-sm"
                   style="border: 1px solid #EAE3DB; color: #2D2622;">
-                  <option value="">Todos los tipos</option>
-                  <option value="contest">Concurso</option>
-                  <option value="practice">Práctica</option>
-                  <option value="training">Entrenamiento</option>
-                  <option value="meeting">Reunión</option>
-                  <option value="deadline">Fecha límite</option>
-                  <option value="clase_gpc">Clase GPC</option>
+                  <option value="">All types</option>
+                  <option value="contest">Contest</option>
+                  <option value="practice">Practice</option>
+                  <option value="training">Training</option>
+                  <option value="meeting">Meeting</option>
+                  <option value="deadline">Deadline</option>
+                  <option value="clase_gpc">GPC Class</option>
                   <option value="rpc">RPC</option>
                   <option value="roadmap">Roadmap</option>
-                  <option value="problem">Problema</option>
-                  <option value="other">Otro</option>
+                  <option value="problem">Problem</option>
+                  <option value="other">Other</option>
                 </select>
               </div>
               <div>
-                <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Ámbito</label>
+                <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Scope</label>
                 <select 
                   [(ngModel)]="filters.scope"
                   (ngModelChange)="applyFilters()"
                   class="rounded-[12px] px-3 py-2 text-sm"
                   style="border: 1px solid #EAE3DB; color: #2D2622;">
-                  <option value="">Todos los ámbitos</option>
+                  <option value="">All scopes</option>
                   <option value="personal">Personal</option>
-                  <option value="team">Equipo</option>
-                  <option value="public">Público</option>
+                  <option value="team">Team</option>
+                  <option value="public">Public</option>
                 </select>
               </div>
               <div>
-                <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Fecha inicio</label>
+                <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Start date</label>
                 <input 
                   type="date"
                   [(ngModel)]="filters.startDate"
@@ -131,7 +131,7 @@ interface FilterData {
                   style="border: 1px solid #EAE3DB; color: #2D2622;">
               </div>
               <div>
-                <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Fecha fin</label>
+                <label class="block text-sm font-medium mb-1" style="color: #2D2622;">End date</label>
                 <input 
                   type="date"
                   [(ngModel)]="filters.endDate"
@@ -143,7 +143,7 @@ interface FilterData {
                 (click)="clearFilters()"
                 class="px-4 py-2 rounded-[12px] text-sm"
                 style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
-                Limpiar filtros
+                Clear filters
               </button>
             </div>
           </div>
@@ -160,13 +160,13 @@ interface FilterData {
 
           <!-- Loading State -->
           <div *ngIf="loading" class="text-center py-8">
-            <p style="color: #4A3B33;">Cargando eventos...</p>
+            <p style="color: #4A3B33;">Loading events...</p>
           </div>
 
           <!-- List View -->
           <div *ngIf="!loading && viewMode === 'list'" class="space-y-4">
             <div *ngIf="filteredEvents.length === 0" class="bg-white rounded-[12px] p-8 text-center" style="border: 1px solid #EAE3DB;">
-              <p style="color: #4A3B33;">No se encontraron eventos. ¡Crea tu primer evento!</p>
+              <p style="color: #4A3B33;">No events found. Create your first event!</p>
             </div>
 
             <div 
@@ -181,8 +181,8 @@ interface FilterData {
                   </div>
                   <p *ngIf="event.description" class="mb-3" style="color: #4A3B33;">{{ event.description }}</p>
                   <div class="text-sm space-y-1" style="color: #4A3B33;">
-                    <p><strong>Inicio:</strong> {{ event.startTime | date:'medium' }}</p>
-                    <p><strong>Fin:</strong> {{ event.endTime | date:'medium' }}</p>
+                    <p><strong>Start:</strong> {{ event.startTime | date:'medium' }}</p>
+                    <p><strong>End:</strong> {{ event.endTime | date:'medium' }}</p>
                     <div class="flex gap-2 mt-2">
                       <span class="px-2 py-1 rounded-[12px] text-xs" [ngStyle]="getEventTypeStyleObject(event.type)">
                         {{ getEventTypeName(event.type) }}
@@ -199,14 +199,14 @@ interface FilterData {
                     (click)="editEvent(event)"
                     class="text-white px-3 py-1 rounded-[12px] text-sm"
                     style="background-color: #D4A373;">
-                    Editar
+                    Edit
                   </button>
                   <button 
                     *ngIf="canDeleteEvent(event)"
                     (click)="deleteEvent(event._id!)"
                     class="px-3 py-1 rounded-[12px] text-sm text-red-600"
                     style="background-color: #FCF9F5; border: 1px solid #EAE3DB;">
-                    Eliminar
+                    Delete
                   </button>
                 </div>
               </div>
@@ -221,14 +221,14 @@ interface FilterData {
                 (click)="previousMonth()"
                 class="px-3 py-1 rounded-[12px]"
                 style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
-                ← Anterior
+                ← Previous
               </button>
               <h3 class="text-lg font-semibold" style="color: #2D2622;">{{ currentMonth | date:'MMMM yyyy' }}</h3>
               <button 
                 (click)="nextMonth()"
                 class="px-3 py-1 rounded-[12px]"
                 style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
-                Siguiente →
+                Next →
               </button>
             </div>
             
@@ -265,7 +265,7 @@ interface FilterData {
                     *ngIf="day.events.length > 3" 
                     class="text-xs pl-1"
                     style="color: #4A3B33;">
-                    +{{ day.events.length - 3 }} más
+                    +{{ day.events.length - 3 }} more
                   </div>
                 </div>
               </div>
@@ -280,24 +280,24 @@ interface FilterData {
         class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4"
         (click)="showCreateModal = false">
         <div class="bg-white rounded-[12px] p-6 w-full max-w-md max-h-screen overflow-y-auto" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
-          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">{{ editingEvent ? 'Editar evento' : 'Crear nuevo evento' }}</h3>
+          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">{{ editingEvent ? 'Edit event' : 'Create new event' }}</h3>
           
           <div class="space-y-4">
             <div>
-              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Título *</label>
+              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Title *</label>
               <input 
                 type="text"
                 [(ngModel)]="formEvent.title"
-                placeholder="Título del evento"
+                placeholder="Event title"
                 class="w-full rounded-[12px] px-4 py-3"
                 style="border: 1px solid #EAE3DB; color: #2D2622;">
             </div>
 
             <div>
-              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Descripción</label>
+              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Description</label>
               <textarea 
                 [(ngModel)]="formEvent.description"
-                placeholder="Descripción del evento"
+                placeholder="Event description"
                 rows="3"
                 class="w-full rounded-[12px] px-4 py-3"
                 style="border: 1px solid #EAE3DB; color: #2D2622;">
@@ -305,38 +305,38 @@ interface FilterData {
             </div>
 
             <div>
-              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Tipo *</label>
+              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Type *</label>
               <select 
                 [(ngModel)]="formEvent.type"
                 class="w-full rounded-[12px] px-4 py-3"
                 style="border: 1px solid #EAE3DB; color: #2D2622;">
-                <option value="contest">Concurso</option>
-                <option value="practice">Práctica</option>
-                <option value="training">Entrenamiento</option>
-                <option value="meeting">Reunión</option>
-                <option value="deadline">Fecha límite</option>
-                <option value="clase_gpc">Clase GPC</option>
+                <option value="contest">Contest</option>
+                <option value="practice">Practice</option>
+                <option value="training">Training</option>
+                <option value="meeting">Meeting</option>
+                <option value="deadline">Deadline</option>
+                <option value="clase_gpc">GPC Class</option>
                 <option value="rpc">RPC</option>
                 <option value="roadmap">Roadmap</option>
-                <option value="problem">Problema</option>
-                <option value="other">Otro</option>
+                <option value="problem">Problem</option>
+                <option value="other">Other</option>
               </select>
             </div>
 
             <div>
-              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Ámbito *</label>
+              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Scope *</label>
               <select 
                 [(ngModel)]="formEvent.eventScope"
                 class="w-full rounded-[12px] px-4 py-3"
                 style="border: 1px solid #EAE3DB; color: #2D2622;">
                 <option value="personal">Personal</option>
-                <option value="team">Equipo</option>
-                <option value="public">Público</option>
+                <option value="team">Team</option>
+                <option value="public">Public</option>
               </select>
             </div>
 
             <div>
-              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Hora de inicio *</label>
+              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Start time *</label>
               <input 
                 type="datetime-local"
                 [(ngModel)]="formEvent.startTime"
@@ -345,7 +345,7 @@ interface FilterData {
             </div>
 
             <div>
-              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Hora de fin *</label>
+              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">End time *</label>
               <input 
                 type="datetime-local"
                 [(ngModel)]="formEvent.endTime"
@@ -359,7 +359,7 @@ interface FilterData {
                 [(ngModel)]="formEvent.isPublic"
                 id="isPublic"
                 class="mr-2 rounded">
-              <label for="isPublic" class="text-sm" style="color: #4A3B33;">Hacer este evento público</label>
+              <label for="isPublic" class="text-sm" style="color: #4A3B33;">Make this event public</label>
             </div>
 
             <!-- Reminder/Notification Settings -->
@@ -375,25 +375,25 @@ interface FilterData {
                   <svg class="w-4 h-4 inline mr-1" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                   </svg>
-                  Habilitar recordatorio
+                  Enable reminder
                 </label>
               </div>
               <div *ngIf="formEvent.reminderEnabled" class="ml-6">
-                <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Notificar antes de:</label>
+                <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Notify before:</label>
                 <select 
                   [(ngModel)]="formEvent.reminderMinutesBefore"
                   class="w-full rounded-[12px] px-4 py-3"
                   style="border: 1px solid #EAE3DB; color: #2D2622;">
-                  <option [value]="5">5 minutos</option>
-                  <option [value]="10">10 minutos</option>
-                  <option [value]="15">15 minutos</option>
-                  <option [value]="30">30 minutos</option>
-                  <option [value]="60">1 hora</option>
-                  <option [value]="120">2 horas</option>
-                  <option [value]="1440">1 día</option>
+                  <option [value]="5">5 minutes</option>
+                  <option [value]="10">10 minutes</option>
+                  <option [value]="15">15 minutes</option>
+                  <option [value]="30">30 minutes</option>
+                  <option [value]="60">1 hour</option>
+                  <option [value]="120">2 hours</option>
+                  <option [value]="1440">1 day</option>
                 </select>
                 <p class="text-xs mt-1" style="color: #4A3B33;">
-                  Se mostrará una notificación en la página antes del evento
+                  A notification will be shown on the page before the event
                 </p>
               </div>
             </div>
@@ -404,14 +404,14 @@ interface FilterData {
               (click)="closeModal()"
               class="px-4 py-2 rounded-[12px]"
               style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
-              Cancelar
+              Cancel
             </button>
             <button 
               (click)="saveEvent()"
               [disabled]="saving || !isFormValid()"
               class="text-white px-4 py-2 rounded-[12px] disabled:opacity-50"
               style="background-color: #8B5E3C;">
-              {{ saving ? 'Guardando...' : (editingEvent ? 'Actualizar' : 'Crear') }}
+              {{ saving ? 'Saving...' : (editingEvent ? 'Update' : 'Create') }}
             </button>
           </div>
         </div>
@@ -436,7 +436,7 @@ export class CalendarComponent implements OnInit {
   
   // Calendar view properties
   currentMonth: Date = new Date();
-  weekDays = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+  weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   calendarDays: Array<{ date: Date; isCurrentMonth: boolean; isToday: boolean; events: CalendarEvent[] }> = [];
 
   // Filter properties
@@ -634,14 +634,14 @@ export class CalendarComponent implements OnInit {
 
     operation.subscribe({
       next: () => {
-        this.successMessage = `Evento ${this.editingEvent ? 'actualizado' : 'creado'} exitosamente!`;
+        this.successMessage = `Event ${this.editingEvent ? 'updated' : 'created'} successfully!`;
         setTimeout(() => this.successMessage = null, 3000);
         this.closeModal();
         this.loadEvents();
         this.saving = false;
       },
       error: (err) => {
-        this.error = `Error al ${this.editingEvent ? 'actualizar' : 'crear'} el evento.`;
+        this.error = `Error ${this.editingEvent ? 'updating' : 'creating'} the event.`;
         this.saving = false;
         console.error('Error saving event:', err);
       }
@@ -649,18 +649,18 @@ export class CalendarComponent implements OnInit {
   }
 
   deleteEvent(id: string): void {
-    if (!confirm('¿Estás seguro de que quieres eliminar este evento?')) {
+    if (!confirm('Are you sure you want to delete this event?')) {
       return;
     }
 
     this.calendarService.deleteEvent(id).subscribe({
       next: () => {
-        this.successMessage = '¡Evento eliminado exitosamente!';
+        this.successMessage = 'Event deleted successfully!';
         setTimeout(() => this.successMessage = null, 3000);
         this.loadEvents();
       },
       error: (err) => {
-        this.error = 'Error al eliminar el evento.';
+        this.error = 'Error deleting the event.';
         console.error('Error deleting event:', err);
       }
     });
@@ -738,16 +738,16 @@ export class CalendarComponent implements OnInit {
 
   getEventTypeName(type: string): string {
     const names: { [key: string]: string } = {
-      'contest': 'Concurso',
-      'practice': 'Práctica',
-      'training': 'Entrenamiento',
-      'meeting': 'Reunión',
-      'deadline': 'Fecha límite',
-      'clase_gpc': 'Clase GPC',
+      'contest': 'Contest',
+      'practice': 'Practice',
+      'training': 'Training',
+      'meeting': 'Meeting',
+      'deadline': 'Deadline',
+      'clase_gpc': 'GPC Class',
       'rpc': 'RPC',
       'roadmap': 'Roadmap',
-      'problem': 'Problema',
-      'other': 'Otro'
+      'problem': 'Problem',
+      'other': 'Other'
     };
     return names[type] || type;
   }
@@ -755,8 +755,8 @@ export class CalendarComponent implements OnInit {
   getEventScopeName(scope: string): string {
     const names: { [key: string]: string } = {
       'personal': 'Personal',
-      'team': 'Equipo',
-      'public': 'Público'
+      'team': 'Team',
+      'public': 'Public'
     };
     return names[scope] || scope;
   }
