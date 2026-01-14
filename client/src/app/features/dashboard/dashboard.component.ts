@@ -21,9 +21,9 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
         <!-- Header Section -->
         <div class="mb-8">
           <h1 class="text-3xl font-semibold" style="color: #2D2622;">
-            Hola, {{ currentUser?.username }}
+            Hello, {{ currentUser?.username }}
           </h1>
-          <p class="mt-1" style="color: #4A3B33;">Tu panel de control para Turistas CP</p>
+          <p class="mt-1" style="color: #4A3B33;">Your dashboard for Turistas CP</p>
         </div>
 
         <!-- Main Grid Layout -->
@@ -40,15 +40,15 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   <svg class="w-5 h-5" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                   </svg>
-                  Progreso del Roadmap
+                  Roadmap Progress
                 </h2>
-                <a routerLink="/roadmap" class="text-sm font-medium hover:underline" style="color: #8B5E3C;">Ver todo →</a>
+                <a routerLink="/roadmap" class="text-sm font-medium hover:underline" style="color: #8B5E3C;">View all →</a>
               </div>
               
               <!-- Progress Bar -->
               <div class="mb-6">
                 <div class="flex justify-between text-sm mb-2">
-                  <span style="color: #4A3B33;">Progreso general</span>
+                  <span style="color: #4A3B33;">Overall progress</span>
                   <span class="font-semibold font-mono" style="color: #8B5E3C;">{{ roadmapStats.averageProgress }}%</span>
                 </div>
                 <div class="rounded-full h-3 overflow-hidden" style="background-color: #EAE3DB;">
@@ -64,11 +64,11 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 </div>
                 <div class="text-center p-3 rounded-[12px]" style="background-color: #FCF9F5;">
                   <div class="text-2xl font-bold font-mono" style="color: #D4A373;">{{ roadmapStats.inProgress }}</div>
-                  <div class="text-xs" style="color: #4A3B33;">En Progreso</div>
+                  <div class="text-xs" style="color: #4A3B33;">In Progress</div>
                 </div>
                 <div class="text-center p-3 rounded-[12px]" style="background-color: #FCF9F5;">
                   <div class="text-2xl font-bold font-mono" style="color: #8B5E3C;">{{ roadmapStats.completed }}</div>
-                  <div class="text-xs" style="color: #4A3B33;">Completados</div>
+                  <div class="text-xs" style="color: #4A3B33;">Completed</div>
                 </div>
               </div>
             </div>
@@ -85,12 +85,12 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   target="_blank"
                   class="text-sm font-medium hover:underline"
                   style="color: #4A90A4;">
-                  Ver perfil →
+                  View profile →
                 </a>
               </div>
               
               <div *ngIf="loadingCodeforcesStats" class="text-center py-4">
-                <p style="color: #4A3B33;">Cargando...</p>
+                <p style="color: #4A3B33;">Loading...</p>
               </div>
 
               <div *ngIf="!loadingCodeforcesStats && codeforcesStats" class="grid grid-cols-4 gap-4">
@@ -104,11 +104,11 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 </div>
                 <div class="text-center">
                   <div class="text-2xl font-bold font-mono" style="color: #4A90A4;">{{ codeforcesStats.contribution || 0 }}</div>
-                  <div class="text-xs" style="color: #4A3B33;">Contribución</div>
+                  <div class="text-xs" style="color: #4A3B33;">Contribution</div>
                 </div>
                 <div class="text-center">
                   <div class="text-2xl font-bold font-mono" style="color: #3A7A8A;">{{ codeforcesStats.friendOfCount || 0 }}</div>
-                  <div class="text-xs" style="color: #4A3B33;">Seguidores</div>
+                  <div class="text-xs" style="color: #4A3B33;">Followers</div>
                 </div>
               </div>
 
@@ -118,7 +118,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   (click)="loadCodeforcesStats()"
                   class="text-sm font-medium"
                   style="color: #4A90A4;">
-                  Reintentar
+                  Retry
                 </button>
               </div>
             </div>
@@ -131,8 +131,8 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                 </svg>
                 <div class="flex-1">
-                  <h3 class="font-semibold" style="color: #2D2622;">Vincula tu cuenta de Codeforces</h3>
-                  <p class="text-sm" style="color: #4A3B33;">Edita tu perfil para ver tus estadísticas aquí</p>
+                  <h3 class="font-semibold" style="color: #2D2622;">Link your Codeforces account</h3>
+                  <p class="text-sm" style="color: #4A3B33;">Edit your profile to see your stats here</p>
                 </div>
               </div>
             </div>
@@ -140,7 +140,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
           <!-- Right Column: Quick Navigation -->
           <div class="space-y-4">
-            <h2 class="text-sm font-semibold uppercase tracking-wider" style="color: #4A3B33;">Acceso Rápido</h2>
+            <h2 class="text-sm font-semibold uppercase tracking-wider" style="color: #4A3B33;">Quick Access</h2>
             
             <!-- Navigation Cards -->
             <a routerLink="/themes" class="block bg-white rounded-[12px] p-4 transition-all hover:shadow-sm" style="border: 1px solid #EAE3DB;">
@@ -150,8 +150,8 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
                 <div>
-                  <h3 class="font-semibold" style="color: #2D2622;">Temas</h3>
-                  <p class="text-xs" style="color: #4A3B33;">Explorar temas de estudio</p>
+                  <h3 class="font-semibold" style="color: #2D2622;">Themes</h3>
+                  <p class="text-xs" style="color: #4A3B33;">Explore study themes</p>
                 </div>
               </div>
             </a>
@@ -164,7 +164,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 </svg>
                 <div>
                   <h3 class="font-semibold" style="color: #2D2622;">Roadmap</h3>
-                  <p class="text-xs" style="color: #4A3B33;">Tu ruta de aprendizaje</p>
+                  <p class="text-xs" style="color: #4A3B33;">Your learning path</p>
                 </div>
               </div>
             </a>
@@ -176,8 +176,8 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                 </svg>
                 <div>
-                  <h3 class="font-semibold" style="color: #2D2622;">Problemas</h3>
-                  <p class="text-xs" style="color: #4A3B33;">Práctica y ejercicios</p>
+                  <h3 class="font-semibold" style="color: #2D2622;">Problems</h3>
+                  <p class="text-xs" style="color: #4A3B33;">Practice and exercises</p>
                 </div>
               </div>
             </a>
@@ -189,8 +189,8 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                 </svg>
                 <div>
-                  <h3 class="font-semibold" style="color: #2D2622;">Equipo</h3>
-                  <p class="text-xs" style="color: #4A3B33;">Trabajo colaborativo</p>
+                  <h3 class="font-semibold" style="color: #2D2622;">Team</h3>
+                  <p class="text-xs" style="color: #4A3B33;">Collaborative work</p>
                 </div>
               </div>
             </a>
@@ -202,8 +202,8 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
                 <div>
-                  <h3 class="font-semibold" style="color: #2D2622;">Calendario</h3>
-                  <p class="text-xs" style="color: #4A3B33;">Eventos y concursos</p>
+                  <h3 class="font-semibold" style="color: #2D2622;">Calendar</h3>
+                  <p class="text-xs" style="color: #4A3B33;">Events and contests</p>
                 </div>
               </div>
             </a>
@@ -215,8 +215,8 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   <path stroke-linecap="round" stroke-linejoin="round" d="M18 20V10m-6 10V4M6 20v-6" />
                 </svg>
                 <div>
-                  <h3 class="font-semibold" style="color: #2D2622;">Estadísticas</h3>
-                  <p class="text-xs" style="color: #4A3B33;">Progreso y logros</p>
+                  <h3 class="font-semibold" style="color: #2D2622;">Statistics</h3>
+                  <p class="text-xs" style="color: #4A3B33;">Progress and achievements</p>
                 </div>
               </div>
             </a>
@@ -305,7 +305,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error('Error loading Codeforces stats:', err);
-        this.codeforcesError = 'No se pudo cargar las estadísticas de Codeforces. Verifica que el handle sea correcto.';
+        this.codeforcesError = 'Could not load Codeforces stats. Please verify that the handle is correct.';
         this.loadingCodeforcesStats = false;
       }
     });

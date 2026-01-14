@@ -28,7 +28,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            Volver a Problemas
+            Back to Problems
           </button>
         </div>
       </div>
@@ -78,7 +78,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   'color': problem.status === 'pending' ? '#4A3B33' : problem.status === 'ac' ? '#8B5E3C' : '#A05E4A',
                   'border': '1px solid ' + (problem.status === 'pending' ? '#EAE3DB' : problem.status === 'ac' ? '#D4A373' : '#A05E4A')
                 }">
-                <option value="pending">Pendiente</option>
+                <option value="pending">Pending</option>
                 <option value="ac">✓ AC</option>
                 <option value="wa">✗ WA</option>
               </select>
@@ -91,7 +91,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   'color': problem.status === 'pending' ? '#4A3B33' : problem.status === 'ac' ? '#8B5E3C' : '#A05E4A',
                   'border': '1px solid ' + (problem.status === 'pending' ? '#EAE3DB' : problem.status === 'ac' ? '#D4A373' : '#A05E4A')
                 }">
-                {{ problem.status === 'pending' ? 'Pendiente' : problem.status === 'ac' ? '✓ AC' : '✗ WA' }}
+                {{ problem.status === 'pending' ? 'Pending' : problem.status === 'ac' ? '✓ AC' : '✗ WA' }}
               </span>
 
               <!-- Owner Badge -->
@@ -105,7 +105,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <svg *ngIf="problem.owner === 'team'" class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                 </svg>
-                {{ problem.owner === 'personal' ? 'Personal' : 'Equipo' }}
+                {{ problem.owner === 'personal' ? 'Personal' : 'Team' }}
               </span>
             </div>
 
@@ -120,7 +120,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                 </svg>
-                Ver problema en {{ problem.platform }}
+                View problem on {{ problem.platform }}
               </a>
             </div>
 
@@ -131,7 +131,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
             <!-- Themes and Subthemes -->
             <div *ngIf="problem.themes && problem.themes.length > 0" class="mt-6">
-              <h3 class="text-sm font-semibold mb-3" style="color: #2D2622;">Temas:</h3>
+              <h3 class="text-sm font-semibold mb-3" style="color: #2D2622;">Themes:</h3>
               <div class="space-y-2">
                 <div *ngFor="let themeAssoc of problem.themes" class="flex flex-wrap items-center gap-2">
                   <span class="text-sm px-3 py-1 rounded-[12px]" style="background-color: #FCF9F5; color: #8B5E3C; border: 1px solid #EAE3DB;">
@@ -158,7 +158,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               <svg class="w-4 h-4 inline mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
               </svg>
-              Editar temas
+              Edit themes
             </button>
           </div>
 
@@ -175,12 +175,12 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <svg class="w-4 h-4 inline mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                 </svg>
-                Agregar Entrada
+                Add Entry
               </button>
             </div>
 
             <div *ngIf="problem.metacognition && problem.metacognition.length === 0" class="italic" style="color: #4A3B33;">
-              No hay entradas de metacognición aún.
+              No metacognition entries yet.
             </div>
 
             <div class="space-y-4">
@@ -216,7 +216,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           <!-- Takeaways Section -->
           <div class="bg-white rounded-[12px] p-8" style="border: 1px solid #EAE3DB;">
             <div class="flex justify-between items-center mb-6">
-              <h2 class="text-2xl font-semibold" style="color: #2D2622;">💡 Aprendizajes Clave</h2>
+              <h2 class="text-2xl font-semibold" style="color: #2D2622;">💡 Key Learnings</h2>
               <button 
                 *ngIf="canEdit"
                 (click)="addTakeaway()"
@@ -226,12 +226,12 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <svg class="w-4 h-4 inline mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                 </svg>
-                Agregar
+                Add
               </button>
             </div>
 
             <div *ngIf="problem.takeaways && problem.takeaways.length === 0" class="italic" style="color: #4A3B33;">
-              No hay aprendizajes registrados aún.
+              No learnings recorded yet.
             </div>
 
             <ul class="space-y-3">
@@ -260,7 +260,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
           <!-- Analysis Section -->
           <div class="bg-white rounded-[12px] p-8" style="border: 1px solid #EAE3DB;">
-            <h2 class="text-2xl font-semibold mb-6" style="color: #2D2622;">📊 Análisis</h2>
+            <h2 class="text-2xl font-semibold mb-6" style="color: #2D2622;">📊 Analysis</h2>
             
             <div *ngIf="canEdit" class="space-y-4">
               <textarea
@@ -269,7 +269,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 rows="8"
                 class="w-full rounded-[12px] px-4 py-3"
                 style="border: 1px solid #EAE3DB; color: #2D2622;"
-                placeholder="Escribe tu análisis del problema aquí...&#10;&#10;Puedes incluir:&#10;- Approach utilizado&#10;- Complejidad temporal y espacial&#10;- Dificultades encontradas&#10;- Optimizaciones consideradas"></textarea>
+                placeholder="Write your problem analysis here...&#10;&#10;You can include:&#10;- Approach used&#10;- Time and space complexity&#10;- Difficulties encountered&#10;- Optimizations considered"></textarea>
             </div>
 
             <div *ngIf="!canEdit && problem.analysis" class="prose max-w-none">
@@ -277,7 +277,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             </div>
 
             <div *ngIf="!canEdit && !problem.analysis" class="italic" style="color: #4A3B33;">
-              No hay análisis disponible.
+              No analysis available.
             </div>
           </div>
 
@@ -291,11 +291,11 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
         class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4"
         (click)="cancelMetacognitionEntry()">
         <div class="bg-white rounded-[12px] p-6 w-full max-w-lg" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
-          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">Nueva Entrada de Metacognición</h3>
+          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">New Metacognition Entry</h3>
           
           <div class="space-y-4">
             <div>
-              <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Tiempo (minutos)</label>
+              <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Time (minutes)</label>
               <input 
                 type="number"
                 [(ngModel)]="newMetacognition.time"
@@ -306,13 +306,13 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             </div>
 
             <div>
-              <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Descripción</label>
+              <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Description</label>
               <textarea 
                 [(ngModel)]="newMetacognition.description"
                 rows="5"
                 class="w-full rounded-[12px] px-4 py-3"
                 style="border: 1px solid #EAE3DB; color: #2D2622;"
-                placeholder="¿Qué estabas pensando en este momento? ¿Qué estrategias consideraste?"></textarea>
+                placeholder="What were you thinking at this moment? What strategies did you consider?"></textarea>
             </div>
           </div>
 
@@ -321,14 +321,14 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               (click)="cancelMetacognitionEntry()"
               class="px-4 py-2 rounded-[12px] font-medium"
               style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
-              Cancelar
+              Cancel
             </button>
             <button 
               (click)="saveMetacognitionEntry()"
               [disabled]="!newMetacognition.time || !newMetacognition.description"
               class="text-white px-4 py-2 rounded-[12px] font-medium disabled:opacity-50"
               style="background-color: #8B5E3C;">
-              Guardar
+              Save
             </button>
           </div>
         </div>
@@ -340,17 +340,17 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
         class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4"
         (click)="cancelTakeaway()">
         <div class="bg-white rounded-[12px] p-6 w-full max-w-lg" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
-          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">Nuevo Aprendizaje Clave</h3>
+          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">New Key Learning</h3>
           
           <div class="space-y-4">
             <div>
-              <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Aprendizaje</label>
+              <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Learning</label>
               <textarea 
                 [(ngModel)]="newTakeaway"
                 rows="3"
                 class="w-full rounded-[12px] px-4 py-3"
                 style="border: 1px solid #EAE3DB; color: #2D2622;"
-                placeholder="Describe lo que aprendiste de este problema..."></textarea>
+                placeholder="Describe what you learned from this problem..."></textarea>
             </div>
           </div>
 
@@ -359,14 +359,14 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               (click)="cancelTakeaway()"
               class="px-4 py-2 rounded-[12px] font-medium"
               style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
-              Cancelar
+              Cancel
             </button>
             <button 
               (click)="saveTakeaway()"
               [disabled]="!newTakeaway"
               class="text-white px-4 py-2 rounded-[12px] font-medium disabled:opacity-50"
               style="background-color: #D4A373;">
-              Guardar
+              Save
             </button>
           </div>
         </div>
@@ -378,19 +378,19 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
         class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4"
         (click)="cancelThemes()">
         <div class="bg-white rounded-[12px] p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
-          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">Editar Temas y Subtemas</h3>
+          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">Edit Themes and Subtopics</h3>
           
           <div class="space-y-4">
             <div *ngFor="let themeAssoc of editingThemes; let i = index" class="rounded-[12px] p-4" style="border: 1px solid #EAE3DB;">
               <div class="flex justify-between items-start mb-3">
                 <div class="flex-1">
-                  <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Tema</label>
+                  <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Theme</label>
                   <select 
                     [(ngModel)]="themeAssoc.themeId"
                     (change)="onThemeChange(i)"
                     class="w-full rounded-[12px] px-4 py-3"
                     style="border: 1px solid #EAE3DB; color: #2D2622;">
-                    <option value="">Seleccionar tema...</option>
+                    <option value="">Select theme...</option>
                     <option *ngFor="let theme of availableThemes" [value]="theme._id">
                       {{ theme.name }}
                     </option>
@@ -408,7 +408,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               </div>
 
               <div *ngIf="themeAssoc.themeId && getThemeSubthemes(themeAssoc.themeId).length > 0">
-                <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Subtemas</label>
+                <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Subtopics</label>
                 <div class="space-y-2">
                   <label 
                     *ngFor="let subtheme of getThemeSubthemes(themeAssoc.themeId)"
@@ -432,7 +432,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               <svg class="w-4 h-4 inline mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
               </svg>
-              Agregar Tema
+              Add Theme
             </button>
           </div>
 
@@ -441,13 +441,13 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               (click)="cancelThemes()"
               class="px-4 py-2 rounded-[12px] font-medium"
               style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
-              Cancelar
+              Cancel
             </button>
             <button 
               (click)="saveThemes()"
               class="text-white px-4 py-2 rounded-[12px] font-medium"
               style="background-color: #8B5E3C;">
-              Guardar
+              Save
             </button>
           </div>
         </div>
@@ -553,7 +553,7 @@ export class ProblemDetailComponent implements OnInit {
   formatDate(date: Date | string | undefined): string {
     if (!date) return '';
     const d = new Date(date);
-    return d.toLocaleDateString('es-ES', { 
+    return d.toLocaleDateString('en-US', { 
       year: 'numeric', 
       month: 'short', 
       day: 'numeric',
@@ -564,7 +564,7 @@ export class ProblemDetailComponent implements OnInit {
 
   getThemeName(themeId: string): string {
     const theme = this.availableThemes.find(t => t._id === themeId);
-    return theme ? theme.name : 'Tema desconocido';
+    return theme ? theme.name : 'Unknown theme';
   }
 
   getThemeSubthemes(themeId: string): any[] {

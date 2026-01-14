@@ -194,7 +194,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                       <line x1="2" y1="12" x2="22" y2="12" />
                       <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
                     </svg>
-                    Esta sección es editable por todos los miembros del equipo
+                    This section is editable by all team members
                   </p>
                 </div>
                 <textarea 
@@ -458,7 +458,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             <svg class="w-16 h-16 mx-auto mb-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
-            <h3 class="text-2xl font-semibold mb-3" style="color: #2D2622;">No hay subtemas</h3>
+            <h3 class="text-2xl font-semibold mb-3" style="color: #2D2622;">No subtopics</h3>
             <p class="mb-6" style="color: #4A3B33;">
               Add subtopics to organize your learning content
             </p>
@@ -647,7 +647,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               <svg class="w-10 h-10 mx-auto mb-2" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
-              <p class="text-sm">No se encontraron problemas</p>
+              <p class="text-sm">No problems found</p>
             </div>
           </div>
 
@@ -946,7 +946,7 @@ export class SubtopicDetailComponent implements OnInit {
         this.loadNode();
       },
       error: (err) => {
-        this.error = 'No se pudo crear el subtema.';
+        this.error = 'Could not create subtopic.';
         console.error('Error creating subtopic:', err);
       }
     });

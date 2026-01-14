@@ -610,9 +610,9 @@ export class ProblemsLibraryComponent implements OnInit {
 
   getCreatorName(problem: Problem): string {
     if (typeof problem.createdBy === 'object' && problem.createdBy !== null) {
-      return (problem.createdBy as PopulatedUser).username || 'Usuario';
+      return (problem.createdBy as PopulatedUser).username || 'User';
     }
-    return 'Usuario';
+    return 'User';
   }
 
   openAddProblemModal(): void {
