@@ -1,8 +1,9 @@
 services:
   # Backend API Service
-  # Note: Render uses PORT 10000 by default for web services
-  # The app.js uses process.env.PORT which will be set to 10000 by Render
+  # Note: Render assigns PORT dynamically (typically 10000 for web services)
+  # The app.js uses process.env.PORT which Render will set automatically
   # During development, the app runs on port 3000 (from .env)
+  # Explicitly setting PORT here ensures consistency, but it can be omitted
   - type: web
     name: turistas-cp-api
     runtime: node
