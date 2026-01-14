@@ -12,13 +12,13 @@ import { AuthService, User } from '../../core/services/auth.service';
   template: `
     <!-- Matte-Drift Navbar: Pure white with thin bottom border -->
     <nav class="bg-white fixed top-0 left-0 right-0 z-50" style="border-bottom: 1px solid #EAE3DB;">
-      <div class="max-w-7xl mx-auto px-6">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6">
         <div class="flex justify-between h-16">
           <!-- Logo and Brand -->
           <div class="flex items-center">
-            <h1 class="text-2xl font-semibold flex items-center gap-2" style="color: #8B5E3C;">
+            <h1 class="text-xl sm:text-2xl font-semibold flex items-center gap-2 whitespace-nowrap" style="color: #8B5E3C;">
               <!-- Lucide Mountain icon -->
-              <svg class="w-6 h-6" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <svg class="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M4 20l4-12 4 6 4-8 4 14H4z" />
               </svg>
               Turistas CP

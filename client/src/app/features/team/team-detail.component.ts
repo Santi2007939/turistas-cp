@@ -231,27 +231,30 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
           <!-- Service Integrations Section -->
           <div class="mb-6">
-            <h2 class="text-xl font-semibold mb-3" style="color: #2D2622;">Service Integrations</h2>
+            <h2 class="text-xl font-semibold mb-3" style="color: #2D2622;">Integraciones de servicios</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <!-- USACO IDE Sessions -->
               <div class="bg-white rounded-[12px] p-4" style="border: 1px solid #EAE3DB;">
                 <div class="flex items-center gap-2 mb-2">
-                  <span class="text-2xl">💻</span>
-                  <h3 class="font-semibold" style="color: #2D2622;">USACO IDE Sessions</h3>
+                  <!-- Lucide Code icon -->
+                  <svg class="w-6 h-6" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                  </svg>
+                  <h3 class="font-semibold" style="color: #2D2622;">Sesiones USACO IDE</h3>
                 </div>
-                <p class="text-sm mb-3" style="color: #4A3B33;">Manage shareable IDE links with code templates</p>
+                <p class="text-sm mb-3" style="color: #4A3B33;">Administra enlaces IDE compartibles con plantillas de código</p>
                 <div class="flex gap-2">
                   <button 
                     (click)="openAddSessionModal()"
                     class="flex-1 text-white px-4 py-2 rounded-[12px] text-sm"
                     style="background-color: #8B5E3C;">
-                    Add Session
+                    Agregar sesión
                   </button>
                   <button 
                     (click)="openViewTemplatesModal()"
                     class="flex-1 px-4 py-2 rounded-[12px] text-sm"
                     style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
-                    View Templates
+                    Ver plantillas
                   </button>
                 </div>
               </div>
@@ -259,30 +262,36 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               <!-- Excalidraw Sessions -->
               <div class="bg-white rounded-[12px] p-4" style="border: 1px solid #EAE3DB;">
                 <div class="flex items-center gap-2 mb-2">
-                  <span class="text-2xl">✏️</span>
-                  <h3 class="font-semibold" style="color: #2D2622;">Excalidraw Sessions</h3>
+                  <!-- Lucide Pencil/Edit icon -->
+                  <svg class="w-6 h-6" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  <h3 class="font-semibold" style="color: #2D2622;">Sesiones Excalidraw</h3>
                 </div>
-                <p class="text-sm mb-3" style="color: #4A3B33;">Managed sessions for diagrams and visualizations</p>
+                <p class="text-sm mb-3" style="color: #4A3B33;">Sesiones administradas para diagramas y visualizaciones</p>
                 <button 
                   (click)="openAddExcalidrawSessionModal()"
                   class="w-full text-white px-4 py-2 rounded-[12px] text-sm"
                   style="background-color: #8B5E3C;">
-                  Add Session
+                  Agregar sesión
                 </button>
               </div>
 
               <!-- RPC Contests -->
               <div class="bg-white rounded-[12px] p-4" style="border: 1px solid #EAE3DB;">
                 <div class="flex items-center gap-2 mb-2">
-                  <span class="text-2xl">🏆</span>
-                  <h3 class="font-semibold" style="color: #2D2622;">RPC Contests</h3>
+                  <!-- Lucide Trophy icon -->
+                  <svg class="w-6 h-6" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 9H4a2 2 0 01-2-2V5a2 2 0 012-2h2M18 9h2a2 2 0 002-2V5a2 2 0 00-2-2h-2M6 3v6a6 6 0 006 6v0a6 6 0 006-6V3M9 21h6M12 15v6" />
+                  </svg>
+                  <h3 class="font-semibold" style="color: #2D2622;">Concursos RPC</h3>
                 </div>
-                <p class="text-sm mb-3" style="color: #4A3B33;">View schedule and register for contests</p>
+                <p class="text-sm mb-3" style="color: #4A3B33;">Ver calendario y registrarse en concursos</p>
                 <button 
                   (click)="openRPCContestsModal()"
                   class="w-full text-white px-4 py-2 rounded-[12px] text-sm"
                   style="background-color: #D4A373;">
-                  View Contests
+                  Ver concursos
                 </button>
               </div>
             </div>
@@ -327,10 +336,13 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 </div>
                 <!-- Linked Excalidraw Sessions -->
                 <div *ngIf="getLinkedExcalidrawSessions(session).length > 0" class="mt-3 pl-4" style="border-left: 2px solid #D4A373;">
-                  <p class="text-sm font-medium mb-2" style="color: #4A3B33;">Linked Excalidraw Sessions:</p>
+                  <p class="text-sm font-medium mb-2" style="color: #4A3B33;">Sesiones Excalidraw vinculadas:</p>
                   <div class="space-y-1">
                     <div *ngFor="let excSession of getLinkedExcalidrawSessions(session)" class="flex items-center gap-2">
-                      <span class="text-sm" style="color: #8B5E3C;">✏️</span>
+                      <!-- Lucide Pencil icon -->
+                      <svg class="w-4 h-4" style="color: #8B5E3C;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                      </svg>
                       <a [href]="excSession.url" target="_blank" class="text-sm hover:underline" style="color: #8B5E3C;">
                         {{ excSession.name }}
                       </a>
@@ -343,7 +355,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
           <!-- Excalidraw Sessions -->
           <div *ngIf="team.excalidrawSessions && team.excalidrawSessions.length > 0" class="mb-6">
-            <h2 class="text-xl font-semibold mb-3" style="color: #2D2622;">Excalidraw Sessions</h2>
+            <h2 class="text-xl font-semibold mb-3" style="color: #2D2622;">Sesiones Excalidraw</h2>
             <div class="space-y-2">
               <div 
                 *ngFor="let excSession of team.excalidrawSessions" 
@@ -351,9 +363,13 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 style="border: 1px solid #EAE3DB;">
                 <div class="flex-1">
                   <p class="font-semibold" style="color: #2D2622;">{{ excSession.name }}</p>
-                  <p class="text-sm" style="color: #4A3B33;">Created {{ excSession.createdAt | date:'mediumDate' }}</p>
-                  <p *ngIf="excSession.linkedToCodeSessionId" class="text-sm mt-1" style="color: #8B5E3C;">
-                    🔗 Linked to: {{ getCodeSessionName(excSession.linkedToCodeSessionId) }}
+                  <p class="text-sm" style="color: #4A3B33;">Creado {{ excSession.createdAt | date:'mediumDate' }}</p>
+                  <p *ngIf="excSession.linkedToCodeSessionId" class="text-sm mt-1 flex items-center gap-1" style="color: #8B5E3C;">
+                    <!-- Lucide Link icon -->
+                    <svg class="w-3 h-3 inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                    </svg>
+                    Vinculado a: {{ getCodeSessionName(excSession.linkedToCodeSessionId) }}
                   </p>
                 </div>
                 <div class="flex gap-2">
@@ -362,21 +378,21 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                     target="_blank"
                     class="text-white px-4 py-2 rounded-[12px] text-sm"
                     style="background-color: #8B5E3C;">
-                    Open Board
+                    Abrir tablero
                   </a>
                   <button
                     *ngIf="isUserInTeam()"
                     (click)="openEditExcalidrawSessionModal(excSession)"
                     class="px-3 py-2 rounded-[12px] text-sm"
                     style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
-                    Edit
+                    Editar
                   </button>
                   <button
                     *ngIf="isUserInTeam() && excSession._id"
                     (click)="deleteExcalidrawSession(excSession._id!)"
                     class="px-3 py-2 rounded-[12px] text-sm text-red-600"
                     style="background-color: #FCF9F5; border: 1px solid #EAE3DB;">
-                    Delete
+                    Eliminar
                   </button>
                 </div>
               </div>

@@ -42,7 +42,7 @@ interface FilterData {
               <svg class="w-6 h-6" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              Calendar
+              Calendario
             </h2>
             <div class="flex gap-2">
               <!-- View Toggle -->
@@ -58,7 +58,7 @@ interface FilterData {
                   <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
                   </svg>
-                  List
+                  Lista
                 </button>
                 <button 
                   (click)="viewMode = 'calendar'"
@@ -71,14 +71,14 @@ interface FilterData {
                   <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
-                  Calendar
+                  Calendario
                 </button>
               </div>
               <button 
                 (click)="showCreateModal = true"
                 class="text-white px-4 py-2 rounded-[12px] font-medium"
                 style="background-color: #8B5E3C;">
-                Add Event
+                Agregar evento
               </button>
             </div>
           </div>
@@ -87,40 +87,40 @@ interface FilterData {
           <div class="bg-white rounded-[12px] p-4 mb-6" style="border: 1px solid #EAE3DB;">
             <div class="flex flex-wrap gap-4 items-end">
               <div>
-                <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Type</label>
+                <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Tipo</label>
                 <select 
                   [(ngModel)]="filters.type"
                   (ngModelChange)="applyFilters()"
                   class="rounded-[12px] px-3 py-2 text-sm"
                   style="border: 1px solid #EAE3DB; color: #2D2622;">
-                  <option value="">All Types</option>
-                  <option value="contest">🏆 Contest</option>
-                  <option value="practice">💻 Practice</option>
-                  <option value="training">📚 Training</option>
-                  <option value="meeting">👥 Meeting</option>
-                  <option value="deadline">⏰ Deadline</option>
-                  <option value="clase_gpc">🎓 Clase GPC</option>
-                  <option value="rpc">🌐 RPC</option>
-                  <option value="roadmap">🗺️ Roadmap</option>
-                  <option value="problem">🧩 Problem</option>
-                  <option value="other">📌 Other</option>
+                  <option value="">Todos los tipos</option>
+                  <option value="contest">Concurso</option>
+                  <option value="practice">Práctica</option>
+                  <option value="training">Entrenamiento</option>
+                  <option value="meeting">Reunión</option>
+                  <option value="deadline">Fecha límite</option>
+                  <option value="clase_gpc">Clase GPC</option>
+                  <option value="rpc">RPC</option>
+                  <option value="roadmap">Roadmap</option>
+                  <option value="problem">Problema</option>
+                  <option value="other">Otro</option>
                 </select>
               </div>
               <div>
-                <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Scope</label>
+                <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Ámbito</label>
                 <select 
                   [(ngModel)]="filters.scope"
                   (ngModelChange)="applyFilters()"
                   class="rounded-[12px] px-3 py-2 text-sm"
                   style="border: 1px solid #EAE3DB; color: #2D2622;">
-                  <option value="">All Scopes</option>
+                  <option value="">Todos los ámbitos</option>
                   <option value="personal">Personal</option>
-                  <option value="team">Team</option>
-                  <option value="public">Public</option>
+                  <option value="team">Equipo</option>
+                  <option value="public">Público</option>
                 </select>
               </div>
               <div>
-                <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Start Date</label>
+                <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Fecha inicio</label>
                 <input 
                   type="date"
                   [(ngModel)]="filters.startDate"
@@ -129,7 +129,7 @@ interface FilterData {
                   style="border: 1px solid #EAE3DB; color: #2D2622;">
               </div>
               <div>
-                <label class="block text-sm font-medium mb-1" style="color: #2D2622;">End Date</label>
+                <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Fecha fin</label>
                 <input 
                   type="date"
                   [(ngModel)]="filters.endDate"
@@ -141,7 +141,7 @@ interface FilterData {
                 (click)="clearFilters()"
                 class="px-4 py-2 rounded-[12px] text-sm"
                 style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
-                Clear Filters
+                Limpiar filtros
               </button>
             </div>
           </div>
@@ -158,13 +158,13 @@ interface FilterData {
 
           <!-- Loading State -->
           <div *ngIf="loading" class="text-center py-8">
-            <p style="color: #4A3B33;">Loading events...</p>
+            <p style="color: #4A3B33;">Cargando eventos...</p>
           </div>
 
           <!-- List View -->
           <div *ngIf="!loading && viewMode === 'list'" class="space-y-4">
             <div *ngIf="filteredEvents.length === 0" class="bg-white rounded-[12px] p-8 text-center" style="border: 1px solid #EAE3DB;">
-              <p style="color: #4A3B33;">No events found. Create your first event!</p>
+              <p style="color: #4A3B33;">No se encontraron eventos. ¡Crea tu primer evento!</p>
             </div>
 
             <div 
@@ -175,18 +175,18 @@ interface FilterData {
                 <div class="flex-1">
                   <div class="flex items-center gap-2 mb-2">
                     <h3 class="text-xl font-semibold" style="color: #2D2622;">{{ event.title }}</h3>
-                    <span class="text-2xl">{{ getEventIcon(event.type) }}</span>
+                    <span [innerHTML]="getEventIconSvg(event.type)"></span>
                   </div>
                   <p *ngIf="event.description" class="mb-3" style="color: #4A3B33;">{{ event.description }}</p>
                   <div class="text-sm space-y-1" style="color: #4A3B33;">
-                    <p><strong>Start:</strong> {{ event.startTime | date:'medium' }}</p>
-                    <p><strong>End:</strong> {{ event.endTime | date:'medium' }}</p>
+                    <p><strong>Inicio:</strong> {{ event.startTime | date:'medium' }}</p>
+                    <p><strong>Fin:</strong> {{ event.endTime | date:'medium' }}</p>
                     <div class="flex gap-2 mt-2">
                       <span class="px-2 py-1 rounded-[12px] text-xs" [ngStyle]="getEventTypeStyleObject(event.type)">
                         {{ getEventTypeName(event.type) }}
                       </span>
                       <span class="px-2 py-1 rounded-[12px] text-xs" [ngStyle]="getEventScopeStyleObject(event.eventScope)">
-                        {{ event.eventScope }}
+                        {{ getEventScopeName(event.eventScope) }}
                       </span>
                     </div>
                   </div>
@@ -197,14 +197,14 @@ interface FilterData {
                     (click)="editEvent(event)"
                     class="text-white px-3 py-1 rounded-[12px] text-sm"
                     style="background-color: #D4A373;">
-                    Edit
+                    Editar
                   </button>
                   <button 
                     *ngIf="canDeleteEvent(event)"
                     (click)="deleteEvent(event._id!)"
                     class="px-3 py-1 rounded-[12px] text-sm text-red-600"
                     style="background-color: #FCF9F5; border: 1px solid #EAE3DB;">
-                    Delete
+                    Eliminar
                   </button>
                 </div>
               </div>
@@ -219,14 +219,14 @@ interface FilterData {
                 (click)="previousMonth()"
                 class="px-3 py-1 rounded-[12px]"
                 style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
-                ← Previous
+                ← Anterior
               </button>
               <h3 class="text-lg font-semibold" style="color: #2D2622;">{{ currentMonth | date:'MMMM yyyy' }}</h3>
               <button 
                 (click)="nextMonth()"
                 class="px-3 py-1 rounded-[12px]"
                 style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
-                Next →
+                Siguiente →
               </button>
             </div>
             
@@ -257,13 +257,13 @@ interface FilterData {
                     class="text-xs p-1 rounded-[12px] cursor-pointer truncate"
                     [ngStyle]="getEventTypeStyleObject(event.type)"
                     [title]="event.title">
-                    {{ getEventIcon(event.type) }} {{ event.title }}
+                    {{ event.title }}
                   </div>
                   <div 
                     *ngIf="day.events.length > 3" 
                     class="text-xs pl-1"
                     style="color: #4A3B33;">
-                    +{{ day.events.length - 3 }} more
+                    +{{ day.events.length - 3 }} más
                   </div>
                 </div>
               </div>
@@ -278,24 +278,24 @@ interface FilterData {
         class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4"
         (click)="showCreateModal = false">
         <div class="bg-white rounded-[12px] p-6 w-full max-w-md max-h-screen overflow-y-auto" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
-          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">{{ editingEvent ? 'Edit Event' : 'Create New Event' }}</h3>
+          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">{{ editingEvent ? 'Editar evento' : 'Crear nuevo evento' }}</h3>
           
           <div class="space-y-4">
             <div>
-              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Title *</label>
+              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Título *</label>
               <input 
                 type="text"
                 [(ngModel)]="formEvent.title"
-                placeholder="Event title"
+                placeholder="Título del evento"
                 class="w-full rounded-[12px] px-4 py-3"
                 style="border: 1px solid #EAE3DB; color: #2D2622;">
             </div>
 
             <div>
-              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Description</label>
+              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Descripción</label>
               <textarea 
                 [(ngModel)]="formEvent.description"
-                placeholder="Event description"
+                placeholder="Descripción del evento"
                 rows="3"
                 class="w-full rounded-[12px] px-4 py-3"
                 style="border: 1px solid #EAE3DB; color: #2D2622;">
@@ -303,38 +303,38 @@ interface FilterData {
             </div>
 
             <div>
-              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Type *</label>
+              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Tipo *</label>
               <select 
                 [(ngModel)]="formEvent.type"
                 class="w-full rounded-[12px] px-4 py-3"
                 style="border: 1px solid #EAE3DB; color: #2D2622;">
-                <option value="contest">🏆 Contest</option>
-                <option value="practice">💻 Practice</option>
-                <option value="training">📚 Training</option>
-                <option value="meeting">👥 Meeting</option>
-                <option value="deadline">⏰ Deadline</option>
-                <option value="clase_gpc">🎓 Clase GPC</option>
-                <option value="rpc">🌐 RPC</option>
-                <option value="roadmap">🗺️ Roadmap</option>
-                <option value="problem">🧩 Problem</option>
-                <option value="other">📌 Other</option>
+                <option value="contest">Concurso</option>
+                <option value="practice">Práctica</option>
+                <option value="training">Entrenamiento</option>
+                <option value="meeting">Reunión</option>
+                <option value="deadline">Fecha límite</option>
+                <option value="clase_gpc">Clase GPC</option>
+                <option value="rpc">RPC</option>
+                <option value="roadmap">Roadmap</option>
+                <option value="problem">Problema</option>
+                <option value="other">Otro</option>
               </select>
             </div>
 
             <div>
-              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Scope *</label>
+              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Ámbito *</label>
               <select 
                 [(ngModel)]="formEvent.eventScope"
                 class="w-full rounded-[12px] px-4 py-3"
                 style="border: 1px solid #EAE3DB; color: #2D2622;">
                 <option value="personal">Personal</option>
-                <option value="team">Team</option>
-                <option value="public">Public</option>
+                <option value="team">Equipo</option>
+                <option value="public">Público</option>
               </select>
             </div>
 
             <div>
-              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Start Time *</label>
+              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Hora de inicio *</label>
               <input 
                 type="datetime-local"
                 [(ngModel)]="formEvent.startTime"
@@ -343,7 +343,7 @@ interface FilterData {
             </div>
 
             <div>
-              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">End Time *</label>
+              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Hora de fin *</label>
               <input 
                 type="datetime-local"
                 [(ngModel)]="formEvent.endTime"
@@ -357,7 +357,7 @@ interface FilterData {
                 [(ngModel)]="formEvent.isPublic"
                 id="isPublic"
                 class="mr-2 rounded">
-              <label for="isPublic" class="text-sm" style="color: #4A3B33;">Make this event public</label>
+              <label for="isPublic" class="text-sm" style="color: #4A3B33;">Hacer este evento público</label>
             </div>
           </div>
 
@@ -366,14 +366,14 @@ interface FilterData {
               (click)="closeModal()"
               class="px-4 py-2 rounded-[12px]"
               style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
-              Cancel
+              Cancelar
             </button>
             <button 
               (click)="saveEvent()"
               [disabled]="saving || !isFormValid()"
               class="text-white px-4 py-2 rounded-[12px] disabled:opacity-50"
               style="background-color: #8B5E3C;">
-              {{ saving ? 'Saving...' : (editingEvent ? 'Update' : 'Create') }}
+              {{ saving ? 'Guardando...' : (editingEvent ? 'Actualizar' : 'Crear') }}
             </button>
           </div>
         </div>
@@ -398,7 +398,7 @@ export class CalendarComponent implements OnInit {
   
   // Calendar view properties
   currentMonth: Date = new Date();
-  weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  weekDays = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
   calendarDays: Array<{ date: Date; isCurrentMonth: boolean; isToday: boolean; events: CalendarEvent[] }> = [];
 
   // Filter properties
@@ -664,35 +664,50 @@ export class CalendarComponent implements OnInit {
   }
 
   getEventIcon(type: string): string {
+    // Returns empty string - icons now handled by getEventIconSvg
+    return '';
+  }
+
+  getEventIconSvg(type: string): string {
+    // SVG icons for event types following the Matte-Drift design pattern
     const icons: { [key: string]: string } = {
-      'contest': '🏆',
-      'practice': '💻',
-      'training': '📚',
-      'meeting': '👥',
-      'deadline': '⏰',
-      'clase_gpc': '🎓',
-      'rpc': '🌐',
-      'roadmap': '🗺️',
-      'problem': '🧩',
-      'other': '📌'
+      'contest': '<svg class="w-5 h-5 inline" style="color: #8B5E3C;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9H4a2 2 0 01-2-2V5a2 2 0 012-2h2M18 9h2a2 2 0 002-2V5a2 2 0 00-2-2h-2M6 3v6a6 6 0 006 6v0a6 6 0 006-6V3M9 21h6M12 15v6" /></svg>',
+      'practice': '<svg class="w-5 h-5 inline" style="color: #4A90A4;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>',
+      'training': '<svg class="w-5 h-5 inline" style="color: #8B5E3C;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>',
+      'meeting': '<svg class="w-5 h-5 inline" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>',
+      'deadline': '<svg class="w-5 h-5 inline" style="color: #A05E4A;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2" /></svg>',
+      'clase_gpc': '<svg class="w-5 h-5 inline" style="color: #8B5E3C;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>',
+      'rpc': '<svg class="w-5 h-5 inline" style="color: #4A90A4;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>',
+      'roadmap': '<svg class="w-5 h-5 inline" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" /></svg>',
+      'problem': '<svg class="w-5 h-5 inline" style="color: #8B5E3C;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" /></svg>',
+      'other': '<svg class="w-5 h-5 inline" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg>'
     };
-    return icons[type] || '📌';
+    return icons[type] || icons['other'];
   }
 
   getEventTypeName(type: string): string {
     const names: { [key: string]: string } = {
-      'contest': 'Contest',
-      'practice': 'Practice',
-      'training': 'Training',
-      'meeting': 'Meeting',
-      'deadline': 'Deadline',
+      'contest': 'Concurso',
+      'practice': 'Práctica',
+      'training': 'Entrenamiento',
+      'meeting': 'Reunión',
+      'deadline': 'Fecha límite',
       'clase_gpc': 'Clase GPC',
       'rpc': 'RPC',
       'roadmap': 'Roadmap',
-      'problem': 'Problem',
-      'other': 'Other'
+      'problem': 'Problema',
+      'other': 'Otro'
     };
     return names[type] || type;
+  }
+
+  getEventScopeName(scope: string): string {
+    const names: { [key: string]: string } = {
+      'personal': 'Personal',
+      'team': 'Equipo',
+      'public': 'Público'
+    };
+    return names[scope] || scope;
   }
 
   getEventTypeClass(type: string): string {
