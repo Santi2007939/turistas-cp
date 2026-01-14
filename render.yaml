@@ -45,7 +45,7 @@ services:
     name: turistas-cp-frontend
     runtime: static
     buildCommand: cd client && npm install && npm run build
-    staticPublishPath: ./client/dist/client/browser
+    staticPublishPath: client/dist/client/browser
     routes:
       - type: rewrite
         source: /*
