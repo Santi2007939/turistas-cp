@@ -1,4 +1,5 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import PersonalNode from '../models/PersonalNode.js';
 import User from '../models/User.js';
 import { protect } from '../middlewares/auth.js';
@@ -124,6 +125,14 @@ router.get('/member/:memberId', readRateLimiter, asyncHandler(async (req, res) =
 // @access  Private
 router.get('/node/:nodeId', readRateLimiter, asyncHandler(async (req, res) => {
   const { nodeId } = req.params;
+  
+  // Validate that nodeId is a valid MongoDB ObjectId
+  if (!mongoose.Types.ObjectId.isValid(nodeId)) {
+    return res.status(400).json({
+      success: false,
+      message: 'Invalid node ID format'
+    });
+  }
   
   // Get the specific node
   const node = await PersonalNode.findById(nodeId)

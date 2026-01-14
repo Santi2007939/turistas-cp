@@ -827,7 +827,7 @@ export class SubtopicDetailComponent implements OnInit {
   error: string | null = null;
   activeTab: { [key: string]: string } = {};
   showAddSubtopicModal = false;
-  isOwner = true; // Whether current user owns this roadmap node
+  isOwner = false; // Whether current user owns this roadmap node (default false for security)
   
   newSubtopic: Subtopic = {
     name: '',
@@ -1234,7 +1234,7 @@ export class SubtopicDetailComponent implements OnInit {
 
     // Create linked problem object without problemId (inline/theoretical problem)
     const linkedProblem: LinkedProblem = {
-      problemId: '',  // Empty string indicates inline problem
+      problemId: undefined,  // undefined indicates inline problem (not from library)
       title: this.newInlineProblem.title,
       description: this.newInlineProblem.description,
       link: this.newInlineProblem.link,
