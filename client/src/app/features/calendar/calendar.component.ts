@@ -14,6 +14,8 @@ interface EventFormData {
   startTime: string;
   endTime: string;
   isPublic: boolean;
+  reminderEnabled: boolean;
+  reminderMinutesBefore: number;
 }
 
 interface FilterData {
@@ -359,6 +361,42 @@ interface FilterData {
                 class="mr-2 rounded">
               <label for="isPublic" class="text-sm" style="color: #4A3B33;">Hacer este evento público</label>
             </div>
+
+            <!-- Reminder/Notification Settings -->
+            <div class="border-t pt-4 mt-2" style="border-color: #EAE3DB;">
+              <div class="flex items-center mb-3">
+                <input 
+                  type="checkbox"
+                  [(ngModel)]="formEvent.reminderEnabled"
+                  id="reminderEnabled"
+                  class="mr-2 rounded">
+                <label for="reminderEnabled" class="text-sm font-medium" style="color: #2D2622;">
+                  <!-- Lucide Bell icon -->
+                  <svg class="w-4 h-4 inline mr-1" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                  </svg>
+                  Habilitar recordatorio
+                </label>
+              </div>
+              <div *ngIf="formEvent.reminderEnabled" class="ml-6">
+                <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Notificar antes de:</label>
+                <select 
+                  [(ngModel)]="formEvent.reminderMinutesBefore"
+                  class="w-full rounded-[12px] px-4 py-3"
+                  style="border: 1px solid #EAE3DB; color: #2D2622;">
+                  <option [value]="5">5 minutos</option>
+                  <option [value]="10">10 minutos</option>
+                  <option [value]="15">15 minutos</option>
+                  <option [value]="30">30 minutos</option>
+                  <option [value]="60">1 hora</option>
+                  <option [value]="120">2 horas</option>
+                  <option [value]="1440">1 día</option>
+                </select>
+                <p class="text-xs mt-1" style="color: #4A3B33;">
+                  Se mostrará una notificación en la página antes del evento
+                </p>
+              </div>
+            </div>
           </div>
 
           <div class="flex gap-2 justify-end mt-6">
@@ -416,7 +454,9 @@ export class CalendarComponent implements OnInit {
     eventScope: 'personal',
     startTime: '',
     endTime: '',
-    isPublic: false
+    isPublic: false,
+    reminderEnabled: false,
+    reminderMinutesBefore: 30
   };
 
   constructor(
@@ -558,7 +598,9 @@ export class CalendarComponent implements OnInit {
       eventScope: event.eventScope,
       startTime: this.formatDateForInput(event.startTime),
       endTime: this.formatDateForInput(event.endTime),
-      isPublic: event.isPublic
+      isPublic: event.isPublic,
+      reminderEnabled: (event as any).reminder?.enabled || false,
+      reminderMinutesBefore: (event as any).reminder?.minutesBefore || 30
     };
     this.showCreateModal = true;
   }
@@ -569,7 +611,7 @@ export class CalendarComponent implements OnInit {
     this.saving = true;
     this.error = null;
 
-    const eventData = {
+    const eventData: any = {
       title: this.formEvent.title,
       description: this.formEvent.description,
       type: this.formEvent.type,
@@ -579,20 +621,35 @@ export class CalendarComponent implements OnInit {
       isPublic: this.formEvent.isPublic
     };
 
+    // Add reminder settings if enabled
+    if (this.formEvent.reminderEnabled) {
+      eventData.reminder = {
+        enabled: true,
+        minutesBefore: this.formEvent.reminderMinutesBefore,
+        sent: false
+      };
+    } else {
+      eventData.reminder = {
+        enabled: false,
+        minutesBefore: 30,
+        sent: false
+      };
+    }
+
     const operation = this.editingEvent
       ? this.calendarService.updateEvent(this.editingEvent._id!, eventData)
       : this.calendarService.createEvent(eventData);
 
     operation.subscribe({
       next: () => {
-        this.successMessage = `Event ${this.editingEvent ? 'updated' : 'created'} successfully!`;
+        this.successMessage = `Evento ${this.editingEvent ? 'actualizado' : 'creado'} exitosamente!`;
         setTimeout(() => this.successMessage = null, 3000);
         this.closeModal();
         this.loadEvents();
         this.saving = false;
       },
       error: (err) => {
-        this.error = `Failed to ${this.editingEvent ? 'update' : 'create'} event.`;
+        this.error = `Error al ${this.editingEvent ? 'actualizar' : 'crear'} el evento.`;
         this.saving = false;
         console.error('Error saving event:', err);
       }
@@ -600,18 +657,18 @@ export class CalendarComponent implements OnInit {
   }
 
   deleteEvent(id: string): void {
-    if (!confirm('Are you sure you want to delete this event?')) {
+    if (!confirm('¿Estás seguro de que quieres eliminar este evento?')) {
       return;
     }
 
     this.calendarService.deleteEvent(id).subscribe({
       next: () => {
-        this.successMessage = 'Event deleted successfully!';
+        this.successMessage = '¡Evento eliminado exitosamente!';
         setTimeout(() => this.successMessage = null, 3000);
         this.loadEvents();
       },
       error: (err) => {
-        this.error = 'Failed to delete event.';
+        this.error = 'Error al eliminar el evento.';
         console.error('Error deleting event:', err);
       }
     });
@@ -627,7 +684,9 @@ export class CalendarComponent implements OnInit {
       eventScope: 'personal',
       startTime: '',
       endTime: '',
-      isPublic: false
+      isPublic: false,
+      reminderEnabled: false,
+      reminderMinutesBefore: 30
     };
   }
 

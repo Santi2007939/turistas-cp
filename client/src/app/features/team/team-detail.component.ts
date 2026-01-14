@@ -299,7 +299,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
           <!-- Code Sessions List -->
           <div *ngIf="team.codeSessions && team.codeSessions.length > 0" class="mb-6">
-            <h2 class="text-xl font-semibold mb-3" style="color: #2D2622;">USACO IDE Sessions</h2>
+            <h2 class="text-xl font-semibold mb-3" style="color: #2D2622;">Sesiones USACO IDE</h2>
             <div class="space-y-3">
               <div 
                 *ngFor="let session of team.codeSessions" 
@@ -308,7 +308,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <div class="flex justify-between items-start mb-2">
                   <div class="flex-1">
                     <p class="font-semibold" style="color: #2D2622;">{{ session.name }}</p>
-                    <p class="text-sm" style="color: #4A3B33;">Created {{ session.createdAt | date:'mediumDate' }}</p>
+                    <p class="text-sm" style="color: #4A3B33;">Creado {{ session.createdAt | date:'mediumDate' }}</p>
                   </div>
                   <div class="flex gap-2">
                     <a 
@@ -316,21 +316,21 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                       target="_blank"
                       class="text-white px-4 py-2 rounded-[12px] text-sm"
                       style="background-color: #8B5E3C;">
-                      Open IDE
+                      Abrir IDE
                     </a>
                     <button
                       *ngIf="isUserInTeam()"
                       (click)="openRenameSessionModal(session)"
                       class="px-3 py-2 rounded-[12px] text-sm"
                       style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
-                      Rename
+                      Renombrar
                     </button>
                     <button
                       *ngIf="isUserInTeam() && session._id"
                       (click)="deleteSession(session._id!)"
                       class="px-3 py-2 rounded-[12px] text-sm text-red-600"
                       style="background-color: #FCF9F5; border: 1px solid #EAE3DB;">
-                      Delete
+                      Eliminar
                     </button>
                   </div>
                 </div>

@@ -56,6 +56,25 @@ const calendarEventSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  // Notification/Reminder settings
+  reminder: {
+    enabled: {
+      type: Boolean,
+      default: false
+    },
+    minutesBefore: {
+      type: Number,
+      default: 30,
+      enum: [5, 10, 15, 30, 60, 120, 1440] // 5min, 10min, 15min, 30min, 1h, 2h, 1 day
+    },
+    sent: {
+      type: Boolean,
+      default: false
+    },
+    sentAt: {
+      type: Date
+    }
+  },
   reminderSent: {
     type: Boolean,
     default: false
@@ -86,6 +105,8 @@ calendarEventSchema.index({ startTime: 1 });
 calendarEventSchema.index({ teamId: 1, startTime: 1 });
 calendarEventSchema.index({ ownerId: 1, startTime: 1 });
 calendarEventSchema.index({ eventScope: 1, teamId: 1 });
+// Index for reminder queries
+calendarEventSchema.index({ 'reminder.enabled': 1, 'reminder.sent': 1, startTime: 1 });
 
 const CalendarEvent = mongoose.model('CalendarEvent', calendarEventSchema);
 
