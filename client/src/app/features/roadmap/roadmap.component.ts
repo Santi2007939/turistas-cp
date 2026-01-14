@@ -184,7 +184,10 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
         <div *ngIf="error" class="bg-white rounded-[12px] p-6 mb-6 border-l-4" style="border-color: #8B5E3C; border-right: 1px solid #EAE3DB; border-top: 1px solid #EAE3DB; border-bottom: 1px solid #EAE3DB;">
           <div class="flex items-start">
             <div class="flex-shrink-0">
-              <span class="text-2xl">⚠️</span>
+              <!-- Lucide AlertTriangle icon -->
+              <svg class="w-6 h-6" style="color: #8B5E3C;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
             </div>
             <div class="ml-3">
               <h3 class="font-semibold" style="color: #8B5E3C;">Error loading roadmap</h3>
@@ -344,7 +347,11 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
               <div class="flex items-center gap-4 text-xs">
                 <div *ngIf="node.lastPracticed" class="flex items-center gap-2" style="color: #4A3B33;">
-                  <span>🕐</span>
+                  <!-- Lucide Clock icon -->
+                  <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="12" cy="12" r="10" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2" />
+                  </svg>
                   <span>Last practiced: {{ node.lastPracticed | date:'short' }}</span>
                 </div>
                 <div *ngIf="node.dueDate" class="flex items-center gap-2"
@@ -352,9 +359,18 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                        'color': isOverdue(node.dueDate) ? '#dc2626' : isDueSoon(node.dueDate) ? '#D4A373' : '#4A3B33',
                        'font-weight': isOverdue(node.dueDate) ? 'bold' : 'normal'
                      }">
-                  <span>📅</span>
+                  <!-- Lucide Calendar icon -->
+                  <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                  </svg>
                   <span>Due: {{ node.dueDate | date:'short' }}</span>
-                  <span *ngIf="isOverdue(node.dueDate)">⚠️</span>
+                  <!-- Lucide AlertTriangle icon for overdue -->
+                  <svg *ngIf="isOverdue(node.dueDate)" class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
                 </div>
               </div>
             </div>

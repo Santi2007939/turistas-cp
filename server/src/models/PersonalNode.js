@@ -40,7 +40,7 @@ const subtopicSchema = new mongoose.Schema({
     problemId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Problem',
-      required: true
+      required: false  // Optional - allows creating inline theoretical problems
     },
     title: {
       type: String,

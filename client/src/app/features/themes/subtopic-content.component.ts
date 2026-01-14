@@ -166,8 +166,14 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             <!-- Shared Theory -->
             <div *ngIf="activeTab === 'theory'">
               <div class="rounded-[12px] p-4 mb-4" style="background-color: #FCF9F5; border-left: 4px solid #8B5E3C;">
-                <p class="text-sm" style="color: #4A3B33;">
-                  🌐 Shared theory contributed by team members
+                <p class="text-sm flex items-center gap-2" style="color: #4A3B33;">
+                  <!-- Lucide Globe icon -->
+                  <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="2" y1="12" x2="22" y2="12" />
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                  </svg>
+                  Shared theory contributed by team members
                 </p>
               </div>
               <div 
