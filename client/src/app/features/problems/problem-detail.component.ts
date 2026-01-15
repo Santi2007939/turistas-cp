@@ -203,16 +203,26 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                       {{ formatDate(entry.createdAt) }}
                     </span>
                   </div>
-                  <button 
-                    *ngIf="canEdit"
-                    (click)="deleteMetacognitionEntry(i)"
-                    class="text-sm"
-                    style="color: #A05E4A;">
-                    <!-- Lucide X icon -->
-                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
+                  <div *ngIf="canEdit" class="flex items-center gap-2">
+                    <button 
+                      (click)="editMetacognitionEntry(i)"
+                      class="text-sm"
+                      style="color: #8B5E3C;">
+                      <!-- Lucide Pencil icon -->
+                      <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                      </svg>
+                    </button>
+                    <button 
+                      (click)="deleteMetacognitionEntry(i)"
+                      class="text-sm"
+                      style="color: #A05E4A;">
+                      <!-- Lucide X icon -->
+                      <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
                 <p class="leading-relaxed whitespace-pre-wrap" style="color: #2D2622;">{{ entry.description }}</p>
               </div>
@@ -256,16 +266,26 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
                 <span class="flex-1" style="color: #2D2622;">{{ takeaway }}</span>
-                <button 
-                  *ngIf="canEdit"
-                  (click)="deleteTakeaway(i)"
-                  class="text-sm flex-shrink-0"
-                  style="color: #A05E4A;">
-                  <!-- Lucide X icon -->
-                  <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
+                <div *ngIf="canEdit" class="flex items-center gap-2 flex-shrink-0">
+                  <button 
+                    (click)="editTakeaway(i)"
+                    class="text-sm"
+                    style="color: #8B5E3C;">
+                    <!-- Lucide Pencil icon -->
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                    </svg>
+                  </button>
+                  <button 
+                    (click)="deleteTakeaway(i)"
+                    class="text-sm"
+                    style="color: #A05E4A;">
+                    <!-- Lucide X icon -->
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
               </li>
             </ul>
           </div>
@@ -309,7 +329,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
         class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4"
         (click)="cancelMetacognitionEntry()">
         <div class="bg-white rounded-[12px] p-6 w-full max-w-lg" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
-          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">New Metacognition Entry</h3>
+          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">{{ editingMetacognitionIndex !== null ? 'Edit' : 'New' }} Metacognition Entry</h3>
           
           <div class="space-y-4">
             <div>
@@ -358,7 +378,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
         class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4"
         (click)="cancelTakeaway()">
         <div class="bg-white rounded-[12px] p-6 w-full max-w-lg" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
-          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">New Key Learning</h3>
+          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">{{ editingTakeawayIndex !== null ? 'Edit' : 'New' }} Key Learning</h3>
           
           <div class="space-y-4">
             <div>
@@ -489,9 +509,11 @@ export class ProblemDetailComponent implements OnInit {
     time: 0,
     description: ''
   };
+  editingMetacognitionIndex: number | null = null;
 
   showTakeawayModal = false;
   newTakeaway = '';
+  editingTakeawayIndex: number | null = null;
 
   showThemesModal = false;
   availableThemes: Theme[] = [];
@@ -660,11 +682,21 @@ export class ProblemDetailComponent implements OnInit {
   // Metacognition methods
   addMetacognitionEntry(): void {
     this.showMetacognitionModal = true;
+    this.editingMetacognitionIndex = null;
     this.newMetacognition = { time: 0, description: '' };
+  }
+
+  editMetacognitionEntry(index: number): void {
+    if (!this.problem || !this.problem.metacognition) return;
+    const entry = this.problem.metacognition[index];
+    this.showMetacognitionModal = true;
+    this.editingMetacognitionIndex = index;
+    this.newMetacognition = { time: entry.time, description: entry.description };
   }
 
   cancelMetacognitionEntry(): void {
     this.showMetacognitionModal = false;
+    this.editingMetacognitionIndex = null;
     this.newMetacognition = { time: 0, description: '' };
   }
 
@@ -672,20 +704,34 @@ export class ProblemDetailComponent implements OnInit {
     if (!this.problem || !this.newMetacognition.time || !this.newMetacognition.description) return;
 
     const currentMetacognition = this.problem.metacognition || [];
-    const updatedMetacognition = [
-      ...currentMetacognition,
-      { ...this.newMetacognition, createdAt: new Date() }
-    ];
+    let updatedMetacognition: MetacognitionEntry[];
+
+    if (this.editingMetacognitionIndex !== null) {
+      // Edit existing entry
+      updatedMetacognition = [...currentMetacognition];
+      updatedMetacognition[this.editingMetacognitionIndex] = {
+        ...updatedMetacognition[this.editingMetacognitionIndex],
+        time: this.newMetacognition.time,
+        description: this.newMetacognition.description
+      };
+    } else {
+      // Add new entry
+      updatedMetacognition = [
+        ...currentMetacognition,
+        { ...this.newMetacognition, createdAt: new Date() }
+      ];
+    }
 
     this.problemsService.updateProblem(this.problem._id, { metacognition: updatedMetacognition }).subscribe({
       next: (response) => {
         this.problem = response.data.problem;
         this.showMetacognitionModal = false;
+        this.editingMetacognitionIndex = null;
         this.newMetacognition = { time: 0, description: '' };
       },
       error: (err) => {
-        this.error = 'Error adding metacognition entry.';
-        console.error('Error adding metacognition entry:', err);
+        this.error = this.editingMetacognitionIndex !== null ? 'Error updating metacognition entry.' : 'Error adding metacognition entry.';
+        console.error('Error saving metacognition entry:', err);
       }
     });
   }
@@ -710,11 +756,20 @@ export class ProblemDetailComponent implements OnInit {
   // Takeaways methods
   addTakeaway(): void {
     this.showTakeawayModal = true;
+    this.editingTakeawayIndex = null;
     this.newTakeaway = '';
+  }
+
+  editTakeaway(index: number): void {
+    if (!this.problem || !this.problem.takeaways) return;
+    this.showTakeawayModal = true;
+    this.editingTakeawayIndex = index;
+    this.newTakeaway = this.problem.takeaways[index];
   }
 
   cancelTakeaway(): void {
     this.showTakeawayModal = false;
+    this.editingTakeawayIndex = null;
     this.newTakeaway = '';
   }
 
@@ -722,20 +777,30 @@ export class ProblemDetailComponent implements OnInit {
     if (!this.problem || !this.newTakeaway) return;
 
     const currentTakeaways = this.problem.takeaways || [];
-    const updatedTakeaways = [
-      ...currentTakeaways,
-      this.newTakeaway
-    ];
+    let updatedTakeaways: string[];
+
+    if (this.editingTakeawayIndex !== null) {
+      // Edit existing takeaway
+      updatedTakeaways = [...currentTakeaways];
+      updatedTakeaways[this.editingTakeawayIndex] = this.newTakeaway;
+    } else {
+      // Add new takeaway
+      updatedTakeaways = [
+        ...currentTakeaways,
+        this.newTakeaway
+      ];
+    }
 
     this.problemsService.updateProblem(this.problem._id, { takeaways: updatedTakeaways }).subscribe({
       next: (response) => {
         this.problem = response.data.problem;
         this.showTakeawayModal = false;
+        this.editingTakeawayIndex = null;
         this.newTakeaway = '';
       },
       error: (err) => {
-        this.error = 'Error adding learning.';
-        console.error('Error adding takeaway:', err);
+        this.error = this.editingTakeawayIndex !== null ? 'Error updating learning.' : 'Error adding learning.';
+        console.error('Error saving takeaway:', err);
       }
     });
   }
