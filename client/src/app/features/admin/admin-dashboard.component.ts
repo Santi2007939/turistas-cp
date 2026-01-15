@@ -133,6 +133,14 @@ interface UserManagement extends User {
                     >
                       {{ user.isCurrentMember ? '★ Remove Member' : '☆ Mark Member' }}
                     </button>
+                    <button
+                      *ngIf="user.role !== 'admin'"
+                      (click)="deleteUser(user._id, user.username)"
+                      class="text-red-600 hover:text-red-900 hover:underline"
+                      title="Delete user permanently"
+                    >
+                      🗑 Delete
+                    </button>
                   </td>
                 </tr>
               </tbody>
@@ -241,6 +249,27 @@ export class AdminDashboardComponent implements OnInit {
       },
       error: (err) => {
         this.error = err.error?.message || 'Error updating member status';
+      }
+    });
+  }
+
+  deleteUser(userId: string, username: string): void {
+    if (!confirm(`Are you sure you want to permanently delete user "${username}"? This action cannot be undone and will also remove them from any teams.`)) {
+      return;
+    }
+    
+    this.error = '';
+    this.successMessage = '';
+    
+    this.http.delete(
+      `${environment.apiUrl}/api/users/${userId}`
+    ).subscribe({
+      next: () => {
+        this.successMessage = `User "${username}" deleted successfully`;
+        this.loadUsers();
+      },
+      error: (err) => {
+        this.error = err.error?.message || 'Error deleting user';
       }
     });
   }

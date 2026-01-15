@@ -153,6 +153,13 @@ export class TeamService {
   }
 
   /**
+   * Remove member from team
+   */
+  removeMember(teamId: string, userId: string): Observable<TeamResponse> {
+    return this.api.delete<TeamResponse>(`/api/team/${teamId}/members/${userId}`);
+  }
+
+  /**
    * Add code session
    */
   addCodeSession(teamId: string, name: string, link: string): Observable<TeamResponse> {

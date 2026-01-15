@@ -257,6 +257,12 @@ export const deleteUser = asyncHandler(async (req, res) => {
     });
   }
 
+  // Remove user from all teams they belong to
+  await TeamConfig.updateMany(
+    { 'members.userId': user._id },
+    { $pull: { members: { userId: user._id } } }
+  );
+
   await user.deleteOne();
 
   res.json({
