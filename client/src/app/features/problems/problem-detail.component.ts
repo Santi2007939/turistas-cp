@@ -723,6 +723,9 @@ export class ProblemDetailComponent implements OnInit {
       ];
     }
 
+    // Sort entries by time (minutes) in ascending order
+    updatedMetacognition.sort((a, b) => a.time - b.time);
+
     this.problemsService.updateProblem(this.problem._id, { metacognition: updatedMetacognition }).subscribe({
       next: (response) => {
         this.problem = response.data.problem;
