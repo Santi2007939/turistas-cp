@@ -1,5 +1,59 @@
 import User from '../models/User.js';
+import TeamConfig from '../models/TeamConfig.js';
 import { asyncHandler } from '../middlewares/error.js';
+
+/**
+ * Helper function to add a user to the main team as a member
+ * @param {string} userId - The user's ID
+ */
+const addUserToTeam = async (userId) => {
+  const teamName = process.env.TEAM_NAME || 'Team Turistas';
+  const team = await TeamConfig.findOne({ name: teamName });
+  
+  if (!team) {
+    console.log(`⚠️  Team "${teamName}" not found. User will not be added to team.`);
+    return;
+  }
+
+  // Check if user is already a member
+  const isAlreadyMember = team.members.some(m => m.userId.toString() === userId.toString());
+  
+  if (isAlreadyMember) {
+    return; // User is already a member
+  }
+
+  // Check if team is full
+  if (team.members.length >= team.maxMembers) {
+    console.log(`⚠️  Team "${teamName}" is full. User will not be added.`);
+    return;
+  }
+
+  // Add user to team (inactive by default, unless there are less than 3 members)
+  team.members.push({
+    userId: userId,
+    isActive: team.members.filter(m => m.isActive).length < 3,
+    joinedAt: new Date()
+  });
+
+  await team.save();
+  console.log(`✅ User ${userId} added to team "${teamName}"`);
+};
+
+/**
+ * Helper function to remove a user from the main team
+ * @param {string} userId - The user's ID
+ */
+const removeUserFromTeam = async (userId) => {
+  const teamName = process.env.TEAM_NAME || 'Team Turistas';
+  const team = await TeamConfig.findOne({ name: teamName });
+  
+  if (!team) {
+    return;
+  }
+
+  team.members = team.members.filter(m => m.userId.toString() !== userId.toString());
+  await team.save();
+};
 
 // @desc    Get all users (Admin)
 // @route   GET /api/users
@@ -48,11 +102,29 @@ export const updateUser = asyncHandler(async (req, res) => {
     });
   }
 
+  const wasActive = user.isActive;
+  const wasCurrentMember = user.isCurrentMember;
+
   if (role !== undefined) user.role = role;
-  if (isActive !== undefined) user.isActive = isActive;
+  if (isActive !== undefined) {
+    user.isActive = isActive;
+    // When activating a user, also set isCurrentMember to true (for non-admin users)
+    if (isActive && !wasActive && user.role !== 'admin') {
+      user.isCurrentMember = true;
+    }
+  }
   if (isCurrentMember !== undefined) user.isCurrentMember = isCurrentMember;
 
   await user.save();
+
+  // If user became a current member, add them to the team
+  if (user.isCurrentMember && !wasCurrentMember && user.role !== 'admin') {
+    await addUserToTeam(user._id);
+  }
+  // If user is no longer a current member, remove them from the team
+  if (!user.isCurrentMember && wasCurrentMember) {
+    await removeUserFromTeam(user._id);
+  }
 
   res.json({
     success: true,
@@ -89,7 +161,38 @@ const updateUserBooleanField = async (userId, fieldName, fieldValue) => {
 export const updateUserStatus = asyncHandler(async (req, res) => {
   const { isActive } = req.body;
 
-  const user = await updateUserBooleanField(req.params.id, 'isActive', isActive);
+  if (typeof isActive !== 'boolean') {
+    return res.status(400).json({
+      success: false,
+      message: 'isActive must be a boolean value'
+    });
+  }
+
+  const user = await User.findById(req.params.id);
+
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      message: 'User not found'
+    });
+  }
+
+  const wasActive = user.isActive;
+  const wasCurrentMember = user.isCurrentMember;
+
+  user.isActive = isActive;
+
+  // When activating a user, also set isCurrentMember to true (for non-admin users)
+  if (isActive && !wasActive && user.role !== 'admin') {
+    user.isCurrentMember = true;
+  }
+
+  await user.save();
+
+  // If user became a current member, add them to the team
+  if (user.isCurrentMember && !wasCurrentMember && user.role !== 'admin') {
+    await addUserToTeam(user._id);
+  }
   
   res.json({
     success: true,
@@ -104,7 +207,35 @@ export const updateUserStatus = asyncHandler(async (req, res) => {
 export const updateUserMember = asyncHandler(async (req, res) => {
   const { isCurrentMember } = req.body;
 
-  const user = await updateUserBooleanField(req.params.id, 'isCurrentMember', isCurrentMember);
+  if (typeof isCurrentMember !== 'boolean') {
+    return res.status(400).json({
+      success: false,
+      message: 'isCurrentMember must be a boolean value'
+    });
+  }
+
+  const user = await User.findById(req.params.id);
+
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      message: 'User not found'
+    });
+  }
+
+  const wasCurrentMember = user.isCurrentMember;
+
+  user.isCurrentMember = isCurrentMember;
+  await user.save();
+
+  // If user became a current member, add them to the team
+  if (isCurrentMember && !wasCurrentMember && user.role !== 'admin') {
+    await addUserToTeam(user._id);
+  }
+  // If user is no longer a current member, remove them from the team
+  if (!isCurrentMember && wasCurrentMember) {
+    await removeUserFromTeam(user._id);
+  }
   
   res.json({
     success: true,
