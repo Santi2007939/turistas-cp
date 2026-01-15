@@ -28,7 +28,7 @@ const addUserToTeam = async (userId) => {
     return;
   }
 
-  // Add user to team (inactive by default, unless there are less than 3 members)
+  // Add user to team (inactive by default, unless there are fewer than 3 members)
   team.members.push({
     userId: userId,
     isActive: team.members.filter(m => m.isActive).length < 3,
