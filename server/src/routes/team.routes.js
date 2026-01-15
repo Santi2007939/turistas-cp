@@ -191,10 +191,13 @@ router.delete('/:id/members/:userId', asyncHandler(async (req, res) => {
   team.members = team.members.filter(m => m.userId.toString() !== req.params.userId);
   await team.save();
 
+  const updatedTeam = await TeamConfig.findById(req.params.id)
+    .populate('coach members.userId', 'username email fullName');
+
   res.json({
     success: true,
     message: 'Member removed successfully',
-    data: { team }
+    data: { team: updatedTeam }
   });
 }));
 
