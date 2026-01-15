@@ -688,6 +688,7 @@ export class ProblemDetailComponent implements OnInit {
 
   editMetacognitionEntry(index: number): void {
     if (!this.problem || !this.problem.metacognition) return;
+    if (index < 0 || index >= this.problem.metacognition.length) return;
     const entry = this.problem.metacognition[index];
     this.showMetacognitionModal = true;
     this.editingMetacognitionIndex = index;
@@ -762,6 +763,7 @@ export class ProblemDetailComponent implements OnInit {
 
   editTakeaway(index: number): void {
     if (!this.problem || !this.problem.takeaways) return;
+    if (index < 0 || index >= this.problem.takeaways.length) return;
     this.showTakeawayModal = true;
     this.editingTakeawayIndex = index;
     this.newTakeaway = this.problem.takeaways[index];
