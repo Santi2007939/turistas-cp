@@ -139,7 +139,7 @@ interface UserManagement extends User {
                       class="text-red-600 hover:text-red-900 hover:underline"
                       title="Delete user permanently"
                     >
-                      🗑 Delete
+                      ✕ Delete
                     </button>
                   </td>
                 </tr>
