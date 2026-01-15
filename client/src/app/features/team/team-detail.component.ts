@@ -111,6 +111,13 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                     style="background-color: #D4A373;">
                     Set Inactive
                   </button>
+                  <button
+                    *ngIf="isCoachOrAdmin()"
+                    (click)="removeMember(member)"
+                    class="px-3 py-1 rounded-[12px] text-sm text-red-600"
+                    style="background-color: #FCF9F5; border: 1px solid #EAE3DB;">
+                    Remove
+                  </button>
                 </div>
               </div>
               <div *ngIf="getActiveMembers().length === 0" class="text-center py-4" style="color: #4A3B33;">
@@ -144,6 +151,13 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                     class="text-white px-3 py-1 rounded-[12px] text-sm"
                     style="background-color: #8B5E3C;">
                     Set Active
+                  </button>
+                  <button
+                    *ngIf="isCoachOrAdmin()"
+                    (click)="removeMember(member)"
+                    class="px-3 py-1 rounded-[12px] text-sm text-red-600"
+                    style="background-color: #FCF9F5; border: 1px solid #EAE3DB;">
+                    Remove
                   </button>
                 </div>
               </div>
@@ -897,6 +911,7 @@ export class TeamDetailComponent implements OnInit, OnDestroy {
   successMessage: string | null = null;
   teamId: string | null = null;
   currentUserId: string | null = null;
+  currentUserRole: string | null = null;
 
   // Modal states
   showEditWhatsAppModal = false;
@@ -953,6 +968,7 @@ export class TeamDetailComponent implements OnInit, OnDestroy {
     if (userStr) {
       const user = JSON.parse(userStr);
       this.currentUserId = user.id;
+      this.currentUserRole = user.role;
     }
   }
 
@@ -1045,7 +1061,7 @@ export class TeamDetailComponent implements OnInit, OnDestroy {
 
   isCoachOrAdmin(): boolean {
     if (!this.team || !this.currentUserId) return false;
-    return this.team.coach?._id === this.currentUserId;
+    return this.team.coach?._id === this.currentUserId || this.currentUserRole === 'admin';
   }
 
   isTeamMemberOrCoach(): boolean {
@@ -1053,7 +1069,7 @@ export class TeamDetailComponent implements OnInit, OnDestroy {
     const isMember = this.team.members.some(m => 
       (typeof m.userId === 'object' ? m.userId._id : m.userId) === this.currentUserId
     );
-    return isMember || this.team.coach?._id === this.currentUserId;
+    return isMember || this.team.coach?._id === this.currentUserId || this.currentUserRole === 'admin';
   }
 
   openEditWhatsAppModal(): void {
@@ -1245,6 +1261,28 @@ export class TeamDetailComponent implements OnInit, OnDestroy {
       error: (err) => {
         this.error = err.error?.message || 'Failed to update member status.';
         console.error('Error updating member status:', err);
+      }
+    });
+  }
+
+  removeMember(member: TeamMember): void {
+    if (!this.teamId) return;
+    
+    const userId = typeof member.userId === 'object' ? member.userId._id : member.userId;
+    const username = typeof member.userId === 'object' ? member.userId.username : 'this member';
+    
+    if (!confirm(`Are you sure you want to remove ${username} from the team?`)) {
+      return;
+    }
+    
+    this.teamService.removeMember(this.teamId, userId).subscribe({
+      next: (response) => {
+        this.team = response.data.team;
+        this.showSuccessMessage(`${username} has been removed from the team.`);
+      },
+      error: (err) => {
+        this.error = err.error?.message || 'Failed to remove member.';
+        console.error('Error removing member:', err);
       }
     });
   }
