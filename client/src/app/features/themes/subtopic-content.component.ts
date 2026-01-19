@@ -173,7 +173,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                     <line x1="2" y1="12" x2="22" y2="12" />
                     <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
                   </svg>
-                  Teoría compartida editable por todos los miembros del equipo
+                  Shared theory editable by all team members
                 </p>
               </div>
               
@@ -183,7 +183,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   class="w-full rounded-[12px] px-4 py-3 min-h-[200px] whitespace-pre-wrap cursor-pointer hover:bg-white transition-colors"
                   style="border: 1px solid #EAE3DB; color: #2D2622; background-color: #FCF9F5;"
                   (click)="startEditingSharedTheory()">
-                  {{ subtopic.sharedTheory || 'No hay contenido de teoría compartida aún. Haz clic para agregar.' }}
+                  {{ subtopic.sharedTheory || 'No shared theory content yet. Click to add.' }}
                 </div>
                 <button 
                   (click)="startEditingSharedTheory()"
@@ -193,7 +193,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
-                  Editar
+                  Edit
                 </button>
               </div>
               
@@ -202,7 +202,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <textarea 
                   [(ngModel)]="editedSharedTheory"
                   rows="12"
-                  placeholder="Escribe aquí la teoría compartida..."
+                  placeholder="Write shared theory here..."
                   class="w-full rounded-[12px] px-4 py-3 resize-none transition-all"
                   style="border: 1px solid #EAE3DB; color: #2D2622;">
                 </textarea>
@@ -211,14 +211,14 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                     (click)="cancelEditingSharedTheory()"
                     class="px-4 py-2 rounded-[12px] font-medium"
                     style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
-                    Cancelar
+                    Cancel
                   </button>
                   <button 
                     (click)="saveSharedTheory()"
                     [disabled]="savingSharedTheory"
                     class="text-white px-4 py-2 rounded-[12px] font-medium disabled:opacity-50"
                     style="background-color: #8B5E3C;">
-                    {{ savingSharedTheory ? 'Guardando...' : 'Guardar' }}
+                    {{ savingSharedTheory ? 'Saving...' : 'Save' }}
                   </button>
                 </div>
               </div>
@@ -562,7 +562,7 @@ export class SubtopicContentComponent implements OnInit {
       },
       error: (err) => {
         this.savingSharedTheory = false;
-        this.error = 'No se pudo guardar la teoría compartida. Intente de nuevo.';
+        this.error = 'Failed to save shared theory. Please try again.';
         console.error('Error saving shared theory:', err);
       }
     });

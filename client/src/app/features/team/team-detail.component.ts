@@ -679,7 +679,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
         class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50"
         (click)="showAddSessionModal = false">
         <div class="bg-white rounded-[12px] p-6 w-full max-w-md" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
-          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">Agregar Sesión de Código</h3>
+          <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">Add Code Session</h3>
           
           <!-- Info box explaining the process -->
           <div class="rounded-[12px] p-4 mb-4" style="background-color: #FCF9F5; border-left: 4px solid #D4A373;">
@@ -690,7 +690,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <line x1="12" y1="16" x2="12" y2="12" />
                 <line x1="12" y1="8" x2="12.01" y2="8" />
               </svg>
-              <span>Crea tu sesión en USACO IDE y luego pega el link aquí para guardarla con tu equipo.</span>
+              <span>Create your session in USACO IDE and then paste the link here to save it with your team.</span>
             </p>
           </div>
 
@@ -705,19 +705,19 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
               </svg>
-              Abrir USACO IDE para crear sesión
+              Open USACO IDE to create session
             </a>
           </div>
 
           <input 
             type="text"
             [(ngModel)]="newSessionName"
-            placeholder="Nombre de la sesión (ej: Sesión de práctica 1)"
+            placeholder="Session name (e.g., Practice Session 1)"
             class="w-full rounded-[12px] px-4 py-3 mb-3"
             style="border: 1px solid #EAE3DB; color: #2D2622;">
           
           <div class="mb-3">
-            <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Link de USACO IDE:</label>
+            <label class="block text-sm font-medium mb-2" style="color: #2D2622;">USACO IDE Link:</label>
             <input 
               type="url"
               [(ngModel)]="customSessionLink"
@@ -725,7 +725,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               class="w-full rounded-[12px] px-4 py-3"
               style="border: 1px solid #EAE3DB; color: #2D2622;">
             <p class="text-xs mt-1" style="color: #4A3B33;">
-              Pega el link de tu sesión de USACO IDE (no se crean hipervínculos automáticos)
+              Paste your USACO IDE session link (hyperlinks are not auto-created)
             </p>
           </div>
           
@@ -734,14 +734,14 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               (click)="showAddSessionModal = false"
               class="px-4 py-2 rounded-[12px]"
               style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
-              Cancelar
+              Cancel
             </button>
             <button 
               (click)="addSession()"
               [disabled]="!newSessionName || addingSession || !customSessionLink"
               class="text-white px-4 py-2 rounded-[12px] disabled:opacity-50"
               style="background-color: #8B5E3C;">
-              {{ addingSession ? 'Agregando...' : 'Agregar Sesión' }}
+              {{ addingSession ? 'Adding...' : 'Add Session' }}
             </button>
           </div>
         </div>
@@ -923,11 +923,11 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             <svg class="w-10 h-10" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
-            <h3 class="text-2xl font-semibold" style="color: #2D2622;">Eliminar Sesión de Código</h3>
+            <h3 class="text-2xl font-semibold" style="color: #2D2622;">Delete Code Session</h3>
           </div>
           
           <p class="mb-6" style="color: #4A3B33;">
-            ¿Estás seguro de que deseas eliminar esta sesión de código? Esta acción no se puede deshacer.
+            Are you sure you want to delete this code session? This action cannot be undone.
           </p>
 
           <div class="flex gap-3 justify-end">
@@ -935,14 +935,14 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               (click)="cancelDeleteCodeSession()"
               class="font-medium px-6 py-3 rounded-[12px] transition-all"
               style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
-              Cancelar
+              Cancel
             </button>
             <button 
               (click)="confirmDeleteCodeSession()"
               [disabled]="deletingCodeSession"
               class="font-medium px-6 py-3 rounded-[12px] transition-all disabled:opacity-50"
               style="background-color: #8B5E3C; color: white;">
-              {{ deletingCodeSession ? 'Eliminando...' : 'Eliminar' }}
+              {{ deletingCodeSession ? 'Deleting...' : 'Delete' }}
             </button>
           </div>
         </div>
@@ -959,11 +959,11 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             <svg class="w-10 h-10" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
-            <h3 class="text-2xl font-semibold" style="color: #2D2622;">Eliminar Sesión de Excalidraw</h3>
+            <h3 class="text-2xl font-semibold" style="color: #2D2622;">Delete Excalidraw Session</h3>
           </div>
           
           <p class="mb-6" style="color: #4A3B33;">
-            ¿Estás seguro de que deseas eliminar esta sesión de Excalidraw? Esta acción no se puede deshacer.
+            Are you sure you want to delete this Excalidraw session? This action cannot be undone.
           </p>
 
           <div class="flex gap-3 justify-end">
@@ -971,14 +971,14 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               (click)="cancelDeleteExcalidraw()"
               class="font-medium px-6 py-3 rounded-[12px] transition-all"
               style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
-              Cancelar
+              Cancel
             </button>
             <button 
               (click)="confirmDeleteExcalidraw()"
               [disabled]="deletingExcalidrawSession"
               class="font-medium px-6 py-3 rounded-[12px] transition-all disabled:opacity-50"
               style="background-color: #8B5E3C; color: white;">
-              {{ deletingExcalidrawSession ? 'Eliminando...' : 'Eliminar' }}
+              {{ deletingExcalidrawSession ? 'Deleting...' : 'Delete' }}
             </button>
           </div>
         </div>
@@ -1393,13 +1393,13 @@ export class TeamDetailComponent implements OnInit, OnDestroy {
       next: (response) => {
         this.team = response.data.team;
         this.showAddSessionModal = false;
-        this.showSuccessMessage(`Sesión de código "${this.newSessionName}" creada exitosamente!`);
+        this.showSuccessMessage(`Code session "${this.newSessionName}" created successfully!`);
         this.newSessionName = '';
         this.customSessionLink = '';
         this.addingSession = false;
       },
       error: (err) => {
-        this.error = 'Error al agregar la sesión de código.';
+        this.error = 'Failed to add code session.';
         this.addingSession = false;
         console.error('Error adding session:', err);
       }

@@ -524,11 +524,11 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             <svg class="w-10 h-10" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
-            <h3 class="text-2xl font-semibold" style="color: #2D2622;">Eliminar Logro</h3>
+            <h3 class="text-2xl font-semibold" style="color: #2D2622;">Delete Achievement</h3>
           </div>
           
           <p class="mb-6" style="color: #4A3B33;">
-            ¿Estás seguro de que deseas eliminar este logro? Esta acción no se puede deshacer.
+            Are you sure you want to delete this achievement? This action cannot be undone.
           </p>
 
           <div class="flex gap-3 justify-end">
@@ -536,14 +536,14 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               (click)="cancelDeleteAchievement()"
               class="font-medium px-6 py-3 rounded-[12px] transition-all"
               style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
-              Cancelar
+              Cancel
             </button>
             <button 
               (click)="confirmDeleteAchievement()"
               [disabled]="deletingAchievement"
               class="font-medium px-6 py-3 rounded-[12px] transition-all disabled:opacity-50"
               style="background-color: #8B5E3C; color: white;">
-              {{ deletingAchievement ? 'Eliminando...' : 'Eliminar' }}
+              {{ deletingAchievement ? 'Deleting...' : 'Delete' }}
             </button>
           </div>
         </div>
