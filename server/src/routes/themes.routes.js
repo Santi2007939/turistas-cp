@@ -1,5 +1,5 @@
 import express from 'express';
-import { getThemes, getTheme, createTheme, updateTheme, deleteTheme, getSubtopicContent, deleteSubtopicGlobally } from '../controllers/themes.controller.js';
+import { getThemes, getTheme, createTheme, updateTheme, deleteTheme, getSubtopicContent, deleteSubtopicGlobally, updateSubtopicSharedContent } from '../controllers/themes.controller.js';
 import { protect } from '../middlewares/auth.js';
 import { validateId } from '../middlewares/validation.js';
 import { createRateLimiter } from '../middlewares/rateLimiter.js';
@@ -27,5 +27,9 @@ router.route('/:id')
 router.route('/:id/subtopics/:subtopicName')
   .get(validateId(), subtopicReadLimiter, getSubtopicContent)
   .delete(validateId(), subtopicWriteLimiter, deleteSubtopicGlobally);
+
+// Subtopic shared content update route
+router.route('/:id/subtopics/:subtopicName/shared')
+  .put(validateId(), subtopicWriteLimiter, updateSubtopicSharedContent);
 
 export default router;
