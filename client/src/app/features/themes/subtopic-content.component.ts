@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ThemesService, SubtopicContent } from '../../core/services/themes.service';
+import { ProblemsService, Problem } from '../../core/services/problems.service';
 import { AuthService, User } from '../../core/services/auth.service';
 import { NavbarComponent } from '../../shared/components/navbar.component';
 
@@ -230,13 +231,51 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <div *ngFor="let snippet of subtopic.codeSnippets; let j = index" 
                      class="rounded-[12px] p-4" style="border: 1px solid #EAE3DB;">
                   <div class="flex items-center justify-between mb-3">
-                    <span class="rounded-[12px] px-3 py-1 text-sm" style="border: 1px solid #EAE3DB; color: #2D2622; background-color: #FCF9F5;">
-                      {{ snippet.language }}
-                    </span>
+                    <select 
+                      [(ngModel)]="snippet.language"
+                      (change)="saveCodeSnippets()"
+                      class="rounded-[12px] px-3 py-1 text-sm"
+                      style="border: 1px solid #EAE3DB; color: #2D2622;">
+                      <option value="python">Python</option>
+                      <option value="cpp">C++</option>
+                    </select>
+                    <button 
+                      (click)="removeCodeSnippet(j)"
+                      class="text-sm flex items-center gap-1"
+                      style="color: #4A3B33;">
+                      <!-- Lucide Trash2 icon -->
+                      <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                      Delete
+                    </button>
                   </div>
-                  <p *ngIf="snippet.description" class="text-sm mb-2" style="color: #4A3B33;">{{ snippet.description }}</p>
-                  <pre class="rounded-[12px] p-4 overflow-x-auto" style="background-color: #2D2622;"><code style="color: #D4A373;">{{ snippet.code }}</code></pre>
+                  <input 
+                    type="text"
+                    [(ngModel)]="snippet.description"
+                    (blur)="saveCodeSnippets()"
+                    placeholder="Code description..."
+                    class="w-full rounded-[12px] px-3 py-2 mb-2 text-sm"
+                    style="border: 1px solid #EAE3DB; color: #2D2622;">
+                  <textarea 
+                    [(ngModel)]="snippet.code"
+                    (blur)="saveCodeSnippets()"
+                    rows="12"
+                    placeholder="// Write your code here..."
+                    class="w-full rounded-[12px] p-4 font-mono text-sm resize-none"
+                    style="background-color: #2D2622; color: #D4A373; border: 1px solid #2D2622;">
+                  </textarea>
                 </div>
+                <button 
+                  (click)="addCodeSnippet()"
+                  class="w-full border-2 border-dashed rounded-[12px] py-3 transition-colors flex items-center justify-center gap-2"
+                  style="border-color: #EAE3DB; color: #4A3B33;">
+                  <!-- Lucide Plus icon -->
+                  <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                  </svg>
+                  Add code snippet
+                </button>
                 
                 <!-- Empty State -->
                 <div *ngIf="!subtopic.codeSnippets || subtopic.codeSnippets.length === 0" 
@@ -253,7 +292,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
             <!-- Problems -->
             <div *ngIf="activeTab === 'problems'">
-              <div class="rounded-[12px] p-4 mb-4" style="background-color: #FCF9F5; border-left: 4px solid #8B5E3C;">
+              <div class="rounded-[12px] p-4 mb-4 flex items-center justify-between" style="background-color: #FCF9F5; border-left: 4px solid #8B5E3C;">
                 <p class="text-sm flex items-center gap-2" style="color: #4A3B33;">
                   <!-- Lucide Code icon -->
                   <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -265,7 +304,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               </div>
               <div class="space-y-3">
                 <!-- Problem Cards -->
-                <div *ngFor="let problem of subtopic.linkedProblems" 
+                <div *ngFor="let problem of subtopic.linkedProblems; let k = index" 
                      class="border-l-4 rounded-[12px] p-4 bg-white"
                      [ngStyle]="{
                        'border-left-color': problem.difficulty === 'easy' ? '#D4A373' : problem.difficulty === 'medium' ? '#8B5E3C' : problem.difficulty === 'hard' ? '#4A3B33' : '#2D2622',
@@ -280,6 +319,15 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                         {{ problem.description }}
                       </p>
                     </div>
+                    <button 
+                      (click)="removeProblem(k)"
+                      class="text-sm ml-2"
+                      style="color: #4A3B33;">
+                      <!-- Lucide X icon -->
+                      <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
                   </div>
                   
                   <div class="flex items-center justify-between">
@@ -302,6 +350,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                         Open
                       </a>
                       <a 
+                        *ngIf="problem.problemId"
                         [routerLink]="['/problems', problem.problemId]"
                         class="text-xs"
                         style="color: #8B5E3C;">
@@ -309,6 +358,30 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                       </a>
                     </div>
                   </div>
+                </div>
+                
+                <!-- Add Problem Buttons -->
+                <div class="flex gap-3">
+                  <button 
+                    (click)="openProblemPicker()"
+                    class="flex-1 border-2 border-dashed rounded-[12px] py-3 transition-colors flex items-center justify-center gap-2"
+                    style="border-color: #EAE3DB; color: #4A3B33;">
+                    <!-- Lucide Link icon -->
+                    <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                    </svg>
+                    Link from library
+                  </button>
+                  <button 
+                    (click)="openCreateProblemModal()"
+                    class="flex-1 border-2 border-dashed rounded-[12px] py-3 transition-colors flex items-center justify-center gap-2"
+                    style="border-color: #D4A373; color: #8B5E3C;">
+                    <!-- Lucide Plus icon -->
+                    <svg class="w-4 h-4" style="color: #8B5E3C;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Create problem
+                  </button>
                 </div>
                 
                 <!-- Empty State -->
@@ -319,6 +392,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                   <p class="text-sm">No linked problems</p>
+                  <p class="text-xs mt-1">Click "Link from library" or "Create problem" to add</p>
                 </div>
               </div>
             </div>
@@ -335,24 +409,57 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 </p>
               </div>
               <div class="space-y-3">
-                <div *ngFor="let resource of subtopic.resources" 
+                <div *ngFor="let resource of subtopic.resources; let r = index" 
                      class="rounded-[12px] p-4" style="border: 1px solid #EAE3DB;">
                   <div class="flex items-start gap-3">
-                    <div class="flex-1">
-                      <h4 class="font-semibold" style="color: #2D2622;">{{ resource.name }}</h4>
-                      <a 
-                        [href]="resource.link" 
-                        target="_blank"
-                        class="text-sm flex items-center gap-1 mt-1"
-                        style="color: #8B5E3C;">
-                        <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                        {{ resource.link }}
-                      </a>
+                    <div class="flex-1 space-y-2">
+                      <input 
+                        type="text"
+                        [(ngModel)]="resource.name"
+                        (blur)="saveResources()"
+                        placeholder="Resource name"
+                        class="w-full rounded-[12px] px-3 py-2 text-sm"
+                        style="border: 1px solid #EAE3DB; color: #2D2622;">
+                      <input 
+                        type="url"
+                        [(ngModel)]="resource.link"
+                        (blur)="saveResources()"
+                        placeholder="https://..."
+                        class="w-full rounded-[12px] px-3 py-2 text-sm"
+                        style="border: 1px solid #EAE3DB; color: #2D2622;">
                     </div>
+                    <button 
+                      (click)="removeResource(r)"
+                      class="text-sm mt-2"
+                      style="color: #4A3B33;">
+                      <!-- Lucide X icon -->
+                      <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
                   </div>
+                  <a *ngIf="resource.link" 
+                     [href]="resource.link" 
+                     target="_blank"
+                     class="text-xs mt-2 inline-flex items-center gap-1"
+                     style="color: #8B5E3C;">
+                    <!-- Lucide ExternalLink icon -->
+                    <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                    Open link
+                  </a>
                 </div>
+                <button 
+                  (click)="addResource()"
+                  class="w-full border-2 border-dashed rounded-[12px] py-3 transition-colors flex items-center justify-center gap-2"
+                  style="border-color: #EAE3DB; color: #4A3B33;">
+                  <!-- Lucide Plus icon -->
+                  <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                  </svg>
+                  Add resource
+                </button>
                 
                 <!-- Empty State -->
                 <div *ngIf="!subtopic.resources || subtopic.resources.length === 0"
@@ -366,6 +473,269 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Problem Picker Modal -->
+    <div 
+      *ngIf="showProblemPickerModal" 
+      class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4"
+      (click)="closeProblemPicker()">
+      <div class="bg-white rounded-[12px] p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
+        <h3 class="text-xl font-semibold mb-6 flex items-center gap-2" style="color: #2D2622;">
+          <!-- Lucide Link icon -->
+          <svg class="w-5 h-5" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+          </svg>
+          Link Problem
+        </h3>
+        
+        <!-- Search and Filter -->
+        <div class="mb-6 space-y-3">
+          <div class="relative">
+            <!-- Lucide Search icon -->
+            <svg class="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input 
+              type="text"
+              [(ngModel)]="problemSearchQuery"
+              (ngModelChange)="filterProblems()"
+              placeholder="Search problems..."
+              class="w-full rounded-[12px] pl-10 pr-4 py-3"
+              style="border: 1px solid #EAE3DB; color: #2D2622;">
+          </div>
+          
+          <div class="flex gap-3">
+            <select 
+              [(ngModel)]="problemFilterDifficulty"
+              (change)="filterProblems()"
+              class="rounded-[12px] px-4 py-2"
+              style="border: 1px solid #EAE3DB; color: #2D2622;">
+              <option value="">All difficulties</option>
+              <option value="easy">Easy</option>
+              <option value="medium">Medium</option>
+              <option value="hard">Hard</option>
+              <option value="very-hard">Very Hard</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Loading State -->
+        <div *ngIf="loadingProblems" class="text-center py-8">
+          <!-- Lucide Loader icon -->
+          <svg class="w-12 h-12 mx-auto mb-4 animate-spin" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          <p style="color: #4A3B33;">Loading problems...</p>
+        </div>
+
+        <!-- Error State -->
+        <div *ngIf="problemPickerError" class="rounded-[12px] p-4 mb-4" style="background-color: #FCF9F5; border-left: 4px solid #8B5E3C;">
+          <p style="color: #8B5E3C;">{{ problemPickerError }}</p>
+        </div>
+
+        <!-- Available Problems List -->
+        <div *ngIf="!loadingProblems" class="space-y-3 mb-6 max-h-96 overflow-y-auto">
+          <div 
+            *ngFor="let problem of filteredProblems" 
+            (click)="selectProblemForLinking(problem)"
+            class="rounded-[12px] p-4 cursor-pointer transition-all"
+            [ngStyle]="{
+              'border': selectedProblemForLink?._id === problem._id ? '2px solid #8B5E3C' : '1px solid #EAE3DB',
+              'background-color': selectedProblemForLink?._id === problem._id ? '#FCF9F5' : '#FFFFFF'
+            }">
+            <div class="flex items-start justify-between">
+              <div class="flex-1">
+                <h4 class="font-semibold mb-1" style="color: #2D2622;">{{ problem.title }}</h4>
+                <div class="flex gap-2 items-center">
+                  <span 
+                    *ngIf="problem.rating"
+                    class="text-xs px-2 py-1 rounded-[12px] font-mono flex items-center gap-1"
+                    style="background-color: #FCF9F5; color: #8B5E3C; border: 1px solid #EAE3DB;">
+                    <!-- Lucide Activity icon for rating -->
+                    <svg class="w-3 h-3" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                    </svg>
+                    {{ problem.rating }}
+                  </span>
+                  <span class="text-xs px-2 py-1 rounded-[12px]"
+                        style="background-color: #FCF9F5; color: #4A3B33; border: 1px solid #EAE3DB;">
+                    {{ problem.platform }}
+                  </span>
+                </div>
+              </div>
+              <div 
+                *ngIf="selectedProblemForLink?._id === problem._id"
+                class="text-2xl"
+                style="color: #8B5E3C;">
+                ✓
+              </div>
+            </div>
+          </div>
+
+          <!-- Empty State -->
+          <div *ngIf="filteredProblems.length === 0" class="text-center py-8" style="color: #4A3B33;">
+            <!-- Lucide Search icon -->
+            <svg class="w-10 h-10 mx-auto mb-2" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <p class="text-sm">No problems found</p>
+          </div>
+        </div>
+
+        <!-- Problem Metadata Form (shown when problem selected) -->
+        <div *ngIf="selectedProblemForLink" class="rounded-[12px] p-6 mb-6" style="background-color: #FCF9F5; border: 1px solid #EAE3DB;">
+          <h4 class="font-semibold mb-4" style="color: #2D2622;">Problem details to link</h4>
+          
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Title *</label>
+              <input 
+                type="text"
+                [(ngModel)]="problemLinkMetadata.title"
+                class="w-full rounded-[12px] px-4 py-2"
+                style="border: 1px solid #EAE3DB; color: #2D2622;">
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Brief description</label>
+              <textarea 
+                [(ngModel)]="problemLinkMetadata.description"
+                rows="2"
+                placeholder="Optional problem description..."
+                class="w-full rounded-[12px] px-4 py-2 resize-none"
+                style="border: 1px solid #EAE3DB; color: #2D2622;">
+              </textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Link</label>
+              <input 
+                type="url"
+                [(ngModel)]="problemLinkMetadata.link"
+                class="w-full rounded-[12px] px-4 py-2"
+                style="border: 1px solid #EAE3DB; color: #2D2622;">
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Difficulty *</label>
+              <select 
+                [(ngModel)]="problemLinkMetadata.difficulty"
+                class="w-full rounded-[12px] px-4 py-2"
+                style="border: 1px solid #EAE3DB; color: #2D2622;">
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+                <option value="very-hard">Very Hard</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex gap-3 justify-end">
+          <button 
+            (click)="closeProblemPicker()"
+            class="font-medium px-6 py-3 rounded-[12px]"
+            style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
+            Cancel
+          </button>
+          <button 
+            (click)="confirmProblemLink()"
+            [disabled]="!selectedProblemForLink || !problemLinkMetadata.title || !problemLinkMetadata.difficulty"
+            class="text-white font-medium px-6 py-3 rounded-[12px] disabled:opacity-50 disabled:cursor-not-allowed"
+            style="background-color: #8B5E3C;">
+            Link problem
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create Problem Modal -->
+    <div 
+      *ngIf="showCreateProblemModal" 
+      class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4"
+      (click)="closeCreateProblemModal()">
+      <div class="bg-white rounded-[12px] p-6 w-full max-w-lg" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
+        <h3 class="text-xl font-semibold mb-6 flex items-center gap-2" style="color: #2D2622;">
+          <!-- Lucide Plus icon -->
+          <svg class="w-5 h-5" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+          </svg>
+          Create Problem
+        </h3>
+        
+        <div class="rounded-[12px] p-4 mb-4" style="background-color: #FCF9F5; border-left: 4px solid #D4A373;">
+          <p class="text-sm flex items-center gap-2" style="color: #4A3B33;">
+            <!-- Lucide Info icon -->
+            <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="16" x2="12" y2="12" />
+              <line x1="12" y1="8" x2="12.01" y2="8" />
+            </svg>
+            This creates a theoretical problem directly linked to this subtopic without adding it to the problem library.
+          </p>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Title *</label>
+            <input 
+              type="text"
+              [(ngModel)]="newInlineProblem.title"
+              placeholder="Problem title..."
+              class="w-full rounded-[12px] px-4 py-3 transition-all"
+              style="border: 1px solid #EAE3DB; color: #2D2622;">
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Description</label>
+            <textarea 
+              [(ngModel)]="newInlineProblem.description"
+              rows="3"
+              placeholder="Problem description (optional)..."
+              class="w-full rounded-[12px] px-4 py-3 transition-all resize-none"
+              style="border: 1px solid #EAE3DB; color: #2D2622;">
+            </textarea>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Link (optional)</label>
+            <input 
+              type="url"
+              [(ngModel)]="newInlineProblem.link"
+              placeholder="https://..."
+              class="w-full rounded-[12px] px-4 py-3 transition-all"
+              style="border: 1px solid #EAE3DB; color: #2D2622;">
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Difficulty *</label>
+            <select 
+              [(ngModel)]="newInlineProblem.difficulty"
+              class="w-full rounded-[12px] px-4 py-3 transition-all"
+              style="border: 1px solid #EAE3DB; color: #2D2622;">
+              <option value="easy">Easy</option>
+              <option value="medium">Medium</option>
+              <option value="hard">Hard</option>
+              <option value="very-hard">Very Hard</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex gap-3 justify-end mt-6">
+          <button 
+            (click)="closeCreateProblemModal()"
+            class="font-medium px-6 py-3 rounded-[12px] transition-all"
+            style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
+            Cancel
+          </button>
+          <button 
+            (click)="createInlineProblem()"
+            [disabled]="!newInlineProblem.title || !newInlineProblem.difficulty"
+            class="text-white font-medium px-6 py-3 rounded-[12px] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            style="background-color: #8B5E3C;">
+            Create problem
+          </button>
         </div>
       </div>
     </div>
@@ -434,10 +804,36 @@ export class SubtopicContentComponent implements OnInit {
   editedSharedTheory = '';
   savingSharedTheory = false;
 
+  // Problem picker state
+  showProblemPickerModal = false;
+  showCreateProblemModal = false;
+  loadingProblems = false;
+  problemPickerError: string | null = null;
+  availableProblems: Problem[] = [];
+  filteredProblems: Problem[] = [];
+  selectedProblemForLink: Problem | null = null;
+  problemSearchQuery = '';
+  problemFilterDifficulty = '';
+  
+  problemLinkMetadata = {
+    title: '',
+    description: '',
+    link: '',
+    difficulty: 'easy'
+  };
+  
+  newInlineProblem = {
+    title: '',
+    description: '',
+    link: '',
+    difficulty: 'easy'
+  };
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private themesService: ThemesService,
+    private problemsService: ProblemsService,
     private authService: AuthService
   ) {}
 
@@ -564,6 +960,217 @@ export class SubtopicContentComponent implements OnInit {
         this.savingSharedTheory = false;
         this.error = 'Failed to save shared theory. Please try again.';
         console.error('Error saving shared theory:', err);
+      }
+    });
+  }
+
+  // Code snippet methods
+  addCodeSnippet(): void {
+    if (!this.subtopic) return;
+    if (!this.subtopic.codeSnippets) {
+      this.subtopic.codeSnippets = [];
+    }
+    this.subtopic.codeSnippets.push({
+      language: 'python',
+      code: '',
+      description: ''
+    });
+    this.saveCodeSnippets();
+  }
+
+  removeCodeSnippet(index: number): void {
+    if (!this.subtopic || !this.subtopic.codeSnippets) return;
+    this.subtopic.codeSnippets.splice(index, 1);
+    this.saveCodeSnippets();
+  }
+
+  saveCodeSnippets(): void {
+    if (!this.subtopic) return;
+    this.themesService.updateSubtopicSharedContent(this.themeId, this.subtopicName, {
+      codeSnippets: this.subtopic.codeSnippets
+    }).subscribe({
+      next: () => {
+        // Successfully saved
+      },
+      error: (err) => {
+        this.error = 'Failed to save code snippets. Please try again.';
+        console.error('Error saving code snippets:', err);
+      }
+    });
+  }
+
+  // Resource methods
+  addResource(): void {
+    if (!this.subtopic) return;
+    if (!this.subtopic.resources) {
+      this.subtopic.resources = [];
+    }
+    this.subtopic.resources.push({
+      name: '',
+      link: ''
+    });
+    this.saveResources();
+  }
+
+  removeResource(index: number): void {
+    if (!this.subtopic || !this.subtopic.resources) return;
+    this.subtopic.resources.splice(index, 1);
+    this.saveResources();
+  }
+
+  saveResources(): void {
+    if (!this.subtopic) return;
+    this.themesService.updateSubtopicSharedContent(this.themeId, this.subtopicName, {
+      resources: this.subtopic.resources
+    }).subscribe({
+      next: () => {
+        // Successfully saved
+      },
+      error: (err) => {
+        this.error = 'Failed to save resources. Please try again.';
+        console.error('Error saving resources:', err);
+      }
+    });
+  }
+
+  // Problem methods
+  openProblemPicker(): void {
+    this.showProblemPickerModal = true;
+    this.loadAvailableProblems();
+  }
+
+  closeProblemPicker(): void {
+    this.showProblemPickerModal = false;
+    this.selectedProblemForLink = null;
+    this.problemSearchQuery = '';
+    this.problemFilterDifficulty = '';
+    this.problemLinkMetadata = {
+      title: '',
+      description: '',
+      link: '',
+      difficulty: 'easy'
+    };
+  }
+
+  loadAvailableProblems(): void {
+    this.loadingProblems = true;
+    this.problemPickerError = null;
+    
+    this.problemsService.getProblems().subscribe({
+      next: (response) => {
+        this.availableProblems = response.data.problems;
+        this.filterProblems();
+        this.loadingProblems = false;
+      },
+      error: (err) => {
+        this.loadingProblems = false;
+        this.problemPickerError = 'Failed to load problems. Please try again.';
+        console.error('Error loading problems:', err);
+      }
+    });
+  }
+
+  filterProblems(): void {
+    const query = this.problemSearchQuery.toLowerCase().trim();
+    const difficulty = this.problemFilterDifficulty;
+    
+    this.filteredProblems = this.availableProblems.filter(p => {
+      // Filter by search query
+      if (query && !p.title.toLowerCase().includes(query) && 
+          !(p.description?.toLowerCase().includes(query))) {
+        return false;
+      }
+      
+      // Filter by difficulty
+      if (difficulty && p.difficulty !== difficulty) {
+        return false;
+      }
+      
+      return true;
+    });
+  }
+
+  selectProblemForLinking(problem: Problem): void {
+    this.selectedProblemForLink = problem;
+    this.problemLinkMetadata = {
+      title: problem.title,
+      description: problem.description || '',
+      link: problem.url || '',
+      difficulty: problem.difficulty
+    };
+  }
+
+  confirmProblemLink(): void {
+    if (!this.subtopic || !this.selectedProblemForLink) return;
+    
+    if (!this.subtopic.linkedProblems) {
+      this.subtopic.linkedProblems = [];
+    }
+    
+    // Add the problem with metadata
+    this.subtopic.linkedProblems.push({
+      problemId: this.selectedProblemForLink._id,
+      title: this.problemLinkMetadata.title,
+      description: this.problemLinkMetadata.description,
+      link: this.problemLinkMetadata.link,
+      difficulty: this.problemLinkMetadata.difficulty as 'easy' | 'medium' | 'hard' | 'very-hard'
+    });
+    
+    this.saveProblems();
+    this.closeProblemPicker();
+  }
+
+  openCreateProblemModal(): void {
+    this.showCreateProblemModal = true;
+  }
+
+  closeCreateProblemModal(): void {
+    this.showCreateProblemModal = false;
+    this.newInlineProblem = {
+      title: '',
+      description: '',
+      link: '',
+      difficulty: 'easy'
+    };
+  }
+
+  createInlineProblem(): void {
+    if (!this.subtopic) return;
+    
+    if (!this.subtopic.linkedProblems) {
+      this.subtopic.linkedProblems = [];
+    }
+    
+    // Add inline problem (without problemId, meaning it's not in the library)
+    this.subtopic.linkedProblems.push({
+      problemId: '', // Empty means inline problem
+      title: this.newInlineProblem.title,
+      description: this.newInlineProblem.description,
+      link: this.newInlineProblem.link,
+      difficulty: this.newInlineProblem.difficulty as 'easy' | 'medium' | 'hard' | 'very-hard'
+    });
+    
+    this.saveProblems();
+    this.closeCreateProblemModal();
+  }
+
+  removeProblem(index: number): void {
+    if (!this.subtopic || !this.subtopic.linkedProblems) return;
+    this.subtopic.linkedProblems.splice(index, 1);
+    this.saveProblems();
+  }
+
+  saveProblems(): void {
+    if (!this.subtopic) return;
+    this.themesService.updateSubtopicSharedContent(this.themeId, this.subtopicName, {
+      linkedProblems: this.subtopic.linkedProblems
+    }).subscribe({
+      next: () => {
+        // Successfully saved
+      },
+      error: (err) => {
+        this.error = 'Failed to save problems. Please try again.';
+        console.error('Error saving problems:', err);
       }
     });
   }
