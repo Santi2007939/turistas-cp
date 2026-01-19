@@ -72,7 +72,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 16v-4m0-4h.01" />
             </svg>
             <p class="text-sm" style="color: #4A3B33;">
-              Add this theme to your roadmap to access Personal Notes and contribute your own content.
+              You can edit shared content. Add this theme to your roadmap to access Personal Notes.
             </p>
           </div>
         </div>

@@ -135,9 +135,14 @@ export class ThemesService {
   }
 
   /**
-   * Update subtopic shared content (theory, code snippets, resources)
+   * Update subtopic shared content (theory, code snippets, resources, problems)
    */
-  updateSubtopicSharedContent(themeId: string, subtopicName: string, content: { sharedTheory?: string }): Observable<any> {
+  updateSubtopicSharedContent(themeId: string, subtopicName: string, content: { 
+    sharedTheory?: string;
+    codeSnippets?: Array<{ language: string; code: string; description?: string }>;
+    linkedProblems?: Array<{ problemId?: string; title: string; description?: string; link?: string; difficulty: string }>;
+    resources?: Array<{ name: string; link: string }>;
+  }): Observable<any> {
     const encodedName = encodeURIComponent(subtopicName);
     return this.api.put(`/api/themes/${themeId}/subtopics/${encodedName}/shared`, content);
   }

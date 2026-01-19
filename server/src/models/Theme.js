@@ -33,7 +33,68 @@ const themeSchema = new mongoose.Schema({
     description: {
       type: String,
       trim: true
-    }
+    },
+    sharedTheory: {
+      type: String,
+      trim: true,
+      default: ''
+    },
+    codeSnippets: [{
+      language: {
+        type: String,
+        enum: ['python', 'cpp'],
+        default: 'python'
+      },
+      code: {
+        type: String,
+        default: ''
+      },
+      description: {
+        type: String,
+        trim: true
+      }
+    }],
+    linkedProblems: [{
+      problemId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Problem',
+        required: false
+      },
+      title: {
+        type: String,
+        required: true,
+        trim: true
+      },
+      description: {
+        type: String,
+        trim: true
+      },
+      link: {
+        type: String,
+        trim: true
+      },
+      difficulty: {
+        type: String,
+        enum: ['easy', 'medium', 'hard', 'very-hard'],
+        required: true
+      },
+      addedAt: {
+        type: Date,
+        default: Date.now
+      }
+    }],
+    resources: [{
+      name: {
+        type: String,
+        required: true,
+        trim: true
+      },
+      link: {
+        type: String,
+        required: true,
+        trim: true
+      }
+    }]
   }],
   resources: [{
     title: String,
