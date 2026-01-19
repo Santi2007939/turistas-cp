@@ -2,7 +2,6 @@ import codeforcesService from '../services/codeforces.service.js';
 import excalidrawService from '../services/excalidraw.service.js';
 import rpcService from '../services/rpc.service.js';
 import usacoIDEService from '../services/usaco-ide.service.js';
-import usacoPermalinkService from '../services/usaco-permalink.service.js';
 import { asyncHandler } from '../middlewares/error.js';
 
 // Codeforces Integration
@@ -156,64 +155,4 @@ export const getCodeTemplate = asyncHandler(async (req, res) => {
     success: true,
     data: { template, language }
   });
-});
-
-// USACO Permalink Integration
-
-// @desc    Create USACO IDE permalink
-// @route   POST /api/integrations/usaco-ide/permalink
-// @access  Private
-export const createUsacoPermalink = asyncHandler(async (req, res, next) => {
-  try {
-    // Get language from body or query, default to 'cpp'
-    const language = req.body.language || req.query.lang || 'cpp';
-    
-    // Get headless setting from body, query, or env (default to true)
-    let headless = true;
-    if (req.body.headless !== undefined) {
-      headless = req.body.headless;
-    } else if (req.query.headless !== undefined) {
-      headless = req.query.headless === 'true';
-    } else {
-      headless = process.env.USACO_HEADLESS !== 'false';
-    }
-    
-    // Get timeout from body
-    const timeout = req.body.timeout;
-
-    // Call the permalink service
-    const result = await usacoPermalinkService.getPermalink(language, {
-      headless,
-      timeout
-    });
-
-    // Return appropriate response based on result
-    if (result.ok) {
-      return res.status(201).json({
-        ok: true,
-        url: result.url
-      });
-    } else {
-      return res.status(502).json({
-        ok: false,
-        reason: result.reason
-      });
-    }
-  } catch (err) {
-    next(err);
-  }
-});
-
-// @desc    Get USACO permalink service status
-// @route   GET /api/integrations/usaco-ide/status
-// @access  Private
-export const getUsacoPermalinkStatus = asyncHandler(async (req, res) => {
-  const status = usacoPermalinkService.getStatus();
-  
-  res.json({
-    ok: true,
-    service: 'usaco-permalink',
-    envHeadless: process.env.USACO_HEADLESS || null,
-    ...status
-  });
-});
+})
