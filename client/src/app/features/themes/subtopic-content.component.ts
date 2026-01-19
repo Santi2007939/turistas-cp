@@ -975,7 +975,8 @@ export class SubtopicContentComponent implements OnInit {
       code: '',
       description: ''
     });
-    this.saveCodeSnippets();
+    // Don't save immediately - let user fill in the fields first
+    // Save will happen on blur event when fields are edited
   }
 
   removeCodeSnippet(index: number): void {
@@ -1009,7 +1010,8 @@ export class SubtopicContentComponent implements OnInit {
       name: '',
       link: ''
     });
-    this.saveResources();
+    // Don't save immediately - let user fill in the fields first
+    // Save will happen on blur event when fields are edited
   }
 
   removeResource(index: number): void {
@@ -1020,8 +1022,12 @@ export class SubtopicContentComponent implements OnInit {
 
   saveResources(): void {
     if (!this.subtopic) return;
+    // Filter out resources with empty name or link to avoid validation errors
+    const validResources = this.subtopic.resources?.filter(
+      r => r.name && r.name.trim() !== '' && r.link && r.link.trim() !== ''
+    ) || [];
     this.themesService.updateSubtopicSharedContent(this.themeId, this.subtopicName, {
-      resources: this.subtopic.resources
+      resources: validResources
     }).subscribe({
       next: () => {
         // Successfully saved
