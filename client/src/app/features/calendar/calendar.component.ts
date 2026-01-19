@@ -416,6 +416,42 @@ interface FilterData {
           </div>
         </div>
       </div>
+
+      <!-- Delete Event Confirmation Modal -->
+      <div 
+        *ngIf="showDeleteEventModal" 
+        class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4"
+        (click)="cancelDeleteEvent()">
+        <div class="bg-white rounded-[12px] p-8 w-full max-w-md" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
+          <div class="flex items-center gap-3 mb-4">
+            <!-- Lucide AlertTriangle icon -->
+            <svg class="w-10 h-10" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <h3 class="text-2xl font-semibold" style="color: #2D2622;">Delete Event</h3>
+          </div>
+          
+          <p class="mb-6" style="color: #4A3B33;">
+            Are you sure you want to delete this event? This action cannot be undone.
+          </p>
+
+          <div class="flex gap-3 justify-end">
+            <button 
+              (click)="cancelDeleteEvent()"
+              class="font-medium px-6 py-3 rounded-[12px] transition-all"
+              style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
+              Cancel
+            </button>
+            <button 
+              (click)="confirmDeleteEvent()"
+              [disabled]="deletingEvent"
+              class="font-medium px-6 py-3 rounded-[12px] transition-all disabled:opacity-50"
+              style="background-color: #8B5E3C; color: white;">
+              {{ deletingEvent ? 'Deleting...' : 'Delete' }}
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   `,
   styles: []
@@ -430,6 +466,11 @@ export class CalendarComponent implements OnInit {
   saving = false;
   editingEvent: CalendarEvent | null = null;
   currentUser: User | null = null;
+  
+  // Delete event confirmation modal
+  showDeleteEventModal = false;
+  eventToDeleteId: string | null = null;
+  deletingEvent = false;
   
   // View mode toggle
   viewMode: 'list' | 'calendar' = 'list';
@@ -649,18 +690,31 @@ export class CalendarComponent implements OnInit {
   }
 
   deleteEvent(id: string): void {
-    if (!confirm('Are you sure you want to delete this event?')) {
-      return;
-    }
+    this.eventToDeleteId = id;
+    this.showDeleteEventModal = true;
+  }
 
-    this.calendarService.deleteEvent(id).subscribe({
+  cancelDeleteEvent(): void {
+    this.showDeleteEventModal = false;
+    this.eventToDeleteId = null;
+  }
+
+  confirmDeleteEvent(): void {
+    if (!this.eventToDeleteId) return;
+
+    this.deletingEvent = true;
+    this.calendarService.deleteEvent(this.eventToDeleteId).subscribe({
       next: () => {
         this.successMessage = 'Event deleted successfully!';
         setTimeout(() => this.successMessage = null, 3000);
         this.loadEvents();
+        this.deletingEvent = false;
+        this.showDeleteEventModal = false;
+        this.eventToDeleteId = null;
       },
       error: (err) => {
         this.error = 'Error deleting the event.';
+        this.deletingEvent = false;
         console.error('Error deleting event:', err);
       }
     });

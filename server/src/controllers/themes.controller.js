@@ -373,3 +373,53 @@ export const deleteSubtopicGlobally = asyncHandler(async (req, res) => {
     message: `Subtopic "${decodedSubtopicName}" deleted successfully from ${deletedCount} user roadmap(s)`
   });
 });
+
+// @desc    Update shared content for a subtopic (shared theory, code snippets, resources)
+// @route   PUT /api/themes/:id/subtopics/:subtopicName/shared
+// @access  Private
+export const updateSubtopicSharedContent = asyncHandler(async (req, res) => {
+  const { id, subtopicName } = req.params;
+  const { sharedTheory } = req.body;
+  const decodedSubtopicName = decodeURIComponent(subtopicName);
+  
+  // Verify theme exists
+  const theme = await Theme.findById(id);
+  if (!theme) {
+    return res.status(404).json({
+      success: false,
+      message: 'Theme not found'
+    });
+  }
+
+  // Normalize subtopic name for matching
+  const normalizedSearchName = normalizeStr(decodedSubtopicName);
+
+  // Find all nodes for this theme and update shared content
+  const allNodes = await PersonalNode.find({ themeId: id });
+  let updatedCount = 0;
+
+  for (const node of allNodes) {
+    if (!node.subtopics || node.subtopics.length === 0) continue;
+    
+    let nodeModified = false;
+    for (const subtopic of node.subtopics) {
+      if (normalizeStr(subtopic.name) === normalizedSearchName) {
+        // Update shared theory if provided
+        if (sharedTheory !== undefined) {
+          subtopic.sharedTheory = sharedTheory;
+          nodeModified = true;
+        }
+      }
+    }
+    
+    if (nodeModified) {
+      updatedCount++;
+      await node.save();
+    }
+  }
+
+  res.json({
+    success: true,
+    message: `Shared content updated for subtopic "${decodedSubtopicName}" in ${updatedCount} user roadmap(s)`
+  });
+});
