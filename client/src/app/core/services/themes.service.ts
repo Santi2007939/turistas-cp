@@ -133,4 +133,12 @@ export class ThemesService {
     const encodedName = encodeURIComponent(subtopicName);
     return this.api.delete(`/api/themes/${themeId}/subtopics/${encodedName}`);
   }
+
+  /**
+   * Update subtopic shared content (theory, code snippets, resources)
+   */
+  updateSubtopicSharedContent(themeId: string, subtopicName: string, content: { sharedTheory?: string }): Observable<any> {
+    const encodedName = encodeURIComponent(subtopicName);
+    return this.api.put(`/api/themes/${themeId}/subtopics/${encodedName}/shared`, content);
+  }
 }

@@ -173,13 +173,54 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                     <line x1="2" y1="12" x2="22" y2="12" />
                     <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
                   </svg>
-                  Shared theory contributed by team members
+                  Shared theory editable by all team members
                 </p>
               </div>
-              <div 
-                class="w-full rounded-[12px] px-4 py-3 min-h-[200px] whitespace-pre-wrap"
-                style="border: 1px solid #EAE3DB; color: #2D2622; background-color: #FCF9F5;">
-                {{ subtopic.sharedTheory || 'No shared theory content yet.' }}
+              
+              <!-- Editable textarea for shared theory -->
+              <div *ngIf="!editingSharedTheory" class="relative">
+                <div 
+                  class="w-full rounded-[12px] px-4 py-3 min-h-[200px] whitespace-pre-wrap cursor-pointer hover:bg-white transition-colors"
+                  style="border: 1px solid #EAE3DB; color: #2D2622; background-color: #FCF9F5;"
+                  (click)="startEditingSharedTheory()">
+                  {{ subtopic.sharedTheory || 'No shared theory content yet. Click to add.' }}
+                </div>
+                <button 
+                  (click)="startEditingSharedTheory()"
+                  class="absolute top-2 right-2 px-3 py-1 rounded-[12px] text-sm font-medium flex items-center gap-1"
+                  style="background-color: #8B5E3C; color: white;">
+                  <!-- Lucide Edit icon -->
+                  <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  Edit
+                </button>
+              </div>
+              
+              <!-- Edit mode -->
+              <div *ngIf="editingSharedTheory">
+                <textarea 
+                  [(ngModel)]="editedSharedTheory"
+                  rows="12"
+                  placeholder="Write shared theory here..."
+                  class="w-full rounded-[12px] px-4 py-3 resize-none transition-all"
+                  style="border: 1px solid #EAE3DB; color: #2D2622;">
+                </textarea>
+                <div class="flex gap-2 justify-end mt-3">
+                  <button 
+                    (click)="cancelEditingSharedTheory()"
+                    class="px-4 py-2 rounded-[12px] font-medium"
+                    style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
+                    Cancel
+                  </button>
+                  <button 
+                    (click)="saveSharedTheory()"
+                    [disabled]="savingSharedTheory"
+                    class="text-white px-4 py-2 rounded-[12px] font-medium disabled:opacity-50"
+                    style="background-color: #8B5E3C;">
+                    {{ savingSharedTheory ? 'Saving...' : 'Save' }}
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -387,6 +428,11 @@ export class SubtopicContentComponent implements OnInit {
   currentUser: User | null = null;
   showDeleteConfirmation = false;
   deleting = false;
+  
+  // Shared theory editing state
+  editingSharedTheory = false;
+  editedSharedTheory = '';
+  savingSharedTheory = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -485,5 +531,40 @@ export class SubtopicContentComponent implements OnInit {
       'very-hard': 'Very Hard'
     };
     return labels[difficulty] || difficulty;
+  }
+
+  // Shared theory editing methods
+  startEditingSharedTheory(): void {
+    this.editedSharedTheory = this.subtopic?.sharedTheory || '';
+    this.editingSharedTheory = true;
+  }
+
+  cancelEditingSharedTheory(): void {
+    this.editingSharedTheory = false;
+    this.editedSharedTheory = '';
+  }
+
+  saveSharedTheory(): void {
+    if (!this.subtopic) return;
+
+    this.savingSharedTheory = true;
+    this.themesService.updateSubtopicSharedContent(this.themeId, this.subtopicName, {
+      sharedTheory: this.editedSharedTheory
+    }).subscribe({
+      next: () => {
+        // Update the local subtopic data
+        if (this.subtopic) {
+          this.subtopic.sharedTheory = this.editedSharedTheory;
+        }
+        this.savingSharedTheory = false;
+        this.editingSharedTheory = false;
+        this.editedSharedTheory = '';
+      },
+      error: (err) => {
+        this.savingSharedTheory = false;
+        this.error = 'Failed to save shared theory. Please try again.';
+        console.error('Error saving shared theory:', err);
+      }
+    });
   }
 }
