@@ -257,14 +257,14 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                     placeholder="Code description..."
                     class="w-full rounded-[12px] px-3 py-2 mb-2 text-sm"
                     style="border: 1px solid #EAE3DB; color: #2D2622;">
-                  <pre class="rounded-[12px] p-4 overflow-x-auto" style="background-color: #2D2622;"><code><textarea 
+                  <textarea 
                     [(ngModel)]="snippet.code"
                     (blur)="saveCodeSnippets()"
                     rows="12"
                     placeholder="// Write your code here..."
-                    class="w-full bg-transparent font-mono text-sm border-0 focus:outline-none resize-none"
-                    style="color: #D4A373;">
-</textarea></code></pre>
+                    class="w-full rounded-[12px] p-4 font-mono text-sm resize-none"
+                    style="background-color: #2D2622; color: #D4A373; border: 1px solid #2D2622;">
+                  </textarea>
                 </div>
                 <button 
                   (click)="addCodeSnippet()"
@@ -1071,23 +1071,23 @@ export class SubtopicContentComponent implements OnInit {
   }
 
   filterProblems(): void {
-    let filtered = [...this.availableProblems];
+    const query = this.problemSearchQuery.toLowerCase().trim();
+    const difficulty = this.problemFilterDifficulty;
     
-    // Filter by search query
-    if (this.problemSearchQuery) {
-      const query = this.problemSearchQuery.toLowerCase();
-      filtered = filtered.filter(p => 
-        p.title.toLowerCase().includes(query) ||
-        p.description?.toLowerCase().includes(query)
-      );
-    }
-    
-    // Filter by difficulty
-    if (this.problemFilterDifficulty) {
-      filtered = filtered.filter(p => p.difficulty === this.problemFilterDifficulty);
-    }
-    
-    this.filteredProblems = filtered;
+    this.filteredProblems = this.availableProblems.filter(p => {
+      // Filter by search query
+      if (query && !p.title.toLowerCase().includes(query) && 
+          !(p.description?.toLowerCase().includes(query))) {
+        return false;
+      }
+      
+      // Filter by difficulty
+      if (difficulty && p.difficulty !== difficulty) {
+        return false;
+      }
+      
+      return true;
+    });
   }
 
   selectProblemForLinking(problem: Problem): void {
