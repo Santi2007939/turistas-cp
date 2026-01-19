@@ -1,0 +1,196 @@
+/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Matte-Drift Design System - Global Styles */
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: 'Public Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: #FCF9F5;
+    color: #2D2622;
+    font-family: 'Public Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  /* JetBrains Mono for numeric/code content */
+  code,
+  pre,
+  .font-mono,
+  .stat-number {
+    font-family: 'JetBrains Mono', Menlo, Monaco, Consolas, monospace;
+  }
+}
+
+@layer components {
+  /* Matte-Drift Card Component */
+  .matte-card {
+    @apply bg-white rounded-[12px] p-6;
+    border: 1px solid #EAE3DB;
+  }
+
+  /* Matte-Drift Primary Button */
+  .matte-btn-primary {
+    @apply px-6 py-3 rounded-[12px] font-medium text-white transition-colors;
+    background-color: #8B5E3C;
+  }
+
+  .matte-btn-primary:hover {
+    background-color: #7A5235;
+  }
+
+  /* Matte-Drift Secondary Button */
+  .matte-btn-secondary {
+    @apply px-6 py-3 rounded-[12px] font-medium transition-colors;
+    background-color: #FCF9F5;
+    color: #2D2622;
+    border: 1px solid #EAE3DB;
+  }
+
+  .matte-btn-secondary:hover {
+    background-color: #EAE3DB;
+  }
+
+  /* Matte-Drift Progress Bar */
+  .matte-progress {
+    @apply w-full rounded-[12px] h-2 overflow-hidden;
+    background-color: #EAE3DB;
+  }
+
+  .matte-progress-bar {
+    @apply h-2 rounded-[12px] transition-all duration-500;
+    background-color: #D4A373;
+  }
+
+  /* Matte-Drift Input */
+  .matte-input {
+    @apply w-full px-4 py-3 rounded-[12px] transition-colors;
+    border: 1px solid #EAE3DB;
+    background-color: #FFFFFF;
+    color: #2D2622;
+  }
+
+  .matte-input:focus {
+    outline: none;
+    border-color: #8B5E3C;
+  }
+
+  /* Matte-Drift Select */
+  .matte-select {
+    @apply w-full px-4 py-3 rounded-[12px] transition-colors;
+    border: 1px solid #EAE3DB;
+    background-color: #FFFFFF;
+    color: #2D2622;
+  }
+
+  .matte-select:focus {
+    outline: none;
+    border-color: #8B5E3C;
+  }
+
+  /* Matte-Drift Badge */
+  .matte-badge {
+    @apply px-3 py-1 text-sm font-medium rounded-[12px];
+  }
+
+  .matte-badge-primary {
+    background-color: #8B5E3C;
+    color: #FFFFFF;
+  }
+
+  .matte-badge-secondary {
+    background-color: #FCF9F5;
+    color: #2D2622;
+    border: 1px solid #EAE3DB;
+  }
+
+  .matte-badge-sand {
+    background-color: #D4A373;
+    color: #2D2622;
+  }
+
+  /* Matte-Drift Date Input - Styled calendar picker */
+  input[type="date"],
+  input[type="datetime-local"] {
+    @apply px-4 py-3 rounded-[12px] transition-colors;
+    border: 1px solid #EAE3DB;
+    background-color: #FFFFFF;
+    color: #2D2622;
+    font-family: 'Public Sans', system-ui, sans-serif;
+  }
+
+  input[type="date"]:focus,
+  input[type="datetime-local"]:focus {
+    outline: none;
+    border-color: #8B5E3C;
+    box-shadow: 0 0 0 2px rgba(139, 94, 60, 0.1);
+  }
+
+  /* Style the calendar icon - Matte-Drift themed */
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    opacity: 0.7;
+    /* Filter to match #4A3B33 (caracal icon color) */
+    filter: invert(23%) sepia(10%) saturate(1200%) hue-rotate(346deg) brightness(95%);
+    transition: all 0.2s ease;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator:hover,
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+    background-color: #FCF9F5;
+  }
+
+  /* Firefox date input styling */
+  input[type="date"]::-moz-calendar-picker-indicator {
+    cursor: pointer;
+  }
+}
+
+/* Matte-Drift Calendar Picker Override (Chrome/Edge) */
+::-webkit-datetime-edit {
+  padding: 0;
+  font-family: 'Public Sans', system-ui, sans-serif;
+}
+
+::-webkit-datetime-edit-fields-wrapper {
+  padding: 0;
+}
+
+::-webkit-datetime-edit-text {
+  color: #4A3B33;
+  padding: 0 4px;
+}
+
+::-webkit-datetime-edit-month-field,
+::-webkit-datetime-edit-day-field,
+::-webkit-datetime-edit-year-field,
+::-webkit-datetime-edit-hour-field,
+::-webkit-datetime-edit-minute-field,
+::-webkit-datetime-edit-ampm-field {
+  color: #2D2622;
+}
+
+::-webkit-datetime-edit-month-field:focus,
+::-webkit-datetime-edit-day-field:focus,
+::-webkit-datetime-edit-year-field:focus,
+::-webkit-datetime-edit-hour-field:focus,
+::-webkit-datetime-edit-minute-field:focus,
+::-webkit-datetime-edit-ampm-field:focus {
+  background-color: #FCF9F5;
+  border-radius: 4px;
+  outline: none;
+}
