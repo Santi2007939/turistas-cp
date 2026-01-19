@@ -1018,7 +1018,6 @@ export class TeamDetailComponent implements OnInit, OnDestroy {
   newRoomName = '';
   newSessionName = '';
   customSessionLink = '';
-  sessionLinkOption = 'auto';
   renameSessionName = '';
   renameSessionId = '';
   viewTemplateLanguage = 'cpp';
@@ -1044,7 +1043,6 @@ export class TeamDetailComponent implements OnInit, OnDestroy {
   rpcContestsError: string | null = null;
   rpcContests: any[] = [];
   usacoLinkUrl = '';
-  selectedLanguage = 'cpp';
   
   // Timeout IDs for success message auto-hide
   private successMessageTimeoutId: number | null = null;
