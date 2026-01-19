@@ -204,7 +204,7 @@ export const deleteTheme = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc    Get aggregated subtopic content for a theme (shared content from all users)
+// @desc    Get aggregated subtopic content for a theme (shared content from Theme model + user's personal notes)
 // @route   GET /api/themes/:id/subtopics/:subtopicName
 // @access  Private
 export const getSubtopicContent = asyncHandler(async (req, res) => {
@@ -226,80 +226,33 @@ export const getSubtopicContent = asyncHandler(async (req, res) => {
     themeId: id 
   });
 
-  // Get all nodes for this theme to aggregate shared content
-  const allNodes = await PersonalNode.find({ themeId: id });
-  
   // Normalize subtopic name for matching
   const normalizedSearchName = normalizeStr(decodedSubtopicName);
   
-  // Aggregate shared content from all users' subtopics with matching name
+  // Find the subtopic in the Theme model (primary source for shared content)
+  const themeSubtopic = theme.subthemes.find(
+    s => normalizeStr(s.name) === normalizedSearchName
+  );
+  
+  // Initialize aggregated content with Theme's shared content
   let aggregatedContent = {
-    name: decodedSubtopicName,
-    description: '',
-    sharedTheory: '',
-    codeSnippets: [],
-    linkedProblems: [],
-    resources: [],
+    name: themeSubtopic?.name || decodedSubtopicName,
+    description: themeSubtopic?.description || '',
+    sharedTheory: themeSubtopic?.sharedTheory || '',
+    codeSnippets: themeSubtopic?.codeSnippets || [],
+    linkedProblems: themeSubtopic?.linkedProblems || [],
+    resources: themeSubtopic?.resources || [],
     userHasThemeInRoadmap: !!userNode,
     personalNotes: '' // Only filled if user has theme in roadmap
   };
 
-  // Set to track unique code snippets and resources
-  const seenCodeSnippets = new Set();
-  const seenResources = new Set();
-  const seenProblems = new Set();
-
-  for (const node of allNodes) {
-    if (!node.subtopics) continue;
-    
-    for (const subtopic of node.subtopics) {
-      if (normalizeStr(subtopic.name) === normalizedSearchName) {
-        // Use description from first match if not already set
-        if (!aggregatedContent.description && subtopic.description) {
-          aggregatedContent.description = subtopic.description;
-        }
-        
-        // Aggregate shared theory (use most recent or longest)
-        if (subtopic.sharedTheory && subtopic.sharedTheory.length > aggregatedContent.sharedTheory.length) {
-          aggregatedContent.sharedTheory = subtopic.sharedTheory;
-        }
-        
-        // Aggregate code snippets (deduplicate by code content)
-        if (subtopic.codeSnippets) {
-          for (const snippet of subtopic.codeSnippets) {
-            const key = `${snippet.language}:${snippet.code}`;
-            if (!seenCodeSnippets.has(key)) {
-              seenCodeSnippets.add(key);
-              aggregatedContent.codeSnippets.push(snippet);
-            }
-          }
-        }
-        
-        // Aggregate linked problems (deduplicate by problemId)
-        if (subtopic.linkedProblems) {
-          for (const problem of subtopic.linkedProblems) {
-            if (!seenProblems.has(problem.problemId.toString())) {
-              seenProblems.add(problem.problemId.toString());
-              aggregatedContent.linkedProblems.push(problem);
-            }
-          }
-        }
-        
-        // Aggregate resources (deduplicate by link)
-        if (subtopic.resources) {
-          for (const resource of subtopic.resources) {
-            if (!seenResources.has(resource.link)) {
-              seenResources.add(resource.link);
-              aggregatedContent.resources.push(resource);
-            }
-          }
-        }
-        
-        // If this is the user's own node, include personal notes
-        if (userNode && node._id.toString() === userNode._id.toString()) {
-          aggregatedContent.personalNotes = subtopic.personalNotes || '';
-        }
-      }
+  // If user has the theme in their roadmap, get personal notes from their node
+  if (userNode && userNode.subtopics) {
+    const userSubtopic = userNode.subtopics.find(
+      s => normalizeStr(s.name) === normalizedSearchName
+    );
+    if (userSubtopic) {
+      aggregatedContent.personalNotes = userSubtopic.personalNotes || '';
     }
   }
 
@@ -374,12 +327,12 @@ export const deleteSubtopicGlobally = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc    Update shared content for a subtopic (shared theory, code snippets, resources)
+// @desc    Update shared content for a subtopic (stored in Theme model)
 // @route   PUT /api/themes/:id/subtopics/:subtopicName/shared
 // @access  Private
 export const updateSubtopicSharedContent = asyncHandler(async (req, res) => {
   const { id, subtopicName } = req.params;
-  const { sharedTheory } = req.body;
+  const { sharedTheory, codeSnippets, linkedProblems, resources } = req.body;
   const decodedSubtopicName = decodeURIComponent(subtopicName);
   
   // Verify theme exists
@@ -394,32 +347,42 @@ export const updateSubtopicSharedContent = asyncHandler(async (req, res) => {
   // Normalize subtopic name for matching
   const normalizedSearchName = normalizeStr(decodedSubtopicName);
 
-  // Find all nodes for this theme and update shared content
-  const allNodes = await PersonalNode.find({ themeId: id });
-  let updatedCount = 0;
+  // Find the subtopic in the theme's subthemes array
+  let subtopicIndex = theme.subthemes.findIndex(
+    s => normalizeStr(s.name) === normalizedSearchName
+  );
 
-  for (const node of allNodes) {
-    if (!node.subtopics || node.subtopics.length === 0) continue;
-    
-    let nodeModified = false;
-    for (const subtopic of node.subtopics) {
-      if (normalizeStr(subtopic.name) === normalizedSearchName) {
-        // Update shared theory if provided
-        if (sharedTheory !== undefined) {
-          subtopic.sharedTheory = sharedTheory;
-          nodeModified = true;
-        }
-      }
-    }
-    
-    if (nodeModified) {
-      updatedCount++;
-      await node.save();
-    }
+  // If subtopic doesn't exist, create it
+  if (subtopicIndex === -1) {
+    theme.subthemes.push({
+      name: decodedSubtopicName,
+      description: '',
+      sharedTheory: '',
+      codeSnippets: [],
+      linkedProblems: [],
+      resources: []
+    });
+    subtopicIndex = theme.subthemes.length - 1;
   }
+
+  // Update shared content fields if provided
+  if (sharedTheory !== undefined) {
+    theme.subthemes[subtopicIndex].sharedTheory = sharedTheory;
+  }
+  if (codeSnippets !== undefined) {
+    theme.subthemes[subtopicIndex].codeSnippets = codeSnippets;
+  }
+  if (linkedProblems !== undefined) {
+    theme.subthemes[subtopicIndex].linkedProblems = linkedProblems;
+  }
+  if (resources !== undefined) {
+    theme.subthemes[subtopicIndex].resources = resources;
+  }
+
+  await theme.save();
 
   res.json({
     success: true,
-    message: `Shared content updated for subtopic "${decodedSubtopicName}" in ${updatedCount} user roadmap(s)`
+    message: `Shared content updated for subtopic "${decodedSubtopicName}"`
   });
 });

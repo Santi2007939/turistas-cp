@@ -123,7 +123,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             </svg>
             <div class="flex-1">
               <p class="text-sm" style="color: #4A3B33;">
-                To add or manage subtopics, first add this theme to your personal roadmap.
+                Click on any subtopic to view and edit its content. Add this theme to your roadmap to track progress and add Personal Notes.
               </p>
             </div>
             <a 
