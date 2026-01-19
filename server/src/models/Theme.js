@@ -57,8 +57,7 @@ const themeSchema = new mongoose.Schema({
     linkedProblems: [{
       problemId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Problem',
-        required: false
+        ref: 'Problem'
       },
       title: {
         type: String,
