@@ -249,6 +249,8 @@ ENCRYPTION_KEY=32-character-encryption-key
 CLIENT_URL=https://tu-app.vercel.app
 ```
 
+> ⚠️ **Importante:** Usa valores únicos y seguros para `JWT_SECRET` y `ENCRYPTION_KEY` en producción. Se recomienda generar cadenas aleatorias de al menos 32 caracteres.
+
 ### Paso 2: Configurar el Frontend para Producción
 
 1. Actualizar la URL de la API en `client/src/environments/environment.prod.ts`:
