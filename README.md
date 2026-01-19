@@ -221,6 +221,110 @@ npm test
 - Ejecución de código online
 - Soporte para C++, Python, Java
 
+## 🌐 Despliegue en Vercel
+
+### Preparación para el Despliegue
+
+Este proyecto utiliza una arquitectura MEAN Stack separada:
+- **Frontend (Angular)**: Se despliega en Vercel
+- **Backend (Node.js/Express)**: Se despliega en Railway, Render, o similar
+
+### Paso 1: Desplegar el Backend
+
+Antes de desplegar el frontend, necesitas tener el backend corriendo en producción.
+
+**Opciones recomendadas:**
+- [Railway](https://railway.app) - Fácil de configurar con Node.js
+- [Render](https://render.com) - Tiene tier gratuito
+- [Fly.io](https://fly.io) - Buen rendimiento global
+
+**Variables de entorno necesarias para el backend:**
+```env
+NODE_ENV=production
+PORT=3000
+MONGODB_URI=mongodb+srv://usuario:password@cluster.mongodb.net/turistas_cp
+JWT_SECRET=your-secure-secret-key
+JWT_EXPIRES_IN=7d
+ENCRYPTION_KEY=32-character-encryption-key
+CLIENT_URL=https://tu-app.vercel.app
+```
+
+> ⚠️ **Importante:** Usa valores únicos y seguros para `JWT_SECRET` y `ENCRYPTION_KEY` en producción. Se recomienda generar cadenas aleatorias de al menos 32 caracteres.
+
+### Paso 2: Configurar el Frontend para Producción
+
+1. Actualizar la URL de la API en `client/src/environments/environment.prod.ts`:
+
+```typescript
+export const environment = {
+  production: true,
+  apiUrl: 'https://tu-backend-url.com',  // URL de tu backend desplegado
+  teamName: 'Team Turistas'
+};
+```
+
+### Paso 3: Desplegar en Vercel
+
+#### Opción A: Desde la CLI de Vercel
+
+```bash
+# Instalar Vercel CLI
+npm install -g vercel
+
+# Navegar al directorio del cliente
+cd client
+
+# Construir el proyecto
+npm run build
+
+# Desplegar
+vercel
+```
+
+#### Opción B: Desde el Dashboard de Vercel
+
+1. Ve a [vercel.com](https://vercel.com) e inicia sesión
+2. Haz clic en "Add New" → "Project"
+3. Importa tu repositorio de GitHub
+4. Configura el proyecto:
+   - **Framework Preset**: Other
+   - **Root Directory**: `client`
+   - **Build Command**: `npm run build`
+   - **Output Directory**: `dist/client/browser`
+   - **Install Command**: `npm install`
+
+5. En la sección de "Environment Variables", agrega:
+   - No se requieren variables de entorno adicionales (la URL de la API está en el código)
+
+6. Haz clic en "Deploy"
+
+### Paso 4: Configurar Rewrites para SPA
+
+Crea un archivo `vercel.json` en la carpeta `client/`:
+
+```json
+{
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
+```
+
+Esto asegura que Angular maneje todas las rutas correctamente.
+
+### Verificación Post-Despliegue
+
+1. Verifica que el frontend cargue correctamente
+2. Prueba el login y registro
+3. Verifica que las llamadas a la API funcionen (revisa la consola del navegador)
+4. Asegúrate de que CORS esté configurado correctamente en el backend (`CLIENT_URL`)
+
+### Solución de Problemas Comunes
+
+- **Error 404 en rutas**: Verifica que `vercel.json` esté configurado
+- **Error de CORS**: Verifica `CLIENT_URL` en el backend
+- **API no responde**: Verifica la URL en `environment.prod.ts`
+
 ## 🤝 Contribución
 
 1. Fork el proyecto
