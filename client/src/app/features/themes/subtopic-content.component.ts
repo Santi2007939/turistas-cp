@@ -1407,7 +1407,7 @@ export class SubtopicContentComponent implements OnInit {
     
     // Add inline problem (without problemId, meaning it's not in the library)
     this.subtopic.linkedProblems.push({
-      problemId: '', // Empty means inline problem
+      problemId: undefined as any, // undefined for inline problem - will be filtered before save
       title: this.newInlineProblem.title,
       description: this.newInlineProblem.description,
       link: this.newInlineProblem.link,
@@ -1426,8 +1426,14 @@ export class SubtopicContentComponent implements OnInit {
 
   saveProblems(): void {
     if (!this.subtopic) return;
+    // Transform linkedProblems to ensure problemId is undefined (not empty string) for inline problems
+    const transformedProblems = this.subtopic.linkedProblems?.map(problem => ({
+      ...problem,
+      // Convert empty string problemId to undefined for MongoDB compatibility
+      problemId: problem.problemId && problem.problemId !== '' ? problem.problemId : undefined
+    }));
     this.themesService.updateSubtopicSharedContent(this.themeId, this.subtopicName, {
-      linkedProblems: this.subtopic.linkedProblems
+      linkedProblems: transformedProblems
     }).subscribe({
       next: () => {
         // Successfully saved
