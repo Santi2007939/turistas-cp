@@ -1129,12 +1129,25 @@ export class SubtopicContentComponent implements OnInit {
   }
 
   saveAndCloseCodeSnippet(): void {
+    if (!this.subtopic) return;
     this.savingCodeSnippet = true;
-    this.saveCodeSnippets();
-    setTimeout(() => {
-      this.savingCodeSnippet = false;
-      this.editingCodeSnippetIndex = null;
-    }, 500);
+    // Filter out code snippets with empty code to avoid saving unnecessary data
+    const validCodeSnippets = this.subtopic.codeSnippets?.filter(
+      snippet => snippet.code && snippet.code.trim() !== ''
+    ) || [];
+    this.themesService.updateSubtopicSharedContent(this.themeId, this.subtopicName, {
+      codeSnippets: validCodeSnippets
+    }).subscribe({
+      next: () => {
+        this.savingCodeSnippet = false;
+        this.editingCodeSnippetIndex = null;
+      },
+      error: (err) => {
+        this.savingCodeSnippet = false;
+        this.error = 'Failed to save code snippets. Please try again.';
+        console.error('Error saving code snippets:', err);
+      }
+    });
   }
 
   confirmDeleteCodeSnippet(index: number): void {
@@ -1264,13 +1277,26 @@ export class SubtopicContentComponent implements OnInit {
   }
 
   saveAndCloseResources(): void {
+    if (!this.subtopic) return;
     this.savingResources = true;
-    this.saveResources();
-    setTimeout(() => {
-      this.savingResources = false;
-      this.editingResources = false;
-      this.originalResources = [];
-    }, 500);
+    // Filter out resources with empty name or link to avoid validation errors
+    const validResources = this.subtopic.resources?.filter(
+      r => r.name && r.name.trim() !== '' && r.link && r.link.trim() !== ''
+    ) || [];
+    this.themesService.updateSubtopicSharedContent(this.themeId, this.subtopicName, {
+      resources: validResources
+    }).subscribe({
+      next: () => {
+        this.savingResources = false;
+        this.editingResources = false;
+        this.originalResources = [];
+      },
+      error: (err) => {
+        this.savingResources = false;
+        this.error = 'Failed to save resources. Please try again.';
+        console.error('Error saving resources:', err);
+      }
+    });
   }
 
   removeResource(index: number): void {
@@ -1407,7 +1433,7 @@ export class SubtopicContentComponent implements OnInit {
     
     // Add inline problem (without problemId, meaning it's not in the library)
     this.subtopic.linkedProblems.push({
-      problemId: undefined as any, // undefined for inline problem - will be filtered before save
+      problemId: undefined, // undefined for inline problem - will be filtered before save
       title: this.newInlineProblem.title,
       description: this.newInlineProblem.description,
       link: this.newInlineProblem.link,

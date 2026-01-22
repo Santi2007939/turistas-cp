@@ -52,7 +52,7 @@ export interface SubtopicContent {
     description?: string;
   }>;
   linkedProblems: Array<{
-    problemId: string;
+    problemId?: string;
     title: string;
     description?: string;
     link?: string;
