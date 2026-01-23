@@ -50,7 +50,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               </div>
               <button 
                 *ngIf="isOwner"
-                (click)="showAddSubtopicModal = true"
+                (click)="openAddSubtopicModal()"
                 class="text-white font-medium py-2 px-4 rounded-[12px] flex items-center gap-2"
                 style="background-color: #8B5E3C;">
                 <!-- Lucide Plus icon -->
@@ -309,7 +309,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                     <pre 
                       *ngIf="editingCodeSnippet[subtopic._id || i] !== j"
                       class="rounded-[12px] p-4 overflow-x-auto font-mono text-sm"
-                      style="background-color: #2D2622; margin: 0;"><code [innerHTML]="highlightCode(snippet.code, snippet.language)"></code></pre>
+                      style="background-color: #2D2622; margin: 0;"><code style="color: #F8F8F2;" [innerHTML]="highlightCode(snippet.code, snippet.language)"></code></pre>
                   </div>
                   <button 
                     *ngIf="isOwner"
@@ -558,7 +558,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               Add subtopics to organize your learning content
             </p>
             <button 
-              (click)="showAddSubtopicModal = true"
+              (click)="openAddSubtopicModal()"
               class="text-white font-medium py-3 px-8 rounded-[12px] flex items-center justify-center gap-2 mx-auto"
               style="background-color: #8B5E3C;">
               <!-- Lucide Plus icon -->
@@ -576,7 +576,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
         *ngIf="showAddSubtopicModal" 
         class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4"
         (click)="showAddSubtopicModal = false">
-        <div class="bg-white rounded-[12px] p-6 w-full max-w-lg" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
+        <div class="bg-white rounded-[12px] p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
           <h3 class="text-xl font-semibold mb-6 flex items-center gap-2" style="color: #2D2622;">
             <!-- Lucide Plus icon -->
             <svg class="w-5 h-5" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -584,6 +584,36 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             </svg>
             New Subtopic
           </h3>
+          
+          <!-- Suggested Subtopics Section -->
+          <div *ngIf="cachedSuggestedSubtopics.length > 0" class="mb-6">
+            <label class="block text-sm font-medium mb-3" style="color: #2D2622;">Suggested Subtopics</label>
+            <div class="rounded-[12px] p-4 mb-2" style="background-color: #FCF9F5; border: 1px solid #EAE3DB;">
+              <p class="text-xs mb-3" style="color: #4A3B33;">
+                These subtopics are related to this theme. Click to add them directly.
+              </p>
+              <div class="flex flex-wrap gap-2">
+                <button 
+                  *ngFor="let suggested of cachedSuggestedSubtopics"
+                  (click)="selectSuggestedSubtopic(suggested)"
+                  class="px-3 py-2 rounded-[12px] text-sm font-medium transition-all hover:shadow-md flex items-center gap-2"
+                  style="background-color: white; border: 1px solid #EAE3DB; color: #2D2622;">
+                  <!-- Lucide Plus icon -->
+                  <svg class="w-3 h-3" style="color: #8B5E3C;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                  </svg>
+                  {{ suggested.name }}
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Divider with "or" text when suggestions exist -->
+          <div *ngIf="cachedSuggestedSubtopics.length > 0" class="flex items-center gap-4 mb-6">
+            <div class="flex-1 h-px" style="background-color: #EAE3DB;"></div>
+            <span class="text-sm" style="color: #4A3B33;">or create a custom subtopic</span>
+            <div class="flex-1 h-px" style="background-color: #EAE3DB;"></div>
+          </div>
           
           <div class="space-y-4">
             <div>
@@ -1030,6 +1060,9 @@ export class SubtopicDetailComponent implements OnInit {
   showAddSubtopicModal = false;
   isOwner = false; // Whether current user owns this roadmap node (default false for security)
   
+  // Cached suggested subtopics (computed when modal opens)
+  cachedSuggestedSubtopics: Array<{ name: string; description?: string }> = [];
+  
   // Delete subtopic confirmation modal state
   showDeleteSubtopicModal = false;
   deletingSubtopic = false;
@@ -1184,7 +1217,8 @@ export class SubtopicDetailComponent implements OnInit {
       linkedProblems: subtopic.linkedProblems,
       resources: subtopic.resources
     };
-    this.showAddSubtopicModal = true;
+    // Open modal (cache won't show since this subtopic already exists)
+    this.openAddSubtopicModal();
   }
 
   saveSubtopic(subtopic: Subtopic): void {
@@ -1629,5 +1663,48 @@ export class SubtopicDetailComponent implements OnInit {
 
     // Close modal
     this.closeCreateProblemModal();
+  }
+
+  // Open the add subtopic modal and compute suggested subtopics
+  openAddSubtopicModal(): void {
+    // Compute and cache suggested subtopics when modal opens
+    this.cachedSuggestedSubtopics = this.computeAvailableSuggestedSubtopics();
+    this.showAddSubtopicModal = true;
+  }
+
+  // Compute suggested subtopics from theme that haven't been added yet
+  private computeAvailableSuggestedSubtopics(): Array<{ name: string; description?: string }> {
+    if (!this.node?.themeId?.subthemes) return [];
+    
+    // Get names of already added subtopics (case-insensitive comparison)
+    const existingNames = new Set(
+      (this.node.subtopics || []).map(s => s.name.toLowerCase().trim())
+    );
+    
+    // Filter theme's subthemes to only show those not already added
+    return this.node.themeId.subthemes.filter(
+      subtheme => !existingNames.has(subtheme.name.toLowerCase().trim())
+    );
+  }
+
+  // Select a suggested subtopic and add it directly
+  selectSuggestedSubtopic(suggested: { name: string; description?: string }): void {
+    // Validate suggested subtopic has a name
+    if (!suggested?.name?.trim()) {
+      this.error = 'Invalid subtopic selection.';
+      return;
+    }
+    
+    this.newSubtopic = {
+      name: suggested.name,
+      description: suggested.description || '',
+      personalNotes: '',
+      sharedTheory: '',
+      codeSnippets: [],
+      linkedProblems: [],
+      resources: []
+    };
+    // Immediately create the subtopic
+    this.createSubtopic();
   }
 }
