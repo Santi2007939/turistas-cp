@@ -383,33 +383,32 @@ export const updateSubtopicSharedContent = asyncHandler(async (req, res) => {
 
   // Sync shared content to all PersonalNodes that have this theme and this subtopic
   // This ensures changes from themes are reflected in all users' roadmap views
-  const personalNodes = await PersonalNode.find({ themeId: id });
-  
-  for (const node of personalNodes) {
-    if (!node.subtopics || node.subtopics.length === 0) continue;
-    
-    // Find the matching subtopic in this node
-    const nodeSubtopicIndex = node.subtopics.findIndex(
-      s => normalizeStr(s.name) === normalizedSearchName
+  // Build the update object for shared content fields
+  const updateFields = {};
+  if (sharedTheory !== undefined) {
+    updateFields['subtopics.$.sharedTheory'] = sharedTheory;
+  }
+  if (codeSnippets !== undefined) {
+    updateFields['subtopics.$.codeSnippets'] = codeSnippets;
+  }
+  if (linkedProblems !== undefined) {
+    updateFields['subtopics.$.linkedProblems'] = linkedProblems;
+  }
+  if (resources !== undefined) {
+    updateFields['subtopics.$.resources'] = resources;
+  }
+
+  // Only update if there are fields to update
+  if (Object.keys(updateFields).length > 0) {
+    // Use updateMany with positional operator to update all matching subtopics in one operation
+    // This handles both exact name matches and normalized name matches
+    await PersonalNode.updateMany(
+      { 
+        themeId: id,
+        'subtopics.name': { $regex: new RegExp(`^${decodedSubtopicName}$`, 'i') }
+      },
+      { $set: updateFields }
     );
-    
-    if (nodeSubtopicIndex !== -1) {
-      // Update shared content fields (but NOT personal notes)
-      if (sharedTheory !== undefined) {
-        node.subtopics[nodeSubtopicIndex].sharedTheory = sharedTheory;
-      }
-      if (codeSnippets !== undefined) {
-        node.subtopics[nodeSubtopicIndex].codeSnippets = codeSnippets;
-      }
-      if (linkedProblems !== undefined) {
-        node.subtopics[nodeSubtopicIndex].linkedProblems = linkedProblems;
-      }
-      if (resources !== undefined) {
-        node.subtopics[nodeSubtopicIndex].resources = resources;
-      }
-      
-      await node.save();
-    }
   }
 
   res.json({
