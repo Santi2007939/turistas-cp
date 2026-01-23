@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { RoadmapService, PersonalNode, Subtopic, CodeSnippet, Resource, LinkedProblem } from '../../core/services/roadmap.service';
 import { ProblemsService, Problem } from '../../core/services/problems.service';
 import { AuthService, User } from '../../core/services/auth.service';
 import { NavbarComponent } from '../../shared/components/navbar.component';
-import { Subtheme } from '../../core/services/themes.service';
+import { ThemesService, Subtheme } from '../../core/services/themes.service';
 
 @Component({
   selector: 'app-subtopic-detail',
@@ -1138,7 +1139,9 @@ export class SubtopicDetailComponent implements OnInit {
     private router: Router,
     private roadmapService: RoadmapService,
     private problemsService: ProblemsService,
-    private authService: AuthService
+    private authService: AuthService,
+    private sanitizer: DomSanitizer,
+    private themesService: ThemesService
   ) {}
 
   ngOnInit(): void {
@@ -1225,12 +1228,51 @@ export class SubtopicDetailComponent implements OnInit {
   saveSubtopic(subtopic: Subtopic): void {
     if (!subtopic._id || !this.nodeId) return;
 
+    // Save personal data (personalNotes) to roadmap node
     this.roadmapService.updateSubtopic(this.nodeId, subtopic._id, subtopic).subscribe({
       error: (err) => {
         this.error = 'Could not save changes.';
         console.error('Error saving subtopic:', err);
       }
     });
+
+    // Also sync shared content (theory, code snippets, problems, resources) to the Theme model
+    // This ensures changes are visible globally in themes and other roadmaps
+    if (this.node?.themeId?._id && subtopic.name) {
+      const sharedContent: {
+        sharedTheory?: string;
+        codeSnippets?: Array<{ language: string; code: string; description?: string }>;
+        linkedProblems?: Array<{ problemId?: string; title: string; description?: string; link?: string; difficulty: string }>;
+        resources?: Array<{ name: string; link: string }>;
+      } = {};
+
+      // Only include fields that have values to avoid overwriting with empty data
+      if (subtopic.sharedTheory !== undefined) {
+        sharedContent.sharedTheory = subtopic.sharedTheory;
+      }
+      if (subtopic.codeSnippets !== undefined) {
+        sharedContent.codeSnippets = subtopic.codeSnippets;
+      }
+      if (subtopic.linkedProblems !== undefined) {
+        sharedContent.linkedProblems = subtopic.linkedProblems;
+      }
+      if (subtopic.resources !== undefined) {
+        sharedContent.resources = subtopic.resources;
+      }
+
+      // Only call the API if there's shared content to update
+      if (Object.keys(sharedContent).length > 0) {
+        this.themesService.updateSubtopicSharedContent(
+          this.node.themeId._id,
+          subtopic.name,
+          sharedContent
+        ).subscribe({
+          error: (err) => {
+            console.error('Error syncing shared content to theme:', err);
+          }
+        });
+      }
+    }
   }
 
   deleteSubtopic(subtopicId: string): void {
@@ -1328,8 +1370,8 @@ export class SubtopicDetailComponent implements OnInit {
   }
 
   // Syntax highlighting helper
-  highlightCode(code: string, language: 'python' | 'cpp'): string {
-    if (!code) return '<span style="color: #6272A4;">// No code yet</span>';
+  highlightCode(code: string, language: 'python' | 'cpp'): SafeHtml {
+    if (!code) return this.sanitizer.bypassSecurityTrustHtml('<span style="color: #6272A4;">// No code yet</span>');
     
     // Escape HTML entities
     let escaped = code
@@ -1380,7 +1422,7 @@ export class SubtopicDetailComponent implements OnInit {
       escaped = escaped.replace(/\b(\d+\.?\d*[fFlL]?)\b/g, '<span style="color: #BD93F9;">$1</span>');
     }
     
-    return escaped;
+    return this.sanitizer.bypassSecurityTrustHtml(escaped);
   }
 
   addResource(subtopic: Subtopic): void {

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ThemesService, SubtopicContent } from '../../core/services/themes.service';
 import { ProblemsService, Problem } from '../../core/services/problems.service';
 import { AuthService, User } from '../../core/services/auth.service';
@@ -950,7 +951,8 @@ export class SubtopicContentComponent implements OnInit {
     private router: Router,
     private themesService: ThemesService,
     private problemsService: ProblemsService,
-    private authService: AuthService
+    private authService: AuthService,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
@@ -1161,8 +1163,8 @@ export class SubtopicContentComponent implements OnInit {
   }
 
   // Syntax highlighting helper
-  highlightCode(code: string, language: 'python' | 'cpp'): string {
-    if (!code) return '<span style="color: #6272A4;">// No code yet</span>';
+  highlightCode(code: string, language: 'python' | 'cpp'): SafeHtml {
+    if (!code) return this.sanitizer.bypassSecurityTrustHtml('<span style="color: #6272A4;">// No code yet</span>');
     
     // Escape HTML entities
     let escaped = code
@@ -1213,7 +1215,7 @@ export class SubtopicContentComponent implements OnInit {
       escaped = escaped.replace(/\b(\d+\.?\d*[fFlL]?)\b/g, '<span style="color: #BD93F9;">$1</span>');
     }
     
-    return escaped;
+    return this.sanitizer.bypassSecurityTrustHtml(escaped);
   }
 
   // Resource methods
