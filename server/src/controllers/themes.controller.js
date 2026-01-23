@@ -381,6 +381,37 @@ export const updateSubtopicSharedContent = asyncHandler(async (req, res) => {
 
   await theme.save();
 
+  // Sync shared content to all PersonalNodes that have this theme and this subtopic
+  // This ensures changes from themes are reflected in all users' roadmap views
+  const personalNodes = await PersonalNode.find({ themeId: id });
+  
+  for (const node of personalNodes) {
+    if (!node.subtopics || node.subtopics.length === 0) continue;
+    
+    // Find the matching subtopic in this node
+    const nodeSubtopicIndex = node.subtopics.findIndex(
+      s => normalizeStr(s.name) === normalizedSearchName
+    );
+    
+    if (nodeSubtopicIndex !== -1) {
+      // Update shared content fields (but NOT personal notes)
+      if (sharedTheory !== undefined) {
+        node.subtopics[nodeSubtopicIndex].sharedTheory = sharedTheory;
+      }
+      if (codeSnippets !== undefined) {
+        node.subtopics[nodeSubtopicIndex].codeSnippets = codeSnippets;
+      }
+      if (linkedProblems !== undefined) {
+        node.subtopics[nodeSubtopicIndex].linkedProblems = linkedProblems;
+      }
+      if (resources !== undefined) {
+        node.subtopics[nodeSubtopicIndex].resources = resources;
+      }
+      
+      await node.save();
+    }
+  }
+
   res.json({
     success: true,
     message: `Shared content updated for subtopic "${decodedSubtopicName}"`

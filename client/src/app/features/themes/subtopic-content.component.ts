@@ -1172,48 +1172,62 @@ export class SubtopicContentComponent implements OnInit {
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;');
     
+    // Use placeholder system to protect spans from being corrupted by subsequent replacements
+    const placeholders: string[] = [];
+    const savePlaceholder = (match: string): string => {
+      const index = placeholders.length;
+      placeholders.push(match);
+      return `\x00${index}\x00`;
+    };
+    const restorePlaceholders = (text: string): string => {
+      return text.replace(/\x00(\d+)\x00/g, (_, idx) => placeholders[parseInt(idx, 10)]);
+    };
+    
     if (language === 'python') {
+      // Comments first (highest priority - they shouldn't be parsed for other patterns)
+      escaped = escaped.replace(/(#.*$)/gm, (match) => savePlaceholder(`<span style="color: #6272A4;">${match}</span>`));
+      
+      // Strings (single and double quotes)
+      escaped = escaped.replace(/(["'])((?:\\.|(?!\1)[^\\])*)(\1)/g, (match) => savePlaceholder(`<span style="color: #F1FA8C;">${match}</span>`));
+      
+      // Numbers (before keywords to avoid issues with hex codes)
+      escaped = escaped.replace(/\b(\d+\.?\d*)\b/g, (match) => savePlaceholder(`<span style="color: #BD93F9;">${match}</span>`));
+      
       // Python keywords
       const pythonKeywords = /\b(and|as|assert|async|await|break|class|continue|def|del|elif|else|except|finally|for|from|global|if|import|in|is|lambda|not|or|pass|raise|return|try|while|with|yield|None|True|False)\b/g;
-      escaped = escaped.replace(pythonKeywords, '<span style="color: #FF79C6;">$1</span>');
+      escaped = escaped.replace(pythonKeywords, (match) => savePlaceholder(`<span style="color: #FF79C6;">${match}</span>`));
       
       // Python built-in functions
       const pythonBuiltins = /\b(print|len|range|int|str|float|list|dict|set|tuple|input|open|type|sum|min|max|abs|sorted|enumerate|zip|map|filter)\b/g;
-      escaped = escaped.replace(pythonBuiltins, '<span style="color: #8BE9FD;">$1</span>');
-      
-      // Strings (single and double quotes)
-      escaped = escaped.replace(/(["'])((?:\\.|(?!\1)[^\\])*)(\1)/g, '<span style="color: #F1FA8C;">$1$2$3</span>');
-      
-      // Comments
-      escaped = escaped.replace(/(#.*$)/gm, '<span style="color: #6272A4;">$1</span>');
-      
-      // Numbers
-      escaped = escaped.replace(/\b(\d+\.?\d*)\b/g, '<span style="color: #BD93F9;">$1</span>');
+      escaped = escaped.replace(pythonBuiltins, (match) => savePlaceholder(`<span style="color: #8BE9FD;">${match}</span>`));
       
     } else if (language === 'cpp') {
-      // C++ keywords
-      const cppKeywords = /\b(alignas|alignof|and|and_eq|asm|auto|bitand|bitor|bool|break|case|catch|char|char8_t|char16_t|char32_t|class|compl|concept|const|consteval|constexpr|constinit|const_cast|continue|co_await|co_return|co_yield|decltype|default|delete|do|double|dynamic_cast|else|enum|explicit|export|extern|false|float|for|friend|goto|if|inline|int|long|mutable|namespace|new|noexcept|not|not_eq|nullptr|operator|or|or_eq|private|protected|public|register|reinterpret_cast|requires|return|short|signed|sizeof|static|static_assert|static_cast|struct|switch|template|this|thread_local|throw|true|try|typedef|typeid|typename|union|unsigned|using|virtual|void|volatile|wchar_t|while|xor|xor_eq)\b/g;
-      escaped = escaped.replace(cppKeywords, '<span style="color: #FF79C6;">$1</span>');
+      // Multi-line comments first (highest priority)
+      escaped = escaped.replace(/(\/\*[\s\S]*?\*\/)/g, (match) => savePlaceholder(`<span style="color: #6272A4;">${match}</span>`));
+      
+      // Single-line comments
+      escaped = escaped.replace(/(\/\/.*$)/gm, (match) => savePlaceholder(`<span style="color: #6272A4;">${match}</span>`));
       
       // C++ preprocessor directives
-      escaped = escaped.replace(/(#\s*(include|define|undef|ifdef|ifndef|if|else|elif|endif|pragma|error|warning).*$)/gm, '<span style="color: #FFB86C;">$1</span>');
+      escaped = escaped.replace(/(#\s*(include|define|undef|ifdef|ifndef|if|else|elif|endif|pragma|error|warning).*$)/gm, (match) => savePlaceholder(`<span style="color: #FFB86C;">${match}</span>`));
+      
+      // Strings
+      escaped = escaped.replace(/(["'])((?:\\.|(?!\1)[^\\])*)(\1)/g, (match) => savePlaceholder(`<span style="color: #F1FA8C;">${match}</span>`));
+      
+      // Numbers (before keywords to avoid issues with hex codes)
+      escaped = escaped.replace(/\b(\d+\.?\d*[fFlL]?)\b/g, (match) => savePlaceholder(`<span style="color: #BD93F9;">${match}</span>`));
+      
+      // C++ keywords
+      const cppKeywords = /\b(alignas|alignof|and|and_eq|asm|auto|bitand|bitor|bool|break|case|catch|char|char8_t|char16_t|char32_t|class|compl|concept|const|consteval|constexpr|constinit|const_cast|continue|co_await|co_return|co_yield|decltype|default|delete|do|double|dynamic_cast|else|enum|explicit|export|extern|false|float|for|friend|goto|if|inline|int|long|mutable|namespace|new|noexcept|not|not_eq|nullptr|operator|or|or_eq|private|protected|public|register|reinterpret_cast|requires|return|short|signed|sizeof|static|static_assert|static_cast|struct|switch|template|this|thread_local|throw|true|try|typedef|typeid|typename|union|unsigned|using|virtual|void|volatile|wchar_t|while|xor|xor_eq)\b/g;
+      escaped = escaped.replace(cppKeywords, (match) => savePlaceholder(`<span style="color: #FF79C6;">${match}</span>`));
       
       // Standard library
       const cppStdLib = /\b(std|cout|cin|endl|vector|string|map|set|queue|stack|pair|sort|find|begin|end|push_back|pop_back|size|empty|clear)\b/g;
-      escaped = escaped.replace(cppStdLib, '<span style="color: #8BE9FD;">$1</span>');
-      
-      // Strings
-      escaped = escaped.replace(/(["'])((?:\\.|(?!\1)[^\\])*)(\1)/g, '<span style="color: #F1FA8C;">$1$2$3</span>');
-      
-      // Single-line comments
-      escaped = escaped.replace(/(\/\/.*$)/gm, '<span style="color: #6272A4;">$1</span>');
-      
-      // Multi-line comments
-      escaped = escaped.replace(/(\/\*[\s\S]*?\*\/)/g, '<span style="color: #6272A4;">$1</span>');
-      
-      // Numbers
-      escaped = escaped.replace(/\b(\d+\.?\d*[fFlL]?)\b/g, '<span style="color: #BD93F9;">$1</span>');
+      escaped = escaped.replace(cppStdLib, (match) => savePlaceholder(`<span style="color: #8BE9FD;">${match}</span>`));
     }
+    
+    // Restore all placeholders
+    escaped = restorePlaceholders(escaped);
     
     return this.sanitizer.bypassSecurityTrustHtml(escaped);
   }
