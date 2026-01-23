@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ThemesService, SubtopicContent } from '../../core/services/themes.service';
 import { ProblemsService, Problem } from '../../core/services/problems.service';
 import { AuthService, User } from '../../core/services/auth.service';
@@ -73,7 +74,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 16v-4m0-4h.01" />
             </svg>
             <p class="text-sm" style="color: #4A3B33;">
-              You can edit shared content. Add this theme to your roadmap to access Personal Notes.
+              You can edit shared content. Add this theme to your roadmap to track progress and add Personal Notes.
             </p>
           </div>
         </div>
@@ -113,11 +114,6 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   'color': activeTab === tab.id ? '#8B5E3C' : '#4A3B33'
                 }">
                 <ng-container [ngSwitch]="tab.id">
-                  <!-- Lock icon for personal -->
-                  <svg *ngSwitchCase="'personal'" class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 11V7a5 5 0 0110 0v4" />
-                  </svg>
                   <!-- BookOpen icon for theory -->
                   <svg *ngSwitchCase="'theory'" class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
@@ -145,25 +141,6 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
           <!-- Tab Content -->
           <div class="mt-4">
-            <!-- Personal Notes (only if user has theme in roadmap) -->
-            <div *ngIf="activeTab === 'personal' && subtopic.userHasThemeInRoadmap">
-              <div class="rounded-[12px] p-4 mb-4" style="background-color: #FCF9F5; border-left: 4px solid #D4A373;">
-                <p class="text-sm flex items-center gap-2" style="color: #4A3B33;">
-                  <!-- Lucide Lock icon -->
-                  <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 11V7a5 5 0 0110 0v4" />
-                  </svg>
-                  These notes are private and only you can see them
-                </p>
-              </div>
-              <div 
-                class="w-full rounded-[12px] px-4 py-3 min-h-[200px] whitespace-pre-wrap"
-                style="border: 1px solid #EAE3DB; color: #2D2622; background-color: #FCF9F5;">
-                {{ subtopic.personalNotes || 'No personal notes yet. Add this theme to your roadmap to write notes.' }}
-              </div>
-            </div>
-
             <!-- Shared Theory -->
             <div *ngIf="activeTab === 'theory'">
               <div class="rounded-[12px] p-4 mb-4" style="background-color: #FCF9F5; border-left: 4px solid #8B5E3C;">
@@ -231,40 +208,98 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <div *ngFor="let snippet of subtopic.codeSnippets; let j = index" 
                      class="rounded-[12px] p-4" style="border: 1px solid #EAE3DB;">
                   <div class="flex items-center justify-between mb-3">
+                    <!-- Language selector (only in edit mode) -->
                     <select 
+                      *ngIf="editingCodeSnippetIndex === j"
                       [(ngModel)]="snippet.language"
-                      (change)="saveCodeSnippets()"
                       class="rounded-[12px] px-3 py-1 text-sm"
                       style="border: 1px solid #EAE3DB; color: #2D2622;">
                       <option value="python">Python</option>
                       <option value="cpp">C++</option>
                     </select>
-                    <button 
-                      (click)="removeCodeSnippet(j)"
-                      class="text-sm flex items-center gap-1"
-                      style="color: #4A3B33;">
-                      <!-- Lucide Trash2 icon -->
-                      <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                      </svg>
-                      Delete
-                    </button>
+                    <!-- Language badge (in view mode) -->
+                    <span 
+                      *ngIf="editingCodeSnippetIndex !== j"
+                      class="text-xs px-3 py-1 rounded-[12px] font-medium"
+                      style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #8B5E3C;">
+                      {{ snippet.language === 'python' ? 'Python' : 'C++' }}
+                    </span>
+                    <!-- Action buttons -->
+                    <div class="flex items-center gap-2">
+                      <!-- Edit button (in view mode) -->
+                      <button 
+                        *ngIf="editingCodeSnippetIndex !== j"
+                        (click)="startEditingCodeSnippet(j)"
+                        class="text-sm flex items-center gap-1 px-3 py-1 rounded-[12px]"
+                        style="background-color: #8B5E3C; color: white;">
+                        <!-- Lucide Edit icon -->
+                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        Edit
+                      </button>
+                      <!-- Save button (in edit mode) -->
+                      <button 
+                        *ngIf="editingCodeSnippetIndex === j"
+                        (click)="saveAndCloseCodeSnippet()"
+                        [disabled]="savingCodeSnippet"
+                        class="text-sm flex items-center gap-1 px-3 py-1 rounded-[12px] disabled:opacity-50"
+                        style="background-color: #8B5E3C; color: white;">
+                        <!-- Lucide Save icon -->
+                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                        </svg>
+                        {{ savingCodeSnippet ? 'Saving...' : 'Save' }}
+                      </button>
+                      <!-- Cancel button (in edit mode) -->
+                      <button 
+                        *ngIf="editingCodeSnippetIndex === j"
+                        (click)="cancelEditingCodeSnippet()"
+                        class="text-sm flex items-center gap-1 px-3 py-1 rounded-[12px]"
+                        style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #4A3B33;">
+                        Cancel
+                      </button>
+                      <!-- Delete button -->
+                      <button 
+                        (click)="confirmDeleteCodeSnippet(j)"
+                        class="text-sm flex items-center gap-1 px-3 py-1 rounded-[12px]"
+                        style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #4A3B33;">
+                        <!-- Lucide Trash2 icon -->
+                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        Delete
+                      </button>
+                    </div>
                   </div>
+                  <!-- Description field -->
                   <input 
+                    *ngIf="editingCodeSnippetIndex === j"
                     type="text"
                     [(ngModel)]="snippet.description"
-                    (blur)="saveCodeSnippets()"
                     placeholder="Code description..."
                     class="w-full rounded-[12px] px-3 py-2 mb-2 text-sm"
                     style="border: 1px solid #EAE3DB; color: #2D2622;">
+                  <p 
+                    *ngIf="editingCodeSnippetIndex !== j && snippet.description"
+                    class="text-sm mb-2"
+                    style="color: #4A3B33;">
+                    {{ snippet.description }}
+                  </p>
+                  <!-- Code editor (in edit mode) -->
                   <textarea 
+                    *ngIf="editingCodeSnippetIndex === j"
                     [(ngModel)]="snippet.code"
-                    (blur)="saveCodeSnippets()"
                     rows="12"
                     placeholder="// Write your code here..."
                     class="w-full rounded-[12px] p-4 font-mono text-sm resize-none"
-                    style="background-color: #2D2622; color: #D4A373; border: 1px solid #2D2622;">
+                    style="background-color: #2D2622; color: #F8F8F2; border: 1px solid #2D2622;">
                   </textarea>
+                  <!-- Code viewer with syntax highlighting (in view mode) -->
+                  <pre 
+                    *ngIf="editingCodeSnippetIndex !== j"
+                    class="rounded-[12px] p-4 overflow-x-auto font-mono text-sm"
+                    style="background-color: #2D2622; margin: 0;"><code style="color: #F8F8F2;" [innerHTML]="highlightCode(snippet.code, snippet.language)"></code></pre>
                 </div>
                 <button 
                   (click)="addCodeSnippet()"
@@ -399,7 +434,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
             <!-- Resources -->
             <div *ngIf="activeTab === 'resources'">
-              <div class="rounded-[12px] p-4 mb-4" style="background-color: #FCF9F5; border-left: 4px solid #D4A373;">
+              <div class="rounded-[12px] p-4 mb-4 flex items-center justify-between" style="background-color: #FCF9F5; border-left: 4px solid #D4A373;">
                 <p class="text-sm flex items-center gap-2" style="color: #4A3B33;">
                   <!-- Lucide BookOpen icon -->
                   <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -407,50 +442,87 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   </svg>
                   Learning resources shared by team members
                 </p>
+                <!-- Edit toggle button -->
+                <button 
+                  *ngIf="!editingResources && subtopic.resources && subtopic.resources.length > 0"
+                  (click)="startEditingResources()"
+                  class="text-sm flex items-center gap-1 px-3 py-1 rounded-[12px]"
+                  style="background-color: #8B5E3C; color: white;">
+                  <!-- Lucide Edit icon -->
+                  <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  Edit
+                </button>
+                <div *ngIf="editingResources" class="flex items-center gap-2">
+                  <button 
+                    (click)="saveAndCloseResources()"
+                    [disabled]="savingResources"
+                    class="text-sm flex items-center gap-1 px-3 py-1 rounded-[12px] disabled:opacity-50"
+                    style="background-color: #8B5E3C; color: white;">
+                    <!-- Lucide Save icon -->
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                    </svg>
+                    {{ savingResources ? 'Saving...' : 'Save' }}
+                  </button>
+                  <button 
+                    (click)="cancelEditingResources()"
+                    class="text-sm flex items-center gap-1 px-3 py-1 rounded-[12px]"
+                    style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #4A3B33;">
+                    Cancel
+                  </button>
+                </div>
               </div>
               <div class="space-y-3">
                 <div *ngFor="let resource of subtopic.resources; let r = index" 
                      class="rounded-[12px] p-4" style="border: 1px solid #EAE3DB;">
-                  <div class="flex items-start gap-3">
+                  <!-- View mode -->
+                  <div *ngIf="!editingResources" class="flex items-center justify-between">
+                    <div class="flex-1">
+                      <h4 class="font-medium" style="color: #2D2622;">{{ resource.name || 'Unnamed Resource' }}</h4>
+                      <a *ngIf="resource.link" 
+                         [href]="resource.link" 
+                         target="_blank"
+                         class="text-sm inline-flex items-center gap-1 mt-1"
+                         style="color: #8B5E3C;">
+                        <!-- Lucide ExternalLink icon -->
+                        <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                        Open link
+                      </a>
+                    </div>
+                  </div>
+                  <!-- Edit mode -->
+                  <div *ngIf="editingResources" class="flex items-start gap-3">
                     <div class="flex-1 space-y-2">
                       <input 
                         type="text"
                         [(ngModel)]="resource.name"
-                        (blur)="saveResources()"
                         placeholder="Resource name"
                         class="w-full rounded-[12px] px-3 py-2 text-sm"
                         style="border: 1px solid #EAE3DB; color: #2D2622;">
                       <input 
                         type="url"
                         [(ngModel)]="resource.link"
-                        (blur)="saveResources()"
                         placeholder="https://..."
                         class="w-full rounded-[12px] px-3 py-2 text-sm"
                         style="border: 1px solid #EAE3DB; color: #2D2622;">
                     </div>
                     <button 
                       (click)="removeResource(r)"
-                      class="text-sm mt-2"
-                      style="color: #4A3B33;">
+                      class="text-sm mt-2 px-2 py-1 rounded-[12px]"
+                      style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #4A3B33;">
                       <!-- Lucide X icon -->
                       <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                       </svg>
                     </button>
                   </div>
-                  <a *ngIf="resource.link" 
-                     [href]="resource.link" 
-                     target="_blank"
-                     class="text-xs mt-2 inline-flex items-center gap-1"
-                     style="color: #8B5E3C;">
-                    <!-- Lucide ExternalLink icon -->
-                    <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                    </svg>
-                    Open link
-                  </a>
                 </div>
                 <button 
+                  *ngIf="editingResources || !subtopic.resources || subtopic.resources.length === 0"
                   (click)="addResource()"
                   class="w-full border-2 border-dashed rounded-[12px] py-3 transition-colors flex items-center justify-center gap-2"
                   style="border-color: #EAE3DB; color: #4A3B33;">
@@ -777,11 +849,45 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
         </div>
       </div>
     </div>
+
+    <!-- Delete Code Snippet Confirmation Modal -->
+    <div 
+      *ngIf="showDeleteCodeSnippetModal" 
+      class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4"
+      (click)="cancelDeleteCodeSnippet()">
+      <div class="bg-white rounded-[12px] p-8 w-full max-w-md" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
+        <div class="flex items-center gap-3 mb-4">
+          <svg class="w-10 h-10" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          <h3 class="text-2xl font-semibold" style="color: #2D2622;">Delete Code Snippet</h3>
+        </div>
+        
+        <p class="mb-6" style="color: #4A3B33;">
+          Are you sure you want to delete this code snippet? This action cannot be undone.
+        </p>
+
+        <div class="flex gap-3 justify-end">
+          <button 
+            (click)="cancelDeleteCodeSnippet()"
+            class="font-medium px-6 py-3 rounded-[12px] transition-all"
+            style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
+            Cancel
+          </button>
+          <button 
+            (click)="executeDeleteCodeSnippet()"
+            class="font-medium px-6 py-3 rounded-[12px] transition-all"
+            style="background-color: #8B5E3C; color: white;">
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
   `
 })
 export class SubtopicContentComponent implements OnInit {
+  // Personal Notes are only available in Roadmap, not in Themes view
   allTabs = [
-    { id: 'personal', label: 'Personal Notes' },
     { id: 'theory', label: 'Shared Theory' },
     { id: 'code', label: 'Code' },
     { id: 'problems', label: 'Problems' },
@@ -803,6 +909,17 @@ export class SubtopicContentComponent implements OnInit {
   editingSharedTheory = false;
   editedSharedTheory = '';
   savingSharedTheory = false;
+
+  // Code snippet editing state
+  editingCodeSnippetIndex: number | null = null;
+  savingCodeSnippet = false;
+  showDeleteCodeSnippetModal = false;
+  codeSnippetToDeleteIndex: number | null = null;
+
+  // Resources editing state
+  editingResources = false;
+  savingResources = false;
+  originalResources: Array<{ name: string; link: string }> = [];
 
   // Problem picker state
   showProblemPickerModal = false;
@@ -834,7 +951,8 @@ export class SubtopicContentComponent implements OnInit {
     private router: Router,
     private themesService: ThemesService,
     private problemsService: ProblemsService,
-    private authService: AuthService
+    private authService: AuthService,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
@@ -856,11 +974,8 @@ export class SubtopicContentComponent implements OnInit {
   }
 
   getAvailableTabs() {
-    // Only show personal notes tab if user has theme in roadmap
-    if (this.subtopic?.userHasThemeInRoadmap) {
-      return this.allTabs;
-    }
-    return this.allTabs.filter(tab => tab.id !== 'personal');
+    // Personal Notes tab is only available in Roadmap, not in Themes view
+    return this.allTabs;
   }
 
   loadSubtopicContent(): void {
@@ -872,12 +987,8 @@ export class SubtopicContentComponent implements OnInit {
         this.subtopic = response.data.subtopic;
         this.themeName = response.data.theme.name;
         
-        // Set default active tab based on whether user has theme in roadmap
-        if (this.subtopic.userHasThemeInRoadmap) {
-          this.activeTab = 'personal';
-        } else {
-          this.activeTab = 'theory';
-        }
+        // Default to theory tab in themes view (Personal Notes only in Roadmap)
+        this.activeTab = 'theory';
         
         this.loading = false;
       },
@@ -970,19 +1081,66 @@ export class SubtopicContentComponent implements OnInit {
     if (!this.subtopic.codeSnippets) {
       this.subtopic.codeSnippets = [];
     }
+    const newIndex = this.subtopic.codeSnippets.length;
     this.subtopic.codeSnippets.push({
       language: 'python',
       code: '',
       description: ''
     });
-    // Don't save immediately - let user fill in the fields first
-    // Save will happen on blur event when fields are edited
+    // Start editing the new snippet immediately
+    this.editingCodeSnippetIndex = newIndex;
   }
 
-  removeCodeSnippet(index: number): void {
-    if (!this.subtopic || !this.subtopic.codeSnippets) return;
-    this.subtopic.codeSnippets.splice(index, 1);
-    this.saveCodeSnippets();
+  startEditingCodeSnippet(index: number): void {
+    this.editingCodeSnippetIndex = index;
+  }
+
+  cancelEditingCodeSnippet(): void {
+    this.editingCodeSnippetIndex = null;
+  }
+
+  saveAndCloseCodeSnippet(): void {
+    if (!this.subtopic) return;
+    this.savingCodeSnippet = true;
+    // Filter out code snippets with empty code to avoid saving unnecessary data
+    const validCodeSnippets = this.subtopic.codeSnippets?.filter(
+      snippet => snippet.code && snippet.code.trim() !== ''
+    ) || [];
+    this.themesService.updateSubtopicSharedContent(this.themeId, this.subtopicName, {
+      codeSnippets: validCodeSnippets
+    }).subscribe({
+      next: () => {
+        this.savingCodeSnippet = false;
+        this.editingCodeSnippetIndex = null;
+      },
+      error: (err) => {
+        this.savingCodeSnippet = false;
+        this.error = 'Failed to save code snippets. Please try again.';
+        console.error('Error saving code snippets:', err);
+      }
+    });
+  }
+
+  confirmDeleteCodeSnippet(index: number): void {
+    this.codeSnippetToDeleteIndex = index;
+    this.showDeleteCodeSnippetModal = true;
+  }
+
+  cancelDeleteCodeSnippet(): void {
+    this.showDeleteCodeSnippetModal = false;
+    this.codeSnippetToDeleteIndex = null;
+  }
+
+  executeDeleteCodeSnippet(): void {
+    if (this.codeSnippetToDeleteIndex !== null && this.subtopic && this.subtopic.codeSnippets) {
+      this.subtopic.codeSnippets.splice(this.codeSnippetToDeleteIndex, 1);
+      this.saveCodeSnippets();
+      if (this.editingCodeSnippetIndex === this.codeSnippetToDeleteIndex) {
+        this.editingCodeSnippetIndex = null;
+      }
+    }
+    this.showDeleteCodeSnippetModal = false;
+    this.codeSnippetToDeleteIndex = null;
   }
 
   saveCodeSnippets(): void {
@@ -1004,6 +1162,76 @@ export class SubtopicContentComponent implements OnInit {
     });
   }
 
+  // Syntax highlighting helper
+  highlightCode(code: string, language: 'python' | 'cpp'): SafeHtml {
+    if (!code) return this.sanitizer.bypassSecurityTrustHtml('<span style="color: #6272A4;">// No code yet</span>');
+    
+    // Escape HTML entities
+    let escaped = code
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+    
+    // Use placeholder system to protect spans from being corrupted by subsequent replacements
+    const placeholders: string[] = [];
+    const savePlaceholder = (match: string): string => {
+      const index = placeholders.length;
+      placeholders.push(match);
+      return `\x00${index}\x00`;
+    };
+    const restorePlaceholders = (text: string): string => {
+      return text.replace(/\x00(\d+)\x00/g, (_, idx) => placeholders[parseInt(idx, 10)]);
+    };
+    
+    if (language === 'python') {
+      // Comments first (highest priority - they shouldn't be parsed for other patterns)
+      escaped = escaped.replace(/(#.*$)/gm, (match) => savePlaceholder(`<span style="color: #6272A4;">${match}</span>`));
+      
+      // Strings (single and double quotes)
+      escaped = escaped.replace(/(["'])((?:\\.|(?!\1)[^\\])*)(\1)/g, (match) => savePlaceholder(`<span style="color: #F1FA8C;">${match}</span>`));
+      
+      // Numbers (before keywords to avoid issues with hex codes)
+      escaped = escaped.replace(/\b(\d+\.?\d*)\b/g, (match) => savePlaceholder(`<span style="color: #BD93F9;">${match}</span>`));
+      
+      // Python keywords
+      const pythonKeywords = /\b(and|as|assert|async|await|break|class|continue|def|del|elif|else|except|finally|for|from|global|if|import|in|is|lambda|not|or|pass|raise|return|try|while|with|yield|None|True|False)\b/g;
+      escaped = escaped.replace(pythonKeywords, (match) => savePlaceholder(`<span style="color: #FF79C6;">${match}</span>`));
+      
+      // Python built-in functions
+      const pythonBuiltins = /\b(print|len|range|int|str|float|list|dict|set|tuple|input|open|type|sum|min|max|abs|sorted|enumerate|zip|map|filter)\b/g;
+      escaped = escaped.replace(pythonBuiltins, (match) => savePlaceholder(`<span style="color: #8BE9FD;">${match}</span>`));
+      
+    } else if (language === 'cpp') {
+      // Multi-line comments first (highest priority)
+      escaped = escaped.replace(/(\/\*[\s\S]*?\*\/)/g, (match) => savePlaceholder(`<span style="color: #6272A4;">${match}</span>`));
+      
+      // Single-line comments
+      escaped = escaped.replace(/(\/\/.*$)/gm, (match) => savePlaceholder(`<span style="color: #6272A4;">${match}</span>`));
+      
+      // C++ preprocessor directives
+      escaped = escaped.replace(/(#\s*(include|define|undef|ifdef|ifndef|if|else|elif|endif|pragma|error|warning).*$)/gm, (match) => savePlaceholder(`<span style="color: #FFB86C;">${match}</span>`));
+      
+      // Strings
+      escaped = escaped.replace(/(["'])((?:\\.|(?!\1)[^\\])*)(\1)/g, (match) => savePlaceholder(`<span style="color: #F1FA8C;">${match}</span>`));
+      
+      // Numbers (before keywords to avoid issues with hex codes)
+      escaped = escaped.replace(/\b(\d+\.?\d*[fFlL]?)\b/g, (match) => savePlaceholder(`<span style="color: #BD93F9;">${match}</span>`));
+      
+      // C++ keywords
+      const cppKeywords = /\b(alignas|alignof|and|and_eq|asm|auto|bitand|bitor|bool|break|case|catch|char|char8_t|char16_t|char32_t|class|compl|concept|const|consteval|constexpr|constinit|const_cast|continue|co_await|co_return|co_yield|decltype|default|delete|do|double|dynamic_cast|else|enum|explicit|export|extern|false|float|for|friend|goto|if|inline|int|long|mutable|namespace|new|noexcept|not|not_eq|nullptr|operator|or|or_eq|private|protected|public|register|reinterpret_cast|requires|return|short|signed|sizeof|static|static_assert|static_cast|struct|switch|template|this|thread_local|throw|true|try|typedef|typeid|typename|union|unsigned|using|virtual|void|volatile|wchar_t|while|xor|xor_eq)\b/g;
+      escaped = escaped.replace(cppKeywords, (match) => savePlaceholder(`<span style="color: #FF79C6;">${match}</span>`));
+      
+      // Standard library
+      const cppStdLib = /\b(std|cout|cin|endl|vector|string|map|set|queue|stack|pair|sort|find|begin|end|push_back|pop_back|size|empty|clear)\b/g;
+      escaped = escaped.replace(cppStdLib, (match) => savePlaceholder(`<span style="color: #8BE9FD;">${match}</span>`));
+    }
+    
+    // Restore all placeholders
+    escaped = restorePlaceholders(escaped);
+    
+    return this.sanitizer.bypassSecurityTrustHtml(escaped);
+  }
+
   // Resource methods
   addResource(): void {
     if (!this.subtopic) return;
@@ -1014,14 +1242,51 @@ export class SubtopicContentComponent implements OnInit {
       name: '',
       link: ''
     });
-    // Don't save immediately - let user fill in the fields first
-    // Save will happen on blur event when fields are edited
+    // Start editing mode when adding a resource
+    this.editingResources = true;
+  }
+
+  startEditingResources(): void {
+    if (!this.subtopic) return;
+    // Save original state in case of cancel
+    this.originalResources = JSON.parse(JSON.stringify(this.subtopic.resources || []));
+    this.editingResources = true;
+  }
+
+  cancelEditingResources(): void {
+    if (!this.subtopic) return;
+    // Restore original state
+    this.subtopic.resources = JSON.parse(JSON.stringify(this.originalResources));
+    this.editingResources = false;
+    this.originalResources = [];
+  }
+
+  saveAndCloseResources(): void {
+    if (!this.subtopic) return;
+    this.savingResources = true;
+    // Filter out resources with empty name or link to avoid validation errors
+    const validResources = this.subtopic.resources?.filter(
+      r => r.name && r.name.trim() !== '' && r.link && r.link.trim() !== ''
+    ) || [];
+    this.themesService.updateSubtopicSharedContent(this.themeId, this.subtopicName, {
+      resources: validResources
+    }).subscribe({
+      next: () => {
+        this.savingResources = false;
+        this.editingResources = false;
+        this.originalResources = [];
+      },
+      error: (err) => {
+        this.savingResources = false;
+        this.error = 'Failed to save resources. Please try again.';
+        console.error('Error saving resources:', err);
+      }
+    });
   }
 
   removeResource(index: number): void {
     if (!this.subtopic || !this.subtopic.resources) return;
     this.subtopic.resources.splice(index, 1);
-    this.saveResources();
   }
 
   saveResources(): void {
@@ -1153,7 +1418,7 @@ export class SubtopicContentComponent implements OnInit {
     
     // Add inline problem (without problemId, meaning it's not in the library)
     this.subtopic.linkedProblems.push({
-      problemId: '', // Empty means inline problem
+      problemId: undefined, // undefined for inline problem - will be filtered before save
       title: this.newInlineProblem.title,
       description: this.newInlineProblem.description,
       link: this.newInlineProblem.link,
@@ -1172,8 +1437,14 @@ export class SubtopicContentComponent implements OnInit {
 
   saveProblems(): void {
     if (!this.subtopic) return;
+    // Transform linkedProblems to ensure problemId is undefined (not empty string) for inline problems
+    const transformedProblems = this.subtopic.linkedProblems?.map(problem => ({
+      ...problem,
+      // Convert empty string problemId to undefined for MongoDB compatibility
+      problemId: problem.problemId && problem.problemId !== '' ? problem.problemId : undefined
+    }));
     this.themesService.updateSubtopicSharedContent(this.themeId, this.subtopicName, {
-      linkedProblems: this.subtopic.linkedProblems
+      linkedProblems: transformedProblems
     }).subscribe({
       next: () => {
         // Successfully saved

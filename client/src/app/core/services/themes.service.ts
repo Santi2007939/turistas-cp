@@ -1,11 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
+import { CodeSnippet, Resource, LinkedProblem } from './roadmap.service';
 
 export interface Subtheme {
   name: string;
   description?: string;
   _id?: string;
+  sharedTheory?: string;
+  codeSnippets?: CodeSnippet[];
+  linkedProblems?: LinkedProblem[];
+  resources?: Resource[];
 }
 
 export interface Theme {
@@ -52,7 +57,7 @@ export interface SubtopicContent {
     description?: string;
   }>;
   linkedProblems: Array<{
-    problemId: string;
+    problemId?: string;
     title: string;
     description?: string;
     link?: string;
