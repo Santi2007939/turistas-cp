@@ -1697,15 +1697,16 @@ export class SubtopicDetailComponent implements OnInit {
     }
     
     // Copy shared content (Theory, Code, Problems, Resources) from the theme's subtopic
+    // Use deep cloning for arrays containing objects to prevent unintended mutations
     // Personal Notes remain empty as they are user-specific
     this.newSubtopic = {
       name: suggested.name,
       description: suggested.description || '',
       personalNotes: '',
       sharedTheory: suggested.sharedTheory || '',
-      codeSnippets: suggested.codeSnippets ? [...suggested.codeSnippets] : [],
-      linkedProblems: suggested.linkedProblems ? [...suggested.linkedProblems] : [],
-      resources: suggested.resources ? [...suggested.resources] : []
+      codeSnippets: suggested.codeSnippets ? JSON.parse(JSON.stringify(suggested.codeSnippets)) : [],
+      linkedProblems: suggested.linkedProblems ? JSON.parse(JSON.stringify(suggested.linkedProblems)) : [],
+      resources: suggested.resources ? JSON.parse(JSON.stringify(suggested.resources)) : []
     };
     // Immediately create the subtopic
     this.createSubtopic();

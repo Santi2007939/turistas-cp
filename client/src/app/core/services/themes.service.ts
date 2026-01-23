@@ -1,28 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
+import { CodeSnippet, Resource, LinkedProblem } from './roadmap.service';
 
 export interface Subtheme {
   name: string;
   description?: string;
   _id?: string;
   sharedTheory?: string;
-  codeSnippets?: Array<{
-    language: 'python' | 'cpp';
-    code: string;
-    description?: string;
-  }>;
-  linkedProblems?: Array<{
-    problemId?: string;
-    title: string;
-    description?: string;
-    link?: string;
-    difficulty: 'easy' | 'medium' | 'hard' | 'very-hard';
-  }>;
-  resources?: Array<{
-    name: string;
-    link: string;
-  }>;
+  codeSnippets?: CodeSnippet[];
+  linkedProblems?: LinkedProblem[];
+  resources?: Resource[];
 }
 
 export interface Theme {
