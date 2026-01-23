@@ -6,6 +6,7 @@ import { RoadmapService, PersonalNode, Subtopic, CodeSnippet, Resource, LinkedPr
 import { ProblemsService, Problem } from '../../core/services/problems.service';
 import { AuthService, User } from '../../core/services/auth.service';
 import { NavbarComponent } from '../../shared/components/navbar.component';
+import { Subtheme } from '../../core/services/themes.service';
 
 @Component({
   selector: 'app-subtopic-detail',
@@ -1060,8 +1061,8 @@ export class SubtopicDetailComponent implements OnInit {
   showAddSubtopicModal = false;
   isOwner = false; // Whether current user owns this roadmap node (default false for security)
   
-  // Cached suggested subtopics (computed when modal opens)
-  cachedSuggestedSubtopics: Array<{ name: string; description?: string }> = [];
+  // Cached suggested subtopics (computed when modal opens) - includes shared content
+  cachedSuggestedSubtopics: Subtheme[] = [];
   
   // Delete subtopic confirmation modal state
   showDeleteSubtopicModal = false;
@@ -1673,7 +1674,7 @@ export class SubtopicDetailComponent implements OnInit {
   }
 
   // Compute suggested subtopics from theme that haven't been added yet
-  private computeAvailableSuggestedSubtopics(): Array<{ name: string; description?: string }> {
+  private computeAvailableSuggestedSubtopics(): Subtheme[] {
     if (!this.node?.themeId?.subthemes) return [];
     
     // Get names of already added subtopics (case-insensitive comparison)
@@ -1687,22 +1688,25 @@ export class SubtopicDetailComponent implements OnInit {
     );
   }
 
-  // Select a suggested subtopic and add it directly
-  selectSuggestedSubtopic(suggested: { name: string; description?: string }): void {
+  // Select a suggested subtopic and add it directly, copying shared content
+  selectSuggestedSubtopic(suggested: Subtheme): void {
     // Validate suggested subtopic has a name
     if (!suggested?.name?.trim()) {
       this.error = 'Invalid subtopic selection.';
       return;
     }
     
+    // Copy shared content (Theory, Code, Problems, Resources) from the theme's subtopic
+    // Use deep cloning for arrays containing objects to prevent unintended mutations
+    // Personal Notes remain empty as they are user-specific
     this.newSubtopic = {
       name: suggested.name,
       description: suggested.description || '',
       personalNotes: '',
-      sharedTheory: '',
-      codeSnippets: [],
-      linkedProblems: [],
-      resources: []
+      sharedTheory: suggested.sharedTheory || '',
+      codeSnippets: suggested.codeSnippets ? JSON.parse(JSON.stringify(suggested.codeSnippets)) : [],
+      linkedProblems: suggested.linkedProblems ? JSON.parse(JSON.stringify(suggested.linkedProblems)) : [],
+      resources: suggested.resources ? JSON.parse(JSON.stringify(suggested.resources)) : []
     };
     // Immediately create the subtopic
     this.createSubtopic();
