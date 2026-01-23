@@ -73,7 +73,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 16v-4m0-4h.01" />
             </svg>
             <p class="text-sm" style="color: #4A3B33;">
-              You can edit shared content. Add this theme to your roadmap to access Personal Notes.
+              You can edit shared content. Add this theme to your roadmap to track progress and add Personal Notes.
             </p>
           </div>
         </div>
@@ -113,11 +113,6 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   'color': activeTab === tab.id ? '#8B5E3C' : '#4A3B33'
                 }">
                 <ng-container [ngSwitch]="tab.id">
-                  <!-- Lock icon for personal -->
-                  <svg *ngSwitchCase="'personal'" class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 11V7a5 5 0 0110 0v4" />
-                  </svg>
                   <!-- BookOpen icon for theory -->
                   <svg *ngSwitchCase="'theory'" class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
@@ -145,25 +140,6 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 
           <!-- Tab Content -->
           <div class="mt-4">
-            <!-- Personal Notes (only if user has theme in roadmap) -->
-            <div *ngIf="activeTab === 'personal' && subtopic.userHasThemeInRoadmap">
-              <div class="rounded-[12px] p-4 mb-4" style="background-color: #FCF9F5; border-left: 4px solid #D4A373;">
-                <p class="text-sm flex items-center gap-2" style="color: #4A3B33;">
-                  <!-- Lucide Lock icon -->
-                  <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 11V7a5 5 0 0110 0v4" />
-                  </svg>
-                  These notes are private and only you can see them
-                </p>
-              </div>
-              <div 
-                class="w-full rounded-[12px] px-4 py-3 min-h-[200px] whitespace-pre-wrap"
-                style="border: 1px solid #EAE3DB; color: #2D2622; background-color: #FCF9F5;">
-                {{ subtopic.personalNotes || 'No personal notes yet. Add this theme to your roadmap to write notes.' }}
-              </div>
-            </div>
-
             <!-- Shared Theory -->
             <div *ngIf="activeTab === 'theory'">
               <div class="rounded-[12px] p-4 mb-4" style="background-color: #FCF9F5; border-left: 4px solid #8B5E3C;">
@@ -909,8 +885,8 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
   `
 })
 export class SubtopicContentComponent implements OnInit {
+  // Personal Notes are only available in Roadmap, not in Themes view
   allTabs = [
-    { id: 'personal', label: 'Personal Notes' },
     { id: 'theory', label: 'Shared Theory' },
     { id: 'code', label: 'Code' },
     { id: 'problems', label: 'Problems' },
@@ -996,11 +972,8 @@ export class SubtopicContentComponent implements OnInit {
   }
 
   getAvailableTabs() {
-    // Only show personal notes tab if user has theme in roadmap
-    if (this.subtopic?.userHasThemeInRoadmap) {
-      return this.allTabs;
-    }
-    return this.allTabs.filter(tab => tab.id !== 'personal');
+    // Personal Notes tab is only available in Roadmap, not in Themes view
+    return this.allTabs;
   }
 
   loadSubtopicContent(): void {
@@ -1012,12 +985,8 @@ export class SubtopicContentComponent implements OnInit {
         this.subtopic = response.data.subtopic;
         this.themeName = response.data.theme.name;
         
-        // Set default active tab based on whether user has theme in roadmap
-        if (this.subtopic.userHasThemeInRoadmap) {
-          this.activeTab = 'personal';
-        } else {
-          this.activeTab = 'theory';
-        }
+        // Default to theory tab in themes view (Personal Notes only in Roadmap)
+        this.activeTab = 'theory';
         
         this.loading = false;
       },

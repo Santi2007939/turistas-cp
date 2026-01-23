@@ -6,6 +6,23 @@ export interface Subtheme {
   name: string;
   description?: string;
   _id?: string;
+  sharedTheory?: string;
+  codeSnippets?: Array<{
+    language: 'python' | 'cpp';
+    code: string;
+    description?: string;
+  }>;
+  linkedProblems?: Array<{
+    problemId?: string;
+    title: string;
+    description?: string;
+    link?: string;
+    difficulty: 'easy' | 'medium' | 'hard' | 'very-hard';
+  }>;
+  resources?: Array<{
+    name: string;
+    link: string;
+  }>;
 }
 
 export interface Theme {
