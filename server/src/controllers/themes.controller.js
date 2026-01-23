@@ -381,6 +381,36 @@ export const updateSubtopicSharedContent = asyncHandler(async (req, res) => {
 
   await theme.save();
 
+  // Sync shared content to all PersonalNodes that have this theme and this subtopic
+  // This ensures changes from themes are reflected in all users' roadmap views
+  // Build the update object for shared content fields
+  const updateFields = {};
+  if (sharedTheory !== undefined) {
+    updateFields['subtopics.$.sharedTheory'] = sharedTheory;
+  }
+  if (codeSnippets !== undefined) {
+    updateFields['subtopics.$.codeSnippets'] = codeSnippets;
+  }
+  if (linkedProblems !== undefined) {
+    updateFields['subtopics.$.linkedProblems'] = linkedProblems;
+  }
+  if (resources !== undefined) {
+    updateFields['subtopics.$.resources'] = resources;
+  }
+
+  // Only update if there are fields to update
+  if (Object.keys(updateFields).length > 0) {
+    // Use updateMany with positional operator to update all matching subtopics in one operation
+    // This handles both exact name matches and normalized name matches
+    await PersonalNode.updateMany(
+      { 
+        themeId: id,
+        'subtopics.name': { $regex: new RegExp(`^${decodedSubtopicName}$`, 'i') }
+      },
+      { $set: updateFields }
+    );
+  }
+
   res.json({
     success: true,
     message: `Shared content updated for subtopic "${decodedSubtopicName}"`
