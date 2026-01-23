@@ -322,7 +322,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   <pre 
                     *ngIf="editingCodeSnippetIndex !== j"
                     class="rounded-[12px] p-4 overflow-x-auto font-mono text-sm"
-                    style="background-color: #2D2622; margin: 0;"><code [innerHTML]="highlightCode(snippet.code, snippet.language)"></code></pre>
+                    style="background-color: #2D2622; margin: 0;"><code style="color: #F8F8F2;" [innerHTML]="highlightCode(snippet.code, snippet.language)"></code></pre>
                 </div>
                 <button 
                   (click)="addCodeSnippet()"
