@@ -278,7 +278,7 @@ interface FilterData {
       <div 
         *ngIf="showCreateModal" 
         class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4"
-        (click)="showCreateModal = false">
+        (click)="closeModal()">
         <div class="bg-white rounded-[12px] p-6 w-full max-w-md max-h-screen overflow-y-auto" style="border: 1px solid #EAE3DB;" (click)="$event.stopPropagation()">
           <h3 class="text-xl font-semibold mb-4" style="color: #2D2622;">{{ editingEvent ? 'Edit event' : 'Create new event' }}</h3>
           
@@ -655,7 +655,7 @@ export class CalendarComponent implements OnInit {
     this.error = null;
 
     const eventData: Partial<CalendarEvent> = {
-      title: this.formEvent.title,
+      title: this.formEvent.title.trim(),
       description: this.formEvent.description,
       type: this.formEvent.type,
       eventScope: this.formEvent.eventScope,
@@ -738,7 +738,7 @@ export class CalendarComponent implements OnInit {
 
   isFormValid(): boolean {
     return !!(
-      this.formEvent.title &&
+      this.formEvent.title.trim() &&
       this.formEvent.type &&
       this.formEvent.eventScope &&
       this.formEvent.startTime &&
@@ -868,8 +868,10 @@ export class CalendarComponent implements OnInit {
     return scopeStyles[scope] || scopeStyles['public'];
   }
 
-  private formatDateForInput(date: Date): string {
+  private formatDateForInput(date: Date | undefined | null): string {
+    if (date === null || date === undefined) return '';
     const d = new Date(date);
+    if (isNaN(d.getTime())) return '';
     const year = d.getFullYear();
     const month = String(d.getMonth() + 1).padStart(2, '0');
     const day = String(d.getDate()).padStart(2, '0');
