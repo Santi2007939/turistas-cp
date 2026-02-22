@@ -119,7 +119,7 @@ router.put('/:id', calendarLimiter, asyncHandler(async (req, res) => {
   // Check permissions based on event scope
   if (event.eventScope === 'personal') {
     // Only the owner can edit personal events
-    if (event.ownerId.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+    if ((!event.ownerId || event.ownerId.toString() !== req.user._id.toString()) && req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
         message: 'Not authorized to update this personal event'
@@ -185,7 +185,7 @@ router.delete('/:id', calendarLimiter, asyncHandler(async (req, res) => {
   // Check permissions based on event scope
   if (event.eventScope === 'personal') {
     // Only the owner can delete personal events
-    if (event.ownerId.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+    if ((!event.ownerId || event.ownerId.toString() !== req.user._id.toString()) && req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
         message: 'Not authorized to delete this personal event'
