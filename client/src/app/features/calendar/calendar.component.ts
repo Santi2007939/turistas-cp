@@ -10,7 +10,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 interface EventFormData {
   title: string;
   description: string;
-  type: 'contest' | 'practice' | 'training' | 'meeting' | 'deadline' | 'roadmap' | 'problem' | 'clase_gpc' | 'rpc' | 'other';
+  type: 'contest' | 'practice' | 'training' | 'meeting' | 'deadline' | 'roadmap' | 'problem' | 'clase_gpc' | 'rpc' | 'icpc' | 'other';
   eventScope: 'personal' | 'team' | 'public';
   teamId?: string;
   startTime: string;
@@ -105,6 +105,7 @@ interface FilterData {
                   <option value="deadline">Deadline</option>
                   <option value="clase_gpc">GPC Class</option>
                   <option value="rpc">RPC</option>
+                  <option value="icpc">ICPC</option>
                   <option value="roadmap">Roadmap</option>
                   <option value="problem">Problem</option>
                   <option value="other">Other</option>
@@ -319,6 +320,7 @@ interface FilterData {
                 <option value="deadline">Deadline</option>
                 <option value="clase_gpc">GPC Class</option>
                 <option value="rpc">RPC</option>
+                <option value="icpc">ICPC</option>
                 <option value="roadmap">Roadmap</option>
                 <option value="problem">Problem</option>
                 <option value="other">Other</option>
@@ -814,6 +816,7 @@ export class CalendarComponent implements OnInit {
       'deadline': '<svg class="w-5 h-5 inline" style="color: #A05E4A;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2" /></svg>',
       'clase_gpc': '<svg class="w-5 h-5 inline" style="color: #8B5E3C;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>',
       'rpc': '<svg class="w-5 h-5 inline" style="color: #4A90A4;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>',
+      'icpc': '<svg class="w-5 h-5 inline" style="color: #B8860B;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>',
       'roadmap': '<svg class="w-5 h-5 inline" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" /></svg>',
       'problem': '<svg class="w-5 h-5 inline" style="color: #8B5E3C;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" /></svg>',
       'other': '<svg class="w-5 h-5 inline" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg>'
@@ -830,6 +833,7 @@ export class CalendarComponent implements OnInit {
       'deadline': 'Deadline',
       'clase_gpc': 'GPC Class',
       'rpc': 'RPC',
+      'icpc': 'ICPC',
       'roadmap': 'Roadmap',
       'problem': 'Problem',
       'other': 'Other'
@@ -855,6 +859,7 @@ export class CalendarComponent implements OnInit {
       'deadline': 'bg-red-100 text-red-800',
       'clase_gpc': 'bg-orange-100 text-orange-800',
       'rpc': 'bg-pink-100 text-pink-800',
+      'icpc': 'bg-yellow-100 text-yellow-800',
       'roadmap': 'bg-teal-100 text-teal-800',
       'problem': 'bg-violet-100 text-violet-800',
       'other': 'bg-gray-100 text-gray-800'
@@ -882,6 +887,7 @@ export class CalendarComponent implements OnInit {
       'deadline': { 'background-color': '#FCF9F5', 'color': '#A05E4A', 'border': '1px solid #A05E4A' },
       'clase_gpc': { 'background-color': '#FCF9F5', 'color': '#8B5E3C', 'border': '1px solid #D4A373' },
       'rpc': { 'background-color': '#E8F4F8', 'color': '#4A90A4', 'border': '1px solid #4A90A4' },
+      'icpc': { 'background-color': '#FEFCE8', 'color': '#854D0E', 'border': '1px solid #EAB308' },
       'roadmap': { 'background-color': '#FCF9F5', 'color': '#4A3B33', 'border': '1px solid #EAE3DB' },
       'problem': { 'background-color': '#FCF9F5', 'color': '#8B5E3C', 'border': '1px solid #EAE3DB' },
       'other': { 'background-color': '#FCF9F5', 'color': '#4A3B33', 'border': '1px solid #EAE3DB' }

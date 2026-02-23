@@ -12,7 +12,7 @@ const calendarEventSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['contest', 'practice', 'training', 'meeting', 'deadline', 'roadmap', 'problem', 'clase_gpc', 'rpc', 'other'],
+    enum: ['contest', 'practice', 'training', 'meeting', 'deadline', 'roadmap', 'problem', 'clase_gpc', 'rpc', 'icpc', 'other'],
     default: 'other'
   },
   eventScope: {
