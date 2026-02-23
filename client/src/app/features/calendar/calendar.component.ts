@@ -184,7 +184,7 @@ interface FilterData {
                     <span [innerHTML]="getEventIconSvg(event.type)"></span>
                   </div>
                   <p *ngIf="event.description" class="mb-3" style="color: #4A3B33;">{{ event.description }}</p>
-                  <p *ngIf="event.link" class="mb-3">
+                  <p *ngIf="event.link && isSafeUrl(event.link)" class="mb-3">
                     <a [href]="event.link" target="_blank" rel="noopener noreferrer" class="text-sm underline" style="color: #8B5E3C;">
                       <!-- Lucide ExternalLink icon -->
                       <svg class="w-4 h-4 inline mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -696,7 +696,7 @@ export class CalendarComponent implements OnInit {
     const eventData: Partial<CalendarEvent> = {
       title: this.formEvent.title.trim(),
       description: this.formEvent.description,
-      link: this.formEvent.link || undefined,
+      link: this.formEvent.link.trim() || undefined,
       type: this.formEvent.type,
       eventScope: this.formEvent.eventScope,
       startTime: new Date(this.formEvent.startTime),
@@ -794,6 +794,10 @@ export class CalendarComponent implements OnInit {
       return hasRequiredFields && !!this.formEvent.teamId;
     }
     return hasRequiredFields;
+  }
+
+  isSafeUrl(url: string): boolean {
+    return url.startsWith('http://') || url.startsWith('https://');
   }
 
   onScopeChange(scope: string): void {
