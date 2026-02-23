@@ -49,7 +49,7 @@ router.get('/upcoming', publicRateLimiter, asyncHandler(async (req, res) => {
     startTime: { $gte: now, $lte: until }
   })
     .sort({ startTime: 1 })
-    .select('title description type eventScope startTime endTime contestId problemId location url isPublic teamId');
+    .select('title description type eventScope startTime endTime contestId problemId location url link isPublic teamId');
 
   res.json({
     success: true,

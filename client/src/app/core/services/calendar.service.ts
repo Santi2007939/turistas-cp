@@ -24,6 +24,7 @@ export interface CalendarEvent {
   participants?: Array<{ _id: string; username: string }>;
   createdBy?: { _id: string; username: string } | string;
   ownerId?: { _id: string; username: string } | string;
+  link?: string;
   reminder?: ReminderSettings;
 }
 
