@@ -1,5 +1,6 @@
 import express from 'express';
 import CalendarEvent from '../models/CalendarEvent.js';
+import TeamConfig from '../models/TeamConfig.js';
 import { protect } from '../middlewares/auth.js';
 import { asyncHandler } from '../middlewares/error.js';
 import { createRateLimiter } from '../middlewares/rateLimiter.js';
@@ -15,14 +16,23 @@ router.use(protect);
 // @desc    Get calendar events
 // @route   GET /api/calendar
 // @access  Private
-router.get('/', asyncHandler(async (req, res) => {
+router.get('/', calendarLimiter, asyncHandler(async (req, res) => {
   const { startDate, endDate, type, scope, teamId } = req.query;
+
+  // Find teams where user is an active member to include their team events
+  const userTeams = await TeamConfig.find(
+    { members: { $elemMatch: { userId: req.user._id, isActive: true } } },
+    { _id: 1 }
+  );
+  const userTeamIds = userTeams.map(t => t._id);
+
   const query = {
     $or: [
       { isPublic: true },
       { createdBy: req.user._id },
       { participants: req.user._id },
-      { ownerId: req.user._id }
+      { ownerId: req.user._id },
+      { eventScope: 'team', teamId: { $in: userTeamIds } }
     ]
   };
 

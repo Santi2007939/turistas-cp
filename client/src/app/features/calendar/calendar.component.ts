@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CalendarService, CalendarEvent } from '../../core/services/calendar.service';
 import { AuthService, User } from '../../core/services/auth.service';
+import { TeamService, TeamConfig } from '../../core/services/team.service';
 import { NavbarComponent } from '../../shared/components/navbar.component';
 
 interface EventFormData {
@@ -11,6 +12,7 @@ interface EventFormData {
   description: string;
   type: 'contest' | 'practice' | 'training' | 'meeting' | 'deadline' | 'roadmap' | 'problem' | 'clase_gpc' | 'rpc' | 'other';
   eventScope: 'personal' | 'team' | 'public';
+  teamId?: string;
   startTime: string;
   endTime: string;
   isPublic: boolean;
@@ -335,6 +337,17 @@ interface FilterData {
               </select>
             </div>
 
+            <div *ngIf="formEvent.eventScope === 'team'">
+              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Team *</label>
+              <select 
+                [(ngModel)]="formEvent.teamId"
+                class="w-full rounded-[12px] px-4 py-3"
+                style="border: 1px solid #EAE3DB; color: #2D2622;">
+                <option value="">Select a team</option>
+                <option *ngFor="let team of userTeams" [value]="team._id">{{ team.name }}</option>
+              </select>
+            </div>
+
             <div>
               <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Start time *</label>
               <input 
@@ -466,6 +479,7 @@ export class CalendarComponent implements OnInit {
   saving = false;
   editingEvent: CalendarEvent | null = null;
   currentUser: User | null = null;
+  userTeams: TeamConfig[] = [];
   
   // Delete event confirmation modal
   showDeleteEventModal = false;
@@ -502,7 +516,8 @@ export class CalendarComponent implements OnInit {
 
   constructor(
     private calendarService: CalendarService,
-    private authService: AuthService
+    private authService: AuthService,
+    private teamService: TeamService
   ) {}
 
   ngOnInit(): void {
@@ -510,6 +525,14 @@ export class CalendarComponent implements OnInit {
       this.currentUser = user;
     });
     this.loadEvents();
+    this.teamService.getTeams().subscribe({
+      next: (response) => {
+        this.userTeams = response.data.teams;
+      },
+      error: (err) => {
+        console.error('Error loading teams:', err);
+      }
+    });
   }
 
   loadEvents(): void {
@@ -639,6 +662,7 @@ export class CalendarComponent implements OnInit {
       description: event.description || '',
       type: event.type,
       eventScope: event.eventScope,
+      teamId: event.teamId,
       startTime: this.formatDateForInput(event.startTime),
       endTime: this.formatDateForInput(event.endTime),
       isPublic: event.isPublic,
@@ -668,6 +692,10 @@ export class CalendarComponent implements OnInit {
         sent: false
       }
     };
+
+    if (this.formEvent.eventScope === 'team' && this.formEvent.teamId) {
+      eventData.teamId = this.formEvent.teamId;
+    }
 
     const operation = this.editingEvent
       ? this.calendarService.updateEvent(this.editingEvent._id!, eventData)
@@ -728,6 +756,7 @@ export class CalendarComponent implements OnInit {
       description: '',
       type: 'other',
       eventScope: 'personal',
+      teamId: undefined,
       startTime: '',
       endTime: '',
       isPublic: false,
@@ -737,13 +766,17 @@ export class CalendarComponent implements OnInit {
   }
 
   isFormValid(): boolean {
-    return !!(
+    const hasRequiredFields = !!(
       this.formEvent.title.trim() &&
       this.formEvent.type &&
       this.formEvent.eventScope &&
       this.formEvent.startTime &&
       this.formEvent.endTime
     );
+    if (this.formEvent.eventScope === 'team') {
+      return hasRequiredFields && !!this.formEvent.teamId;
+    }
+    return hasRequiredFields;
   }
 
   canEditEvent(event: CalendarEvent): boolean {
