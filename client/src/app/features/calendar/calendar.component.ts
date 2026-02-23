@@ -258,7 +258,7 @@ interface FilterData {
                   <div 
                     *ngFor="let event of day.events.slice(0, 3)" 
                     (click)="editEvent(event); $event.stopPropagation()"
-                    class="text-xs p-1 rounded-[12px] cursor-pointer truncate"
+                    class="text-xs font-medium p-1 rounded-[12px] cursor-pointer truncate"
                     [ngStyle]="getEventTypeStyleObject(event.type)"
                     [title]="event.title">
                     {{ event.title }}
@@ -329,22 +329,12 @@ interface FilterData {
               <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Scope *</label>
               <select 
                 [(ngModel)]="formEvent.eventScope"
+                (ngModelChange)="onScopeChange($event)"
                 class="w-full rounded-[12px] px-4 py-3"
                 style="border: 1px solid #EAE3DB; color: #2D2622;">
                 <option value="personal">Personal</option>
                 <option value="team">Team</option>
                 <option value="public">Public</option>
-              </select>
-            </div>
-
-            <div *ngIf="formEvent.eventScope === 'team'">
-              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Team *</label>
-              <select 
-                [(ngModel)]="formEvent.teamId"
-                class="w-full rounded-[12px] px-4 py-3"
-                style="border: 1px solid #EAE3DB; color: #2D2622;">
-                <option value="">Select a team</option>
-                <option *ngFor="let team of userTeams" [value]="team._id">{{ team.name }}</option>
               </select>
             </div>
 
@@ -777,6 +767,14 @@ export class CalendarComponent implements OnInit {
       return hasRequiredFields && !!this.formEvent.teamId;
     }
     return hasRequiredFields;
+  }
+
+  onScopeChange(scope: string): void {
+    if (scope === 'team' && this.userTeams.length > 0) {
+      this.formEvent.teamId = this.userTeams[0]._id;
+    } else {
+      this.formEvent.teamId = undefined;
+    }
   }
 
   canEditEvent(event: CalendarEvent): boolean {
