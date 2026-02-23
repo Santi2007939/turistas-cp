@@ -48,6 +48,10 @@ const calendarEventSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
+  resource: {
+    type: String,
+    trim: true
+  },
   participants: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
