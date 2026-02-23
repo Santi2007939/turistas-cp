@@ -10,6 +10,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
 interface EventFormData {
   title: string;
   description: string;
+  link: string;
   type: 'contest' | 'practice' | 'training' | 'meeting' | 'deadline' | 'roadmap' | 'problem' | 'clase_gpc' | 'rpc' | 'icpc' | 'other';
   eventScope: 'personal' | 'team' | 'public';
   teamId?: string;
@@ -183,6 +184,15 @@ interface FilterData {
                     <span [innerHTML]="getEventIconSvg(event.type)"></span>
                   </div>
                   <p *ngIf="event.description" class="mb-3" style="color: #4A3B33;">{{ event.description }}</p>
+                  <p *ngIf="event.link" class="mb-3">
+                    <a [href]="event.link" target="_blank" rel="noopener noreferrer" class="text-sm underline" style="color: #8B5E3C;">
+                      <!-- Lucide ExternalLink icon -->
+                      <svg class="w-4 h-4 inline mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" />
+                      </svg>
+                      {{ event.link }}
+                    </a>
+                  </p>
                   <div class="text-sm space-y-1" style="color: #4A3B33;">
                     <p><strong>Start:</strong> {{ event.startTime | date:'medium' }}</p>
                     <p><strong>End:</strong> {{ event.endTime | date:'medium' }}</p>
@@ -305,6 +315,16 @@ interface FilterData {
                 class="w-full rounded-[12px] px-4 py-3"
                 style="border: 1px solid #EAE3DB; color: #2D2622;">
               </textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Link</label>
+              <input 
+                type="url"
+                [(ngModel)]="formEvent.link"
+                placeholder="https://example.com"
+                class="w-full rounded-[12px] px-4 py-3"
+                style="border: 1px solid #EAE3DB; color: #2D2622;">
             </div>
 
             <div>
@@ -497,6 +517,7 @@ export class CalendarComponent implements OnInit {
   formEvent: EventFormData = {
     title: '',
     description: '',
+    link: '',
     type: 'other',
     eventScope: 'personal',
     startTime: '',
@@ -636,6 +657,7 @@ export class CalendarComponent implements OnInit {
     this.formEvent = {
       title: '',
       description: '',
+      link: '',
       type: 'other',
       eventScope: 'personal',
       startTime: this.formatDateForInput(startTime),
@@ -652,6 +674,7 @@ export class CalendarComponent implements OnInit {
     this.formEvent = {
       title: event.title,
       description: event.description || '',
+      link: event.link || '',
       type: event.type,
       eventScope: event.eventScope,
       teamId: event.teamId,
@@ -673,6 +696,7 @@ export class CalendarComponent implements OnInit {
     const eventData: Partial<CalendarEvent> = {
       title: this.formEvent.title.trim(),
       description: this.formEvent.description,
+      link: this.formEvent.link || undefined,
       type: this.formEvent.type,
       eventScope: this.formEvent.eventScope,
       startTime: new Date(this.formEvent.startTime),
@@ -746,6 +770,7 @@ export class CalendarComponent implements OnInit {
     this.formEvent = {
       title: '',
       description: '',
+      link: '',
       type: 'other',
       eventScope: 'personal',
       teamId: undefined,
