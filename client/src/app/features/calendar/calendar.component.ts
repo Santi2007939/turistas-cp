@@ -11,6 +11,7 @@ interface EventFormData {
   title: string;
   description: string;
   link: string;
+  resource: string;
   type: 'contest' | 'practice' | 'training' | 'meeting' | 'deadline' | 'roadmap' | 'problem' | 'clase_gpc' | 'rpc' | 'icpc' | 'other';
   eventScope: 'personal' | 'team' | 'public';
   teamId?: string;
@@ -193,6 +194,15 @@ interface FilterData {
                       {{ event.link }}
                     </a>
                   </p>
+                  <p *ngIf="event.resource && isSafeUrl(event.resource)" class="mb-3">
+                    <a [href]="event.resource" target="_blank" rel="noopener noreferrer" class="text-sm underline" style="color: #8B5E3C;">
+                      <!-- Lucide FileText icon -->
+                      <svg class="w-4 h-4 inline mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      Resource: {{ event.resource }}
+                    </a>
+                  </p>
                   <div class="text-sm space-y-1" style="color: #4A3B33;">
                     <p><strong>Start:</strong> {{ event.startTime | date:'medium' }}</p>
                     <p><strong>End:</strong> {{ event.endTime | date:'medium' }}</p>
@@ -323,6 +333,16 @@ interface FilterData {
                 type="url"
                 [(ngModel)]="formEvent.link"
                 placeholder="https://example.com"
+                class="w-full rounded-[12px] px-4 py-3"
+                style="border: 1px solid #EAE3DB; color: #2D2622;">
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium mb-1" style="color: #2D2622;">Resource (PDF or document link)</label>
+              <input 
+                type="url"
+                [(ngModel)]="formEvent.resource"
+                placeholder="https://example.com/resource.pdf"
                 class="w-full rounded-[12px] px-4 py-3"
                 style="border: 1px solid #EAE3DB; color: #2D2622;">
             </div>
@@ -518,6 +538,7 @@ export class CalendarComponent implements OnInit {
     title: '',
     description: '',
     link: '',
+    resource: '',
     type: 'other',
     eventScope: 'personal',
     startTime: '',
@@ -658,6 +679,7 @@ export class CalendarComponent implements OnInit {
       title: '',
       description: '',
       link: '',
+      resource: '',
       type: 'other',
       eventScope: 'personal',
       startTime: this.formatDateForInput(startTime),
@@ -675,6 +697,7 @@ export class CalendarComponent implements OnInit {
       title: event.title,
       description: event.description || '',
       link: event.link || '',
+      resource: event.resource || '',
       type: event.type,
       eventScope: event.eventScope,
       teamId: event.teamId,
@@ -697,6 +720,7 @@ export class CalendarComponent implements OnInit {
       title: this.formEvent.title.trim(),
       description: this.formEvent.description,
       link: this.formEvent.link.trim() || undefined,
+      resource: this.formEvent.resource.trim() || undefined,
       type: this.formEvent.type,
       eventScope: this.formEvent.eventScope,
       startTime: new Date(this.formEvent.startTime),
@@ -771,6 +795,7 @@ export class CalendarComponent implements OnInit {
       title: '',
       description: '',
       link: '',
+      resource: '',
       type: 'other',
       eventScope: 'personal',
       teamId: undefined,
