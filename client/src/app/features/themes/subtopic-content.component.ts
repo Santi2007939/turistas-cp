@@ -1328,6 +1328,8 @@ export class SubtopicContentComponent implements OnInit {
       setTimeout(() => {
         this.copiedSnippetCode = null;
       }, 2000);
+    }).catch(() => {
+      this.error = 'Failed to copy code to clipboard.';
     });
   }
 

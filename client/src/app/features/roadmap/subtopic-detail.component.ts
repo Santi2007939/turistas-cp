@@ -1482,6 +1482,8 @@ export class SubtopicDetailComponent implements OnInit {
       setTimeout(() => {
         this.copiedSnippetCode = null;
       }, 2000);
+    }).catch(() => {
+      console.error('Failed to copy code to clipboard');
     });
   }
 
