@@ -626,7 +626,7 @@ router.delete('/:id/code-sessions/:sessionId', teamManagementLimiter, asyncHandl
 // @desc    Get/refresh team statistics from problems library
 // @route   GET /api/team/:id/statistics
 // @access  Private
-router.get('/:id/statistics', asyncHandler(async (req, res) => {
+router.get('/:id/statistics', teamManagementLimiter, asyncHandler(async (req, res) => {
   const team = await TeamConfig.findById(req.params.id)
     .populate('members.userId', 'username email fullName');
 
