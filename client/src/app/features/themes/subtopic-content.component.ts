@@ -1109,7 +1109,7 @@ export class SubtopicContentComponent implements OnInit {
   }
 
   getProblemIdentifier(problem: SubtopicContent['linkedProblems'][0]): string {
-    return problem._id || problem.problemId || problem.title;
+    return problem.problemId || problem.title;
   }
 
   isProblemCompleted(problem: SubtopicContent['linkedProblems'][0]): boolean {
