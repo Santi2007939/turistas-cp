@@ -8,6 +8,20 @@ import { createRateLimiter } from '../middlewares/rateLimiter.js';
 
 const router = express.Router();
 
+// Helper function to recalculate progress based on completed problems vs total linked problems
+const recalculateProgress = (node) => {
+  let totalProblems = 0;
+  const completedCount = (node.completedProblems || []).length;
+  if (node.subtopics) {
+    for (const subtopic of node.subtopics) {
+      if (subtopic.linkedProblems) {
+        totalProblems += subtopic.linkedProblems.length;
+      }
+    }
+  }
+  return totalProblems > 0 ? Math.round((completedCount / totalProblems) * 100) : 0;
+};
+
 // All routes require authentication
 router.use(protect);
 
@@ -277,20 +291,7 @@ router.post('/:id/toggle-problem', writeRateLimiter, asyncHandler(async (req, re
     node.completedProblems.push(problemIdentifier);
   }
 
-  // Recalculate progress based on completed problems vs total linked problems
-  let totalProblems = 0;
-  let completedCount = node.completedProblems.length;
-  if (node.subtopics) {
-    for (const subtopic of node.subtopics) {
-      if (subtopic.linkedProblems) {
-        totalProblems += subtopic.linkedProblems.length;
-      }
-    }
-  }
-  if (totalProblems > 0) {
-    node.progress = Math.round((completedCount / totalProblems) * 100);
-  }
-
+  node.progress = recalculateProgress(node);
   node.lastPracticed = new Date();
   await node.save();
 
@@ -340,20 +341,7 @@ router.post('/toggle-problem-by-theme', writeRateLimiter, asyncHandler(async (re
     node.completedProblems.push(problemIdentifier);
   }
 
-  // Recalculate progress
-  let totalProblems = 0;
-  let completedCount = node.completedProblems.length;
-  if (node.subtopics) {
-    for (const subtopic of node.subtopics) {
-      if (subtopic.linkedProblems) {
-        totalProblems += subtopic.linkedProblems.length;
-      }
-    }
-  }
-  if (totalProblems > 0) {
-    node.progress = Math.round((completedCount / totalProblems) * 100);
-  }
-
+  node.progress = recalculateProgress(node);
   node.lastPracticed = new Date();
   await node.save();
 

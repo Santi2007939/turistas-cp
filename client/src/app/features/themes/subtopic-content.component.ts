@@ -1076,20 +1076,20 @@ export class SubtopicContentComponent implements OnInit {
     return order[difficulty] ?? 4;
   }
 
-  sortProblemsByDifficulty(problems: any[]): any[] {
+  sortProblemsByDifficulty(problems: SubtopicContent['linkedProblems']): SubtopicContent['linkedProblems'] {
     return [...problems].sort((a, b) => this.getDifficultyOrder(a.difficulty) - this.getDifficultyOrder(b.difficulty));
   }
 
-  getProblemIdentifier(problem: any): string {
+  getProblemIdentifier(problem: SubtopicContent['linkedProblems'][0]): string {
     return problem._id || problem.problemId || problem.title;
   }
 
-  isProblemCompleted(problem: any): boolean {
+  isProblemCompleted(problem: SubtopicContent['linkedProblems'][0]): boolean {
     const id = this.getProblemIdentifier(problem);
     return this.completedProblems.includes(id);
   }
 
-  toggleProblemCompleted(problem: any): void {
+  toggleProblemCompleted(problem: SubtopicContent['linkedProblems'][0]): void {
     if (!this.subtopic?.userHasThemeInRoadmap) return;
     const id = this.getProblemIdentifier(problem);
     this.roadmapService.toggleProblemCompletionByTheme(this.themeId, id).subscribe({
