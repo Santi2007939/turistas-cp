@@ -357,11 +357,27 @@ import { ThemesService, Subtheme } from '../../core/services/themes.service';
                        }">
                     <!-- Problem Header -->
                     <div class="flex items-start justify-between mb-2">
-                      <div class="flex-1">
-                        <h4 class="font-semibold mb-1" style="color: #2D2622;">{{ problem.title }}</h4>
-                        <p *ngIf="problem.description" class="text-sm mb-2" style="color: #4A3B33;">
-                          {{ problem.description }}
-                        </p>
+                      <div class="flex items-start gap-3 flex-1">
+                        <!-- Completion circle button -->
+                        <button 
+                          *ngIf="isOwner"
+                          (click)="toggleProblemCompleted(problem)"
+                          class="mt-1 flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors"
+                          [ngStyle]="{
+                            'border-color': isProblemCompleted(problem) ? '#8B5E3C' : '#EAE3DB',
+                            'background-color': isProblemCompleted(problem) ? '#8B5E3C' : 'transparent'
+                          }"
+                          [title]="isProblemCompleted(problem) ? 'Mark as incomplete' : 'Mark as completed'">
+                          <svg *ngIf="isProblemCompleted(problem)" class="w-3 h-3" style="color: white;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                        </button>
+                        <div class="flex-1">
+                          <h4 class="font-semibold mb-1" style="color: #2D2622;" [ngStyle]="{'text-decoration': isProblemCompleted(problem) ? 'line-through' : 'none', 'opacity': isProblemCompleted(problem) ? '0.6' : '1'}">{{ problem.title }}</h4>
+                          <p *ngIf="problem.description" class="text-sm mb-2" style="color: #4A3B33;">
+                            {{ problem.description }}
+                          </p>
+                        </div>
                       </div>
                       <button 
                         *ngIf="isOwner"
@@ -1121,6 +1137,8 @@ export class SubtopicDetailComponent implements OnInit {
     link: '',
     difficulty: 'medium'
   };
+
+  completedProblems: string[] = [];
   
   problemLinkMetadata: {
     title: string;
@@ -1166,10 +1184,14 @@ export class SubtopicDetailComponent implements OnInit {
       next: (response) => {
         this.node = response.data.node;
         this.isOwner = response.data.isOwner;
+        this.completedProblems = (this.node as any)?.completedProblems || [];
         
-        // Initialize active tabs
+        // Sort linked problems by difficulty for each subtopic
         if (this.node?.subtopics) {
           this.node.subtopics.forEach((subtopic, index) => {
+            if (subtopic.linkedProblems) {
+              subtopic.linkedProblems = this.sortProblemsByDifficulty(subtopic.linkedProblems);
+            }
             const key = subtopic._id || index;
             // Default to 'theory' tab for non-owners (shared content) or 'personal' for owners
             this.activeTab[key] = this.isOwner ? 'personal' : 'theory';
@@ -1620,6 +1642,9 @@ export class SubtopicDetailComponent implements OnInit {
     }
     this.currentSubtopicForProblem.linkedProblems.push(linkedProblem);
 
+    // Sort by difficulty
+    this.currentSubtopicForProblem.linkedProblems = this.sortProblemsByDifficulty(this.currentSubtopicForProblem.linkedProblems);
+
     // Save subtopic
     this.saveSubtopic(this.currentSubtopicForProblem);
 
@@ -1663,6 +1688,45 @@ export class SubtopicDetailComponent implements OnInit {
       'very-hard': 'Very Hard'
     };
     return labels[difficulty] || difficulty;
+  }
+
+  getDifficultyOrder(difficulty: string): number {
+    const order: { [key: string]: number } = {
+      'easy': 0,
+      'medium': 1,
+      'hard': 2,
+      'very-hard': 3
+    };
+    return order[difficulty] ?? 4;
+  }
+
+  sortProblemsByDifficulty(problems: LinkedProblem[]): LinkedProblem[] {
+    return [...problems].sort((a, b) => this.getDifficultyOrder(a.difficulty) - this.getDifficultyOrder(b.difficulty));
+  }
+
+  getProblemIdentifier(problem: LinkedProblem): string {
+    return problem._id || problem.problemId || problem.title;
+  }
+
+  isProblemCompleted(problem: LinkedProblem): boolean {
+    const id = this.getProblemIdentifier(problem);
+    return this.completedProblems.includes(id);
+  }
+
+  toggleProblemCompleted(problem: LinkedProblem): void {
+    if (!this.isOwner || !this.nodeId) return;
+    const id = this.getProblemIdentifier(problem);
+    this.roadmapService.toggleProblemCompletion(this.nodeId, id).subscribe({
+      next: (response) => {
+        this.completedProblems = response.data.completedProblems || [];
+        if (this.node) {
+          this.node.progress = response.data.progress;
+        }
+      },
+      error: (err) => {
+        console.error('Error toggling problem completion:', err);
+      }
+    });
   }
 
   navigateToFilteredProblems(subtopic: Subtopic): void {
@@ -1714,6 +1778,9 @@ export class SubtopicDetailComponent implements OnInit {
       this.currentSubtopicForProblem.linkedProblems = [];
     }
     this.currentSubtopicForProblem.linkedProblems.push(linkedProblem);
+
+    // Sort by difficulty
+    this.currentSubtopicForProblem.linkedProblems = this.sortProblemsByDifficulty(this.currentSubtopicForProblem.linkedProblems);
 
     // Save subtopic
     this.saveSubtopic(this.currentSubtopicForProblem);

@@ -58,6 +58,7 @@ export interface PersonalNode {
   dueDate?: Date;
   subtopics?: Subtopic[];
   problemsSolved: any[];
+  completedProblems?: string[];
   order?: number;
   startedAt?: Date;
   completedAt?: Date;

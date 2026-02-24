@@ -6,6 +6,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ThemesService, SubtopicContent } from '../../core/services/themes.service';
 import { ProblemsService, Problem } from '../../core/services/problems.service';
 import { AuthService, User } from '../../core/services/auth.service';
+import { RoadmapService } from '../../core/services/roadmap.service';
 import { NavbarComponent } from '../../shared/components/navbar.component';
 
 @Component({
@@ -348,11 +349,27 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                        'border-bottom': '1px solid #EAE3DB'
                      }">
                   <div class="flex items-start justify-between mb-2">
-                    <div class="flex-1">
-                      <h4 class="font-semibold mb-1" style="color: #2D2622;">{{ problem.title }}</h4>
-                      <p *ngIf="problem.description" class="text-sm mb-2" style="color: #4A3B33;">
-                        {{ problem.description }}
-                      </p>
+                    <div class="flex items-start gap-3 flex-1">
+                      <!-- Completion circle button -->
+                      <button 
+                        *ngIf="subtopic.userHasThemeInRoadmap"
+                        (click)="toggleProblemCompleted(problem)"
+                        class="mt-1 flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors"
+                        [ngStyle]="{
+                          'border-color': isProblemCompleted(problem) ? '#8B5E3C' : '#EAE3DB',
+                          'background-color': isProblemCompleted(problem) ? '#8B5E3C' : 'transparent'
+                        }"
+                        [title]="isProblemCompleted(problem) ? 'Mark as incomplete' : 'Mark as completed'">
+                        <svg *ngIf="isProblemCompleted(problem)" class="w-3 h-3" style="color: white;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </button>
+                      <div class="flex-1">
+                        <h4 class="font-semibold mb-1" style="color: #2D2622;" [ngStyle]="{'text-decoration': isProblemCompleted(problem) ? 'line-through' : 'none', 'opacity': isProblemCompleted(problem) ? '0.6' : '1'}">{{ problem.title }}</h4>
+                        <p *ngIf="problem.description" class="text-sm mb-2" style="color: #4A3B33;">
+                          {{ problem.description }}
+                        </p>
+                      </div>
                     </div>
                     <button 
                       (click)="removeProblem(k)"
@@ -946,13 +963,16 @@ export class SubtopicContentComponent implements OnInit {
     difficulty: 'easy'
   };
 
+  completedProblems: string[] = [];
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private themesService: ThemesService,
     private problemsService: ProblemsService,
     private authService: AuthService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private roadmapService: RoadmapService
   ) {}
 
   ngOnInit(): void {
@@ -986,6 +1006,12 @@ export class SubtopicContentComponent implements OnInit {
       next: (response) => {
         this.subtopic = response.data.subtopic;
         this.themeName = response.data.theme.name;
+        this.completedProblems = response.data.subtopic.completedProblems || [];
+        
+        // Sort linked problems by difficulty (easy → hard)
+        if (this.subtopic?.linkedProblems) {
+          this.subtopic.linkedProblems = this.sortProblemsByDifficulty(this.subtopic.linkedProblems);
+        }
         
         // Default to theory tab in themes view (Personal Notes only in Roadmap)
         this.activeTab = 'theory';
@@ -1038,6 +1064,42 @@ export class SubtopicContentComponent implements OnInit {
       'very-hard': 'Very Hard'
     };
     return labels[difficulty] || difficulty;
+  }
+
+  getDifficultyOrder(difficulty: string): number {
+    const order: { [key: string]: number } = {
+      'easy': 0,
+      'medium': 1,
+      'hard': 2,
+      'very-hard': 3
+    };
+    return order[difficulty] ?? 4;
+  }
+
+  sortProblemsByDifficulty(problems: any[]): any[] {
+    return [...problems].sort((a, b) => this.getDifficultyOrder(a.difficulty) - this.getDifficultyOrder(b.difficulty));
+  }
+
+  getProblemIdentifier(problem: any): string {
+    return problem._id || problem.problemId || problem.title;
+  }
+
+  isProblemCompleted(problem: any): boolean {
+    const id = this.getProblemIdentifier(problem);
+    return this.completedProblems.includes(id);
+  }
+
+  toggleProblemCompleted(problem: any): void {
+    if (!this.subtopic?.userHasThemeInRoadmap) return;
+    const id = this.getProblemIdentifier(problem);
+    this.roadmapService.toggleProblemCompletionByTheme(this.themeId, id).subscribe({
+      next: (response) => {
+        this.completedProblems = response.data.completedProblems || [];
+      },
+      error: (err) => {
+        console.error('Error toggling problem completion:', err);
+      }
+    });
   }
 
   // Shared theory editing methods
@@ -1391,6 +1453,9 @@ export class SubtopicContentComponent implements OnInit {
       difficulty: this.problemLinkMetadata.difficulty as 'easy' | 'medium' | 'hard' | 'very-hard'
     });
     
+    // Sort by difficulty
+    this.subtopic.linkedProblems = this.sortProblemsByDifficulty(this.subtopic.linkedProblems);
+    
     this.saveProblems();
     this.closeProblemPicker();
   }
@@ -1424,6 +1489,9 @@ export class SubtopicContentComponent implements OnInit {
       link: this.newInlineProblem.link,
       difficulty: this.newInlineProblem.difficulty as 'easy' | 'medium' | 'hard' | 'very-hard'
     });
+    
+    // Sort by difficulty
+    this.subtopic.linkedProblems = this.sortProblemsByDifficulty(this.subtopic.linkedProblems);
     
     this.saveProblems();
     this.closeCreateProblemModal();
