@@ -8,6 +8,20 @@ import { createRateLimiter } from '../middlewares/rateLimiter.js';
 
 const router = express.Router();
 
+// Helper function to recalculate progress based on completed problems vs total linked problems
+const recalculateProgress = (node) => {
+  let totalProblems = 0;
+  const completedCount = (node.completedProblems || []).length;
+  if (node.subtopics) {
+    for (const subtopic of node.subtopics) {
+      if (subtopic.linkedProblems) {
+        totalProblems += subtopic.linkedProblems.length;
+      }
+    }
+  }
+  return totalProblems > 0 ? Math.round((completedCount / totalProblems) * 100) : 0;
+};
+
 // All routes require authentication
 router.use(protect);
 
@@ -236,6 +250,108 @@ router.post('/', asyncHandler(async (req, res) => {
     success: true,
     message: 'Roadmap updated successfully',
     data: { node }
+  });
+}));
+
+// @desc    Toggle problem completion for a user's roadmap node
+// @route   POST /api/roadmap/:id/toggle-problem
+// @access  Private
+router.post('/:id/toggle-problem', writeRateLimiter, asyncHandler(async (req, res) => {
+  const { problemIdentifier } = req.body;
+
+  if (!problemIdentifier) {
+    return res.status(400).json({
+      success: false,
+      message: 'problemIdentifier is required'
+    });
+  }
+
+  const node = await PersonalNode.findOne({
+    _id: req.params.id,
+    userId: req.user._id
+  });
+
+  if (!node) {
+    return res.status(404).json({
+      success: false,
+      message: 'Roadmap node not found'
+    });
+  }
+
+  if (!node.completedProblems) {
+    node.completedProblems = [];
+  }
+
+  const index = node.completedProblems.indexOf(problemIdentifier);
+  if (index > -1) {
+    // Remove from completed
+    node.completedProblems.splice(index, 1);
+  } else {
+    // Add to completed
+    node.completedProblems.push(problemIdentifier);
+  }
+
+  node.progress = recalculateProgress(node);
+  node.lastPracticed = new Date();
+  await node.save();
+
+  res.json({
+    success: true,
+    message: index > -1 ? 'Problem unmarked as completed' : 'Problem marked as completed',
+    data: { 
+      completedProblems: node.completedProblems,
+      progress: node.progress
+    }
+  });
+}));
+
+// @desc    Toggle problem completion by themeId (for themes view)
+// @route   POST /api/roadmap/toggle-problem-by-theme
+// @access  Private
+router.post('/toggle-problem-by-theme', writeRateLimiter, asyncHandler(async (req, res) => {
+  const { themeId, problemIdentifier } = req.body;
+
+  if (!themeId || !problemIdentifier) {
+    return res.status(400).json({
+      success: false,
+      message: 'themeId and problemIdentifier are required'
+    });
+  }
+
+  const node = await PersonalNode.findOne({
+    userId: req.user._id,
+    themeId
+  });
+
+  if (!node) {
+    return res.status(404).json({
+      success: false,
+      message: 'Theme not found in your roadmap'
+    });
+  }
+
+  if (!node.completedProblems) {
+    node.completedProblems = [];
+  }
+
+  const index = node.completedProblems.indexOf(problemIdentifier);
+  if (index > -1) {
+    node.completedProblems.splice(index, 1);
+  } else {
+    node.completedProblems.push(problemIdentifier);
+  }
+
+  node.progress = recalculateProgress(node);
+  node.lastPracticed = new Date();
+  await node.save();
+
+  res.json({
+    success: true,
+    message: index > -1 ? 'Problem unmarked as completed' : 'Problem marked as completed',
+    data: { 
+      completedProblems: node.completedProblems,
+      progress: node.progress
+    }
   });
 }));
 

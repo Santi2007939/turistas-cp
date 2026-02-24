@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { CalendarService, CalendarEvent } from '../../core/services/calendar.service';
 import { AuthService, User } from '../../core/services/auth.service';
 import { TeamService, TeamConfig } from '../../core/services/team.service';
@@ -551,7 +552,8 @@ export class CalendarComponent implements OnInit {
   constructor(
     private calendarService: CalendarService,
     private authService: AuthService,
-    private teamService: TeamService
+    private teamService: TeamService,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
@@ -860,7 +862,7 @@ export class CalendarComponent implements OnInit {
     return '';
   }
 
-  getEventIconSvg(type: string): string {
+  getEventIconSvg(type: string): SafeHtml {
     // SVG icons for event types following the Matte-Drift design pattern
     const icons: { [key: string]: string } = {
       'contest': '<svg class="w-5 h-5 inline" style="color: #8B5E3C;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9H4a2 2 0 01-2-2V5a2 2 0 012-2h2M18 9h2a2 2 0 002-2V5a2 2 0 00-2-2h-2M6 3v6a6 6 0 006 6v0a6 6 0 006-6V3M9 21h6M12 15v6" /></svg>',
@@ -875,7 +877,7 @@ export class CalendarComponent implements OnInit {
       'problem': '<svg class="w-5 h-5 inline" style="color: #8B5E3C;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" /></svg>',
       'other': '<svg class="w-5 h-5 inline" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg>'
     };
-    return icons[type] || icons['other'];
+    return this.sanitizer.bypassSecurityTrustHtml(icons[type] || icons['other']);
   }
 
   getEventTypeName(type: string): string {

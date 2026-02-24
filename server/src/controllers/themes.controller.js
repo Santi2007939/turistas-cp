@@ -243,10 +243,11 @@ export const getSubtopicContent = asyncHandler(async (req, res) => {
     linkedProblems: themeSubtopic?.linkedProblems || [],
     resources: themeSubtopic?.resources || [],
     userHasThemeInRoadmap: !!userNode,
-    personalNotes: '' // Only filled if user has theme in roadmap
+    personalNotes: '', // Only filled if user has theme in roadmap
+    completedProblems: [] // User's completed problems for this theme
   };
 
-  // If user has the theme in their roadmap, get personal notes from their node
+  // If user has the theme in their roadmap, get personal notes and completed problems from their node
   if (userNode && userNode.subtopics) {
     const userSubtopic = userNode.subtopics.find(
       s => normalizeStr(s.name) === normalizedSearchName
@@ -254,6 +255,7 @@ export const getSubtopicContent = asyncHandler(async (req, res) => {
     if (userSubtopic) {
       aggregatedContent.personalNotes = userSubtopic.personalNotes || '';
     }
+    aggregatedContent.completedProblems = userNode.completedProblems || [];
   }
 
   res.json({

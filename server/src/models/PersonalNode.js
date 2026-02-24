@@ -117,6 +117,9 @@ const personalNodeSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Problem'
   }],
+  completedProblems: [{
+    type: String
+  }],
   order: {
     type: Number,
     default: 0

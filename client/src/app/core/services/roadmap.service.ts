@@ -58,6 +58,7 @@ export interface PersonalNode {
   dueDate?: Date;
   subtopics?: Subtopic[];
   problemsSolved: any[];
+  completedProblems?: string[];
   order?: number;
   startedAt?: Date;
   completedAt?: Date;
@@ -194,5 +195,19 @@ export class RoadmapService {
    */
   updateNodeOrder(nodeOrders: { nodeId: string; order: number }[]): Observable<any> {
     return this.api.put('/api/roadmap/reorder', { nodeOrders });
+  }
+
+  /**
+   * Toggle problem completion for a roadmap node
+   */
+  toggleProblemCompletion(nodeId: string, problemIdentifier: string): Observable<any> {
+    return this.api.post(`/api/roadmap/${nodeId}/toggle-problem`, { problemIdentifier });
+  }
+
+  /**
+   * Toggle problem completion by theme ID (for themes view)
+   */
+  toggleProblemCompletionByTheme(themeId: string, problemIdentifier: string): Observable<any> {
+    return this.api.post('/api/roadmap/toggle-problem-by-theme', { themeId, problemIdentifier });
   }
 }
