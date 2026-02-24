@@ -57,6 +57,7 @@ export interface SubtopicContent {
     description?: string;
   }>;
   linkedProblems: Array<{
+    _id?: string;
     problemId?: string;
     title: string;
     description?: string;
@@ -69,6 +70,7 @@ export interface SubtopicContent {
   }>;
   userHasThemeInRoadmap: boolean;
   personalNotes: string;
+  completedProblems: string[];
 }
 
 export interface SubtopicContentResponse {

@@ -8,7 +8,7 @@ const problemSchema = new mongoose.Schema({
   },
   platform: {
     type: String,
-    enum: ['codeforces', 'atcoder', 'leetcode', 'hackerrank', 'cses', 'uva', 'spoj', 'custom', 'other'],
+    enum: ['codeforces', 'atcoder', 'leetcode', 'hackerrank', 'cses', 'uva', 'spoj', 'rpc', 'custom', 'other'],
     default: 'other'
   },
   platformId: {

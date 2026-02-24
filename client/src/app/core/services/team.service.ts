@@ -111,6 +111,13 @@ export class TeamService {
   }
 
   /**
+   * Get/refresh team statistics from problems library
+   */
+  getTeamStatistics(teamId: string): Observable<any> {
+    return this.api.get(`/api/team/${teamId}/statistics`);
+  }
+
+  /**
    * Delete team
    */
   deleteTeam(id: string): Observable<any> {

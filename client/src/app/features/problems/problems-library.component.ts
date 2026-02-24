@@ -249,6 +249,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                 <option value="cses">CSES</option>
                 <option value="uva">UVa</option>
                 <option value="spoj">SPOJ</option>
+                <option value="rpc">RPC</option>
                 <option value="custom">Custom</option>
                 <option value="other">Other</option>
               </select>
@@ -865,7 +866,8 @@ export class ProblemsLibraryComponent implements OnInit {
       { pattern: /^https?:\/\/(www\.)?hackerrank\.com\//i, platform: 'hackerrank' },
       { pattern: /^https?:\/\/(www\.)?cses\.fi\//i, platform: 'cses' },
       { pattern: /^https?:\/\/(www\.)?uva\.onlinejudge\.org\//i, platform: 'uva' },
-      { pattern: /^https?:\/\/(www\.)?spoj\.com\//i, platform: 'spoj' }
+      { pattern: /^https?:\/\/(www\.)?spoj\.com\//i, platform: 'spoj' },
+      { pattern: /^https?:\/\/(www\.)?red\.programacion\.com\.co\//i, platform: 'rpc' }
     ];
 
     for (const { pattern, platform } of platformPatterns) {

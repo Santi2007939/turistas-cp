@@ -1098,6 +1098,17 @@ export class TeamDetailComponent implements OnInit, OnDestroy {
       next: (response) => {
         this.team = response.data.team;
         this.loading = false;
+        // Refresh statistics from problems library
+        this.teamService.getTeamStatistics(id).subscribe({
+          next: (statsResponse) => {
+            if (this.team && statsResponse.data?.statistics) {
+              this.team.statistics = statsResponse.data.statistics;
+            }
+          },
+          error: (err) => {
+            console.error('Error loading team statistics:', err);
+          }
+        });
       },
       error: (err) => {
         this.error = 'Failed to load team. Please try again later.';

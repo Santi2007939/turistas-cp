@@ -623,6 +623,50 @@ router.delete('/:id/code-sessions/:sessionId', teamManagementLimiter, asyncHandl
   });
 }));
 
+// @desc    Get/refresh team statistics from problems library
+// @route   GET /api/team/:id/statistics
+// @access  Private
+router.get('/:id/statistics', asyncHandler(async (req, res) => {
+  const team = await TeamConfig.findById(req.params.id)
+    .populate('members.userId', 'username email fullName');
+
+  if (!team) {
+    return res.status(404).json({
+      success: false,
+      message: 'Team not found'
+    });
+  }
+
+  // Import Problem model
+  const Problem = (await import('../models/Problem.js')).default;
+
+  // Get all team problems (owner === 'team') - count unique problems (by _id)
+  const teamProblems = await Problem.find({ owner: 'team' });
+
+  const totalProblemsSolved = teamProblems.length;
+
+  // Calculate average rating from problems that have a rating
+  const problemsWithRating = teamProblems.filter(p => p.rating != null && p.rating > 0);
+  const averageRating = problemsWithRating.length > 0
+    ? Math.round(problemsWithRating.reduce((sum, p) => sum + p.rating, 0) / problemsWithRating.length)
+    : 0;
+
+  // Update team statistics
+  team.statistics = {
+    totalProblemsSolved,
+    totalContests: team.statistics?.totalContests || 0,
+    averageRating
+  };
+  await team.save();
+
+  res.json({
+    success: true,
+    data: {
+      statistics: team.statistics
+    }
+  });
+}));
+
 // @desc    Delete team
 // @route   DELETE /api/team/:id
 // @access  Private/Admin
