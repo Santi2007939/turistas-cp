@@ -308,10 +308,24 @@ import { ThemesService, Subtheme } from '../../core/services/themes.service';
                       style="background-color: #2D2622; color: #F8F8F2; border: 1px solid #2D2622;">
                     </textarea>
                     <!-- Code viewer with syntax highlighting (in view mode) -->
-                    <pre 
-                      *ngIf="editingCodeSnippet[subtopic._id || i] !== j"
-                      class="rounded-[12px] p-4 overflow-x-auto font-mono text-sm"
-                      style="background-color: #2D2622; margin: 0;"><code style="color: #F8F8F2;" [innerHTML]="highlightCode(snippet.code, snippet.language)"></code></pre>
+                    <div *ngIf="editingCodeSnippet[subtopic._id || i] !== j" class="relative">
+                      <button
+                        (click)="copyCodeSnippet(snippet.code)"
+                        class="absolute top-2 right-2 p-1.5 rounded-[8px] transition-colors"
+                        style="background-color: rgba(255,255,255,0.1); color: #F8F8F2;"
+                        [title]="copiedSnippetCode === snippet.code ? 'Copied!' : 'Copy code'">
+                        <svg *ngIf="copiedSnippetCode !== snippet.code" class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                          <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                          <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+                        </svg>
+                        <svg *ngIf="copiedSnippetCode === snippet.code" class="w-4 h-4" style="color: #50FA7B;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </button>
+                      <pre 
+                        class="rounded-[12px] p-4 overflow-x-auto font-mono text-sm"
+                        style="background-color: #2D2622; margin: 0;"><code style="color: #F8F8F2;" [innerHTML]="highlightCode(snippet.code, snippet.language)"></code></pre>
+                    </div>
                   </div>
                   <button 
                     *ngIf="isOwner"
@@ -1120,6 +1134,7 @@ export class SubtopicDetailComponent implements OnInit {
   showDeleteCodeSnippetModal = false;
   subtopicForCodeSnippetDelete: Subtopic | null = null;
   codeSnippetToDeleteIndex: number | null = null;
+  copiedSnippetCode: string | null = null;
 
   // Resources editing state
   editingResources: { [key: string]: boolean } = {};
@@ -1406,10 +1421,10 @@ export class SubtopicDetailComponent implements OnInit {
     const savePlaceholder = (match: string): string => {
       const index = placeholders.length;
       placeholders.push(match);
-      return `\x00${index}\x00`;
+      return `\x00PH${index}PH\x00`;
     };
     const restorePlaceholders = (text: string): string => {
-      return text.replace(/\x00(\d+)\x00/g, (_, idx) => placeholders[parseInt(idx, 10)]);
+      return text.replace(/\x00PH(\d+)PH\x00/g, (_, idx) => placeholders[parseInt(idx, 10)]);
     };
     
     if (language === 'python') {
@@ -1459,6 +1474,15 @@ export class SubtopicDetailComponent implements OnInit {
     escaped = restorePlaceholders(escaped);
     
     return this.sanitizer.bypassSecurityTrustHtml(escaped);
+  }
+
+  copyCodeSnippet(code: string): void {
+    navigator.clipboard.writeText(code).then(() => {
+      this.copiedSnippetCode = code;
+      setTimeout(() => {
+        this.copiedSnippetCode = null;
+      }, 2000);
+    });
   }
 
   addResource(subtopic: Subtopic): void {
@@ -1668,7 +1692,7 @@ export class SubtopicDetailComponent implements OnInit {
     if (!this.subtopicForUnlink || !this.problemToUnlink) return;
 
     if (this.subtopicForUnlink.linkedProblems) {
-      const index = this.subtopicForUnlink.linkedProblems.findIndex(lp => lp.problemId === this.problemToUnlink!.problemId);
+      const index = this.subtopicForUnlink.linkedProblems.indexOf(this.problemToUnlink);
       if (index > -1) {
         this.subtopicForUnlink.linkedProblems.splice(index, 1);
         this.saveSubtopic(this.subtopicForUnlink);

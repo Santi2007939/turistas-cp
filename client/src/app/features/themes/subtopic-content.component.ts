@@ -297,10 +297,24 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                     style="background-color: #2D2622; color: #F8F8F2; border: 1px solid #2D2622;">
                   </textarea>
                   <!-- Code viewer with syntax highlighting (in view mode) -->
-                  <pre 
-                    *ngIf="editingCodeSnippetIndex !== j"
-                    class="rounded-[12px] p-4 overflow-x-auto font-mono text-sm"
-                    style="background-color: #2D2622; margin: 0;"><code style="color: #F8F8F2;" [innerHTML]="highlightCode(snippet.code, snippet.language)"></code></pre>
+                  <div *ngIf="editingCodeSnippetIndex !== j" class="relative">
+                    <button
+                      (click)="copyCodeSnippet(snippet.code)"
+                      class="absolute top-2 right-2 p-1.5 rounded-[8px] transition-colors"
+                      style="background-color: rgba(255,255,255,0.1); color: #F8F8F2;"
+                      [title]="copiedSnippetCode === snippet.code ? 'Copied!' : 'Copy code'">
+                      <svg *ngIf="copiedSnippetCode !== snippet.code" class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                        <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+                      </svg>
+                      <svg *ngIf="copiedSnippetCode === snippet.code" class="w-4 h-4" style="color: #50FA7B;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </button>
+                    <pre 
+                      class="rounded-[12px] p-4 overflow-x-auto font-mono text-sm"
+                      style="background-color: #2D2622; margin: 0;"><code style="color: #F8F8F2;" [innerHTML]="highlightCode(snippet.code, snippet.language)"></code></pre>
+                  </div>
                 </div>
                 <button 
                   (click)="addCodeSnippet()"
@@ -338,6 +352,19 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   Problems linked to this subtopic
                 </p>
               </div>
+              <!-- Notice when user has not added theme to roadmap -->
+              <div *ngIf="!subtopic.userHasThemeInRoadmap && subtopic.linkedProblems && subtopic.linkedProblems.length > 0" 
+                   class="rounded-[12px] p-4 mb-4 flex items-center gap-3" 
+                   style="background-color: #FCF9F5; border: 1px solid #EAE3DB;">
+                <svg class="w-5 h-5 flex-shrink-0" style="color: #8B5E3C;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <circle cx="12" cy="12" r="10" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 16v-4m0-4h.01" />
+                </svg>
+                <p class="text-sm flex-1" style="color: #4A3B33;">
+                  To track problem completion, add this theme to your 
+                  <a routerLink="/roadmap" class="font-semibold underline" style="color: #8B5E3C;">roadmap</a> first.
+                </p>
+              </div>
               <div class="space-y-3">
                 <!-- Problem Cards -->
                 <div *ngFor="let problem of subtopic.linkedProblems; let k = index" 
@@ -372,7 +399,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                       </div>
                     </div>
                     <button 
-                      (click)="removeProblem(k)"
+                      (click)="removeProblem(problem)"
                       class="text-sm ml-2"
                       style="color: #4A3B33;">
                       <!-- Lucide X icon -->
@@ -932,6 +959,7 @@ export class SubtopicContentComponent implements OnInit {
   savingCodeSnippet = false;
   showDeleteCodeSnippetModal = false;
   codeSnippetToDeleteIndex: number | null = null;
+  copiedSnippetCode: string | null = null;
 
   // Resources editing state
   editingResources = false;
@@ -1239,10 +1267,10 @@ export class SubtopicContentComponent implements OnInit {
     const savePlaceholder = (match: string): string => {
       const index = placeholders.length;
       placeholders.push(match);
-      return `\x00${index}\x00`;
+      return `\x00PH${index}PH\x00`;
     };
     const restorePlaceholders = (text: string): string => {
-      return text.replace(/\x00(\d+)\x00/g, (_, idx) => placeholders[parseInt(idx, 10)]);
+      return text.replace(/\x00PH(\d+)PH\x00/g, (_, idx) => placeholders[parseInt(idx, 10)]);
     };
     
     if (language === 'python') {
@@ -1292,6 +1320,15 @@ export class SubtopicContentComponent implements OnInit {
     escaped = restorePlaceholders(escaped);
     
     return this.sanitizer.bypassSecurityTrustHtml(escaped);
+  }
+
+  copyCodeSnippet(code: string): void {
+    navigator.clipboard.writeText(code).then(() => {
+      this.copiedSnippetCode = code;
+      setTimeout(() => {
+        this.copiedSnippetCode = null;
+      }, 2000);
+    });
   }
 
   // Resource methods
@@ -1497,10 +1534,13 @@ export class SubtopicContentComponent implements OnInit {
     this.closeCreateProblemModal();
   }
 
-  removeProblem(index: number): void {
+  removeProblem(problem: SubtopicContent['linkedProblems'][0]): void {
     if (!this.subtopic || !this.subtopic.linkedProblems) return;
-    this.subtopic.linkedProblems.splice(index, 1);
-    this.saveProblems();
+    const index = this.subtopic.linkedProblems.indexOf(problem);
+    if (index > -1) {
+      this.subtopic.linkedProblems.splice(index, 1);
+      this.saveProblems();
+    }
   }
 
   saveProblems(): void {
