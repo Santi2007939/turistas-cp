@@ -11,15 +11,20 @@ const router = express.Router();
 // Helper function to recalculate progress based on completed problems vs total linked problems
 const recalculateProgress = (node) => {
   let totalProblems = 0;
-  const completedCount = (node.completedProblems || []).length;
+  const currentIdentifiers = new Set();
   if (node.subtopics) {
     for (const subtopic of node.subtopics) {
       if (subtopic.linkedProblems) {
         totalProblems += subtopic.linkedProblems.length;
+        for (const problem of subtopic.linkedProblems) {
+          const id = problem.problemId ? problem.problemId.toString() : problem.title;
+          currentIdentifiers.add(id);
+        }
       }
     }
   }
-  return totalProblems > 0 ? Math.round((completedCount / totalProblems) * 100) : 0;
+  const validCompletedCount = (node.completedProblems || []).filter(id => currentIdentifiers.has(id)).length;
+  return totalProblems > 0 ? Math.round((validCompletedCount / totalProblems) * 100) : 0;
 };
 
 // All routes require authentication
@@ -286,6 +291,7 @@ router.post('/:id/toggle-problem', writeRateLimiter, asyncHandler(async (req, re
   if (index > -1) {
     // Remove from completed
     node.completedProblems.splice(index, 1);
+    node.markModified('completedProblems');
   } else {
     // Add to completed
     node.completedProblems.push(problemIdentifier);
@@ -337,6 +343,7 @@ router.post('/toggle-problem-by-theme', writeRateLimiter, asyncHandler(async (re
   const index = node.completedProblems.indexOf(problemIdentifier);
   if (index > -1) {
     node.completedProblems.splice(index, 1);
+    node.markModified('completedProblems');
   } else {
     node.completedProblems.push(problemIdentifier);
   }
