@@ -404,6 +404,18 @@ router.post('/:id/subtopics', asyncHandler(async (req, res) => {
     });
   }
 
+  // Prevent duplicate subtopics with the same name (case-insensitive)
+  const normalizedName = name?.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+  const duplicate = node.subtopics.find(
+    s => s.name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim() === normalizedName
+  );
+  if (duplicate) {
+    return res.status(409).json({
+      success: false,
+      message: 'A subtopic with this name already exists in this node'
+    });
+  }
+
   const subtopic = {
     name,
     description,
