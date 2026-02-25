@@ -392,7 +392,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                         </svg>
                       </button>
                       <div class="flex-1">
-                        <h4 class="font-semibold mb-1" style="color: #2D2622;" [ngStyle]="{'opacity': isProblemCompleted(problem) ? '0.6' : '1'}">{{ problem.title }}</h4>
+                        <h4 class="font-semibold mb-1" style="color: #2D2622;">{{ problem.title }}</h4>
                         <p *ngIf="problem.description" class="text-sm mb-2" style="color: #4A3B33;">
                           {{ problem.description }}
                         </p>
