@@ -233,6 +233,12 @@ export const getSubtopicContent = asyncHandler(async (req, res) => {
   const themeSubtopic = theme.subthemes.find(
     s => normalizeStr(s.name) === normalizedSearchName
   );
+
+  // Check if user has the specific subtopic in their roadmap node
+  const userSubtopic = userNode?.subtopics?.find(
+    s => normalizeStr(s.name) === normalizedSearchName
+  );
+  const userHasSubtopicInRoadmap = !!userSubtopic;
   
   // Initialize aggregated content with Theme's shared content
   let aggregatedContent = {
@@ -242,19 +248,14 @@ export const getSubtopicContent = asyncHandler(async (req, res) => {
     codeSnippets: themeSubtopic?.codeSnippets || [],
     linkedProblems: themeSubtopic?.linkedProblems || [],
     resources: themeSubtopic?.resources || [],
-    userHasThemeInRoadmap: !!userNode,
-    personalNotes: '', // Only filled if user has theme in roadmap
+    userHasThemeInRoadmap: userHasSubtopicInRoadmap,
+    personalNotes: '', // Only filled if user has subtopic in roadmap
     completedProblems: [] // User's completed problems for this theme
   };
 
-  // If user has the theme in their roadmap, get personal notes and completed problems from their node
-  if (userNode && userNode.subtopics) {
-    const userSubtopic = userNode.subtopics.find(
-      s => normalizeStr(s.name) === normalizedSearchName
-    );
-    if (userSubtopic) {
-      aggregatedContent.personalNotes = userSubtopic.personalNotes || '';
-    }
+  // If user has the subtopic in their roadmap, get personal notes and completed problems
+  if (userHasSubtopicInRoadmap) {
+    aggregatedContent.personalNotes = userSubtopic.personalNotes || '';
     aggregatedContent.completedProblems = userNode.completedProblems || [];
   }
 
