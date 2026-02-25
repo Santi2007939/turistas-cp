@@ -413,6 +413,41 @@ export const updateSubtopicSharedContent = asyncHandler(async (req, res) => {
     );
   }
 
+  // When linkedProblems change, clean up stale completedProblems entries in affected PersonalNodes
+  if (linkedProblems !== undefined) {
+    const affectedNodes = await PersonalNode.find({
+      themeId: id,
+      'subtopics.name': { $regex: new RegExp(`^${decodedSubtopicName}$`, 'i') }
+    });
+
+    for (const affectedNode of affectedNodes) {
+      // Collect all valid problem identifiers from all subtopics (post-sync)
+      const validIds = new Set();
+      for (const subtopic of affectedNode.subtopics) {
+        for (const problem of subtopic.linkedProblems || []) {
+          const identifier = problem.problemId ? problem.problemId.toString() : problem.title;
+          validIds.add(identifier);
+        }
+      }
+
+      const originalCount = (affectedNode.completedProblems || []).length;
+      const filteredCompleted = (affectedNode.completedProblems || []).filter(pid => validIds.has(pid));
+
+      if (filteredCompleted.length !== originalCount) {
+        affectedNode.completedProblems = filteredCompleted;
+        affectedNode.markModified('completedProblems');
+        // Recalculate progress based on valid completions
+        const totalProblems = affectedNode.subtopics.reduce(
+          (sum, s) => sum + (s.linkedProblems || []).length, 0
+        );
+        affectedNode.progress = totalProblems > 0
+          ? Math.round((filteredCompleted.length / totalProblems) * 100)
+          : 0;
+        await affectedNode.save();
+      }
+    }
+  }
+
   res.json({
     success: true,
     message: `Shared content updated for subtopic "${decodedSubtopicName}"`
