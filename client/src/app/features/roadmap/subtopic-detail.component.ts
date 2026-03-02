@@ -361,7 +361,7 @@ import { ThemesService, Subtheme } from '../../core/services/themes.service';
                 </div>
                 <div class="space-y-3">
                   <!-- Problem Cards -->
-                  <div *ngFor="let problem of subtopic.linkedProblems" 
+                  <div *ngFor="let problem of subtopic.linkedProblems; let k = index" 
                        class="border-l-4 rounded-[12px] p-4 bg-white transition-shadow hover:shadow-md"
                        [ngStyle]="{
                          'border-left-color': problem.difficulty === 'easy' ? '#D4A373' : problem.difficulty === 'medium' ? '#8B5E3C' : problem.difficulty === 'hard' ? '#4A3B33' : '#2D2622',
@@ -369,70 +369,145 @@ import { ThemesService, Subtheme } from '../../core/services/themes.service';
                          'border-top': '1px solid #EAE3DB',
                          'border-bottom': '1px solid #EAE3DB'
                        }">
-                    <!-- Problem Header -->
-                    <div class="flex items-start justify-between mb-2">
-                      <div class="flex items-start gap-3 flex-1">
-                        <!-- Completion circle button -->
-                        <button 
-                          *ngIf="isOwner"
-                          (click)="toggleProblemCompleted(problem)"
-                          class="mt-1 flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors"
-                          [ngStyle]="{
-                            'border-color': isProblemCompleted(problem) ? '#8B5E3C' : '#EAE3DB',
-                            'background-color': isProblemCompleted(problem) ? '#8B5E3C' : 'transparent'
-                          }"
-                          [title]="isProblemCompleted(problem) ? 'Mark as incomplete' : 'Mark as completed'">
-                          <svg *ngIf="isProblemCompleted(problem)" class="w-3 h-3" style="color: white;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                          </svg>
-                        </button>
-                        <div class="flex-1">
-                          <h4 class="font-semibold mb-1" style="color: #2D2622;">{{ problem.title }}</h4>
-                          <p *ngIf="problem.description" class="text-sm mb-2" style="color: #4A3B33;">
-                            {{ problem.description }}
-                          </p>
+                    <!-- View mode -->
+                    <div *ngIf="editingProblem[subtopic._id || i] !== k">
+                      <!-- Problem Header -->
+                      <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-start gap-3 flex-1">
+                          <!-- Completion circle button -->
+                          <button 
+                            *ngIf="isOwner"
+                            (click)="toggleProblemCompleted(problem)"
+                            class="mt-1 flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors"
+                            [ngStyle]="{
+                              'border-color': isProblemCompleted(problem) ? '#8B5E3C' : '#EAE3DB',
+                              'background-color': isProblemCompleted(problem) ? '#8B5E3C' : 'transparent'
+                            }"
+                            [title]="isProblemCompleted(problem) ? 'Mark as incomplete' : 'Mark as completed'">
+                            <svg *ngIf="isProblemCompleted(problem)" class="w-3 h-3" style="color: white;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                          </button>
+                          <div class="flex-1">
+                            <h4 class="font-semibold mb-1" style="color: #2D2622;">{{ problem.title }}</h4>
+                            <p *ngIf="problem.description" class="text-sm mb-2" style="color: #4A3B33;">
+                              {{ problem.description }}
+                            </p>
+                          </div>
+                        </div>
+                        <div *ngIf="isOwner" class="flex items-center gap-1 ml-2">
+                          <!-- Edit button -->
+                          <button
+                            (click)="startEditingProblem(subtopic, k, problem, i)"
+                            class="text-sm px-2 py-1 rounded-[8px] flex items-center gap-1 font-medium"
+                            style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #4A3B33;">
+                            <!-- Lucide Edit icon -->
+                            <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                            Edit
+                          </button>
+                          <button 
+                            (click)="removeProblemFromSubtopic(subtopic, problem)"
+                            class="text-sm"
+                            style="color: #4A3B33;">
+                            <!-- Lucide X icon -->
+                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </button>
                         </div>
                       </div>
-                      <button 
-                        *ngIf="isOwner"
-                        (click)="removeProblemFromSubtopic(subtopic, problem)"
-                        class="text-sm ml-2"
-                        style="color: #4A3B33;">
-                        <!-- Lucide X icon -->
-                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
-                    </div>
-                    
-                    <!-- Problem Footer -->
-                    <div class="flex items-center justify-between">
-                      <span 
-                        class="text-xs px-2 py-1 rounded-[12px] font-medium"
-                        style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #8B5E3C;">
-                        {{ getDifficultyLabel(problem.difficulty) }}
-                      </span>
                       
-                      <div class="flex gap-2">
-                        <a 
-                          *ngIf="problem.link"
-                          [href]="problem.link" 
-                          target="_blank"
-                          class="text-xs flex items-center gap-1"
-                          style="color: #8B5E3C;">
-                          <!-- Lucide ExternalLink icon -->
+                      <!-- Problem Footer -->
+                      <div class="flex items-center justify-between">
+                        <span 
+                          class="text-xs px-2 py-1 rounded-[12px] font-medium"
+                          style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #8B5E3C;">
+                          {{ getDifficultyLabel(problem.difficulty) }}
+                        </span>
+                        
+                        <div class="flex gap-2">
+                          <a 
+                            *ngIf="problem.link"
+                            [href]="problem.link" 
+                            target="_blank"
+                            class="text-xs flex items-center gap-1"
+                            style="color: #8B5E3C;">
+                            <!-- Lucide ExternalLink icon -->
+                            <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                            Open
+                          </a>
+                          <a 
+                            *ngIf="problem.problemId"
+                            [routerLink]="['/problems', problem.problemId]"
+                            class="text-xs"
+                            style="color: #8B5E3C;">
+                            View details
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Edit mode -->
+                    <div *ngIf="editingProblem[subtopic._id || i] === k" class="space-y-3">
+                      <div>
+                        <label class="block text-xs font-medium mb-1" style="color: #2D2622;">Title *</label>
+                        <input 
+                          type="text"
+                          [(ngModel)]="editedProblem.title"
+                          class="w-full rounded-[8px] px-3 py-2 text-sm"
+                          style="border: 1px solid #EAE3DB; color: #2D2622;">
+                      </div>
+                      <div>
+                        <label class="block text-xs font-medium mb-1" style="color: #2D2622;">Description</label>
+                        <textarea 
+                          [(ngModel)]="editedProblem.description"
+                          rows="2"
+                          class="w-full rounded-[8px] px-3 py-2 text-sm resize-none"
+                          style="border: 1px solid #EAE3DB; color: #2D2622;">
+                        </textarea>
+                      </div>
+                      <div>
+                        <label class="block text-xs font-medium mb-1" style="color: #2D2622;">Link</label>
+                        <input 
+                          type="url"
+                          [(ngModel)]="editedProblem.link"
+                          class="w-full rounded-[8px] px-3 py-2 text-sm"
+                          style="border: 1px solid #EAE3DB; color: #2D2622;">
+                      </div>
+                      <div>
+                        <label class="block text-xs font-medium mb-1" style="color: #2D2622;">Difficulty *</label>
+                        <select 
+                          [(ngModel)]="editedProblem.difficulty"
+                          class="w-full rounded-[8px] px-3 py-2 text-sm"
+                          style="border: 1px solid #EAE3DB; color: #2D2622;">
+                          <option value="easy">Easy</option>
+                          <option value="medium">Medium</option>
+                          <option value="hard">Hard</option>
+                          <option value="very-hard">Very Hard</option>
+                        </select>
+                      </div>
+                      <div class="flex gap-2 justify-end pt-1">
+                        <button
+                          (click)="cancelEditingProblem(subtopic, i)"
+                          class="text-sm px-3 py-1.5 rounded-[8px] font-medium"
+                          style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #2D2622;">
+                          Cancel
+                        </button>
+                        <button
+                          (click)="saveEditedProblem(subtopic, problem, i)"
+                          [disabled]="!editedProblem.title"
+                          class="text-white text-sm px-3 py-1.5 rounded-[8px] font-medium disabled:opacity-50 flex items-center gap-1"
+                          style="background-color: #8B5E3C;">
+                          <!-- Lucide Save icon -->
                           <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
                           </svg>
-                          Open
-                        </a>
-                        <a 
-                          *ngIf="problem.problemId"
-                          [routerLink]="['/problems', problem.problemId]"
-                          class="text-xs"
-                          style="color: #8B5E3C;">
-                          View details
-                        </a>
+                          Save
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -1140,6 +1215,15 @@ export class SubtopicDetailComponent implements OnInit {
   editingResources: { [key: string]: boolean } = {};
   originalResources: { [key: string]: Array<{ name: string; link: string }> } = {};
   
+  // Problem inline editing state (keyed by subtopic id or index)
+  editingProblem: { [key: string]: number | null } = {};
+  editedProblem: {
+    title: string;
+    description: string;
+    link: string;
+    difficulty: 'easy' | 'medium' | 'hard' | 'very-hard';
+  } = { title: '', description: '', link: '', difficulty: 'medium' };
+
   // Inline problem creation
   newInlineProblem: {
     title: string;
@@ -1704,6 +1788,35 @@ export class SubtopicDetailComponent implements OnInit {
     this.showUnlinkProblemModal = false;
     this.subtopicForUnlink = null;
     this.problemToUnlink = null;
+  }
+
+  startEditingProblem(subtopic: Subtopic, problemIndex: number, problem: LinkedProblem, subtopicIndex: number): void {
+    const key = subtopic._id || subtopicIndex;
+    this.editingProblem[key] = problemIndex;
+    this.editedProblem = {
+      title: problem.title,
+      description: problem.description || '',
+      link: problem.link || '',
+      difficulty: problem.difficulty
+    };
+  }
+
+  cancelEditingProblem(subtopic: Subtopic, subtopicIndex: number): void {
+    const key = subtopic._id || subtopicIndex;
+    this.editingProblem[key] = null;
+  }
+
+  saveEditedProblem(subtopic: Subtopic, problem: LinkedProblem, subtopicIndex: number): void {
+    const key = subtopic._id || subtopicIndex;
+    problem.title = this.editedProblem.title;
+    problem.description = this.editedProblem.description;
+    problem.link = this.editedProblem.link;
+    problem.difficulty = this.editedProblem.difficulty;
+    if (subtopic.linkedProblems) {
+      subtopic.linkedProblems = this.sortProblemsByDifficulty(subtopic.linkedProblems);
+    }
+    this.saveSubtopic(subtopic);
+    this.editingProblem[key] = null;
   }
 
   getDifficultyLabel(difficulty: string): string {
