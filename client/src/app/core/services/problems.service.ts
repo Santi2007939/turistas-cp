@@ -68,6 +68,7 @@ export interface CheckDuplicateResponse {
   success: boolean;
   data: {
     exists: boolean;
+    isOwn?: boolean;
     problems: {
       _id: string;
       title: string;

@@ -441,7 +441,7 @@ router.post('/:id/subtopics', asyncHandler(async (req, res) => {
 // @route   PUT /api/roadmap/:id/subtopics/:subtopicId
 // @access  Private
 router.put('/:id/subtopics/:subtopicId', asyncHandler(async (req, res) => {
-  const { name, description, personalNotes, sharedTheory, codeSnippets, linkedProblems, resources } = req.body;
+  const { name, description, personalNotes, sharedTheory, codeSnippets, linkedProblems, resources, status } = req.body;
 
   const node = await PersonalNode.findOne({
     _id: req.params.id,
@@ -470,6 +470,7 @@ router.put('/:id/subtopics/:subtopicId', asyncHandler(async (req, res) => {
   if (codeSnippets !== undefined) subtopic.codeSnippets = codeSnippets;
   if (linkedProblems !== undefined) subtopic.linkedProblems = linkedProblems;
   if (resources !== undefined) subtopic.resources = resources;
+  if (status !== undefined) subtopic.status = status;
 
   await node.save();
 

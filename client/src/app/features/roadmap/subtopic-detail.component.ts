@@ -90,15 +90,70 @@ import { ThemesService, Subtheme } from '../../core/services/themes.service';
 
         <!-- Subtopics List -->
         <div *ngIf="!loading && node">
-          <!-- Subtopic Selector Grid -->
-          <div *ngIf="node.subtopics && node.subtopics.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+          <!-- Subtopic List -->
+          <div *ngIf="node.subtopics && node.subtopics.length > 0" class="space-y-2 mb-6">
             <div *ngFor="let subtopic of node.subtopics; let i = index"
                  class="bg-white rounded-[12px] p-4 cursor-pointer transition-all"
                  [ngStyle]="{'border': selectedSubtopicIndex === i ? '2px solid #8B5E3C' : '1px solid #EAE3DB'}"
                  (click)="selectSubtopic(i)">
-              <div class="flex items-start justify-between mb-2">
-                <h3 class="font-semibold" style="color: #2D2622;">{{ subtopic.name }}</h3>
-                <div *ngIf="isOwner" class="flex gap-1 ml-2 flex-shrink-0" (click)="$event.stopPropagation()">
+              <div class="flex items-center gap-4">
+                <!-- Status indicator -->
+                <div class="flex-shrink-0 w-3 h-3 rounded-full"
+                     [ngStyle]="{'background-color': getSubtopicStatusColor(subtopic.status)}">
+                </div>
+
+                <!-- Name and description -->
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <span class="font-semibold" style="color: #2D2622;">{{ subtopic.name }}</span>
+                    <!-- Status badge -->
+                    <span class="text-xs px-2 py-0.5 rounded-full font-medium"
+                          [ngStyle]="{
+                            'background-color': getSubtopicStatusColor(subtopic.status) + '20',
+                            'color': getSubtopicStatusColor(subtopic.status),
+                            'border': '1px solid ' + getSubtopicStatusColor(subtopic.status) + '50'
+                          }">
+                      {{ getSubtopicStatusLabel(subtopic.status) }}
+                    </span>
+                  </div>
+                  <p *ngIf="subtopic.description" class="text-xs mt-0.5 truncate" style="color: #4A3B33;">{{ subtopic.description }}</p>
+
+                  <!-- Progress bar (from linked problems completion) -->
+                  <div *ngIf="subtopic.linkedProblems && subtopic.linkedProblems.length > 0" class="mt-2">
+                    <div class="flex justify-between text-xs mb-1" style="color: #4A3B33;">
+                      <span>Problems</span>
+                      <span class="font-mono" style="color: #8B5E3C;">{{ getSubtopicCompletedCount(subtopic) }}/{{ subtopic.linkedProblems.length }}</span>
+                    </div>
+                    <div class="w-full rounded-full h-1.5 overflow-hidden" style="background-color: #EAE3DB;">
+                      <div class="h-1.5 rounded-full transition-all duration-300"
+                           style="background-color: #D4A373;"
+                           [style.width.%]="getSubtopicProgress(subtopic)">
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Content badges -->
+                  <div class="flex flex-wrap gap-1.5 mt-2">
+                    <span *ngIf="subtopic.codeSnippets && subtopic.codeSnippets.length > 0"
+                          class="text-xs px-1.5 py-0.5 rounded-[8px]"
+                          style="background-color: #FCF9F5; color: #4A3B33; border: 1px solid #EAE3DB;">
+                      {{ subtopic.codeSnippets.length }} snippet{{ subtopic.codeSnippets.length !== 1 ? 's' : '' }}
+                    </span>
+                    <span *ngIf="subtopic.linkedProblems && subtopic.linkedProblems.length > 0"
+                          class="text-xs px-1.5 py-0.5 rounded-[8px]"
+                          style="background-color: #FCF9F5; color: #8B5E3C; border: 1px solid #EAE3DB;">
+                      {{ subtopic.linkedProblems.length }} problem{{ subtopic.linkedProblems.length !== 1 ? 's' : '' }}
+                    </span>
+                    <span *ngIf="subtopic.resources && subtopic.resources.length > 0"
+                          class="text-xs px-1.5 py-0.5 rounded-[8px]"
+                          style="background-color: #FCF9F5; color: #4A3B33; border: 1px solid #EAE3DB;">
+                      {{ subtopic.resources.length }} resource{{ subtopic.resources.length !== 1 ? 's' : '' }}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Action buttons (owner only) -->
+                <div *ngIf="isOwner" class="flex gap-1 flex-shrink-0" (click)="$event.stopPropagation()">
                   <button
                     (click)="editSubtopic(subtopic)"
                     class="text-white px-2 py-1 rounded-[12px] text-xs font-medium flex items-center gap-1"
@@ -118,30 +173,11 @@ import { ThemesService, Subtheme } from '../../core/services/themes.service';
                     </svg>
                   </button>
                 </div>
-              </div>
-              <p *ngIf="subtopic.description" class="text-sm mb-3" style="color: #4A3B33;">{{ subtopic.description }}</p>
-              <div class="flex flex-wrap gap-2">
-                <span *ngIf="subtopic.codeSnippets && subtopic.codeSnippets.length > 0"
-                      class="text-xs px-2 py-1 rounded-[12px]"
-                      style="background-color: #FCF9F5; color: #4A3B33; border: 1px solid #EAE3DB;">
-                  {{ subtopic.codeSnippets.length }} snippet{{ subtopic.codeSnippets.length !== 1 ? 's' : '' }}
-                </span>
-                <span *ngIf="subtopic.linkedProblems && subtopic.linkedProblems.length > 0"
-                      class="text-xs px-2 py-1 rounded-[12px]"
-                      style="background-color: #FCF9F5; color: #8B5E3C; border: 1px solid #EAE3DB;">
-                  {{ subtopic.linkedProblems.length }} problem{{ subtopic.linkedProblems.length !== 1 ? 's' : '' }}
-                </span>
-                <span *ngIf="subtopic.resources && subtopic.resources.length > 0"
-                      class="text-xs px-2 py-1 rounded-[12px]"
-                      style="background-color: #FCF9F5; color: #4A3B33; border: 1px solid #EAE3DB;">
-                  {{ subtopic.resources.length }} resource{{ subtopic.resources.length !== 1 ? 's' : '' }}
-                </span>
-              </div>
-              <div *ngIf="selectedSubtopicIndex === i" class="flex items-center gap-1 text-xs font-medium mt-2" style="color: #8B5E3C;">
-                <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+
+                <!-- Viewing indicator -->
+                <svg *ngIf="selectedSubtopicIndex === i" class="w-4 h-4 flex-shrink-0" style="color: #8B5E3C;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                 </svg>
-                Viewing
               </div>
             </div>
           </div>
@@ -153,8 +189,48 @@ import { ThemesService, Subtheme } from '../../core/services/themes.service';
             <!-- Subtopic Header -->
             <div class="flex items-start justify-between mb-4 pb-4" style="border-bottom: 1px solid #EAE3DB;">
               <div class="flex-1">
-                <h3 class="text-xl font-semibold mb-2" style="color: #2D2622;">{{ subtopic.name }}</h3>
+                <div class="flex items-center gap-3 flex-wrap mb-2">
+                  <h3 class="text-xl font-semibold" style="color: #2D2622;">{{ subtopic.name }}</h3>
+                  <!-- Status badge / selector -->
+                  <div *ngIf="isOwner">
+                    <select
+                      [value]="subtopic.status || 'not-started'"
+                      (change)="updateSubtopicStatus(subtopic, $event)"
+                      class="text-xs px-2 py-1 rounded-full font-medium cursor-pointer"
+                      [ngStyle]="{
+                        'background-color': getSubtopicStatusColor(subtopic.status) + '20',
+                        'color': getSubtopicStatusColor(subtopic.status),
+                        'border': '1px solid ' + getSubtopicStatusColor(subtopic.status) + '50'
+                      }">
+                      <option value="not-started">Not Started</option>
+                      <option value="in-progress">In Progress</option>
+                      <option value="completed">Completed</option>
+                    </select>
+                  </div>
+                  <span *ngIf="!isOwner"
+                        class="text-xs px-2 py-0.5 rounded-full font-medium"
+                        [ngStyle]="{
+                          'background-color': getSubtopicStatusColor(subtopic.status) + '20',
+                          'color': getSubtopicStatusColor(subtopic.status),
+                          'border': '1px solid ' + getSubtopicStatusColor(subtopic.status) + '50'
+                        }">
+                    {{ getSubtopicStatusLabel(subtopic.status) }}
+                  </span>
+                </div>
                 <p style="color: #4A3B33;">{{ subtopic.description }}</p>
+                <!-- Individual progress bar -->
+                <div *ngIf="subtopic.linkedProblems && subtopic.linkedProblems.length > 0" class="mt-3">
+                  <div class="flex justify-between text-xs font-medium mb-1">
+                    <span style="color: #4A3B33;">Problems solved</span>
+                    <span class="font-mono" style="color: #8B5E3C;">{{ getSubtopicCompletedCount(subtopic) }}/{{ subtopic.linkedProblems.length }}</span>
+                  </div>
+                  <div class="w-full rounded-full h-2 overflow-hidden" style="background-color: #EAE3DB;">
+                    <div class="h-2 rounded-full transition-all duration-500"
+                         style="background-color: #D4A373;"
+                         [style.width.%]="getSubtopicProgress(subtopic)">
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -1396,6 +1472,49 @@ export class SubtopicDetailComponent implements OnInit {
 
   selectSubtopic(index: number): void {
     this.selectedSubtopicIndex = index;
+  }
+
+  getSubtopicStatusColor(status?: string): string {
+    const colors: { [key: string]: string } = {
+      'not-started': '#9CA3AF',
+      'in-progress': '#D4A373',
+      'completed': '#8B5E3C'
+    };
+    return colors[status || 'not-started'] || '#9CA3AF';
+  }
+
+  getSubtopicStatusLabel(status?: string): string {
+    const labels: { [key: string]: string } = {
+      'not-started': 'Not Started',
+      'in-progress': 'In Progress',
+      'completed': 'Completed'
+    };
+    return labels[status || 'not-started'] || 'Not Started';
+  }
+
+  getSubtopicCompletedCount(subtopic: Subtopic): number {
+    if (!subtopic.linkedProblems) return 0;
+    return subtopic.linkedProblems.filter(p => this.completedProblems.includes(this.getProblemIdentifier(p))).length;
+  }
+
+  getSubtopicProgress(subtopic: Subtopic): number {
+    if (!subtopic.linkedProblems || subtopic.linkedProblems.length === 0) return 0;
+    return Math.round((this.getSubtopicCompletedCount(subtopic) / subtopic.linkedProblems.length) * 100);
+  }
+
+  updateSubtopicStatus(subtopic: Subtopic, event: Event): void {
+    if (!subtopic._id || !this.nodeId) return;
+    const select = event.target as HTMLSelectElement;
+    const newStatus = select.value as 'not-started' | 'in-progress' | 'completed';
+    const previousStatus = subtopic.status;
+    subtopic.status = newStatus;
+    this.roadmapService.updateSubtopic(this.nodeId, subtopic._id, { status: newStatus }).subscribe({
+      error: (err) => {
+        subtopic.status = previousStatus;
+        this.error = 'Could not update subtopic status. Please try again.';
+        console.error('Error updating subtopic status:', err);
+      }
+    });
   }
 
   saveSubtopic(subtopic: Subtopic): void {
