@@ -77,6 +77,11 @@ const subtopicSchema = new mongoose.Schema({
       trim: true
     }
   }],
+  status: {
+    type: String,
+    enum: ['not-started', 'in-progress', 'completed'],
+    default: 'not-started'
+  },
   order: {
     type: Number,
     default: 0
