@@ -721,9 +721,17 @@ export class ProblemsLibraryComponent implements OnInit {
     }).subscribe({
       next: (response) => {
         if (response.data.exists && response.data.problems.length > 0) {
-          // Show duplicate modal
-          this.duplicateProblems = response.data.problems;
-          this.showDuplicateModal = true;
+          if (response.data.isOwn) {
+            // User already has their own problem with this URL — show a clear error
+            this.error = 'You already have a problem with this URL in your library.';
+            this.showAddProblemModal = false;
+            this.resetNewProblem();
+            this.pendingProblemData = null;
+          } else {
+            // Show duplicate modal for other users' problems
+            this.duplicateProblems = response.data.problems;
+            this.showDuplicateModal = true;
+          }
         } else {
           // No duplicates, create directly
           this.createProblemDirectly(problemData, false);
