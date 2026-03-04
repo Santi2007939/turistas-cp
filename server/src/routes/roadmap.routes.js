@@ -507,18 +507,18 @@ router.delete('/:id/subtopics/:subtopicId', asyncHandler(async (req, res) => {
   subtopic.deleteOne();
 
   // Recalculate progress after subtopic deletion and clean up stale completedProblems
-  const currentIdentifiers = new Set();
+  const validProblemIds = new Set();
   if (node.subtopics) {
     for (const s of node.subtopics) {
       if (s.linkedProblems) {
         for (const problem of s.linkedProblems) {
           const id = problem.problemId ? problem.problemId.toString() : problem.title;
-          currentIdentifiers.add(id);
+          validProblemIds.add(id);
         }
       }
     }
   }
-  node.completedProblems = (node.completedProblems || []).filter(id => currentIdentifiers.has(id));
+  node.completedProblems = (node.completedProblems || []).filter(id => validProblemIds.has(id));
   node.progress = recalculateProgress(node);
 
   await node.save();

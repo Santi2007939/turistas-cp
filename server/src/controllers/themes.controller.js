@@ -452,13 +452,14 @@ export const updateSubtopicSharedContent = asyncHandler(async (req, res) => {
         }
       }
 
+      const originalCompletedCount = (affectedNode.completedProblems || []).length;
       const filteredCompleted = (affectedNode.completedProblems || []).filter(pid => validIds.has(pid));
       const newProgress = totalProblems > 0
         ? Math.round((filteredCompleted.length / totalProblems) * 100)
         : 0;
 
       // Always update if completedProblems changed or progress changed
-      if (filteredCompleted.length !== (affectedNode.completedProblems || []).length || affectedNode.progress !== newProgress) {
+      if (filteredCompleted.length !== originalCompletedCount || affectedNode.progress !== newProgress) {
         affectedNode.completedProblems = filteredCompleted;
         affectedNode.markModified('completedProblems');
         affectedNode.progress = newProgress;
