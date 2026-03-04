@@ -89,34 +89,72 @@ import { ThemesService, Subtheme } from '../../core/services/themes.service';
         </div>
 
         <!-- Subtopics List -->
-        <div *ngIf="!loading && node" class="space-y-6">
-          <div *ngFor="let subtopic of node.subtopics; let i = index" 
+        <div *ngIf="!loading && node">
+          <!-- Subtopic Selector Grid -->
+          <div *ngIf="node.subtopics && node.subtopics.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+            <div *ngFor="let subtopic of node.subtopics; let i = index"
+                 class="bg-white rounded-[12px] p-4 cursor-pointer transition-all"
+                 [ngStyle]="{'border': selectedSubtopicIndex === i ? '2px solid #8B5E3C' : '1px solid #EAE3DB'}"
+                 (click)="selectSubtopic(i)">
+              <div class="flex items-start justify-between mb-2">
+                <h3 class="font-semibold" style="color: #2D2622;">{{ subtopic.name }}</h3>
+                <div *ngIf="isOwner" class="flex gap-1 ml-2 flex-shrink-0" (click)="$event.stopPropagation()">
+                  <button
+                    (click)="editSubtopic(subtopic)"
+                    class="text-white px-2 py-1 rounded-[12px] text-xs font-medium flex items-center gap-1"
+                    style="background-color: #D4A373;"
+                    title="Edit subtopic">
+                    <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                  </button>
+                  <button
+                    (click)="deleteSubtopic(subtopic._id || '')"
+                    class="px-2 py-1 rounded-[12px] text-xs font-medium flex items-center gap-1"
+                    style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #4A3B33;"
+                    title="Delete subtopic">
+                    <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <p *ngIf="subtopic.description" class="text-sm mb-3" style="color: #4A3B33;">{{ subtopic.description }}</p>
+              <div class="flex flex-wrap gap-2">
+                <span *ngIf="subtopic.codeSnippets && subtopic.codeSnippets.length > 0"
+                      class="text-xs px-2 py-1 rounded-[12px]"
+                      style="background-color: #FCF9F5; color: #4A3B33; border: 1px solid #EAE3DB;">
+                  {{ subtopic.codeSnippets.length }} snippet{{ subtopic.codeSnippets.length !== 1 ? 's' : '' }}
+                </span>
+                <span *ngIf="subtopic.linkedProblems && subtopic.linkedProblems.length > 0"
+                      class="text-xs px-2 py-1 rounded-[12px]"
+                      style="background-color: #FCF9F5; color: #8B5E3C; border: 1px solid #EAE3DB;">
+                  {{ subtopic.linkedProblems.length }} problem{{ subtopic.linkedProblems.length !== 1 ? 's' : '' }}
+                </span>
+                <span *ngIf="subtopic.resources && subtopic.resources.length > 0"
+                      class="text-xs px-2 py-1 rounded-[12px]"
+                      style="background-color: #FCF9F5; color: #4A3B33; border: 1px solid #EAE3DB;">
+                  {{ subtopic.resources.length }} resource{{ subtopic.resources.length !== 1 ? 's' : '' }}
+                </span>
+              </div>
+              <div *ngIf="selectedSubtopicIndex === i" class="flex items-center gap-1 text-xs font-medium mt-2" style="color: #8B5E3C;">
+                <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+                Viewing
+              </div>
+            </div>
+          </div>
+
+          <!-- Selected Subtopic Detail -->
+          <ng-container *ngFor="let subtopic of node.subtopics; let i = index">
+          <div *ngIf="i === selectedSubtopicIndex"
                class="bg-white rounded-[12px] p-6" style="border: 1px solid #EAE3DB;">
             <!-- Subtopic Header -->
             <div class="flex items-start justify-between mb-4 pb-4" style="border-bottom: 1px solid #EAE3DB;">
               <div class="flex-1">
                 <h3 class="text-xl font-semibold mb-2" style="color: #2D2622;">{{ subtopic.name }}</h3>
                 <p style="color: #4A3B33;">{{ subtopic.description }}</p>
-              </div>
-              <div *ngIf="isOwner" class="flex gap-2">
-                <button 
-                  (click)="editSubtopic(subtopic)"
-                  class="text-white px-3 py-1 rounded-[12px] text-sm font-medium flex items-center gap-1"
-                  style="background-color: #D4A373;">
-                  <!-- Lucide Edit icon -->
-                  <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                  </svg>
-                </button>
-                <button 
-                  (click)="deleteSubtopic(subtopic._id || '')"
-                  class="px-3 py-1 rounded-[12px] text-sm font-medium flex items-center gap-1"
-                  style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #4A3B33;">
-                  <!-- Lucide Trash2 icon -->
-                  <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                  </svg>
-                </button>
               </div>
             </div>
 
@@ -646,12 +684,13 @@ import { ThemesService, Subtheme } from '../../core/services/themes.service';
                     <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                     </svg>
-                    Add resource
+                      Add resource
                   </button>
                 </div>
               </div>
             </div>
           </div>
+          </ng-container>
 
           <!-- Empty State -->
           <div *ngIf="!node.subtopics || node.subtopics.length === 0" 
@@ -1166,6 +1205,7 @@ export class SubtopicDetailComponent implements OnInit {
   activeTab: { [key: string]: string } = {};
   showAddSubtopicModal = false;
   isOwner = false; // Whether current user owns this roadmap node (default false for security)
+  selectedSubtopicIndex: number | null = null;
   
   // Cached suggested subtopics (computed when modal opens) - includes shared content
   cachedSuggestedSubtopics: Subtheme[] = [];
@@ -1295,6 +1335,14 @@ export class SubtopicDetailComponent implements OnInit {
             // Default to 'theory' tab for non-owners (shared content) or 'personal' for owners
             this.activeTab[key] = this.isOwner ? 'personal' : 'theory';
           });
+          // Select first subtopic by default
+          if (this.node.subtopics.length > 0) {
+            if (this.selectedSubtopicIndex === null || this.selectedSubtopicIndex >= this.node.subtopics.length) {
+              this.selectedSubtopicIndex = 0;
+            }
+          } else {
+            this.selectedSubtopicIndex = null;
+          }
         }
         
         this.loading = false;
@@ -1344,6 +1392,10 @@ export class SubtopicDetailComponent implements OnInit {
     };
     // Open modal (cache won't show since this subtopic already exists)
     this.openAddSubtopicModal();
+  }
+
+  selectSubtopic(index: number): void {
+    this.selectedSubtopicIndex = index;
   }
 
   saveSubtopic(subtopic: Subtopic): void {
@@ -1415,6 +1467,7 @@ export class SubtopicDetailComponent implements OnInit {
         this.deletingSubtopic = false;
         this.showDeleteSubtopicModal = false;
         this.subtopicToDeleteId = null;
+        this.selectedSubtopicIndex = null;
         this.loadNode();
       },
       error: (err) => {

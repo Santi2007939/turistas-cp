@@ -37,48 +37,43 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div 
           *ngFor="let theme of themes" 
-          class="bg-white rounded-[12px] p-6 cursor-pointer transition-colors relative"
+          class="bg-white rounded-[12px] p-6 cursor-pointer transition-colors"
           style="border: 1px solid #EAE3DB;"
           (click)="navigateToDetail(theme._id)">
           
-          <!-- Edit button for current members -->
-          <button 
-            *ngIf="isCurrentMember"
-            (click)="navigateToEdit(theme._id, $event)"
-            class="absolute top-3 right-12 p-2 rounded-[12px] transition-colors"
-            style="background-color: #FCF9F5; border: 1px solid #EAE3DB;"
-            title="Edit theme">
-            <!-- Lucide Edit icon -->
-            <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-            </svg>
-          </button>
-          <!-- Delete button for admin users -->
-          <button 
-            *ngIf="isAdmin"
-            (click)="confirmDelete(theme, $event)"
-            class="absolute top-3 right-3 p-2 rounded-[12px] transition-colors"
-            style="background-color: #FCF9F5; border: 1px solid #EAE3DB;"
-            title="Delete theme">
-            <!-- Lucide Trash2 icon -->
-            <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-            </svg>
-          </button>
-          
           <div class="flex justify-between items-start mb-4">
-            <h2 class="text-xl font-semibold" style="color: #2D2622;">{{ theme.name }}</h2>
-            <span 
-              class="px-3 py-1 text-xs font-semibold rounded-[12px]"
-              [ngStyle]="{
-                'background-color': theme.difficulty === 'beginner' ? '#FCF9F5' : 
-                                     theme.difficulty === 'intermediate' ? '#FCF9F5' : 
-                                     theme.difficulty === 'advanced' ? '#FCF9F5' : '#FCF9F5',
-                'color': '#8B5E3C',
-                'border': '1px solid #EAE3DB'
-              }">
-              {{ theme.difficulty }}
-            </span>
+            <h2 class="text-xl font-semibold pr-2" style="color: #2D2622;">{{ theme.name }}</h2>
+            <div class="flex items-center gap-1 flex-shrink-0">
+              <!-- Edit button for current members -->
+              <button 
+                *ngIf="isCurrentMember"
+                (click)="navigateToEdit(theme._id, $event)"
+                class="p-2 rounded-[12px] transition-colors"
+                style="background-color: #FCF9F5; border: 1px solid #EAE3DB;"
+                title="Edit theme">
+                <!-- Lucide Edit icon -->
+                <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+              </button>
+              <!-- Delete button for admin users -->
+              <button 
+                *ngIf="isAdmin"
+                (click)="confirmDelete(theme, $event)"
+                class="p-2 rounded-[12px] transition-colors"
+                style="background-color: #FCF9F5; border: 1px solid #EAE3DB;"
+                title="Delete theme">
+                <!-- Lucide Trash2 icon -->
+                <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </button>
+              <span 
+                class="px-3 py-1 text-xs font-semibold rounded-[12px]"
+                style="background-color: #FCF9F5; color: #8B5E3C; border: 1px solid #EAE3DB;">
+                {{ theme.difficulty }}
+              </span>
+            </div>
           </div>
           
           <p class="mb-4" style="color: #4A3B33;">{{ theme.description || 'No description available' }}</p>
