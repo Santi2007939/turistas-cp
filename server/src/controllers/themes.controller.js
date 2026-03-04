@@ -323,6 +323,22 @@ export const deleteSubtopicGlobally = asyncHandler(async (req, res) => {
     
     if (node.subtopics.length < originalLength) {
       deletedCount++;
+
+      // Recalculate progress and clean up stale completedProblems
+      const validIds = new Set();
+      let totalProblems = 0;
+      for (const s of node.subtopics) {
+        for (const problem of s.linkedProblems || []) {
+          const identifier = problem.problemId ? problem.problemId.toString() : problem.title;
+          validIds.add(identifier);
+          totalProblems++;
+        }
+      }
+      node.completedProblems = (node.completedProblems || []).filter(pid => validIds.has(pid));
+      node.progress = totalProblems > 0
+        ? Math.round((node.completedProblems.length / totalProblems) * 100)
+        : 0;
+
       await node.save();
     }
   }
@@ -417,7 +433,7 @@ export const updateSubtopicSharedContent = asyncHandler(async (req, res) => {
     );
   }
 
-  // When linkedProblems change, clean up stale completedProblems entries in affected PersonalNodes
+  // When linkedProblems change, clean up stale completedProblems and recalculate progress for all affected PersonalNodes
   if (linkedProblems !== undefined) {
     const affectedNodes = await PersonalNode.find({
       themeId: id,
@@ -427,26 +443,26 @@ export const updateSubtopicSharedContent = asyncHandler(async (req, res) => {
     for (const affectedNode of affectedNodes) {
       // Collect all valid problem identifiers from all subtopics (post-sync)
       const validIds = new Set();
+      let totalProblems = 0;
       for (const subtopic of affectedNode.subtopics) {
         for (const problem of subtopic.linkedProblems || []) {
           const identifier = problem.problemId ? problem.problemId.toString() : problem.title;
           validIds.add(identifier);
+          totalProblems++;
         }
       }
 
-      const originalCount = (affectedNode.completedProblems || []).length;
+      const originalCompletedCount = (affectedNode.completedProblems || []).length;
       const filteredCompleted = (affectedNode.completedProblems || []).filter(pid => validIds.has(pid));
+      const newProgress = totalProblems > 0
+        ? Math.round((filteredCompleted.length / totalProblems) * 100)
+        : 0;
 
-      if (filteredCompleted.length !== originalCount) {
+      // Always update if completedProblems changed or progress changed
+      if (filteredCompleted.length !== originalCompletedCount || affectedNode.progress !== newProgress) {
         affectedNode.completedProblems = filteredCompleted;
         affectedNode.markModified('completedProblems');
-        // Recalculate progress based on valid completions
-        const totalProblems = affectedNode.subtopics.reduce(
-          (sum, s) => sum + (s.linkedProblems || []).length, 0
-        );
-        affectedNode.progress = totalProblems > 0
-          ? Math.round((filteredCompleted.length / totalProblems) * 100)
-          : 0;
+        affectedNode.progress = newProgress;
         await affectedNode.save();
       }
     }
