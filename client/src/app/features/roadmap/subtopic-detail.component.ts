@@ -90,18 +90,140 @@ import { ThemesService, Subtheme } from '../../core/services/themes.service';
 
         <!-- Subtopics List -->
         <div *ngIf="!loading && node">
-          <!-- Subtopic Selector -->
+          <!-- Subtopic Selector - Custom Dropdown -->
           <div *ngIf="node.subtopics && node.subtopics.length > 0" class="mb-6">
             <label class="block text-sm font-medium mb-2" style="color: #2D2622;">Subtopic</label>
-            <select
-              [ngModel]="selectedSubtopicIndex"
-              (ngModelChange)="selectSubtopic($event)"
-              class="w-full rounded-[12px] px-4 py-3 bg-white transition-all"
-              style="border: 1px solid #EAE3DB; color: #2D2622;">
-              <option *ngFor="let subtopic of node.subtopics; let i = index" [ngValue]="i">
-                {{ subtopic.name }} — {{ getSubtopicAutoStatusLabel(subtopic) }}
-              </option>
-            </select>
+
+            <div class="relative">
+              <!-- Backdrop to close dropdown on outside click -->
+              <div
+                *ngIf="showSubtopicDropdown"
+                class="fixed inset-0 z-40"
+                (click)="showSubtopicDropdown = false">
+              </div>
+
+              <!-- Trigger Button -->
+              <button
+                type="button"
+                (click)="showSubtopicDropdown = !showSubtopicDropdown"
+                class="w-full rounded-[12px] px-4 py-3 bg-white flex items-center justify-between transition-all text-left"
+                [ngStyle]="{
+                  'border': showSubtopicDropdown ? '1px solid #8B5E3C' : '1px solid #EAE3DB',
+                  'box-shadow': showSubtopicDropdown ? '0 0 0 3px rgba(139, 94, 60, 0.1)' : 'none'
+                }">
+                <ng-container *ngIf="selectedSubtopicIndex !== null">
+                  <div class="flex-1 min-w-0 mr-3">
+                    <div class="flex items-center gap-2 flex-wrap mb-0.5">
+                      <span class="font-medium" style="color: #2D2622;">{{ node.subtopics[selectedSubtopicIndex].name }}</span>
+                      <span class="text-xs px-2 py-0.5 rounded-full font-medium"
+                            [ngStyle]="{
+                              'background-color': getSubtopicAutoStatusColor(node.subtopics[selectedSubtopicIndex]) + '20',
+                              'color': getSubtopicAutoStatusColor(node.subtopics[selectedSubtopicIndex]),
+                              'border': '1px solid ' + getSubtopicAutoStatusColor(node.subtopics[selectedSubtopicIndex]) + '50'
+                            }">
+                        {{ getSubtopicAutoStatusLabel(node.subtopics[selectedSubtopicIndex]) }}
+                      </span>
+                    </div>
+                    <div class="flex items-center gap-3 text-xs" style="color: #4A3B33;">
+                      <span class="flex items-center gap-1">
+                        <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                          <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
+                        </svg>
+                        {{ node.subtopics[selectedSubtopicIndex].linkedProblems?.length || 0 }} problem{{ (node.subtopics[selectedSubtopicIndex].linkedProblems?.length || 0) !== 1 ? 's' : '' }}
+                      </span>
+                      <span class="flex items-center gap-1">
+                        <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+                        </svg>
+                        {{ node.subtopics[selectedSubtopicIndex].codeSnippets?.length || 0 }} snippet{{ (node.subtopics[selectedSubtopicIndex].codeSnippets?.length || 0) !== 1 ? 's' : '' }}
+                      </span>
+                    </div>
+                  </div>
+                </ng-container>
+                <!-- Chevron icon -->
+                <svg
+                  class="w-5 h-5 flex-shrink-0 transition-transform duration-200"
+                  [style.transform]="showSubtopicDropdown ? 'rotate(180deg)' : 'rotate(0deg)'"
+                  style="color: #8B5E3C;"
+                  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              <!-- Dropdown Panel -->
+              <div
+                *ngIf="showSubtopicDropdown"
+                class="absolute top-full left-0 right-0 mt-2 rounded-[12px] z-50 overflow-hidden"
+                style="border: 1px solid #EAE3DB; background-color: white; box-shadow: 0 8px 24px rgba(45, 38, 34, 0.12); max-height: 420px; overflow-y: auto;">
+                <div
+                  *ngFor="let subtopic of node.subtopics; let i = index"
+                  (click)="selectSubtopic(i); showSubtopicDropdown = false"
+                  class="p-4 cursor-pointer transition-colors"
+                  [ngStyle]="{
+                    'background-color': i === selectedSubtopicIndex ? '#FCF9F5' : 'white',
+                    'border-bottom': i < node.subtopics.length - 1 ? '1px solid #EAE3DB' : 'none'
+                  }">
+                  <!-- Card Header -->
+                  <div class="flex items-center justify-between mb-1.5">
+                    <div class="flex items-center gap-2 flex-1 min-w-0">
+                      <!-- Checkmark for selected -->
+                      <svg *ngIf="i === selectedSubtopicIndex"
+                           class="w-4 h-4 flex-shrink-0"
+                           style="color: #8B5E3C;"
+                           xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span class="font-semibold truncate" style="color: #2D2622;">{{ subtopic.name }}</span>
+                    </div>
+                    <!-- Status badge -->
+                    <span class="text-xs px-2 py-0.5 rounded-full font-medium ml-2 flex-shrink-0"
+                          [ngStyle]="{
+                            'background-color': getSubtopicAutoStatusColor(subtopic) + '20',
+                            'color': getSubtopicAutoStatusColor(subtopic),
+                            'border': '1px solid ' + getSubtopicAutoStatusColor(subtopic) + '50'
+                          }">
+                      {{ getSubtopicAutoStatusLabel(subtopic) }}
+                    </span>
+                  </div>
+
+                  <!-- Description preview -->
+                  <p *ngIf="subtopic.description"
+                     class="text-xs mb-2 truncate"
+                     style="color: #4A3B33;">{{ subtopic.description }}</p>
+
+                  <!-- Stats row -->
+                  <div class="flex items-center gap-4 text-xs" style="color: #4A3B33;"
+                       [class.mb-2]="subtopic.linkedProblems && subtopic.linkedProblems.length > 0">
+                    <span class="flex items-center gap-1">
+                      <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
+                      </svg>
+                      {{ subtopic.linkedProblems?.length || 0 }} problem{{ (subtopic.linkedProblems?.length || 0) !== 1 ? 's' : '' }}
+                    </span>
+                    <span class="flex items-center gap-1">
+                      <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+                      </svg>
+                      {{ subtopic.codeSnippets?.length || 0 }} snippet{{ (subtopic.codeSnippets?.length || 0) !== 1 ? 's' : '' }}
+                    </span>
+                  </div>
+
+                  <!-- Progress bar (only if has problems) -->
+                  <div *ngIf="subtopic.linkedProblems && subtopic.linkedProblems.length > 0">
+                    <div class="flex justify-between text-xs mb-1">
+                      <span style="color: #4A3B33;">Progress</span>
+                      <span class="font-mono" style="color: #8B5E3C;">{{ getSubtopicCompletedCount(subtopic) }}/{{ subtopic.linkedProblems.length }}</span>
+                    </div>
+                    <div class="w-full h-1.5 rounded-full overflow-hidden" style="background-color: #EAE3DB;">
+                      <div class="h-1.5 rounded-full transition-all duration-500"
+                           style="background-color: #D4A373;"
+                           [style.width.%]="getSubtopicProgress(subtopic)">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- Selected Subtopic Detail -->
@@ -1209,6 +1331,7 @@ export class SubtopicDetailComponent implements OnInit {
   showAddSubtopicModal = false;
   isOwner = false; // Whether current user owns this roadmap node (default false for security)
   selectedSubtopicIndex: number | null = null;
+  showSubtopicDropdown = false;
   
   // Cached suggested subtopics (computed when modal opens) - includes shared content
   cachedSuggestedSubtopics: Subtheme[] = [];
