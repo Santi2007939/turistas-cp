@@ -165,7 +165,33 @@ router.post('/check-duplicate', asyncHandler(async (req, res) => {
     });
   }
 
-  // Find existing problems (excluding user's own problems)
+  // First check if the user already has their own problem with this URL/platformId
+  // to prevent a silent duplicate key error on creation
+  const ownExistingProblems = await Problem.find({
+    $and: [
+      { $or: queryConditions },
+      { createdBy: userId }
+    ]
+  });
+
+  if (ownExistingProblems.length > 0) {
+    return res.json({
+      success: true,
+      data: {
+        exists: true,
+        isOwn: true,
+        problems: ownExistingProblems.map(p => ({
+          _id: p._id,
+          title: p.title,
+          platform: p.platform,
+          owner: p.owner,
+          createdBy: p.createdBy
+        }))
+      }
+    });
+  }
+
+  // Find existing problems created by other users
   const existingProblems = await Problem.find({
     $and: [
       { $or: queryConditions },
@@ -177,6 +203,7 @@ router.post('/check-duplicate', asyncHandler(async (req, res) => {
     success: true,
     data: {
       exists: existingProblems.length > 0,
+      isOwn: false,
       problems: existingProblems.map(p => ({
         _id: p._id,
         title: p.title,
@@ -199,6 +226,14 @@ router.post('/', asyncHandler(async (req, res) => {
     addedBy: req.user._id,
     createdBy: req.user._id
   };
+
+  // Strip null/empty optional fields to avoid potential validator issues
+  if (problemData.rating === null || problemData.rating === undefined) {
+    delete problemData.rating;
+  }
+  if (!problemData.url || typeof problemData.url !== 'string' || problemData.url.trim() === '') {
+    delete problemData.url;
+  }
 
   // Filter out invalid theme associations (entries without a valid themeId)
   if (Array.isArray(problemData.themes)) {

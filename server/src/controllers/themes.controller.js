@@ -403,6 +403,10 @@ export const updateSubtopicSharedContent = asyncHandler(async (req, res) => {
 
   await theme.save();
 
+  // Escape the subtopic name for safe use in a regex (prevents regex injection)
+  const escapedSubtopicName = decodedSubtopicName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const subtopicNameRegex = new RegExp(`^${escapedSubtopicName}$`, 'i');
+
   // Sync shared content to all PersonalNodes that have this theme and this subtopic
   // This ensures changes from themes are reflected in all users' roadmap views
   // Build the update object for shared content fields
@@ -422,22 +426,45 @@ export const updateSubtopicSharedContent = asyncHandler(async (req, res) => {
 
   // Only update if there are fields to update
   if (Object.keys(updateFields).length > 0) {
-    // Use updateMany with positional operator to update all matching subtopics in one operation
-    // This handles both exact name matches and normalized name matches
+    // Update existing subtopics in PersonalNodes that already have this subtopic
     await PersonalNode.updateMany(
       { 
         themeId: id,
-        'subtopics.name': { $regex: new RegExp(`^${decodedSubtopicName}$`, 'i') }
+        'subtopics.name': { $regex: subtopicNameRegex }
       },
       { $set: updateFields }
     );
+  }
+
+  // When linkedProblems change, also propagate the subtopic to PersonalNodes that have
+  // this theme but do NOT yet have this subtopic, so all roadmap nodes stay in sync.
+  // Only add the subtopic to new nodes when there are problems to show.
+  if (linkedProblems !== undefined && linkedProblems.length > 0) {
+    const subtopicData = theme.subthemes[subtopicIndex];
+    const nodesWithoutSubtopic = await PersonalNode.find({
+      themeId: id,
+      'subtopics.name': { $not: subtopicNameRegex }
+    });
+
+    for (const node of nodesWithoutSubtopic) {
+      node.subtopics.push({
+        name: subtopicData.name,
+        description: subtopicData.description || '',
+        sharedTheory: sharedTheory !== undefined ? sharedTheory : (subtopicData.sharedTheory || ''),
+        codeSnippets: codeSnippets !== undefined ? codeSnippets : (subtopicData.codeSnippets || []),
+        linkedProblems: linkedProblems !== undefined ? linkedProblems : (subtopicData.linkedProblems || []),
+        resources: resources !== undefined ? resources : (subtopicData.resources || []),
+        personalNotes: ''
+      });
+      await node.save();
+    }
   }
 
   // When linkedProblems change, clean up stale completedProblems and recalculate progress for all affected PersonalNodes
   if (linkedProblems !== undefined) {
     const affectedNodes = await PersonalNode.find({
       themeId: id,
-      'subtopics.name': { $regex: new RegExp(`^${decodedSubtopicName}$`, 'i') }
+      'subtopics.name': { $regex: subtopicNameRegex }
     });
 
     for (const affectedNode of affectedNodes) {
