@@ -130,6 +130,8 @@ class CodeforcesService {
       // https://codeforces.com/problemset/problem/1234/A
       // https://codeforces.com/contest/1234/problem/A
       // https://codeforces.com/gym/123456/problem/A
+      // Groups 1,2 match problemset URLs: problemset/problem/<contestId>/<index>
+      // Groups 3,4 match contest/gym URLs: (contest|gym)/<contestId>/problem/<index>
       const urlPattern = /codeforces\.com\/(?:problemset\/problem\/(\d+)\/([A-Za-z]\d?)|(?:contest|gym)\/(\d+)\/problem\/([A-Za-z]\d?))/i;
       const match = url.match(urlPattern);
 
