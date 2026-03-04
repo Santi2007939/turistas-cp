@@ -130,15 +130,17 @@ class CodeforcesService {
       // https://codeforces.com/problemset/problem/1234/A
       // https://codeforces.com/contest/1234/problem/A
       // https://codeforces.com/gym/123456/problem/A
-      const urlPattern = /codeforces\.com\/(?:problemset\/problem|contest|gym)\/(\d+)\/([A-Za-z]\d?)/i;
+      // Groups 1,2 match problemset URLs: problemset/problem/<contestId>/<index>
+      // Groups 3,4 match contest/gym URLs: (contest|gym)/<contestId>/problem/<index>
+      const urlPattern = /codeforces\.com\/(?:problemset\/problem\/(\d+)\/([A-Za-z]\d?)|(?:contest|gym)\/(\d+)\/problem\/([A-Za-z]\d?))/i;
       const match = url.match(urlPattern);
 
       if (!match) {
         throw new Error('Invalid Codeforces URL format');
       }
 
-      const contestId = match[1];
-      const index = match[2];
+      const contestId = match[1] || match[3];
+      const index = match[2] || match[4];
 
       // Fetch problem details from API
       const response = await axios.get(`${CODEFORCES_API}/problemset.problems`);

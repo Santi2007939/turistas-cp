@@ -99,7 +99,7 @@ const problemSchema = new mongoose.Schema({
 
 // Index for searching problems
 problemSchema.index({ title: 'text' });
-problemSchema.index({ platform: 1, platformId: 1 }, { unique: true, sparse: true });
+problemSchema.index({ platform: 1, platformId: 1 }, { unique: true, partialFilterExpression: { platformId: { $exists: true, $type: 'string' } } });
 
 const Problem = mongoose.model('Problem', problemSchema);
 
