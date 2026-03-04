@@ -52,9 +52,9 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               </svg>
               Edit
             </button>
-            <!-- Delete button for admin users -->
+            <!-- Delete button for active members and admins -->
             <button 
-              *ngIf="isAdmin"
+              *ngIf="isCurrentMember"
               (click)="confirmDelete()"
               class="font-medium py-2 px-4 rounded-[12px] flex items-center gap-2"
               style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #4A3B33;">

@@ -177,13 +177,13 @@ export const updateTheme = asyncHandler(async (req, res) => {
 
 // @desc    Delete theme
 // @route   DELETE /api/themes/:id
-// @access  Private (Admin only)
+// @access  Private (Active members and admins)
 export const deleteTheme = asyncHandler(async (req, res) => {
-  // Only admins can delete themes
-  if (req.user.role !== 'admin') {
+  // Only active current members and admins can delete themes
+  if (!req.user.isCurrentMember && req.user.role !== 'admin') {
     return res.status(403).json({
       success: false,
-      message: 'Only administrators can delete themes'
+      message: 'Only active team members can delete themes'
     });
   }
 

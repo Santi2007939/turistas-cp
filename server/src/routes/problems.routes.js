@@ -200,6 +200,11 @@ router.post('/', asyncHandler(async (req, res) => {
     createdBy: req.user._id
   };
 
+  // Filter out invalid theme associations (entries without a valid themeId)
+  if (Array.isArray(problemData.themes)) {
+    problemData.themes = problemData.themes.filter(t => t && t.themeId);
+  }
+
   // For personal problems, modify platformId to avoid unique constraint issues
   // when user wants to track a problem that exists as team or another personal problem
   if (problemData.owner === 'personal' && forceCreate && problemData.platformId) {
