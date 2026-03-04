@@ -39,9 +39,9 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
               </div>
             </div>
             <div class="flex gap-2">
-              <!-- Delete button for admin users -->
+              <!-- Delete button for current members -->
               <button 
-                *ngIf="isAdmin"
+                *ngIf="isCurrentMember"
                 (click)="confirmDelete()"
                 class="font-medium py-2 px-4 rounded-[12px] flex items-center gap-2"
                 style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #4A3B33;">
@@ -1105,6 +1105,10 @@ export class SubtopicContentComponent implements OnInit {
 
   get isAdmin(): boolean {
     return this.currentUser?.role === 'admin';
+  }
+
+  get isCurrentMember(): boolean {
+    return !!(this.currentUser?.isCurrentMember || this.currentUser?.role === 'admin');
   }
 
   getAvailableTabs() {

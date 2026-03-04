@@ -41,6 +41,18 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
           style="border: 1px solid #EAE3DB;"
           (click)="navigateToDetail(theme._id)">
           
+          <!-- Edit button for current members -->
+          <button 
+            *ngIf="isCurrentMember"
+            (click)="navigateToEdit(theme._id, $event)"
+            class="absolute top-3 right-12 p-2 rounded-[12px] transition-colors"
+            style="background-color: #FCF9F5; border: 1px solid #EAE3DB;"
+            title="Edit theme">
+            <!-- Lucide Edit icon -->
+            <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+          </button>
           <!-- Delete button for admin users -->
           <button 
             *ngIf="isAdmin"
@@ -175,6 +187,10 @@ export class ThemesListComponent implements OnInit {
     return this.currentUser?.role === 'admin';
   }
 
+  get isCurrentMember(): boolean {
+    return !!(this.currentUser?.isCurrentMember || this.currentUser?.role === 'admin');
+  }
+
   loadThemes(): void {
     this.loading = true;
     this.error = null;
@@ -190,6 +206,11 @@ export class ThemesListComponent implements OnInit {
         console.error('Error loading themes:', err);
       }
     });
+  }
+
+  navigateToEdit(themeId: string, event: Event): void {
+    event.stopPropagation();
+    this.router.navigate(['/themes', themeId, 'edit']);
   }
 
   navigateToDetail(themeId: string): void {

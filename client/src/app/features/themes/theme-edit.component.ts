@@ -1,17 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ThemesService, Theme, Subtheme } from '../../core/services/themes.service';
 import { NavbarComponent } from '../../shared/components/navbar.component';
 import { CATEGORY_TAG_SUGGESTIONS } from './theme-tags.constants';
 
 @Component({
-  selector: 'app-theme-create',
+  selector: 'app-theme-edit',
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule, NavbarComponent],
   template: `
-    <!-- Matte-Drift Theme Create -->
+    <!-- Matte-Drift Theme Edit -->
     <div class="min-h-screen" style="background-color: #FCF9F5;">
       <!-- Navigation -->
       <app-navbar></app-navbar>
@@ -23,12 +23,16 @@ import { CATEGORY_TAG_SUGGESTIONS } from './theme-tags.constants';
               (click)="goBack()"
               class="flex items-center hover:underline"
               style="color: #4A3B33;">
-              <span class="mr-2">←</span> Back to Themes
+              <span class="mr-2">←</span> Back to Theme
             </button>
           </div>
 
-          <div class="bg-white rounded-[12px] p-8" style="border: 1px solid #EAE3DB;">
-            <h1 class="text-3xl font-semibold mb-6" style="color: #2D2622;">Create New Theme</h1>
+          <div *ngIf="loadingTheme" class="text-center py-8">
+            <p style="color: #4A3B33;">Loading theme...</p>
+          </div>
+
+          <div *ngIf="!loadingTheme" class="bg-white rounded-[12px] p-8" style="border: 1px solid #EAE3DB;">
+            <h1 class="text-3xl font-semibold mb-6" style="color: #2D2622;">Edit Theme</h1>
 
             <div *ngIf="error" class="bg-white rounded-[12px] px-4 py-3 mb-4" style="border: 1px solid #EAE3DB; color: #2D2622;">
               {{ error }}
@@ -266,7 +270,7 @@ import { CATEGORY_TAG_SUGGESTIONS } from './theme-tags.constants';
                   <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
                   </svg>
-                  {{ saving ? 'Creating...' : 'Create Theme' }}
+                  {{ saving ? 'Saving...' : 'Save Changes' }}
                 </button>
               </div>
             </form>
@@ -277,7 +281,7 @@ import { CATEGORY_TAG_SUGGESTIONS } from './theme-tags.constants';
   `,
   styles: []
 })
-export class ThemeCreateComponent {
+export class ThemeEditComponent implements OnInit {
   theme: Partial<Theme> = {
     name: '',
     description: '',
@@ -287,17 +291,54 @@ export class ThemeCreateComponent {
     isPublic: true
   };
 
+  themeId: string | null = null;
   tagsInput: string = '';
   error: string | null = null;
   saving = false;
+  loadingTheme = false;
 
   // Tag suggestions per category
   private readonly categoryTagSuggestions = CATEGORY_TAG_SUGGESTIONS;
 
   constructor(
     private themesService: ThemesService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
+
+  ngOnInit(): void {
+    this.themeId = this.route.snapshot.paramMap.get('id');
+    if (this.themeId) {
+      this.loadTheme(this.themeId);
+    }
+  }
+
+  loadTheme(id: string): void {
+    this.loadingTheme = true;
+    this.error = null;
+
+    this.themesService.getTheme(id).subscribe({
+      next: (response) => {
+        const t = response.data.theme;
+        this.theme = {
+          name: t.name,
+          description: t.description,
+          category: t.category,
+          difficulty: t.difficulty,
+          tags: [...(t.tags || [])],
+          subthemes: (t.subthemes || []).map(s => ({ name: s.name, description: s.description || '' })),
+          resources: [...(t.resources || [])],
+          isPublic: t.isPublic
+        };
+        this.tagsInput = (t.tags || []).join(', ');
+        this.loadingTheme = false;
+      },
+      error: () => {
+        this.error = 'Failed to load theme. Please try again.';
+        this.loadingTheme = false;
+      }
+    });
+  }
 
   get tagSuggestions(): string[] {
     return this.categoryTagSuggestions[this.theme.category || ''] || [];
@@ -358,7 +399,7 @@ export class ThemeCreateComponent {
   }
 
   saveTheme(): void {
-    if (!this.isFormValid()) return;
+    if (!this.isFormValid() || !this.themeId) return;
 
     this.saving = true;
     this.error = null;
@@ -372,20 +413,19 @@ export class ThemeCreateComponent {
     this.theme.subthemes = (this.theme.subthemes || []).filter(s => s.name);
     this.theme.resources = (this.theme.resources || []).filter(r => r.title && r.url);
 
-    this.themesService.createTheme(this.theme).subscribe({
-      next: (response) => {
+    this.themesService.updateTheme(this.themeId, this.theme).subscribe({
+      next: () => {
         this.saving = false;
-        this.router.navigate(['/themes']);
+        this.router.navigate(['/themes', this.themeId]);
       },
-      error: (err) => {
-        this.error = 'Failed to create theme. Please try again.';
+      error: () => {
+        this.error = 'Failed to save theme. Please try again.';
         this.saving = false;
-        console.error('Error creating theme:', err);
       }
     });
   }
 
   goBack(): void {
-    this.router.navigate(['/themes']);
+    this.router.navigate(['/themes', this.themeId]);
   }
 }
