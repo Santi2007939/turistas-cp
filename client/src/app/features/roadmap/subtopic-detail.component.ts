@@ -194,8 +194,8 @@ import { ThemesService, Subtheme } from '../../core/services/themes.service';
                   <!-- Status badge / selector -->
                   <div *ngIf="isOwner">
                     <select
-                      [(ngModel)]="subtopic.status"
-                      (change)="updateSubtopicStatus(subtopic)"
+                      [value]="subtopic.status || 'not-started'"
+                      (change)="updateSubtopicStatus(subtopic, $event)"
                       class="text-xs px-2 py-1 rounded-full font-medium cursor-pointer"
                       [ngStyle]="{
                         'background-color': getSubtopicStatusColor(subtopic.status) + '20',
@@ -1502,11 +1502,16 @@ export class SubtopicDetailComponent implements OnInit {
     return Math.round((this.getSubtopicCompletedCount(subtopic) / subtopic.linkedProblems.length) * 100);
   }
 
-  updateSubtopicStatus(subtopic: Subtopic): void {
+  updateSubtopicStatus(subtopic: Subtopic, event: Event): void {
     if (!subtopic._id || !this.nodeId) return;
-    this.roadmapService.updateSubtopic(this.nodeId, subtopic._id, { status: subtopic.status }).subscribe({
+    const select = event.target as HTMLSelectElement;
+    const newStatus = select.value as 'not-started' | 'in-progress' | 'completed';
+    const previousStatus = subtopic.status;
+    subtopic.status = newStatus;
+    this.roadmapService.updateSubtopic(this.nodeId, subtopic._id, { status: newStatus }).subscribe({
       error: (err) => {
-        this.error = 'Could not update subtopic status.';
+        subtopic.status = previousStatus;
+        this.error = 'Could not update subtopic status. Please try again.';
         console.error('Error updating subtopic status:', err);
       }
     });
