@@ -45,6 +45,7 @@ export interface Subtopic {
   codeSnippets?: CodeSnippet[];
   linkedProblems?: LinkedProblem[];
   resources?: Resource[];
+  status?: 'not-started' | 'in-progress' | 'completed';
   order?: number;
 }
 
