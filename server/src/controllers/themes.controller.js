@@ -155,11 +155,11 @@ export const updateTheme = asyncHandler(async (req, res) => {
     });
   }
 
-  // Check ownership
-  if (theme.createdBy.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+  // Any active current member or admin can update themes (global shared content)
+  if (!req.user.isCurrentMember && req.user.role !== 'admin') {
     return res.status(403).json({
       success: false,
-      message: 'Not authorized to update this theme'
+      message: 'Only active team members can update themes'
     });
   }
 
@@ -271,15 +271,15 @@ export const getSubtopicContent = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc    Delete subtopic globally (admin only) - removes from all users and shared content
+// @desc    Delete subtopic globally - removes from all users and shared content
 // @route   DELETE /api/themes/:id/subtopics/:subtopicName
-// @access  Private (Admin only)
+// @access  Private (current members and admins)
 export const deleteSubtopicGlobally = asyncHandler(async (req, res) => {
-  // Only admins can delete subtopics globally
-  if (req.user.role !== 'admin') {
+  // Only current members and admins can delete subtopics globally
+  if (!req.user.isCurrentMember && req.user.role !== 'admin') {
     return res.status(403).json({
       success: false,
-      message: 'Only administrators can delete subtopics globally'
+      message: 'Only active team members can delete subtopics'
     });
   }
 

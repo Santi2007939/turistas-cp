@@ -40,6 +40,18 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
             </div>
           </div>
           <div class="flex gap-2">
+            <!-- Edit button for current members -->
+            <button 
+              *ngIf="isCurrentMember"
+              (click)="navigateToEdit()"
+              class="font-medium py-2 px-4 rounded-[12px] flex items-center gap-2"
+              style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #4A3B33;">
+              <!-- Lucide Edit icon -->
+              <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+              Edit
+            </button>
             <!-- Delete button for admin users -->
             <button 
               *ngIf="isAdmin"
@@ -94,9 +106,9 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   </h3>
                   <p *ngIf="subtheme.description" class="text-sm" style="color: #4A3B33;">{{ subtheme.description }}</p>
                 </div>
-                <!-- Admin delete button for subtopic -->
+                <!-- Current member delete button for subtopic -->
                 <button 
-                  *ngIf="isAdmin"
+                  *ngIf="isCurrentMember"
                   (click)="confirmDeleteSubtopic(subtheme, $event)"
                   class="p-2 rounded-[12px] transition-colors opacity-0 group-hover:opacity-100"
                   style="background-color: white; border: 1px solid #EAE3DB;"
@@ -296,6 +308,16 @@ export class ThemeDetailComponent implements OnInit {
 
   get isAdmin(): boolean {
     return this.currentUser?.role === 'admin';
+  }
+
+  get isCurrentMember(): boolean {
+    return !!(this.currentUser?.isCurrentMember || this.currentUser?.role === 'admin');
+  }
+
+  navigateToEdit(): void {
+    if (this.themeId) {
+      this.router.navigate(['/themes', this.themeId, 'edit']);
+    }
   }
 
   loadTheme(id: string): void {
