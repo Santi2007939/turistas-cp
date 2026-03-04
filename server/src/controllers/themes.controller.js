@@ -196,6 +196,9 @@ export const deleteTheme = asyncHandler(async (req, res) => {
     });
   }
 
+  // Delete all personal roadmap nodes associated with this theme
+  await PersonalNode.deleteMany({ themeId: req.params.id });
+
   await theme.deleteOne();
 
   res.json({

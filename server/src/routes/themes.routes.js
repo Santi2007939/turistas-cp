@@ -9,19 +9,21 @@ const router = express.Router();
 // Rate limiters for subtopic operations
 const subtopicReadLimiter = createRateLimiter(30, 60000, 'Too many subtopic requests. Please try again later.');
 const subtopicWriteLimiter = createRateLimiter(10, 60000, 'Too many subtopic modification requests. Please try again later.');
+const themeReadLimiter = createRateLimiter(30, 60000, 'Too many theme requests. Please try again later.');
+const themeWriteLimiter = createRateLimiter(10, 60000, 'Too many theme modification requests. Please try again later.');
 
 // All routes require authentication
 router.use(protect);
 
 // Routes
 router.route('/')
-  .get(getThemes)
-  .post(createTheme);
+  .get(themeReadLimiter, getThemes)
+  .post(themeWriteLimiter, createTheme);
 
 router.route('/:id')
-  .get(validateId(), getTheme)
-  .put(validateId(), updateTheme)
-  .delete(validateId(), deleteTheme);
+  .get(validateId(), themeReadLimiter, getTheme)
+  .put(validateId(), themeWriteLimiter, updateTheme)
+  .delete(validateId(), themeWriteLimiter, deleteTheme);
 
 // Subtopic routes - must come after /:id routes
 router.route('/:id/subtopics/:subtopicName')
