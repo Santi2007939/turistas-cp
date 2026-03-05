@@ -472,6 +472,24 @@ router.put('/:id/subtopics/:subtopicId', asyncHandler(async (req, res) => {
   if (resources !== undefined) subtopic.resources = resources;
   if (status !== undefined) subtopic.status = status;
 
+  // When linkedProblems changes, recalculate progress and clean up stale completedProblems
+  if (linkedProblems !== undefined) {
+    const validIds = new Set();
+    let totalProblems = 0;
+    for (const st of node.subtopics) {
+      for (const problem of st.linkedProblems || []) {
+        const id = problem.problemId ? problem.problemId.toString() : problem.title;
+        validIds.add(id);
+        totalProblems++;
+      }
+    }
+    node.completedProblems = (node.completedProblems || []).filter(id => validIds.has(id));
+    node.markModified('completedProblems');
+    node.progress = totalProblems > 0
+      ? Math.round((node.completedProblems.length / totalProblems) * 100)
+      : 0;
+  }
+
   await node.save();
 
   res.json({

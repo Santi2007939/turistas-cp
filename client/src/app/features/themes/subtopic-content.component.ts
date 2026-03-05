@@ -1688,7 +1688,10 @@ export class SubtopicContentComponent implements OnInit {
       linkedProblems: transformedProblems
     }).subscribe({
       next: () => {
-        // Successfully saved
+        // Reload subtopic content so that completedProblems and userHasThemeInRoadmap
+        // are updated. This ensures newly added problems are interactable immediately
+        // (the subtopic is propagated to the user's PersonalNode by the server).
+        this.loadSubtopicContent();
       },
       error: (err) => {
         this.error = 'Failed to save problems. Please try again.';
