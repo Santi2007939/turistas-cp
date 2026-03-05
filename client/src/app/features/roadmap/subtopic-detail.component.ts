@@ -1586,6 +1586,16 @@ export class SubtopicDetailComponent implements OnInit {
 
     // Save personal data (personalNotes) to roadmap node
     this.roadmapService.updateSubtopic(this.nodeId, subtopic._id, subtopic).subscribe({
+      next: (response) => {
+        // Update completedProblems and progress from server response so that
+        // newly added or removed problems are immediately reflected in the UI
+        if (response?.data?.node) {
+          this.completedProblems = response.data.node.completedProblems || [];
+          if (this.node) {
+            this.node.progress = response.data.node.progress;
+          }
+        }
+      },
       error: (err) => {
         this.error = 'Could not save changes.';
         console.error('Error saving subtopic:', err);
