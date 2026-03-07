@@ -533,7 +533,7 @@ import { ThemesService, Subtheme } from '../../core/services/themes.service';
                          'border-bottom': '1px solid #EAE3DB'
                        }">
                     <!-- View mode -->
-                    <div *ngIf="editingProblem[subtopic._id || i] !== k">
+                    <div *ngIf="editingProblem[subtopic._id || i] !== problem._id">
                       <!-- Problem Header -->
                       <div class="flex items-start justify-between mb-2">
                         <div class="flex items-start gap-3 flex-1">
@@ -561,7 +561,7 @@ import { ThemesService, Subtheme } from '../../core/services/themes.service';
                         <div *ngIf="isOwner" class="flex items-center gap-1 ml-2">
                           <!-- Edit button -->
                           <button
-                            (click)="startEditingProblem(subtopic, k, problem, i)"
+                            (click)="startEditingProblem(subtopic, problem, i)"
                             class="text-sm px-2 py-1 rounded-[8px] flex items-center gap-1 font-medium"
                             style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #4A3B33;">
                             <!-- Lucide Edit icon -->
@@ -615,7 +615,7 @@ import { ThemesService, Subtheme } from '../../core/services/themes.service';
                     </div>
 
                     <!-- Edit mode -->
-                    <div *ngIf="editingProblem[subtopic._id || i] === k" class="space-y-3">
+                    <div *ngIf="editingProblem[subtopic._id || i] === problem._id" class="space-y-3">
                       <div>
                         <label class="block text-xs font-medium mb-1" style="color: #2D2622;">Title *</label>
                         <input 
@@ -1382,7 +1382,7 @@ export class SubtopicDetailComponent implements OnInit {
   originalResources: { [key: string]: Array<{ name: string; link: string }> } = {};
   
   // Problem inline editing state (keyed by subtopic id or index)
-  editingProblem: { [key: string]: number | null } = {};
+  editingProblem: { [key: string]: string | null } = {};
   editedProblem: {
     title: string;
     description: string;
@@ -2001,6 +2001,11 @@ export class SubtopicDetailComponent implements OnInit {
     // Sort by difficulty
     this.currentSubtopicForProblem.linkedProblems = this.sortProblemsByDifficulty(this.currentSubtopicForProblem.linkedProblems);
 
+    // Clear any in-progress edit state for this subtopic since the problem list has changed
+    if (this.currentSubtopicForProblem._id) {
+      this.editingProblem[this.currentSubtopicForProblem._id] = null;
+    }
+
     // Save subtopic
     this.saveSubtopic(this.currentSubtopicForProblem);
 
@@ -2027,6 +2032,10 @@ export class SubtopicDetailComponent implements OnInit {
       const index = this.subtopicForUnlink.linkedProblems.indexOf(this.problemToUnlink);
       if (index > -1) {
         this.subtopicForUnlink.linkedProblems.splice(index, 1);
+        // Clear any in-progress edit state for this subtopic since the problem list has changed
+        if (this.subtopicForUnlink._id) {
+          this.editingProblem[this.subtopicForUnlink._id] = null;
+        }
         this.saveSubtopic(this.subtopicForUnlink);
       }
     }
@@ -2036,9 +2045,9 @@ export class SubtopicDetailComponent implements OnInit {
     this.problemToUnlink = null;
   }
 
-  startEditingProblem(subtopic: Subtopic, problemIndex: number, problem: LinkedProblem, subtopicIndex: number): void {
+  startEditingProblem(subtopic: Subtopic, problem: LinkedProblem, subtopicIndex: number): void {
     const key = subtopic._id || subtopicIndex;
-    this.editingProblem[key] = problemIndex;
+    this.editingProblem[key] = problem._id ?? null;
     this.editedProblem = {
       title: problem.title,
       description: problem.description || '',
@@ -2166,6 +2175,11 @@ export class SubtopicDetailComponent implements OnInit {
 
     // Sort by difficulty
     this.currentSubtopicForProblem.linkedProblems = this.sortProblemsByDifficulty(this.currentSubtopicForProblem.linkedProblems);
+
+    // Clear any in-progress edit state for this subtopic since the problem list has changed
+    if (this.currentSubtopicForProblem._id) {
+      this.editingProblem[this.currentSubtopicForProblem._id] = null;
+    }
 
     // Save subtopic
     this.saveSubtopic(this.currentSubtopicForProblem);
