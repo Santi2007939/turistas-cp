@@ -376,7 +376,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                        'border-bottom': '1px solid #EAE3DB'
                      }">
                   <!-- View mode -->
-                  <div *ngIf="editingProblemIndex !== k">
+                  <div *ngIf="editingProblemId !== problem._id">
                     <div class="flex items-start justify-between mb-2">
                       <div class="flex items-start gap-3 flex-1">
                         <!-- Completion circle button -->
@@ -403,7 +403,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                       <div class="flex items-center gap-1 ml-2">
                         <!-- Edit button -->
                         <button
-                          (click)="startEditingProblem(k, problem)"
+                          (click)="startEditingProblem(problem)"
                           class="text-sm px-2 py-1 rounded-[8px] flex items-center gap-1 font-medium"
                           style="background-color: #FCF9F5; border: 1px solid #EAE3DB; color: #4A3B33;">
                           <!-- Lucide Edit icon -->
@@ -455,7 +455,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   </div>
 
                   <!-- Edit mode -->
-                  <div *ngIf="editingProblemIndex === k" class="space-y-3">
+                  <div *ngIf="editingProblemId === problem._id" class="space-y-3">
                     <div>
                       <label class="block text-xs font-medium mb-1" style="color: #2D2622;">Title *</label>
                       <input 
@@ -1043,7 +1043,7 @@ export class SubtopicContentComponent implements OnInit {
   originalResources: Array<{ name: string; link: string }> = [];
 
   // Problem inline editing state
-  editingProblemIndex: number | null = null;
+  editingProblemId: string | null = null;
   editedProblem: {
     title: string;
     description: string;
@@ -1130,6 +1130,9 @@ export class SubtopicContentComponent implements OnInit {
         if (this.subtopic?.linkedProblems) {
           this.subtopic.linkedProblems = this.sortProblemsByDifficulty(this.subtopic.linkedProblems);
         }
+        
+        // Clear any in-progress edit state since the problem list has been refreshed
+        this.editingProblemId = null;
         
         // Default to theory tab in themes view (Personal Notes only in Roadmap)
         this.activeTab = 'theory';
@@ -1626,8 +1629,8 @@ export class SubtopicContentComponent implements OnInit {
     this.closeCreateProblemModal();
   }
 
-  startEditingProblem(index: number, problem: SubtopicContent['linkedProblems'][0]): void {
-    this.editingProblemIndex = index;
+  startEditingProblem(problem: SubtopicContent['linkedProblems'][0]): void {
+    this.editingProblemId = problem._id ?? null;
     this.editedProblem = {
       title: problem.title,
       description: problem.description || '',
@@ -1637,11 +1640,11 @@ export class SubtopicContentComponent implements OnInit {
   }
 
   cancelEditingProblem(): void {
-    this.editingProblemIndex = null;
+    this.editingProblemId = null;
   }
 
   saveEditedProblem(problem: SubtopicContent['linkedProblems'][0]): void {
-    if (!this.subtopic || this.editingProblemIndex === null) return;
+    if (!this.subtopic || this.editingProblemId === null) return;
     problem.title = this.editedProblem.title;
     problem.description = this.editedProblem.description;
     problem.link = this.editedProblem.link;
@@ -1657,7 +1660,7 @@ export class SubtopicContentComponent implements OnInit {
     }).subscribe({
       next: () => {
         this.savingProblem = false;
-        this.editingProblemIndex = null;
+        this.editingProblemId = null;
       },
       error: (err) => {
         this.savingProblem = false;
