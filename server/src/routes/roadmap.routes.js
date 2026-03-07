@@ -23,8 +23,11 @@ const recalculateProgress = (node) => {
       }
     }
   }
-  const validCompletedCount = (node.completedProblems || []).filter(id => currentIdentifiers.has(id)).length;
-  return totalProblems > 0 ? Math.round((validCompletedCount / totalProblems) * 100) : 0;
+  // Use a Set to deduplicate completedProblems before counting to avoid inflated progress
+  const validCompletedIds = new Set(
+    (node.completedProblems || []).filter(id => currentIdentifiers.has(id))
+  );
+  return totalProblems > 0 ? Math.round((validCompletedIds.size / totalProblems) * 100) : 0;
 };
 
 // All routes require authentication
@@ -283,30 +286,33 @@ router.post('/:id/toggle-problem', writeRateLimiter, asyncHandler(async (req, re
     });
   }
 
-  if (!node.completedProblems) {
-    node.completedProblems = [];
-  }
+  const isCompleted = (node.completedProblems || []).includes(problemIdentifier);
 
-  const index = node.completedProblems.indexOf(problemIdentifier);
-  if (index > -1) {
-    // Remove from completed
-    node.completedProblems.splice(index, 1);
-    node.markModified('completedProblems');
-  } else {
-    // Add to completed
-    node.completedProblems.push(problemIdentifier);
-  }
+  // Use atomic operations to prevent race conditions and duplicate entries:
+  // $pull removes ALL instances of the identifier (deduplicates), $addToSet prevents duplicates
+  const atomicUpdate = isCompleted
+    ? { $pull: { completedProblems: problemIdentifier } }
+    : { $addToSet: { completedProblems: problemIdentifier } };
 
-  node.progress = recalculateProgress(node);
-  node.lastPracticed = new Date();
-  await node.save();
+  const updatedNode = await PersonalNode.findOneAndUpdate(
+    { _id: req.params.id, userId: req.user._id },
+    atomicUpdate,
+    { new: true }
+  );
+
+  // Calculate progress using the updated completedProblems and update atomically
+  const progress = recalculateProgress(updatedNode);
+  await PersonalNode.updateOne(
+    { _id: req.params.id, userId: req.user._id },
+    { $set: { progress, lastPracticed: new Date() } }
+  );
 
   res.json({
     success: true,
-    message: index > -1 ? 'Problem unmarked as completed' : 'Problem marked as completed',
+    message: isCompleted ? 'Problem unmarked as completed' : 'Problem marked as completed',
     data: { 
-      completedProblems: node.completedProblems,
-      progress: node.progress
+      completedProblems: updatedNode.completedProblems,
+      progress
     }
   });
 }));
@@ -336,28 +342,33 @@ router.post('/toggle-problem-by-theme', writeRateLimiter, asyncHandler(async (re
     });
   }
 
-  if (!node.completedProblems) {
-    node.completedProblems = [];
-  }
+  const isCompleted = (node.completedProblems || []).includes(problemIdentifier);
 
-  const index = node.completedProblems.indexOf(problemIdentifier);
-  if (index > -1) {
-    node.completedProblems.splice(index, 1);
-    node.markModified('completedProblems');
-  } else {
-    node.completedProblems.push(problemIdentifier);
-  }
+  // Use atomic operations to prevent race conditions and duplicate entries:
+  // $pull removes ALL instances of the identifier (deduplicates), $addToSet prevents duplicates
+  const atomicUpdate = isCompleted
+    ? { $pull: { completedProblems: problemIdentifier } }
+    : { $addToSet: { completedProblems: problemIdentifier } };
 
-  node.progress = recalculateProgress(node);
-  node.lastPracticed = new Date();
-  await node.save();
+  const updatedNode = await PersonalNode.findOneAndUpdate(
+    { _id: node._id, userId: req.user._id },
+    atomicUpdate,
+    { new: true }
+  );
+
+  // Calculate progress using the updated completedProblems and update atomically
+  const progress = recalculateProgress(updatedNode);
+  await PersonalNode.updateOne(
+    { _id: node._id, userId: req.user._id },
+    { $set: { progress, lastPracticed: new Date() } }
+  );
 
   res.json({
     success: true,
-    message: index > -1 ? 'Problem unmarked as completed' : 'Problem marked as completed',
+    message: isCompleted ? 'Problem unmarked as completed' : 'Problem marked as completed',
     data: { 
-      completedProblems: node.completedProblems,
-      progress: node.progress
+      completedProblems: updatedNode.completedProblems,
+      progress
     }
   });
 }));
@@ -487,10 +498,13 @@ router.put('/:id/subtopics/:subtopicId', asyncHandler(async (req, res) => {
         totalProblems++;
       }
     }
-    node.completedProblems = (node.completedProblems || []).filter(id => validIds.has(id));
-    node.markModified('completedProblems');
+    // Deduplicate and filter out stale completedProblems using a Set to avoid double-counting
+    const validCompletedSet = new Set(
+      (node.completedProblems || []).filter(id => validIds.has(id))
+    );
+    node.completedProblems = [...validCompletedSet];
     node.progress = totalProblems > 0
-      ? Math.round((node.completedProblems.length / totalProblems) * 100)
+      ? Math.round((validCompletedSet.size / totalProblems) * 100)
       : 0;
   }
 
@@ -541,7 +555,11 @@ router.delete('/:id/subtopics/:subtopicId', asyncHandler(async (req, res) => {
       }
     }
   }
-  node.completedProblems = (node.completedProblems || []).filter(id => validProblemIds.has(id));
+  // Deduplicate and filter stale completedProblems using a Set
+  const validCompletedSet = new Set(
+    (node.completedProblems || []).filter(id => validProblemIds.has(id))
+  );
+  node.completedProblems = [...validCompletedSet];
   node.progress = recalculateProgress(node);
 
   await node.save();
