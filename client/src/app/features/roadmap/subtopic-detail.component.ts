@@ -533,7 +533,7 @@ import { ThemesService, Subtheme } from '../../core/services/themes.service';
                          'border-bottom': '1px solid #EAE3DB'
                        }">
                     <!-- View mode -->
-                    <div *ngIf="editingProblem[subtopic._id || i] !== problem._id">
+                    <div *ngIf="!editingProblem[subtopic._id || i] || editingProblem[subtopic._id || i] !== problem._id">
                       <!-- Problem Header -->
                       <div class="flex items-start justify-between mb-2">
                         <div class="flex items-start gap-3 flex-1">
@@ -615,7 +615,7 @@ import { ThemesService, Subtheme } from '../../core/services/themes.service';
                     </div>
 
                     <!-- Edit mode -->
-                    <div *ngIf="editingProblem[subtopic._id || i] === problem._id" class="space-y-3">
+                    <div *ngIf="editingProblem[subtopic._id || i] && editingProblem[subtopic._id || i] === problem._id" class="space-y-3">
                       <div>
                         <label class="block text-xs font-medium mb-1" style="color: #2D2622;">Title *</label>
                         <input 
@@ -2044,10 +2044,19 @@ export class SubtopicDetailComponent implements OnInit {
     if (!this.subtopicForUnlink || !this.problemToUnlink) return;
 
     if (this.subtopicForUnlink.linkedProblems) {
-      const index = this.subtopicForUnlink.linkedProblems.indexOf(this.problemToUnlink);
+      // Use findIndex with _id comparison instead of indexOf (reference equality) so that
+      // the delete still works even if saveSubtopic's async response replaced linkedProblems
+      // with new server objects (e.g. triggered by a textarea blur) before the user confirmed.
+      const toUnlink = this.problemToUnlink;
+      const index = this.subtopicForUnlink.linkedProblems.findIndex(p =>
+        toUnlink._id
+          ? p._id === toUnlink._id
+          : (p.title === toUnlink.title && p.difficulty === toUnlink.difficulty)
+      );
       if (index > -1) {
         this.subtopicForUnlink.linkedProblems.splice(index, 1);
-        // Clear any in-progress edit state for this subtopic since the problem list has changed
+        // Clear any in-progress edit state for this subtopic since the problem list has changed.
+        // Subtopics from the server always have _id, so this key matches the template expression.
         if (this.subtopicForUnlink._id) {
           this.editingProblem[this.subtopicForUnlink._id] = null;
         }
