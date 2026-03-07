@@ -428,6 +428,10 @@ router.post('/:id/subtopics', asyncHandler(async (req, res) => {
   };
 
   node.subtopics.push(subtopic);
+
+  // Recalculate progress after adding a subtopic that may contain problems
+  node.progress = recalculateProgress(node);
+
   await node.save();
 
   res.json({
