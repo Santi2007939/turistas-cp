@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import Theme from '../models/Theme.js';
 import PersonalNode from '../models/PersonalNode.js';
 import { asyncHandler } from '../middlewares/error.js';
@@ -418,7 +419,13 @@ export const updateSubtopicSharedContent = asyncHandler(async (req, res) => {
     updateFields['subtopics.$.codeSnippets'] = codeSnippets;
   }
   if (linkedProblems !== undefined) {
-    updateFields['subtopics.$.linkedProblems'] = linkedProblems;
+    // Ensure each linked problem has an _id before using updateMany,
+    // because updateMany is a raw MongoDB operation that does not
+    // auto-generate _id for array subdocuments like Mongoose .save() does.
+    updateFields['subtopics.$.linkedProblems'] = linkedProblems.map(p => ({
+      ...p,
+      _id: p._id || new mongoose.Types.ObjectId()
+    }));
   }
   if (resources !== undefined) {
     updateFields['subtopics.$.resources'] = resources;

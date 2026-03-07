@@ -1460,6 +1460,11 @@ export class SubtopicDetailComponent implements OnInit {
             const key = subtopic._id || index;
             // Default to 'theory' tab for non-owners (shared content) or 'personal' for owners
             this.activeTab[key] = this.isOwner ? 'personal' : 'theory';
+            // Initialize editingProblem to null so that the view/edit mode condition
+            // works correctly even for problems without _id (null !== undefined is true)
+            if (this.editingProblem[key] === undefined) {
+              this.editingProblem[key] = null;
+            }
           });
           // Select first subtopic by default
           if (this.node.subtopics.length > 0) {
@@ -1593,6 +1598,16 @@ export class SubtopicDetailComponent implements OnInit {
           this.completedProblems = response.data.node.completedProblems || [];
           if (this.node) {
             this.node.progress = response.data.node.progress;
+          }
+          // Update local subtopic linkedProblems from server response so that
+          // newly added problems get their server-generated _id values.
+          // This prevents rendering issues where problems without _id cause
+          // the view/edit mode condition to fail.
+          const updatedSubtopic = response.data.node.subtopics?.find(
+            (s: Subtopic) => s._id === subtopic._id
+          );
+          if (updatedSubtopic?.linkedProblems) {
+            subtopic.linkedProblems = this.sortProblemsByDifficulty(updatedSubtopic.linkedProblems);
           }
         }
       },
