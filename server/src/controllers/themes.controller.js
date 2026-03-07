@@ -335,9 +335,13 @@ export const deleteSubtopicGlobally = asyncHandler(async (req, res) => {
           totalProblems++;
         }
       }
-      node.completedProblems = (node.completedProblems || []).filter(pid => validIds.has(pid));
+      // Deduplicate and filter stale completedProblems using a Set
+      const validCompletedSet = new Set(
+        (node.completedProblems || []).filter(pid => validIds.has(pid))
+      );
+      node.completedProblems = [...validCompletedSet];
       node.progress = totalProblems > 0
-        ? Math.round((node.completedProblems.length / totalProblems) * 100)
+        ? Math.round((validCompletedSet.size / totalProblems) * 100)
         : 0;
 
       await node.save();
@@ -486,18 +490,42 @@ export const updateSubtopicSharedContent = asyncHandler(async (req, res) => {
         }
       }
 
-      const originalCompletedCount = (affectedNode.completedProblems || []).length;
-      const filteredCompleted = (affectedNode.completedProblems || []).filter(pid => validIds.has(pid));
+      const originalCompletedProblems = affectedNode.completedProblems || [];
+      // Identify stale entries (no longer in any linkedProblems) for atomic removal
+      const staleIds = originalCompletedProblems.filter(pid => !validIds.has(pid));
+      // Check for duplicate entries in the remaining valid completedProblems
+      const validCompleted = originalCompletedProblems.filter(pid => validIds.has(pid));
+      const deduplicatedValidSet = new Set(validCompleted);
+      const hasDuplicates = deduplicatedValidSet.size < validCompleted.length;
+
       const newProgress = totalProblems > 0
-        ? Math.round((filteredCompleted.length / totalProblems) * 100)
+        ? Math.round((deduplicatedValidSet.size / totalProblems) * 100)
         : 0;
 
-      // Always update if completedProblems changed or progress changed
-      if (filteredCompleted.length !== originalCompletedCount || affectedNode.progress !== newProgress) {
-        affectedNode.completedProblems = filteredCompleted;
-        affectedNode.markModified('completedProblems');
-        affectedNode.progress = newProgress;
-        await affectedNode.save();
+      if (staleIds.length > 0 || hasDuplicates || affectedNode.progress !== newProgress) {
+        if (staleIds.length > 0) {
+          // Use atomic $pull to remove only stale entries without overwriting concurrent toggles
+          await PersonalNode.updateOne(
+            { _id: affectedNode._id },
+            { $pull: { completedProblems: { $in: staleIds } }, $set: { progress: newProgress } }
+          );
+        }
+        if (hasDuplicates) {
+          // Deduplicate remaining valid entries (read fresh after $pull if stale were removed)
+          const freshNode = staleIds.length > 0
+            ? await PersonalNode.findById(affectedNode._id)
+            : affectedNode;
+          const dedupedCompleted = [...new Set(freshNode.completedProblems || [])];
+          await PersonalNode.updateOne(
+            { _id: affectedNode._id },
+            { $set: { completedProblems: dedupedCompleted, progress: newProgress } }
+          );
+        } else if (staleIds.length === 0 && affectedNode.progress !== newProgress) {
+          await PersonalNode.updateOne(
+            { _id: affectedNode._id },
+            { $set: { progress: newProgress } }
+          );
+        }
       }
     }
   }
