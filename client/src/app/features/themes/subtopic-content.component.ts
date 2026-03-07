@@ -376,7 +376,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                        'border-bottom': '1px solid #EAE3DB'
                      }">
                   <!-- View mode -->
-                  <div *ngIf="editingProblemId !== problem._id">
+                  <div *ngIf="!editingProblemId || editingProblemId !== problem._id">
                     <div class="flex items-start justify-between mb-2">
                       <div class="flex items-start gap-3 flex-1">
                         <!-- Completion circle button -->
@@ -455,7 +455,7 @@ import { NavbarComponent } from '../../shared/components/navbar.component';
                   </div>
 
                   <!-- Edit mode -->
-                  <div *ngIf="editingProblemId === problem._id" class="space-y-3">
+                  <div *ngIf="editingProblemId && editingProblemId === problem._id" class="space-y-3">
                     <div>
                       <label class="block text-xs font-medium mb-1" style="color: #2D2622;">Title *</label>
                       <input 
