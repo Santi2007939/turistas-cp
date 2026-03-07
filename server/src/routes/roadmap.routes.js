@@ -503,7 +503,6 @@ router.put('/:id/subtopics/:subtopicId', asyncHandler(async (req, res) => {
       (node.completedProblems || []).filter(id => validIds.has(id))
     );
     node.completedProblems = [...validCompletedSet];
-    node.markModified('completedProblems');
     node.progress = totalProblems > 0
       ? Math.round((validCompletedSet.size / totalProblems) * 100)
       : 0;
@@ -561,7 +560,6 @@ router.delete('/:id/subtopics/:subtopicId', asyncHandler(async (req, res) => {
     (node.completedProblems || []).filter(id => validProblemIds.has(id))
   );
   node.completedProblems = [...validCompletedSet];
-  node.markModified('completedProblems');
   node.progress = recalculateProgress(node);
 
   await node.save();

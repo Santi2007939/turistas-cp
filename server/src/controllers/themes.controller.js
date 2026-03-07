@@ -340,7 +340,6 @@ export const deleteSubtopicGlobally = asyncHandler(async (req, res) => {
         (node.completedProblems || []).filter(pid => validIds.has(pid))
       );
       node.completedProblems = [...validCompletedSet];
-      node.markModified('completedProblems');
       node.progress = totalProblems > 0
         ? Math.round((validCompletedSet.size / totalProblems) * 100)
         : 0;
