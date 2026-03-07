@@ -1672,7 +1672,13 @@ export class SubtopicContentComponent implements OnInit {
 
   removeProblem(problem: SubtopicContent['linkedProblems'][0]): void {
     if (!this.subtopic || !this.subtopic.linkedProblems) return;
-    const index = this.subtopic.linkedProblems.indexOf(problem);
+    // Use findIndex with _id comparison (or title/difficulty fallback for problems without _id)
+    // to be robust against array replacement by async loadSubtopicContent responses
+    const index = this.subtopic.linkedProblems.findIndex(p =>
+      problem._id
+        ? p._id === problem._id
+        : (p.title === problem.title && p.difficulty === problem.difficulty)
+    );
     if (index > -1) {
       this.subtopic.linkedProblems.splice(index, 1);
       this.saveProblems();

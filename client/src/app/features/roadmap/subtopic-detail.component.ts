@@ -1589,7 +1589,30 @@ export class SubtopicDetailComponent implements OnInit {
   saveSubtopic(subtopic: Subtopic): void {
     if (!subtopic._id || !this.nodeId) return;
 
-    // Save personal data (personalNotes) to roadmap node
+    // Build shared content snapshot BEFORE the async call so we sync exactly what was saved
+    const sharedContent: {
+      sharedTheory?: string;
+      codeSnippets?: Array<{ language: string; code: string; description?: string }>;
+      linkedProblems?: Array<{ problemId?: string; title: string; description?: string; link?: string; difficulty: string }>;
+      resources?: Array<{ name: string; link: string }>;
+    } = {};
+    if (subtopic.sharedTheory !== undefined) {
+      sharedContent.sharedTheory = subtopic.sharedTheory;
+    }
+    if (subtopic.codeSnippets !== undefined) {
+      sharedContent.codeSnippets = subtopic.codeSnippets;
+    }
+    if (subtopic.linkedProblems !== undefined) {
+      // Snapshot the array contents so the shared content reflects exactly what was saved
+      sharedContent.linkedProblems = [...subtopic.linkedProblems];
+    }
+    if (subtopic.resources !== undefined) {
+      sharedContent.resources = subtopic.resources;
+    }
+
+    // Save personal data (personalNotes) and linkedProblems to roadmap node first,
+    // then sync shared content to Theme model sequentially to avoid race conditions
+    // where both operations modify the PersonalNode concurrently.
     this.roadmapService.updateSubtopic(this.nodeId, subtopic._id, subtopic).subscribe({
       next: (response) => {
         // Update completedProblems and progress from server response so that
@@ -1610,50 +1633,26 @@ export class SubtopicDetailComponent implements OnInit {
             subtopic.linkedProblems = this.sortProblemsByDifficulty(updatedSubtopic.linkedProblems);
           }
         }
+
+        // Sync shared content to Theme model AFTER the PersonalNode save completes
+        // to avoid concurrent modifications to the PersonalNode's completedProblems
+        if (this.node?.themeId?._id && subtopic.name && Object.keys(sharedContent).length > 0) {
+          this.themesService.updateSubtopicSharedContent(
+            this.node.themeId._id,
+            subtopic.name,
+            sharedContent
+          ).subscribe({
+            error: (err) => {
+              console.error('Error syncing shared content to theme:', err);
+            }
+          });
+        }
       },
       error: (err) => {
         this.error = 'Could not save changes.';
         console.error('Error saving subtopic:', err);
       }
     });
-
-    // Also sync shared content (theory, code snippets, problems, resources) to the Theme model
-    // This ensures changes are visible globally in themes and other roadmaps
-    if (this.node?.themeId?._id && subtopic.name) {
-      const sharedContent: {
-        sharedTheory?: string;
-        codeSnippets?: Array<{ language: string; code: string; description?: string }>;
-        linkedProblems?: Array<{ problemId?: string; title: string; description?: string; link?: string; difficulty: string }>;
-        resources?: Array<{ name: string; link: string }>;
-      } = {};
-
-      // Only include fields that have values to avoid overwriting with empty data
-      if (subtopic.sharedTheory !== undefined) {
-        sharedContent.sharedTheory = subtopic.sharedTheory;
-      }
-      if (subtopic.codeSnippets !== undefined) {
-        sharedContent.codeSnippets = subtopic.codeSnippets;
-      }
-      if (subtopic.linkedProblems !== undefined) {
-        sharedContent.linkedProblems = subtopic.linkedProblems;
-      }
-      if (subtopic.resources !== undefined) {
-        sharedContent.resources = subtopic.resources;
-      }
-
-      // Only call the API if there's shared content to update
-      if (Object.keys(sharedContent).length > 0) {
-        this.themesService.updateSubtopicSharedContent(
-          this.node.themeId._id,
-          subtopic.name,
-          sharedContent
-        ).subscribe({
-          error: (err) => {
-            console.error('Error syncing shared content to theme:', err);
-          }
-        });
-      }
-    }
   }
 
   deleteSubtopic(subtopicId: string): void {
