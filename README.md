@@ -1,346 +1,190 @@
+<div align="right">
+  <a href="#english-version"><img src="https://img.shields.io/badge/Language-English-blue?style=flat-square&logo=google-translate&logoColor=white" alt="English"/></a>
+  <a href="#versión-en-español"><img src="https://img.shields.io/badge/Language-Español-lightgrey?style=flat-square&logo=google-translate&logoColor=white" alt="Spanish"/></a>
+</div>
+
 # Turistas CP 🏔️
+### Competitive Programming Training Platform
 
-Plataforma de entrenamiento para programación competitiva utilizando MEAN Stack (MongoDB, Express, Angular, Node.js).
+Web platform designed to structure and monitor the training of competitive programming teams and individuals, built on the **MEAN** stack (MongoDB, Express, Angular, Node.js).
 
-## 📋 Descripción
+---
 
-Turistas CP es una plataforma web diseñada para ayudar a equipos de programación competitiva a entrenar de manera organizada y eficiente. Incluye funcionalidades de seguimiento de problemas, roadmaps personalizados, calendario de concursos, estadísticas de progreso, y colaboración en equipo.
+## English Version
 
-### Características Principales
+### 📋 Description
+**Turistas CP** is a central platform designed to organize training routines for competitive programming teams and individuals. It handles roadmaps, contest schedules, personal metrics, and team collaboration natively.
 
-- 🎯 **Roadmaps Personalizados**: Crea y sigue rutas de aprendizaje personalizadas
-- 📊 **Estadísticas**: Seguimiento del progreso individual y del equipo
-- 📅 **Calendario**: Gestión de concursos y eventos
-- 🏆 **Logros**: Sistema de gamificación y motivación
-- 👥 **Trabajo en Equipo**: Configuración y colaboración de equipos
-- 🔗 **Integraciones**: Codeforces, RPC, USACO IDE, Excalidraw
+### 🎯 Key Features
+* **Custom Roadmaps:** Design and follow visual pathways to master complex algorithmic topics.
+* **Statistics & Metrics:** Visual tracking of individual and team analytical growth.
+* **Shared Calendar:** Contest tracking and custom simulated sessions.
+* **External Integrations:** Built-in hooks and links for Codeforces, RPC, USACO, and collaborative whiteboard integration via Excalidraw.
 
-## 🛠️ Tecnologías
+---
 
-### Backend
-- **Node.js** v18+
-- **Express.js** - Framework web
-- **MongoDB Atlas** - Base de datos en la nube
-- **Mongoose** - ODM para MongoDB
-- **JWT** - Autenticación
+### 🛠️ Architecture & Core Stack
 
-### Frontend
-- **Angular** 19+
-- **Tailwind CSS** - Framework de estilos
-- **TypeScript**
+#### **Backend (REST APIs)**
+* **Runtime & Framework:** Node.js + Express.js.
+* **Database & ODM:** MongoDB Atlas + Mongoose for schema modeling.
+* **Security:** Stateless JWT authentication and secure encryption modules.
 
-## 📦 Requisitos
+#### **Frontend (UI Layer)**
+* **Framework:** Angular 19+ (Modular core structure, router features, guards, and shared components).
+* **Styles:** Utility-first responsive design powered by Tailwind CSS.
+* **Languages:** TypeScript.
 
-- **Node.js** v18 o superior
-- **npm** v9 o superior
-- **MongoDB Atlas** - Cuenta configurada (no se requiere instalación local)
+---
 
-## 🚀 Instalación
+### 🚀 Setup and Installation
 
-### 1. Clonar el repositorio
-
+#### 1. Clone the project
 ```bash
 git clone https://github.com/Santi2007939/turistas-cp.git
 cd turistas-cp
 ```
 
-### 2. Configurar el Backend
-
+#### 2. Backend Setup
 ```bash
 cd server
 npm install
 ```
-
-Crear archivo `.env` basado en `.env.example`:
-
-```bash
-cp .env.example .env
-```
-
-Editar `.env` con tus credenciales:
-
+*Configure your environment by copying `.env.example` to `.env`:*
 ```env
-NODE_ENV=development
 PORT=3000
-MONGODB_URI=mongodb+srv://usuario:password@cluster.mongodb.net/turistas_cp
-JWT_SECRET=your-secret-key
+MONGODB_URI=your-mongodb-atlas-uri
+JWT_SECRET=your-secure-secret-key
 JWT_EXPIRES_IN=7d
-ENCRYPTION_KEY=32-character-key-here
+ENCRYPTION_KEY=your-32-character-key
+```
+*Run API server:*
+```bash
+npm run dev
 ```
 
-### 3. Configurar el Frontend
-
+#### 3. Frontend Setup
 ```bash
 cd ../client
 npm install
 ```
+*Start client development server:*
+```bash
+npm start
+```
+* Access Frontend: `http://localhost:4200`
+* Access Backend API: `http://localhost:3000`
 
-### 4. Ejecutar el proyecto
+---
 
-**Backend (Terminal 1):**
+### 📁 Project Directory Layout
+```text
+turistas-cp/
+├── client/                 # Angular Client app
+│   ├── src/app/
+│   │   ├── core/           # Guards, interceptores, and services
+│   │   ├── shared/         # Reusable layouts and pipes
+│   │   └── features/       # Feature modules (roadmap, team, stats, calendar)
+│
+└── server/                 # REST API Server
+    ├── src/
+    │   ├── config/         # MongoDB Database configurations
+    │   ├── models/         # Mongoose models and validation schemas
+    │   ├── controllers/    # Controller route handlers
+    │   ├── middlewares/    # Session authentication validation
+    │   └── services/       # External APIs and utilities handlers
+```
+
+---
+---
+
+## Versión en Español
+
+### 📋 Descripción
+**Turistas CP** centraliza herramientas interactivas y recursos de aprendizaje para potenciar el rendimiento de equipos en concursos lógicos. La plataforma automatiza el seguimiento de problemas y la visualización de métricas de progreso de forma interactiva.
+
+### 🎯 Características Principales
+* **Roadmaps de Aprendizaje:** Creación y seguimiento visual de rutas de estudio temáticas y de dificultad incremental.
+* **Métricas y Estadísticas:** Gráficos intuitivos del desempeño individual y grupal.
+* **Gestión de Calendario:** Programación de concursos simulados y sincronización de eventos de programación competitiva.
+* **Integraciones Externas:** Consumo de APIs públicas y enlaces de herramientas como Codeforces, RPC, USACO y Excalidraw para pizarras colaborativas.
+
+---
+
+### 🛠️ Arquitectura & Tecnologías
+
+#### **Backend (Servicios RESTful)**
+* **Runtime & Framework:** Node.js + Express.js para una API REST modular.
+* **Base de Datos & ODM:** MongoDB Atlas con Mongoose para modelamiento NoSQL.
+* **Autenticación:** JSON Web Tokens (JWT) para sesiones sin estado y encriptación de datos sensibles.
+
+#### **Frontend (Interfaz de Usuario)**
+* **Framework:** Angular 19+ (Estructura modular orientada a servicios, Core/Guards y Feature modules).
+* **Diseño & Estilos:** Tailwind CSS para interfaces responsivas y de carga eficiente.
+* **Tipado:** TypeScript estricto.
+
+---
+
+### 🚀 Instalación y Despliegue
+
+#### 1. Clonar el repositorio
+```bash
+git clone https://github.com/Santi2007939/turistas-cp.git
+cd turistas-cp
+```
+
+#### 2. Configurar el Backend
 ```bash
 cd server
+npm install
+```
+*Crea un archivo `.env` basado en `.env.example` y define tus variables:*
+```env
+PORT=3000
+MONGODB_URI=your-mongodb-atlas-uri
+JWT_SECRET=your-secure-secret-key
+JWT_EXPIRES_IN=7d
+ENCRYPTION_KEY=your-32-character-key
+```
+*Iniciar servidor de desarrollo:*
+```bash
 npm run dev
 ```
 
-**Frontend (Terminal 2):**
+#### 3. Configurar el Frontend
 ```bash
-cd client
+cd ../client
+npm install
+```
+*Iniciar servidor Angular:*
+```bash
 npm start
 ```
+* La aplicación estará disponible en: `http://localhost:4200`
+* El backend levantará la API en: `http://localhost:3000`
 
-La aplicación estará disponible en:
-- Frontend: `http://localhost:4200`
-- Backend API: `http://localhost:3000`
+---
 
-## 📁 Estructura del Proyecto
-
-```
+### 📁 Estructura del Proyecto
+```text
 turistas-cp/
-├── client/                 # Angular Frontend
-│   ├── src/
-│   │   ├── app/
-│   │   │   ├── core/
-│   │   │   │   ├── services/      # Servicios API y autenticación
-│   │   │   │   └── guards/        # Guards de autenticación
-│   │   │   ├── shared/
-│   │   │   │   └── components/    # Componentes compartidos
-│   │   │   ├── features/          # Módulos de funcionalidades
-│   │   │   │   ├── auth/          # Autenticación
-│   │   │   │   ├── roadmap/       # Roadmaps
-│   │   │   │   ├── problems/      # Problemas
-│   │   │   │   ├── calendar/      # Calendario
-│   │   │   │   ├── stats/         # Estadísticas
-│   │   │   │   ├── team/          # Equipo
-│   │   │   │   └── achievements/  # Logros
-│   │   │   ├── app.routes.ts
-│   │   │   └── app.config.ts
-│   │   └── ...
-│   ├── angular.json
-│   ├── package.json
-│   └── tailwind.config.js
+├── client/                 # Angular Frontend (Arquitectura por Componentes/Features)
+│   ├── src/app/
+│   │   ├── core/           # Guards, interceptores y servicios singleton
+│   │   ├── shared/         # Componentes y pipes reutilizables
+│   │   └── features/       # Módulos encapsulados (auth, roadmap, problems, stats, calendar, team)
 │
-├── server/                 # Express Backend
-│   ├── src/
-│   │   ├── config/
-│   │   │   └── database.js        # Configuración MongoDB
-│   │   ├── models/                # Modelos Mongoose
-│   │   ├── routes/                # Rutas de la API
-│   │   ├── controllers/           # Controladores
-│   │   ├── middlewares/           # Middlewares
-│   │   └── services/              # Servicios de integración
-│   ├── package.json
-│   └── .env.example
-│
-├── .gitignore
-└── README.md
+└── server/                 # Express Backend (Arquitectura MVC/Service Layer)
+    ├── src/
+    │   ├── config/         # Configuración de base de datos
+    │   ├── models/         # Modelos Mongoose
+    │   ├── controllers/    # Controladores de endpoints
+    │   ├── middlewares/    # Validación y seguridad JWT
+    │   └── services/       # Integraciones de API y utilidades externas
 ```
 
-## 🔄 GitFlow - Flujo de Trabajo
+---
 
-Este proyecto utiliza GitFlow para el manejo de ramas:
-
-### Ramas Principales
-
-- **`main`**: Rama de producción, siempre estable
-- **`develop`**: Rama de desarrollo, integración de nuevas características
-
-### Ramas de Soporte
-
-- **`feature/*`**: Nuevas funcionalidades
-  ```bash
-  git checkout develop
-  git checkout -b feature/nombre-funcionalidad
-  ```
-
-- **`hotfix/*`**: Correcciones urgentes en producción
-  ```bash
-  git checkout main
-  git checkout -b hotfix/nombre-correccion
-  ```
-
-### Flujo de Trabajo
-
-1. **Crear una nueva funcionalidad:**
-   ```bash
-   git checkout develop
-   git pull origin develop
-   git checkout -b feature/mi-funcionalidad
-   # Realizar cambios y commits
-   git push origin feature/mi-funcionalidad
-   # Crear Pull Request a develop
-   ```
-
-2. **Corrección urgente (hotfix):**
-   ```bash
-   git checkout main
-   git pull origin main
-   git checkout -b hotfix/correccion-urgente
-   # Realizar cambios y commits
-   git push origin hotfix/correccion-urgente
-   # Crear Pull Request a main y develop
-   ```
-
-3. **Finalizar desarrollo (release):**
-   ```bash
-   # Merge de develop a main
-   git checkout main
-   git merge develop
-   git tag -a v1.0.0 -m "Version 1.0.0"
-   git push origin main --tags
-   ```
-
-## 🧪 Testing
-
-```bash
-# Backend tests
-cd server
-npm test
-
-# Frontend tests
-cd client
-npm test
-```
-
-## 📝 Servicios de Integración
-
-### Codeforces API
-- Información de usuarios
-- Historial de ratings
-- Próximos concursos
-
-### Excalidraw
-- Salas colaborativas de pizarra
-- Trabajo en equipo visual
-
-### RPC (Red de Programación Competitiva)
-- Inscripción automática a concursos
-- Seguimiento de competencias
-
-### USACO IDE
-- Ejecución de código online
-- Soporte para C++, Python, Java
-
-## 🌐 Despliegue en Vercel
-
-### Preparación para el Despliegue
-
-Este proyecto utiliza una arquitectura MEAN Stack separada:
-- **Frontend (Angular)**: Se despliega en Vercel
-- **Backend (Node.js/Express)**: Se despliega en Railway, Render, o similar
-
-### Paso 1: Desplegar el Backend
-
-Antes de desplegar el frontend, necesitas tener el backend corriendo en producción.
-
-**Opciones recomendadas:**
-- [Railway](https://railway.app) - Fácil de configurar con Node.js
-- [Render](https://render.com) - Tiene tier gratuito
-- [Fly.io](https://fly.io) - Buen rendimiento global
-
-**Variables de entorno necesarias para el backend:**
-```env
-NODE_ENV=production
-PORT=3000
-MONGODB_URI=mongodb+srv://usuario:password@cluster.mongodb.net/turistas_cp
-JWT_SECRET=your-secure-secret-key
-JWT_EXPIRES_IN=7d
-ENCRYPTION_KEY=32-character-encryption-key
-CLIENT_URL=https://tu-app.vercel.app
-```
-
-> ⚠️ **Importante:** Usa valores únicos y seguros para `JWT_SECRET` y `ENCRYPTION_KEY` en producción. Se recomienda generar cadenas aleatorias de al menos 32 caracteres.
-
-### Paso 2: Configurar el Frontend para Producción
-
-1. Actualizar la URL de la API en `client/src/environments/environment.prod.ts`:
-
-```typescript
-export const environment = {
-  production: true,
-  apiUrl: 'https://tu-backend-url.com',  // URL de tu backend desplegado
-  teamName: 'Team Turistas'
-};
-```
-
-### Paso 3: Desplegar en Vercel
-
-#### Opción A: Desde la CLI de Vercel
-
-```bash
-# Instalar Vercel CLI
-npm install -g vercel
-
-# Navegar al directorio del cliente
-cd client
-
-# Construir el proyecto
-npm run build
-
-# Desplegar
-vercel
-```
-
-#### Opción B: Desde el Dashboard de Vercel
-
-1. Ve a [vercel.com](https://vercel.com) e inicia sesión
-2. Haz clic en "Add New" → "Project"
-3. Importa tu repositorio de GitHub
-4. Configura el proyecto:
-   - **Framework Preset**: Other
-   - **Root Directory**: `client`
-   - **Build Command**: `npm run build`
-   - **Output Directory**: `dist/client/browser`
-   - **Install Command**: `npm install`
-
-5. En la sección de "Environment Variables", agrega:
-   - No se requieren variables de entorno adicionales (la URL de la API está en el código)
-
-6. Haz clic en "Deploy"
-
-### Paso 4: Configurar Rewrites para SPA
-
-Crea un archivo `vercel.json` en la carpeta `client/`:
-
-```json
-{
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
-  ]
-}
-```
-
-Esto asegura que Angular maneje todas las rutas correctamente.
-
-### Verificación Post-Despliegue
-
-1. Verifica que el frontend cargue correctamente
-2. Prueba el login y registro
-3. Verifica que las llamadas a la API funcionen (revisa la consola del navegador)
-4. Asegúrate de que CORS esté configurado correctamente en el backend (`CLIENT_URL`)
-
-### Solución de Problemas Comunes
-
-- **Error 404 en rutas**: Verifica que `vercel.json` esté configurado
-- **Error de CORS**: Verifica `CLIENT_URL` en el backend
-- **API no responde**: Verifica la URL en `environment.prod.ts`
-
-## 🤝 Contribución
-
-1. Fork el proyecto
-2. Crea una rama para tu funcionalidad (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
-
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
-
-## 👥 Autores
-
-- Santi2007939
-
-## 🆘 Soporte
-
-Si tienes alguna pregunta o problema, por favor abre un issue en el repositorio.
+<div align="center">
+  "Optimizing what is within control, solving complexity under the absurd." 🚀
+</div>
