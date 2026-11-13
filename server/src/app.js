@@ -19,6 +19,7 @@ import achievementsRoutes from './routes/achievements.routes.js';
 import customAchievementsRoutes from './routes/custom-achievements.routes.js';
 import integrationsRoutes from './routes/integrations.routes.js';
 import teamRoutes from './routes/team.routes.js';
+import simulationsRoutes from './routes/simulations.routes.js';
 
 // Load environment variables
 dotenv.config();
@@ -73,6 +74,7 @@ app.use('/api/achievements', achievementsRoutes);
 app.use('/api/custom-achievements', customAchievementsRoutes);
 app.use('/api/integrations', integrationsRoutes);
 app.use('/api/team', teamRoutes);
+app.use('/api/simulations', simulationsRoutes);
 
 // 404 handler
 app.use(notFound);

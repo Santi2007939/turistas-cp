@@ -7,6 +7,7 @@ import CalendarEvent from './CalendarEvent.js';
 import TeamConfig from './TeamConfig.js';
 import Achievement from './Achievement.js';
 import CustomAchievement from './CustomAchievement.js';
+import Simulation from './Simulation.js';
 
 export {
   User,
@@ -17,5 +18,6 @@ export {
   CalendarEvent,
   TeamConfig,
   Achievement,
-  CustomAchievement
+  CustomAchievement,
+  Simulation
 };

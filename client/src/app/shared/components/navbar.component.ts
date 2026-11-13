@@ -72,6 +72,17 @@ import { AuthService, User } from '../../core/services/auth.service';
               Problems
             </a>
             <a 
+              routerLink="/simulations" 
+              routerLinkActive="nav-active"
+              [routerLinkActiveOptions]="{exact: false}"
+              class="nav-link">
+              <!-- Lucide Trophy-like flag icon -->
+              <svg class="w-4 h-4" style="color: #4A3B33;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 21V4m0 0h11l-1.5 4L15 12H4" />
+              </svg>
+              Simulations
+            </a>
+            <a 
               routerLink="/team" 
               routerLinkActive="nav-active"
               [routerLinkActiveOptions]="{exact: false}"
@@ -323,6 +334,14 @@ import { AuthService, User } from '../../core/services/auth.service';
             [routerLinkActiveOptions]="{exact: false}"
             class="mobile-nav-link">
             Problems
+          </a>
+          <a 
+            routerLink="/simulations"
+            (click)="closeMobileMenu()"
+            routerLinkActive="mobile-nav-active"
+            [routerLinkActiveOptions]="{exact: false}"
+            class="mobile-nav-link">
+            Simulations
           </a>
           <a 
             routerLink="/team"
