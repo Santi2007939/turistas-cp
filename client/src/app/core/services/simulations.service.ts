@@ -76,42 +76,42 @@ export class SimulationsService {
   constructor(private api: ApiService) {}
 
   getMembers(): Observable<{ success: boolean; data: { members: SimulationMember[] } }> {
-    return this.api.get('/simulations/members');
+    return this.api.get('/api/simulations/members');
   }
 
   getSimulations(): Observable<{ success: boolean; data: { simulations: Simulation[] } }> {
-    return this.api.get('/simulations');
+    return this.api.get('/api/simulations');
   }
 
   getSimulation(id: string): Observable<SimulationResponse> {
-    return this.api.get(`/simulations/${id}`);
+    return this.api.get(`/api/simulations/${id}`);
   }
 
   createSimulation(data: CreateSimulationData): Observable<SimulationResponse> {
-    return this.api.post('/simulations', data);
+    return this.api.post('/api/simulations', data);
   }
 
   updateLinks(id: string, links: { usaco?: string; excalidraw?: string }): Observable<SimulationResponse> {
-    return this.api.put(`/simulations/${id}/links`, links);
+    return this.api.put(`/api/simulations/${id}/links`, links);
   }
 
   start(id: string): Observable<SimulationResponse> {
-    return this.api.post(`/simulations/${id}/start`, {});
+    return this.api.post(`/api/simulations/${id}/start`, {});
   }
 
   finish(id: string): Observable<SimulationResponse> {
-    return this.api.post(`/simulations/${id}/finish`, {});
+    return this.api.post(`/api/simulations/${id}/finish`, {});
   }
 
   submit(id: string, problemLetter: string, verdict: Verdict): Observable<SimulationResponse> {
-    return this.api.post(`/simulations/${id}/submissions`, { problemLetter, verdict });
+    return this.api.post(`/api/simulations/${id}/submissions`, { problemLetter, verdict });
   }
 
   undoSubmission(id: string, submissionId: string): Observable<SimulationResponse> {
-    return this.api.delete(`/simulations/${id}/submissions/${submissionId}`);
+    return this.api.delete(`/api/simulations/${id}/submissions/${submissionId}`);
   }
 
   deleteSimulation(id: string): Observable<{ success: boolean }> {
-    return this.api.delete(`/simulations/${id}`);
+    return this.api.delete(`/api/simulations/${id}`);
   }
 }
