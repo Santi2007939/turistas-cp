@@ -1,6 +1,7 @@
 import express from 'express';
 import Simulation, { BALLOON_COLORS, VERDICTS } from '../models/Simulation.js';
 import User from '../models/User.js';
+import TeamConfig from '../models/TeamConfig.js';
 import { protect } from '../middlewares/auth.js';
 import { asyncHandler } from '../middlewares/error.js';
 import { validateId } from '../middlewares/validation.js';
@@ -36,6 +37,16 @@ const sanitizeLink = (value) => {
 
 const problemLetter = (index) => String.fromCharCode(65 + index);
 
+// Active members are the ones toggled as active in the team (TeamConfig.members[].isActive)
+const getActiveMemberIds = async () => {
+  const teamName = process.env.TEAM_NAME || 'Team Turistas';
+  const team = await TeamConfig.findOne({ name: teamName }).select('members');
+  if (!team) return [];
+  return team.members
+    .filter(m => m.isActive && m.userId)
+    .map(m => m.userId.toString());
+};
+
 // Marks a running simulation as finished once its time is over
 const refreshStatus = async (simulation) => {
   if (simulation.status === 'running' && simulation.endTime && Date.now() >= simulation.endTime.getTime()) {
@@ -62,11 +73,12 @@ const forbidden = (res) => res.status(403).json({
 
 // ---------- routes ----------
 
-// @desc    Current members that can be selected for a simulation
+// @desc    Active team members that can be selected for a simulation
 // @route   GET /api/simulations/members
 // @access  Private
 router.get('/members', asyncHandler(async (req, res) => {
-  const members = await User.find({ isCurrentMember: true, isActive: true })
+  const ids = await getActiveMemberIds();
+  const members = await User.find({ _id: { $in: ids } })
     .select(USER_FIELDS)
     .sort({ username: 1 });
 
@@ -117,9 +129,9 @@ router.post('/', asyncHandler(async (req, res) => {
     return res.status(400).json({ success: false, message: 'Invalid member id' });
   }
 
-  const validMembers = await User.countDocuments({ _id: { $in: uniqueIds }, isCurrentMember: true, isActive: true });
-  if (validMembers !== uniqueIds.length) {
-    return res.status(400).json({ success: false, message: 'All participants must be current members' });
+  const activeIds = new Set(await getActiveMemberIds());
+  if (uniqueIds.some(id => !activeIds.has(id))) {
+    return res.status(400).json({ success: false, message: 'All participants must be active team members' });
   }
 
   const usaco = sanitizeLink(links?.usaco);

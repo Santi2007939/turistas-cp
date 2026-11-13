@@ -54,8 +54,11 @@ import { BalloonComponent } from './balloon.component';
           <!-- Members -->
           <section class="bg-white rounded-[12px] p-5" style="border: 1px solid #EAE3DB;">
             <h2 class="font-semibold mb-1" style="color: #2D2622;">Members</h2>
-            <p class="text-xs mb-3" style="color: #8C7B70;">Only the selected members can mark verdicts and edit this simulation.</p>
+            <p class="text-xs mb-3" style="color: #8C7B70;">Active team members. Only the selected ones can mark verdicts and edit this simulation.</p>
             <div *ngIf="loadingMembers" class="text-sm" style="color: #4A3B33;">Loading members...</div>
+            <div *ngIf="!loadingMembers && members.length === 0" class="text-sm" style="color: #4A3B33;">
+              No active members. Activate members in the <a routerLink="/team" class="underline" style="color: #8B5E3C;">Team</a> page.
+            </div>
             <div class="grid sm:grid-cols-2 gap-2">
               <label *ngFor="let m of members"
                      class="flex items-center gap-3 rounded-[10px] px-3 py-2 cursor-pointer"
